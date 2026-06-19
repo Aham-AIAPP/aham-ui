@@ -1,5 +1,7 @@
 # Aham UI — 供 AI 消费的设计系统
 
+![Aham UI — 供 AI 消费的设计系统](assets/social-preview.png)
+
 > aham 系列 · 本地优先 macOS AI 工具的设计地基 · 单一事实源、机器可读
 >
 > 把"该长什么样"写成 AI 能读懂的规范，让 Claude 等工具据此产出风格一致的界面与文档。

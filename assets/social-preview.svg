@@ -1,0 +1,41 @@
+<svg width="1280" height="1280" viewBox="0 0 1280 1280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 方形画布：渲染后居中裁出 1280×640 -->
+  <rect width="1280" height="1280" fill="#FFFFFF"/>
+
+  <!-- 内容带：垂直居中的 1280×640（y 320..960） -->
+  <g transform="translate(0,320)">
+    <!-- 冷色的纸：白底 + 极细边线，扁平无阴影 -->
+    <rect x="1" y="1" width="1278" height="638" fill="#FFFFFF" stroke="#E7E7E7" stroke-width="2"/>
+    <!-- 顶部强调细线：唯一的蓝，点缀 -->
+    <rect x="0" y="0" width="1280" height="6" fill="#336EE8"/>
+
+    <!-- Logo mark：蓝圆角方 + 两条白条 -->
+    <g transform="translate(96,212)">
+      <rect width="168" height="168" rx="42" fill="#336EE8"/>
+      <rect x="48" y="60" width="74" height="14" rx="7" fill="#FFFFFF"/>
+      <rect x="48" y="94" width="52" height="14" rx="7" fill="#FFFFFF"/>
+    </g>
+
+    <!-- 文案区 -->
+    <g font-family="'Inter','PingFang SC','Microsoft YaHei',system-ui,-apple-system,sans-serif">
+      <text x="312" y="268" font-size="96" font-weight="700" fill="#262626" letter-spacing="-1">Aham UI</text>
+      <text x="316" y="332" font-size="40" font-weight="500" fill="#6E6E6E">供 AI 消费的设计系统</text>
+      <text x="316" y="382" font-size="26" font-weight="400" fill="#9B9B9B">单一事实源 · 七层规范 · 亮/暗双色 · 对标 Claude desktop 的克制</text>
+    </g>
+
+    <!-- 调色板：唯一蓝 + 三层灰 + 主墨 -->
+    <g transform="translate(96,456)">
+      <rect width="38" height="38" rx="8" fill="#336EE8"/>
+      <rect x="50" width="38" height="38" rx="8" fill="#FFFFFF" stroke="#E7E7E7" stroke-width="1.5"/>
+      <rect x="100" width="38" height="38" rx="8" fill="#F3F3F3"/>
+      <rect x="150" width="38" height="38" rx="8" fill="#E7E7E7"/>
+      <rect x="200" width="38" height="38" rx="8" fill="#262626"/>
+    </g>
+
+    <!-- 底部品牌句 + 版本 -->
+    <g font-family="'Inter','PingFang SC','Microsoft YaHei',system-ui,sans-serif">
+      <text x="98" y="560" font-size="26" font-weight="400" fill="#6E6E6E">把灵光一现，做成能用的 AI 工具。</text>
+      <text x="1182" y="560" font-size="26" font-weight="600" fill="#336EE8" text-anchor="end">v5.1</text>
+    </g>
+  </g>
+</svg>
