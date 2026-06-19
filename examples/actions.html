@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 动作全变体</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:720px;margin:0 auto;}
+  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
+  .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:20px;margin-bottom:16px;}
+  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 14px;text-transform:uppercase;letter-spacing:.04em;}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;}
+  .tag{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);width:100%;margin-bottom:-4px;}
+  .cols{display:flex;gap:24px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>动作类 · 全变体</h1>
+  <p class="note">批 2:按钮所有变体/状态 + 菜单所有项类型。亮/暗验证。</p>
+
+  <div class="sec">
+    <h2>按钮 · 层级 × 尺寸</h2>
+    <span class="tag">四个层级(一组一 primary)</span>
+    <div class="row">
+      <button class="btn btn--primary">主操作</button>
+      <button class="btn btn--secondary">次操作</button>
+      <button class="btn btn--ghost">幽灵</button>
+      <button class="btn btn--danger">危险</button>
+    </div>
+    <span class="tag">三个尺寸 Small / Medium / Large</span>
+    <div class="row">
+      <button class="btn btn--secondary btn--sm">Small</button>
+      <button class="btn btn--secondary">Medium</button>
+      <button class="btn btn--secondary btn--lg">Large</button>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>按钮 · 状态 / 变体</h2>
+    <div class="row">
+      <span class="tag">loading</span>
+      <button class="btn btn--primary is-loading">保存</button>
+      <button class="btn btn--secondary is-loading">加载</button>
+    </div>
+    <div class="row">
+      <span class="tag">disabled / 图标+文字 / 纯图标 / toggle / 链接</span>
+      <button class="btn btn--primary" disabled>禁用</button>
+      <button class="btn btn--secondary"><span style="font-size:14px">↓</span> 导出</button>
+      <button class="icon-btn">⚙</button>
+      <button class="btn btn--secondary btn--toggle" aria-pressed="true">已选中</button>
+      <button class="btn btn--link">链接按钮</button>
+    </div>
+    <span class="tag">全宽 block</span>
+    <div class="row"><button class="btn btn--primary btn--block">全宽主操作</button></div>
+    <span class="tag">按钮组</span>
+    <div class="row"><div class="btn-group"><button class="btn btn--secondary">左</button><button class="btn btn--secondary">中</button><button class="btn btn--secondary">右</button></div></div>
+  </div>
+
+  <div class="sec">
+    <h2>菜单 · 所有项类型</h2>
+    <div class="cols">
+      <div class="menu" style="position:static;box-shadow:0 0 0 1px var(--line)">
+        <div class="mg">文件</div>
+        <div class="mi"><span class="ico">+</span>新建<span class="sc">⌘N</span></div>
+        <div class="mi"><span class="ico">↓</span>导出<span class="sc">⌘E</span></div>
+        <div class="mi checked">显示侧栏<span class="sc">⌘\</span></div>
+        <hr class="md">
+        <div class="mg">排序</div>
+        <div class="mi has-sub"><span class="ico">⇅</span>排序方式
+          <div class="menu submenu" style="box-shadow:var(--sh-md)"><div class="mi checked">名称</div><div class="mi">日期</div><div class="mi">大小</div></div>
+        </div>
+        <hr class="md">
+        <div class="mi danger"><span class="ico">🗑</span>删除<span class="sc">⌫</span></div>
+      </div>
+      <div style="font-size:12px;color:var(--ink-3);max-width:200px;line-height:1.7">
+        含:分组标题 · 图标项 · 快捷键提示(mono) · 勾选项(✓) · 分隔线 · 子菜单(▸,hover 展开) · 危险项(红,hover 红底)。
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

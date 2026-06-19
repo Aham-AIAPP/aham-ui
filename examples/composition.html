@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aham UI · 组合规则示范</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:32px;}
+  .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:24px;}
+  h1{font:600 24px/1.25 var(--font-sans-display);letter-spacing:-.01em;margin:0;}
+  .note{color:var(--ink-2);font-size:13px;margin:0;}
+  /* 卡片：圆角 lg12 + padding20（大,内元素独立圆角）—— 3.1 适用条件 */
+  .demo-card{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:20px;}
+  /* 字段节奏：label→6→控件→4→hint;字段间 20 —— 3.4 / 3.5 */
+  .fld{margin-bottom:20px;}
+  .fld:last-of-type{margin-bottom:0;}
+  .fld .lbl{display:block;margin-bottom:6px;}
+  .fld .hint{display:block;margin-top:4px;}
+  .fld .input,.fld .select{width:100%;box-sizing:border-box;}
+  .sep{height:1px;background:var(--line);margin:16px 0;}
+  /* 底部操作：右对齐,间距 8 —— 3.3 */
+  .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;}
+  /* 工具栏行：同高对齐 + 主次 —— 3.2 / 3.3 */
+  .tb{display:flex;align-items:center;gap:10px;background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:14px 16px;}
+  .tb .grow{flex:1;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>组合规则示范</h1>
+  <p class="note">不用任何新组件,只靠第 3 章 5 条规则推导。亮色 / 暗色都"像一套"。</p>
+
+  <!-- 推导示例：设置卡片内含表单 + 底部操作 -->
+  <div class="demo-card">
+    <div class="text-heading">导出设置</div>
+    <div class="sep"></div>
+    <div class="fld">
+      <span class="lbl text-subhead">默认格式</span>
+      <select class="select"><option>DOCX</option><option>PDF</option><option>Markdown</option></select>
+      <span class="hint text-caption" style="color:var(--ink-3)">新建文档时的默认导出类型</span>
+    </div>
+    <div class="fld">
+      <span class="lbl text-subhead">文件名模板</span>
+      <input class="input" value="{标题}-{日期}">
+      <span class="hint text-caption" style="color:var(--ink-3)">支持 {标题} {日期} {时长} 变量</span>
+    </div>
+    <div class="fld">
+      <span class="lbl text-subhead">导出后</span>
+      <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink)"><input type="checkbox" class="check" checked>自动打开文件</label>
+    </div>
+    <div class="actions">
+      <button class="btn btn--ghost">取消</button>
+      <button class="btn btn--primary">保存</button>
+    </div>
+  </div>
+
+  <!-- 工具栏行：同高对齐 + 一组一 primary -->
+  <div class="tb">
+    <button class="btn btn--primary btn--sm">新建</button>
+    <input class="input" style="height:28px;width:180px" placeholder="搜索…">
+    <span class="grow"></span>
+    <button class="btn btn--ghost btn--sm">导出</button>
+    <span class="status status--ok" style="font-size:13px">已同步</span>
+  </div>
+</div>
+<script src="../aham-ui.js"></script>
+</body>
+</html>

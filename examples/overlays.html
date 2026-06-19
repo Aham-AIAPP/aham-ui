@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 浮层补全</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:780px;margin:0 auto;}
+  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
+  .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:24px;margin-bottom:16px;}
+  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 18px;text-transform:uppercase;letter-spacing:.04em;}
+  .stage{display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>浮层 · 补全</h1>
+  <p class="note">批 5:对话框式 alert + popover 箭头 + 窗口 chrome + 滚动吸顶。</p>
+
+  <div class="sec">
+    <h2>对话框式 Alert · 确认弹窗</h2>
+    <div class="dialog" style="box-shadow:0 0 0 1px var(--line)">
+      <div class="dlg-title">删除「客户访谈」?</div>
+      <div class="dlg-body">此操作不可撤销,转写记录与音频将一并删除。</div>
+      <div class="dlg-foot">
+        <button class="btn btn--ghost btn--sm">取消</button>
+        <button class="btn btn--danger btn--sm">删除</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>Popover · 箭头指向</h2>
+    <div class="stage" style="padding:20px 0">
+      <div class="popover arrow-top" style="box-shadow:0 0 0 1px var(--line);max-width:200px">
+        <div style="font-size:13px;color:var(--ink);font-weight:500;margin-bottom:4px">向上指</div>
+        <div style="font-size:12px;color:var(--ink-2);line-height:1.5">锚点在上方,箭头朝上。</div>
+      </div>
+      <div class="popover arrow-left" style="box-shadow:0 0 0 1px var(--line);max-width:200px">
+        <div style="font-size:13px;color:var(--ink);font-weight:500;margin-bottom:4px">向左指</div>
+        <div style="font-size:12px;color:var(--ink-2);line-height:1.5">锚点在左侧,箭头朝左。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>窗口 Chrome · 桌面窗口</h2>
+    <div class="window" style="box-shadow:0 0 0 1px var(--line);max-width:420px">
+      <div class="window__bar">
+        <div class="window__dots"><i></i><i></i><i></i></div>
+        <span class="window__title">导出设置</span>
+      </div>
+      <div class="window__body">
+        <div class="field"><span class="label">格式</span><select class="select"><option>DOCX</option><option>PDF</option></select></div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--ink-3);margin-top:10px">灯位用中性灰(守克制,不上红黄绿)。</div>
+  </div>
+
+  <div class="sec">
+    <h2>滚动吸顶 · sticky head + 滚动阴影</h2>
+    <div class="scroll-sticky scroll-shadow" style="border:1px solid var(--line);border-radius:8px;padding:0 16px;max-width:360px">
+      <div class="sticky-head">说话人列表(吸顶)</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink);border-bottom:1px solid var(--border-faint)">张明 · 12 段</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink);border-bottom:1px solid var(--border-faint)">李华 · 8 段</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink);border-bottom:1px solid var(--border-faint)">王芳 · 6 段</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink);border-bottom:1px solid var(--border-faint)">赵强 · 5 段</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink);border-bottom:1px solid var(--border-faint)">陈静 · 4 段</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink);border-bottom:1px solid var(--border-faint)">刘洋 · 3 段</div>
+      <div style="padding:8px 0;font-size:14px;color:var(--ink)">周琳 · 2 段</div>
+    </div>
+    <div style="font-size:12px;color:var(--ink-3);margin-top:10px">表头吸顶;上下边缘有渐隐阴影提示更多内容。</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 数据展示补全</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:780px;margin:0 auto;}
+  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
+  .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:20px;margin-bottom:16px;}
+  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 14px;text-transform:uppercase;letter-spacing:.04em;}
+  .scroll-x{overflow-x:auto;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>数据展示 · 补全</h1>
+  <p class="note">批 4:可编辑行 + 行内操作 + 分组表头 + 固定列 + Lockup + 卡片集合 + 行内 disclosure。</p>
+
+  <div class="sec">
+    <h2>表格 · 可编辑行 / 行内操作 / 分组表头</h2>
+    <table class="doc-table">
+      <thead><tr><th>名称</th><th>类型</th><th class="num">时长</th><th></th></tr></thead>
+      <tbody>
+        <tr class="group-row"><td colspan="4">本周</td></tr>
+        <tr><td>周会纪要</td><td class="cat">会议</td><td class="num">42:18</td>
+          <td class="row-actions"><button class="act">✎</button><button class="act danger">🗑</button></td></tr>
+        <tr><td class="editing"><input class="cell-input" value="客户访谈"></td><td class="cat">调研</td><td class="num">28:05</td>
+          <td class="row-actions"><button class="act">✎</button><button class="act danger">🗑</button></td></tr>
+        <tr class="group-row"><td colspan="4">上周</td></tr>
+        <tr><td>产品评审</td><td class="cat">会议</td><td class="num">35:40</td>
+          <td class="row-actions"><button class="act">✎</button><button class="act danger">🗑</button></td></tr>
+      </tbody>
+    </table>
+    <div style="font-size:12px;color:var(--ink-3);margin-top:10px">第 2 行在编辑态(蓝边输入);行尾操作 hover 显示;"本周/上周"是分组表头行。</div>
+  </div>
+
+  <div class="sec">
+    <h2>表格 · 固定首列(横向滚动)</h2>
+    <div class="scroll-x">
+      <table class="doc-table sticky-col" style="min-width:680px">
+        <thead><tr><th>项目</th><th class="num">一月</th><th class="num">二月</th><th class="num">三月</th><th class="num">四月</th><th class="num">五月</th></tr></thead>
+        <tbody>
+          <tr><td>转写量</td><td class="num">1,204</td><td class="num">1,388</td><td class="num">1,502</td><td class="num">1,610</td><td class="num">1,744</td></tr>
+          <tr><td>调研数</td><td class="num">86</td><td class="num">92</td><td class="num">104</td><td class="num">118</td><td class="num">131</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="font-size:12px;color:var(--ink-3);margin-top:10px">首列 sticky,横向滚动时保持可见。</div>
+  </div>
+
+  <div class="sec">
+    <h2>Lockup · 图文组合块</h2>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="lockup"><div class="lk-icon">◷</div><div class="lk-body"><span class="lk-title">周会纪要</span><span class="lk-sub">会议 · 4 人 · 2026-06-19</span></div></div>
+      <div class="lockup"><div class="lk-icon">◔</div><div class="lk-body"><span class="lk-title">客户访谈</span><span class="lk-sub">调研 · 28:05</span></div></div>
+    </div>
+  </div>
+
+  <div class="sec" style="background:var(--panel);box-shadow:none">
+    <h2>卡片集合 · grid(靠层差区分,卡片无边框)</h2>
+    <div class="card-grid">
+      <div class="card" style="padding:16px"><div class="metric"><span class="k">本周转写</span><span class="v">128</span><span class="d">+12%</span></div></div>
+      <div class="card" style="padding:16px"><div class="metric"><span class="k">调研完成</span><span class="v">17</span><span class="d">+3</span></div></div>
+      <div class="card card--sel" style="padding:16px"><div class="metric"><span class="k">待处理</span><span class="v">5</span><span class="d">选中态</span></div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>行内 Disclosure · 轻量展开</h2>
+    <div class="disclosure open"><div class="dt"><span class="caret">▸</span>高级选项</div><div class="dc">导出格式、文件名模板、导出后行为等设置项在此展开。</div></div>
+    <div class="disclosure"><div class="dt"><span class="caret">▸</span>调试信息(已折叠)</div><div class="dc">折叠内容。</div></div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 状态/可视化补全</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:780px;margin:0 auto;}
+  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
+  .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:20px;margin-bottom:16px;}
+  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 16px;text-transform:uppercase;letter-spacing:.04em;}
+  .row{display:flex;gap:32px;flex-wrap:wrap;align-items:center;}
+  .gx{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .cap{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);margin-bottom:8px;display:block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>状态 / 可视化 · 补全</h1>
+  <p class="note">批 6:不确定/环形进度 + 仪表 + 图片容器 + 分享面板 + 编辑菜单 + 图表(面积/堆叠/散点/sparkline)。</p>
+
+  <div class="sec">
+    <h2>进度 · 不确定 / 环形</h2>
+    <span class="cap">indeterminate(来回滑动)</span>
+    <div class="progress is-indeterminate" style="max-width:320px;margin-bottom:18px"><span class="progress__bar"></span></div>
+    <span class="cap">ring(环形,墨色填充)</span>
+    <div class="row">
+      <div class="ring" style="--p:65%"><span class="val">65%</span></div>
+      <div class="ring" style="--p:30%"><span class="val">30%</span></div>
+      <div class="ring ring--sm" style="--p:90%"><span class="val">90</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>仪表 Gauge(半环)</h2>
+    <div class="row">
+      <div class="gauge">
+        <svg width="120" height="66" viewBox="0 0 120 66">
+          <path d="M10 60 A50 50 0 0 1 110 60" fill="none" style="stroke:var(--line)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M10 60 A50 50 0 0 1 110 60" fill="none" style="stroke:var(--ink)" stroke-width="8" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="55"/>
+        </svg>
+        <span class="g-val">65%</span><span class="g-label">存储已用</span>
+      </div>
+      <div class="gauge">
+        <svg width="120" height="66" viewBox="0 0 120 66">
+          <path d="M10 60 A50 50 0 0 1 110 60" fill="none" style="stroke:var(--line)" stroke-width="8" stroke-linecap="round"/>
+          <path d="M10 60 A50 50 0 0 1 110 60" fill="none" style="stroke:var(--accent)" stroke-width="8" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="118"/>
+        </svg>
+        <span class="g-val">25%</span><span class="g-label">本月配额</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>图表补全 · 面积 / 堆叠 / 散点 / Sparkline</h2>
+    <div class="gx">
+      <div>
+        <span class="cap">面积图(单蓝)</span>
+        <svg width="100%" height="110" viewBox="0 0 280 110" preserveAspectRatio="none">
+          <line x1="0" y1="100" x2="280" y2="100" style="stroke:var(--line)"/>
+          <polygon points="0,80 56,60 112,68 168,40 224,48 280,28 280,100 0,100" style="fill:var(--accent-tint)"/>
+          <polyline points="0,80 56,60 112,68 168,40 224,48 280,28" fill="none" style="stroke:var(--accent)" stroke-width="2"/>
+        </svg>
+      </div>
+      <div>
+        <span class="cap">堆叠柱(灰阶层)</span>
+        <svg width="100%" height="110" viewBox="0 0 280 110">
+          <line x1="0" y1="100" x2="280" y2="100" style="stroke:var(--line)"/>
+          <!-- 4 组堆叠 -->
+          <g>
+            <rect x="20" y="60" width="40" height="40" style="fill:var(--ink)"/><rect x="20" y="40" width="40" height="20" style="fill:var(--ink-3)"/>
+            <rect x="85" y="50" width="40" height="50" style="fill:var(--ink)"/><rect x="85" y="32" width="40" height="18" style="fill:var(--ink-3)"/>
+            <rect x="150" y="44" width="40" height="56" style="fill:var(--ink)"/><rect x="150" y="24" width="40" height="20" style="fill:var(--ink-3)"/>
+            <rect x="215" y="36" width="40" height="64" style="fill:var(--ink)"/><rect x="215" y="18" width="40" height="18" style="fill:var(--ink-3)"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <span class="cap">散点图(一个蓝高亮)</span>
+        <svg width="100%" height="110" viewBox="0 0 280 110">
+          <line x1="0" y1="100" x2="280" y2="100" style="stroke:var(--line)"/>
+          <line x1="0" y1="0" x2="0" y2="100" style="stroke:var(--line)"/>
+          <circle cx="40" cy="70" r="4" style="fill:var(--ink-3)"/><circle cx="80" cy="55" r="4" style="fill:var(--ink-3)"/>
+          <circle cx="120" cy="62" r="4" style="fill:var(--ink-3)"/><circle cx="160" cy="40" r="4" style="fill:var(--ink-3)"/>
+          <circle cx="200" cy="48" r="4" style="fill:var(--ink-3)"/><circle cx="235" cy="30" r="5" style="fill:var(--accent)"/>
+        </svg>
+      </div>
+      <div>
+        <span class="cap">sparkline(迷你,无轴)</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <svg width="120" height="32" viewBox="0 0 120 32"><polyline points="0,24 20,18 40,22 60,10 80,14 100,6 120,12" fill="none" style="stroke:var(--ink-2)" stroke-width="1.5"/></svg>
+          <span style="font-family:var(--font-mono);font-size:14px;color:var(--ink)">1,744 <span style="color:var(--success);font-size:12px">↑8%</span></span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--ink-3);margin-top:14px">全部:灰阶序列 + 至多一个蓝高亮 · 细轴线 · mono 数字 · 无 3D/渐变/多色谱。</div>
+  </div>
+
+  <div class="sec">
+    <h2>图片容器 · 占位 / 比例 / 加载</h2>
+    <div class="row">
+      <div style="width:140px"><span class="cap">16:9 占位</span><div class="image-box r-16-9"><span class="ph">▦</span></div></div>
+      <div style="width:90px"><span class="cap">1:1 占位</span><div class="image-box r-1-1"><span class="ph">▦</span></div></div>
+      <div style="width:140px"><span class="cap">加载中</span><div class="image-box r-16-9 loading"></div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>分享面板 / 编辑菜单</h2>
+    <span class="cap">分享/导出面板</span>
+    <div class="share-panel" style="max-width:420px;margin-bottom:20px">
+      <button class="opt"><span class="oi">W</span>Word</button>
+      <button class="opt"><span class="oi">P</span>PDF</button>
+      <button class="opt"><span class="oi">↗</span>链接</button>
+      <button class="opt"><span class="oi">✉</span>邮件</button>
+    </div>
+    <span class="cap">编辑菜单(文本选择浮起)</span>
+    <div class="edit-menu"><button>复制</button><button>剪切</button><button>粘贴</button><button>翻译</button></div>
+  </div>
+</div>
+</body>
+</html>

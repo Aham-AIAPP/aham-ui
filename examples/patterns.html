@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aham UI · 场景成品页（可抄）</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  h1{font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0 0 4px;}
+  .sub{color:var(--ink-2);font-size:14px;margin:0 0 24px;}
+  .plabel{font-size:13px;font-weight:600;color:var(--ink-2);margin:28px 0 10px;}
+  /* “屏幕”外框：展示成品页 */
+  .screen{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);overflow:hidden;}
+  .screen-sm{max-width:420px;margin:0 auto;}
+  .twocol{display:grid;grid-template-columns:200px 1fr;min-height:380px;}
+  .sidebar{width:auto;}
+  .pad{padding:20px 24px;}
+  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--line);}
+  .toolbar .grow{flex:1;}
+  .mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media(max-width:760px){.twocol{grid-template-columns:1fr;}.mgrid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>场景成品页</h1>
+  <p class="sub">用 Aham UI 组件拼成的完整页型。AI 可直接照此结构产出界面。交互由 aham-ui.js 驱动(排序/全选/页签/折叠/树/浮层)。</p>
+
+  <!-- 1. 列表页 -->
+  <div class="plabel">1 · 列表页（三栏 shell + 工具栏 + 数据表 + 分页）</div>
+  <div class="screen">
+    <div class="titlebar"><div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border-radius:4px;background:var(--accent)"></span><b style="font-size:15px">资料库</b></div><button class="btn btn--primary btn--sm">新建</button></div>
+    <div class="twocol">
+      <nav class="sidebar">
+        <div class="nav-grouptitle">工作区</div>
+        <div class="nav-item nav-item--on">全部记录</div>
+        <div class="nav-item">会议</div>
+        <div class="nav-item">调研</div>
+        <div class="nav-grouptitle">归档</div>
+        <div class="nav-item">已完成</div>
+      </nav>
+      <div class="col">
+        <div class="toolbar">
+          <input class="input" style="width:200px" placeholder="搜索…">
+          <select class="select" style="width:120px"><option>全部类型</option></select>
+          <span class="tag">本周<button>×</button></span>
+          <span class="grow"></span>
+          <button class="btn btn--ghost btn--sm">导出</button>
+        </div>
+        <div style="overflow:auto">
+          <table class="doc-table" data-sortable>
+            <thead><tr>
+              <th class="sel-cell"><input type="checkbox" class="check" data-select-all></th>
+              <th class="sortable">名称<span class="caret"></span></th>
+              <th class="sortable">类型<span class="caret"></span></th>
+              <th class="num sortable">时长<span class="caret"></span></th>
+              <th>状态</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="sel-cell"><input type="checkbox" class="check" data-row-check></td><td>周会纪要</td><td class="cat">会议</td><td class="num">42:18</td><td><span class="status status--ok">已完成</span></td></tr>
+              <tr><td class="sel-cell"><input type="checkbox" class="check" data-row-check></td><td>客户访谈</td><td class="cat">调研</td><td class="num">28:05</td><td><span class="status status--active">转写中</span></td></tr>
+              <tr><td class="sel-cell"><input type="checkbox" class="check" data-row-check></td><td>产品评审</td><td class="cat">会议</td><td class="num">35:40</td><td><span class="status status--warn">待处理</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding:12px 20px;display:flex;justify-content:flex-end">
+          <div class="pager"><button>‹</button><button aria-current="page">1</button><button>2</button><button>3</button><button>›</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 详情页 -->
+  <div class="plabel">2 · 详情页（面包屑 + 页签 + 键值详情）</div>
+  <div class="screen">
+    <div class="pad" data-tabscope>
+      <div class="crumb"><a>资料库</a><span class="sep">/</span><a>会议</a><span class="sep">/</span><span class="here">周会纪要</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 0 4px">
+        <div class="text-heading">周会纪要</div>
+        <div class="row"><button class="btn btn--ghost btn--sm">分享</button><button class="btn btn--secondary btn--sm">导出</button></div>
+      </div>
+      <div class="tabs" data-tabs><div class="tab tab--on" data-target="info">概要</div><div class="tab" data-target="text">转写</div><div class="tab" data-target="spk">说话人</div></div>
+      <div data-panel="info">
+        <dl class="desc" style="margin-top:16px">
+          <dt>日期</dt><dd class="mono">2026-06-19</dd>
+          <dt>时长</dt><dd class="mono">00:42:18</dd>
+          <dt>参与</dt><dd>4 人</dd>
+          <dt>状态</dt><dd><span class="status status--ok">已完成</span></dd>
+        </dl>
+      </div>
+      <div data-panel="text" hidden><p style="color:var(--ink-2);font-size:14px;margin-top:16px">（转写正文…）</p></div>
+      <div data-panel="spk" hidden><p style="color:var(--ink-2);font-size:14px;margin-top:16px">（说话人分离…）</p></div>
+    </div>
+  </div>
+
+  <!-- 3. 设置页 -->
+  <div class="plabel">3 · 设置页（类目导航 + 字段行）</div>
+  <div class="screen">
+    <div class="twocol" style="min-height:300px">
+      <nav class="sidebar">
+        <div class="nav-item nav-item--on">通用</div>
+        <div class="nav-item">转写</div>
+        <div class="nav-item">隐私</div>
+        <div class="nav-item">关于</div>
+      </nav>
+      <div class="pad">
+        <div class="text-subheading" style="margin-bottom:4px">通用</div>
+        <div class="divider"></div>
+        <label class="ctl-row" style="justify-content:space-between;display:flex;width:100%;padding:10px 0;border-bottom:1px solid var(--line)"><span>开机自动启动<div style="font-size:12px;color:var(--ink-3)">登录后在后台运行</div></span><input type="checkbox" class="switch" checked></label>
+        <label class="ctl-row" style="justify-content:space-between;display:flex;width:100%;padding:10px 0;border-bottom:1px solid var(--line)"><span>本地优先<div style="font-size:12px;color:var(--ink-3)">优先在本机处理</div></span><input type="checkbox" class="switch" checked></label>
+        <div class="field" style="width:200px;margin-top:14px"><span class="label">默认导出格式</span><select class="select"><option>DOCX</option><option>PDF</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 仪表盘 -->
+  <div class="plabel">4 · 仪表盘（KPI 网格 + 图表 + 列表）</div>
+  <div class="screen pad">
+    <div class="mgrid">
+      <div class="metric"><span class="k">本周转写</span><span class="v">18</span><span class="d">+4</span></div>
+      <div class="metric"><span class="k">总时长</span><span class="v">12.4<span class="u">h</span></span><span class="d">本周</span></div>
+      <div class="metric"><span class="k">纪要</span><span class="v">15</span><span class="d">已生成</span></div>
+      <div class="metric"><span class="k">待处理</span><span class="v">3</span><span class="d">队列</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:20px">
+      <div>
+        <div class="text-caption" style="margin-bottom:8px">每日转写量</div>
+        <svg viewBox="0 0 340 140" width="100%">
+          <line x1="20" y1="110" x2="330" y2="110" stroke="#E7E7E7"/>
+          <rect x="36" y="70" width="24" height="40" fill="#C8C8C8"/><rect x="76" y="55" width="24" height="55" fill="#C8C8C8"/>
+          <rect x="116" y="78" width="24" height="32" fill="#C8C8C8"/><rect x="156" y="48" width="24" height="62" fill="#C8C8C8"/>
+          <rect x="196" y="60" width="24" height="50" fill="#C8C8C8"/><rect x="236" y="40" width="24" height="70" fill="#C8C8C8"/>
+          <rect x="276" y="30" width="24" height="80" fill="#336EE8"/>
+        </svg>
+      </div>
+      <div>
+        <div class="text-caption" style="margin-bottom:8px">最近</div>
+        <div class="timeline">
+          <div class="tl-item tl-item--on"><div class="tl-time">10:24</div><div class="tl-title">周会纪要 已完成</div></div>
+          <div class="tl-item"><div class="tl-time">09:10</div><div class="tl-title">客户访谈 开始转写</div></div>
+          <div class="tl-item"><div class="tl-time">昨天</div><div class="tl-title">产品评审 已归档</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 登录页 -->
+  <div class="plabel">5 · 登录页（居中卡片 + 单一主操作）</div>
+  <div class="screen screen-sm pad" style="text-align:center;padding:40px 32px">
+    <span style="display:inline-block;width:36px;height:36px;border-radius:9px;background:var(--accent);margin-bottom:16px"></span>
+    <div class="text-heading" style="margin-bottom:4px">登录 Aham</div>
+    <div style="color:var(--ink-3);font-size:13px;margin-bottom:24px">把灵光一现，做成能用的 AI 工具</div>
+    <div class="field" style="text-align:left;margin-bottom:12px"><span class="label">邮箱</span><input class="input" placeholder="you@example.com"></div>
+    <div class="field" style="text-align:left;margin-bottom:20px"><span class="label">密码</span><input class="input" type="password"></div>
+    <button class="btn btn--primary btn--lg" style="width:100%">登录</button>
+  </div>
+
+  <!-- 6. 三态 -->
+  <div class="plabel">6 · 三态（空 / 加载 / 错误）</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+    <div class="screen"><div class="empty"><div style="font-size:28px;color:var(--ink-3)">·</div><div class="et">还没有记录</div><button class="btn btn--secondary btn--sm">新建第一条</button></div></div>
+    <div class="screen pad"><div style="display:flex;flex-direction:column;gap:10px;padding:24px 8px"><div class="skeleton" style="width:60%"></div><div class="skeleton"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:40%"></div></div></div>
+    <div class="screen"><div class="result"><div style="font-size:24px;color:var(--danger)">!</div><div class="rt" style="font-size:16px">加载失败</div><div class="rd">网络异常，请重试</div><button class="btn btn--secondary btn--sm">重试</button></div></div>
+  </div>
+
+  <!-- 7. 对话 / AI -->
+  <div class="plabel">7 · 对话 / AI（消息流 + 输入，发送是唯一蓝）</div>
+  <div class="screen" style="max-width:560px;margin:0 auto">
+    <div class="pad" style="display:flex;flex-direction:column;gap:14px;min-height:200px">
+      <div style="align-self:flex-start;max-width:75%;background:var(--panel);border-radius:12px;padding:10px 14px;font-size:14px">帮我把这段会议转成纪要</div>
+      <div style="align-self:flex-end;max-width:75%;background:var(--white);box-shadow:0 0 0 1px var(--line);border-radius:12px;padding:10px 14px;font-size:14px">好的，已生成纪要：本周完成转写引擎离线化…</div>
+    </div>
+    <div style="display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--line)">
+      <input class="input" style="flex:1" placeholder="输入消息…">
+      <button class="btn btn--primary">发送</button>
+    </div>
+  </div>
+
+  <p class="sub" style="margin-top:32px">— 全部用 aham-ui.css 的 class 拼成，无额外样式覆盖（除“屏幕外框”演示用）。这就是 AI 拿到规范后应当产出的界面长相。</p>
+</div>
+<script src="../aham-ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 导航补全</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
+  .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:0;margin-bottom:16px;overflow:visible;}
+  .sec.pad{padding:20px;}
+  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 14px;text-transform:uppercase;letter-spacing:.04em;}
+  .tag{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);display:block;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>导航类 · 补全</h1>
+  <p class="note">批 3:三段式导航栏 + 侧栏分组折叠/徽标/图标 + 搜索清除/建议 + 令牌字段。</p>
+
+  <div class="sec">
+    <div class="navbar">
+      <button class="back">‹ 返回</button>
+      <span class="nav-title">周会纪要</span>
+      <div class="nav-actions">
+        <button class="btn btn--ghost btn--sm">分享</button>
+        <button class="btn btn--secondary btn--sm">导出</button>
+        <button class="icon-btn">⋯</button>
+      </div>
+    </div>
+    <div style="padding:12px 16px;font-size:12px;color:var(--ink-3)">三段式导航栏:返回(蓝) · 标题 · 操作区(一组一 primary)</div>
+  </div>
+
+  <div class="sec" style="display:flex;min-height:300px">
+    <div class="sidebar" style="width:240px;border-right:1px solid var(--line);border-radius:12px 0 0 12px">
+      <div class="nav-group">
+        <div class="nav-grouptitle"><span class="caret">▾</span>工作区</div>
+        <div class="nav-item nav-item--on"><span class="ico">▦</span>全部记录<span class="badge">128</span></div>
+        <div class="nav-item"><span class="ico">◷</span>会议<span class="badge">42</span></div>
+        <div class="nav-item"><span class="ico">◔</span>调研<span class="badge">17</span></div>
+      </div>
+      <div class="nav-group collapsed">
+        <div class="nav-grouptitle"><span class="caret">▾</span>归档</div>
+        <div class="nav-item"><span class="ico">▨</span>已完成</div>
+        <div class="nav-item"><span class="ico">▧</span>回收站</div>
+      </div>
+    </div>
+    <div style="flex:1;padding:20px;font-size:13px;color:var(--ink-2)">
+      <span class="tag">侧栏:分组可折叠(▾/▸) · 图标 · 徽标(mono 数字) · 选中扁平灰</span>
+      "归档"组已折叠——caret 转 90°,组内项隐藏。"工作区"组展开,"全部记录"选中(扁平灰,非蓝),带徽标。
+    </div>
+  </div>
+
+  <div class="sec pad">
+    <h2>搜索 · 清除 + 建议下拉</h2>
+    <div class="search" style="max-width:380px">
+      <div class="input-wrap has-prefix has-suffix">
+        <span class="affix pre">⌕</span>
+        <input class="input" value="周会">
+        <button class="clear">×</button>
+      </div>
+      <div class="search-suggest">
+        <div class="si on"><span class="ico">◷</span>周会纪要<span class="meta">会议</span></div>
+        <div class="si"><span class="ico">◷</span>周会复盘<span class="meta">会议</span></div>
+        <div class="si"><span class="ico">◔</span>周度调研<span class="meta">调研</span></div>
+      </div>
+    </div>
+    <div style="height:90px"></div>
+  </div>
+
+  <div class="sec pad">
+    <h2>令牌字段 · 收件人式标签输入</h2>
+    <div class="field" style="max-width:460px">
+      <span class="label">分享给</span>
+      <div class="token-field">
+        <span class="token">张明 <span class="x">×</span></span>
+        <span class="token">李华 <span class="x">×</span></span>
+        <span class="token">产品组 <span class="x">×</span></span>
+        <input placeholder="输入姓名或邮箱…">
+      </div>
+      <span class="hint">输入后回车成为标签;× 移除</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

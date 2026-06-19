@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 录入全状态</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);padding:28px;}
+  .wrap{max-width:760px;margin:0 auto;}
+  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
+  .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:20px;margin-bottom:16px;}
+  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 14px;text-transform:uppercase;letter-spacing:.04em;}
+  .row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin-bottom:12px;}
+  .cell{display:flex;flex-direction:column;gap:5px;min-width:150px;}
+  .tag{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);}
+  .inline{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--ink);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>录入类 · 全状态</h1>
+  <p class="note">批 1:每个录入组件的所有状态与变体。亮/暗都验证。</p>
+
+  <div class="sec">
+    <h2>文本输入</h2>
+    <div class="row">
+      <div class="cell"><span class="tag">default</span><input class="input" placeholder="请输入"></div>
+      <div class="cell"><span class="tag">filled</span><input class="input" value="周会纪要"></div>
+      <div class="cell"><span class="tag">error</span><input class="input is-error" value="格式错误"><span class="err">请输入有效内容</span></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="tag">disabled</span><input class="input" value="不可编辑" disabled></div>
+      <div class="cell"><span class="tag">readonly</span><input class="input" value="只读内容" readonly></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="tag">prefix</span><div class="input-wrap has-prefix"><span class="affix pre">¥</span><input class="input" value="128.00"></div></div>
+      <div class="cell"><span class="tag">suffix</span><div class="input-wrap has-suffix"><input class="input" value="80"><span class="affix suf">%</span></div></div>
+      <div class="cell"><span class="tag">clearable</span><div class="input-wrap has-suffix"><input class="input" value="可清除"><button class="clear">×</button></div></div>
+    </div>
+    <div class="cell" style="max-width:300px"><span class="tag">with count</span><input class="input" value="带字数统计"><span class="input-count">5 / 20</span></div>
+  </div>
+
+  <div class="sec">
+    <h2>文本域 / 下拉</h2>
+    <div class="row">
+      <div class="cell" style="flex:1"><span class="tag">textarea</span><textarea class="textarea" style="width:100%;box-sizing:border-box">多行文本…</textarea><span class="input-count">3 / 200</span></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="tag">select default</span><select class="select"><option>DOCX</option><option>PDF</option></select></div>
+      <div class="cell"><span class="tag">select error</span><select class="select is-error"><option>请选择</option></select></div>
+      <div class="cell"><span class="tag">select disabled</span><select class="select" disabled><option>不可选</option></select></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <h2>勾选 / 单选 / 开关</h2>
+    <div class="row">
+      <label class="inline"><input type="checkbox" class="check"> 未选</label>
+      <label class="inline"><input type="checkbox" class="check" checked> 已选</label>
+      <label class="inline"><input type="checkbox" class="check" id="ind"> 不确定</label>
+      <label class="inline"><input type="checkbox" class="check" checked disabled> 禁用</label>
+    </div>
+    <div class="row">
+      <label class="inline"><input type="radio" name="r" class="radio"> 选项A</label>
+      <label class="inline"><input type="radio" name="r" class="radio" checked> 选项B</label>
+      <label class="inline"><input type="radio" name="r2" class="radio" checked disabled> 禁用</label>
+    </div>
+    <div class="row">
+      <label class="switch-row"><input type="checkbox" class="switch"> 关</label>
+      <label class="switch-row"><input type="checkbox" class="switch" checked> 开</label>
+      <label class="switch-row"><input type="checkbox" class="switch" checked disabled> 禁用</label>
+    </div>
+    <label class="switch-row between" style="max-width:280px;margin-top:4px"><span>本地优先<div style="font-size:12px;color:var(--ink-3)">优先在本机处理</div></span><input type="checkbox" class="switch" checked></label>
+  </div>
+
+  <div class="sec">
+    <h2>滑块 / 步进 / 验证码 / 日期</h2>
+    <div class="cell" style="max-width:320px;margin-bottom:14px"><span class="tag">slider with value</span>
+      <div class="slider-row"><input type="range" class="slider" value="60"><span class="val">60</span></div>
+      <div class="slider-ticks"><span>0</span><span>50</span><span>100</span></div>
+    </div>
+    <div class="row" style="align-items:center">
+      <div class="cell"><span class="tag">stepper</span><div class="stepper"><button>−</button><input value="3"><button>+</button></div></div>
+      <div class="cell"><span class="tag">disabled slider</span><input type="range" class="slider" value="30" disabled style="width:140px"></div>
+    </div>
+    <div class="row">
+      <div class="cell"><span class="tag">verification code</span><div class="otp"><input value="2"><input value="6"><input value="0"><input></div></div>
+    </div>
+    <div class="cell" style="max-width:200px"><span class="tag">date picker</span><div class="picker-trigger"><input class="input" value="2026-06-19" readonly><span class="ico">▾</span></div></div>
+  </div>
+</div>
+<script>document.getElementById('ind').indeterminate=true;</script>
+</body>
+</html>
