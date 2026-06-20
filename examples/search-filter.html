@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aham UI · 搜索与筛选</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  /* 仅少量示范框架样式;颜色/间距/圆角一律用 var(--token) */
+  body{background:var(--panel);}
+  .demo-note{margin-block-start:var(--s5);padding-block-start:var(--s4);border-block-start:1px solid var(--line);}
+  .demo-note h2{font:var(--w-semibold) var(--text-sm)/1.3 var(--font-sans-display);color:var(--ink-2);margin:0 0 var(--s2);}
+  .demo-note ul{margin:0;padding-inline-start:var(--s4);display:flex;flex-direction:column;gap:6px;}
+  .demo-note li{font-size:var(--text-sm);color:var(--ink-2);line-height:1.5;}
+  .demo-note li b{color:var(--ink);font-weight:var(--w-medium);}
+</style>
+</head>
+<body>
+  <div class="container container--content">
+    <div class="page-shell">
+
+      <!-- 页面头:标题左上对齐;全页唯一 primary 在 page-toolbar trailing,头部不放主操作 -->
+      <header class="page-header">
+        <div class="page-header__main">
+          <h1 class="page-header__title">资料库</h1>
+          <p class="page-header__sub">会议纪要、调研记录与产品评审，统一检索。</p>
+        </div>
+      </header>
+
+      <!-- 工具栏三段式（↔§8.5）：lead 视图切换 / center 筛选 / trail 搜索 + 主操作 -->
+      <div class="page-toolbar">
+        <div class="page-toolbar__lead">
+          <div class="tabs" data-tabs>
+            <div class="tab tab--on" data-target="all">全部</div>
+            <div class="tab" data-target="meeting">会议</div>
+            <div class="tab" data-target="research">调研</div>
+          </div>
+        </div>
+
+        <div class="page-toolbar__center">
+          <select class="select" aria-label="类型">
+            <option>类型：全部</option>
+            <option>会议</option>
+            <option>调研</option>
+            <option>评审</option>
+          </select>
+          <div class="filter-chips">
+            <span class="tag">本周<button aria-label="移除筛选 本周">×</button></span>
+            <span class="tag">负责人：我<button aria-label="移除筛选 负责人">×</button></span>
+            <span class="tag">已完成<button aria-label="移除筛选 已完成">×</button></span>
+          </div>
+          <button class="filter-clear" type="button">清除</button>
+        </div>
+
+        <div class="page-toolbar__trail">
+          <div class="toolbar-search">
+            <div class="input-wrap has-prefix">
+              <span class="affix pre" aria-hidden="true">
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="7" cy="7" r="4.5"></circle>
+                  <line x1="10.5" y1="10.5" x2="14" y2="14" stroke-linecap="round"></line>
+                </svg>
+              </span>
+              <input class="input" type="search" placeholder="搜索资料…" aria-label="搜索资料">
+            </div>
+          </div>
+          <button class="btn btn--primary" type="button">新建</button>
+        </div>
+      </div>
+
+      <!-- 结果计数并入头部行，绝不置底 -->
+      <p class="result-count">共 24 条</p>
+
+      <!-- 列表：doc-table 只横线、无竖线、无整行底色；状态=6px 点+文字 -->
+      <table class="doc-table">
+        <thead>
+          <tr>
+            <th>标题</th>
+            <th>类型</th>
+            <th class="num">时长</th>
+            <th>更新</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>周会纪要</td>
+            <td class="cat">会议</td>
+            <td class="num">42:18</td>
+            <td>今天</td>
+            <td><span class="status status--ok">已完成</span></td>
+          </tr>
+          <tr>
+            <td>客户访谈 · 北区</td>
+            <td class="cat">调研</td>
+            <td class="num">58:04</td>
+            <td>昨天</td>
+            <td><span class="status">转写中</span></td>
+          </tr>
+          <tr>
+            <td>产品评审</td>
+            <td class="cat">评审</td>
+            <td class="num">31:47</td>
+            <td>3 天前</td>
+            <td><span class="status status--ok">已完成</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- 布局要点说明 -->
+      <section class="demo-note">
+        <h2>布局要点（↔§8.5 工具栏三段式）</h2>
+        <ul>
+          <li><b>搜索框落 trailing</b>：搜索与主操作常驻工具栏右段，与左侧视图、中段筛选分离，视线落点稳定。</li>
+          <li><b>计数不置底</b>：结果计数并入工具栏下方头部行，紧贴列表上沿，不沉到页脚（应用轨底部不放关键信息）。</li>
+          <li><b>筛选 chips 位置</b>：已应用筛选用含 × 的 .tag 平铺在中段，紧邻类型下拉，「清除」收尾一键复位。</li>
+          <li><b>窄屏折叠</b>：工具栏 flex-wrap，窄屏时三段自然换行堆叠，搜索框有最小宽护栏不被压扁。</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+  <script src="../aham-ui.js"></script>
+</body>
+</html>

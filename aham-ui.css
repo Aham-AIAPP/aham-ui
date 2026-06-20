@@ -1,5 +1,5 @@
 /* =============================================================================
-   Aham UI — v5.1 (Apple HIG 框架重构 + 审计补全 + 清理旧/重复类;取值全用 Aham)
+   Aham UI — v6.0 (新增页面布局体系:多轨页面骨架/页型/页眉/搜索筛选/状态/预览/密度;取值全用 Aham)
    北极星：Claude desktop 气质——极简、克制、留白、内容优先。默认是"不加"。
    字体重设计：砍掉衬线混排，统一 Inter(西文)+雅黑/黑体(中文) 一套无衬线 + JetBrains Mono(数字)。
    纯 CSS 组件库——不依赖 React，任意 HTML 直接用 class 拼原型。
@@ -58,8 +58,19 @@
   --fill-hover:rgba(20,20,20,.04); --fill-active:rgba(20,20,20,.08);
   /* Opacity */
   --opacity-disabled:.4;
-  /* Breakpoints（参考值；CSS 变量不能驱动 @media，媒体查询里用同名数值） */
-  --bp-sm:380px; --bp-md:860px; --bp-lg:1280px;
+  /* Breakpoints（v6.0:网页 rem 为单一事实源;@media 里用 px 同值。旧 bp-sm/md/lg 保留兼容但已弃用） */
+  --bp-w-sm:40rem; --bp-w-md:48rem; --bp-w-lg:64rem; --bp-w-xl:80rem; --bp-w-2xl:96rem; --bp-h-short:30rem;
+  --bp-sm:380px; --bp-md:860px; --bp-lg:1280px; /* @deprecated v6.0 */
+  /* —— v6.0 页面布局体系 —— */
+  /* Content widths（网页轨居中收口;正文阅读宽与页面宽分离） */
+  --page-max:1280px; --content-max:1080px; --read-max:65ch; --form-max:560px; --auth-max:420px; --ultra-max:1536px;
+  /* Grid（gutter 列间 / margin 页边,随断点放大） */
+  --grid-cols:12; --gutter:24px; --margin-x:32px;
+  /* Density（默认 standard;[data-density] 覆盖 --row-h / --density-scale） */
+  --row-h:36px; --density-scale:1;
+  /* Overlay widths（承接 2.7 浮层） */
+  --dialog-w:380px; --modal-min:360px; --modal-w:480px; --modal-max:640px; --drawer-w:400px;
+  --preview-max-w:1080px; --preview-max-h:90vh;
 }
 
 /* ---- Base ---- */
@@ -725,4 +736,125 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 /* —— Reduce Motion 响应(prefers-reduced-motion:reduce:无过渡/直接切换,禁循环与视差) —— */
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important;}
+}
+
+/* =============================================================================
+   8 页面布局体系 Page Layout (v6.0) — 多轨页面骨架 / 页型 / 页眉 / 搜索筛选 / 状态 / 预览 / 密度
+   结构 ↔ 业内(Material/Carbon/Ant/Fluent/HIG…),取值全用 Aham。
+   轨道:.track-web(居中收口) · .track-app(左对齐铺满) — 用 logical properties 支持 RTL。
+   ============================================================================= */
+
+/* —— 容器与居中(网页轨):页面壳 max-width + 居中;正文阅读宽独立 —— */
+.container{width:100%;max-width:var(--page-max);margin-inline:auto;padding-inline:var(--margin-x);}
+.container--content{max-width:var(--content-max);}
+.container--read{max-width:var(--read-max);}   /* 正文阅读宽,与页面壳分离 */
+.container--form{max-width:var(--form-max);}
+.container--auth{max-width:var(--auth-max);}
+.container--ultra{max-width:var(--ultra-max);}
+.container--full{max-width:none;}
+/* 应用轨:不居中,内容靠 leading 铺满(多余宽度交给 pane) */
+.track-app .container,.container--fill{max-width:none;margin-inline:0;}
+
+/* —— 12 列栅格(网页轨):gutter 与 margin 分离 —— */
+.grid-12{display:grid;grid-template-columns:repeat(var(--grid-cols),1fr);gap:var(--gutter);}
+.col-1{grid-column:span 1;} .col-2{grid-column:span 2;} .col-3{grid-column:span 3;}
+.col-4{grid-column:span 4;} .col-6{grid-column:span 6;} .col-8{grid-column:span 8;}
+.col-9{grid-column:span 9;} .col-12{grid-column:span 12;}
+/* 机制提示:二维骨架/卡片墙用 grid;一维工具栏/按钮组用 flex(见 .toolbar/.btn-group) */
+
+/* —— 容器查询:组件按父容器宽响应(供 AI 拼装,放主区/侧栏都正确) —— */
+.cq{container-type:inline-size;}
+@container (max-width:480px){ .cq-stack{flex-direction:column;align-items:stretch;} }
+
+/* —— 页面三层结构:页眉 / 工具区 / 内容区 —— */
+.page-shell{display:flex;flex-direction:column;min-height:0;}
+.page-content{padding-block:var(--s5) var(--s6);}      /* 顶 24 / 底 32:底部不放关键控件(应用轨铁律) */
+
+/* 页眉区:面包屑 → 标题(+副标题) → 页面级主操作(右);标题左上对齐 */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s4);
+  padding-block:var(--s5);}
+.page-header__main{min-width:0;display:flex;flex-direction:column;gap:var(--s2);}
+.page-header__crumb{display:flex;align-items:center;gap:6px;font-size:var(--text-xs);color:var(--ink-3);} /* ↔ .crumb;与 back 互斥 */
+.page-header__title{font:var(--w-semibold) var(--text-2xl)/1.25 var(--font-sans-display);color:var(--ink);margin:0;}
+.page-header__sub{font-size:var(--text-md);color:var(--ink-2);}    /* 副标题在标题下方,不与标题同行 */
+.page-header__actions{display:flex;align-items:center;gap:var(--s2);flex:none;}  /* 全页仅一个 primary,置 trailing */
+.page-header--divider{border-block-end:1px solid var(--line);}
+
+/* —— 工具区:三段式 左(导航/视图) — 中(次要) — 右(搜索 + 唯一主操作) —— */
+.page-toolbar{display:flex;align-items:center;gap:var(--s3);flex-wrap:wrap;padding-block:var(--s3);}
+.page-toolbar__lead{display:flex;align-items:center;gap:var(--s2);}
+.page-toolbar__center{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;}
+.page-toolbar__trail{display:flex;align-items:center;gap:var(--s2);margin-inline-start:auto;}  /* 搜索框 + 主操作常驻 */
+.toolbar-search{min-width:200px;max-width:360px;flex:1 1 200px;}  /* 搜索框落 trailing,宽度护栏 */
+.filter-chips{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;}  /* 筛选 chips 用 .tag,含 × 移除 */
+.result-count{font-size:var(--text-xs);color:var(--ink-2);}   /* 结果计数并入头部,绝不置底 */
+.filter-clear{font-size:var(--text-xs);color:var(--ink-2);background:none;border:none;cursor:pointer;}
+.filter-clear:hover{color:var(--ink);}
+
+/* —— 内容密度:= 输入方式 × 宽度档;同页不混 —— */
+[data-density="comfortable"]{--row-h:44px;--ctrl-h-md:40px;--density-scale:1.25;}
+[data-density="standard"]{--row-h:36px;--ctrl-h-md:32px;--density-scale:1;}
+[data-density="compact"]{--row-h:28px;--ctrl-h-md:28px;--density-scale:.75;}
+.doc-table[data-density] tbody td{height:var(--row-h);}
+
+/* —— 页面状态:空 / 加载骨架 / 错误(整页级居中;列表内嵌空态随容器左对齐) —— */
+.page-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--s3);
+  text-align:center;padding:var(--s8) var(--s5);color:var(--ink-2);}
+.page-state__icon{width:48px;height:48px;color:var(--ink-3);}
+.page-state__title{font:var(--w-semibold) var(--text-lg)/1.3 var(--font-sans);color:var(--ink);}
+.page-state__desc{font-size:var(--text-base);color:var(--ink-2);max-width:42ch;}
+.page-state__actions{display:flex;gap:var(--s2);margin-top:var(--s2);}  /* 空态必须给下一步 */
+/* 页面内联通知/错误:置内容区顶部或就近,错误三重指示(框+图标+文字) */
+.notice{display:flex;align-items:flex-start;gap:var(--s2);padding:var(--s3) var(--s4);border-radius:var(--r-md);
+  font-size:var(--text-base);border:1px solid var(--line);background:var(--panel);color:var(--ink-2);}
+.notice--error{border-color:#E3C9C5;background:var(--danger-bg);color:var(--danger);}
+.notice--success{border-color:#CFE0D2;background:var(--success-bg);color:var(--success);}
+.notice--warning{border-color:#E6DCC2;background:var(--warning-bg);color:var(--warning);}
+/* 骨架白名单:容器/数据类才用(.skeleton 已定义);占位尺寸 = 最终尺寸,防 CLS */
+
+/* —— 滚动 / 吸顶:sticky 页眉给主体内容偏移,避免遮挡 —— */
+.sticky-top{position:sticky;top:0;z-index:var(--z-sticky);background:var(--bg-app);}
+.scroll-area{overflow:auto;min-height:0;}     /* 虚拟列表/长表的滚动容器:固定高 + overflow */
+
+/* —— 弹窗按钮顺序(↔Apple Alerts;桌面+网页统一按 macOS) ——
+   取消在左 / 确认(默认,primary)在右下。DOM 顺序:取消在前、确认在后。
+   .modal__foot / .dlg-foot 已 justify-content:flex-end,故 DOM 末项视觉在右。
+   破坏性确认用 .btn--danger 且不设默认;未保存确认三按钮:取消 / 放弃(danger) / 保存(primary)。 */
+.modal__foot,.dlg-foot{flex-direction:row;}  /* 窄屏可堆叠见下 @media */
+
+/* —— 预览模式 Preview(Quick Look 式:空格预览 ≠ 双击打开) —— */
+.preview{position:fixed;inset:0;z-index:var(--z-modal);display:flex;align-items:center;justify-content:center;
+  background:var(--overlay);padding:var(--s6);}
+.preview__stage{position:relative;max-width:min(90vw,var(--preview-max-w));max-height:var(--preview-max-h);
+  background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-modal);overflow:hidden;display:flex;flex-direction:column;}
+.preview__bar{display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+  padding:var(--s2) var(--s3);border-block-end:1px solid var(--line);}  /* 顶部:计数(中/左) + 分享/导出/删除(trailing) */
+.preview__count{font:var(--text-sm)/1 var(--font-mono);color:var(--ink-2);}
+.preview__body{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:var(--panel);overflow:auto;}
+.preview__body img{max-width:100%;max-height:100%;object-fit:contain;}   /* 默认 fit;放大态 cursor:grab */
+.preview__nav{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border:none;border-radius:var(--r-pill);
+  background:var(--white);box-shadow:var(--sh-pop);color:var(--ink);cursor:pointer;}
+.preview__nav--prev{inset-inline-start:var(--s4);}    /* ← 上一张;键盘 ←/→ */
+.preview__nav--next{inset-inline-end:var(--s4);}      /* → 下一张 */
+.preview--full .preview__stage{max-width:none;max-height:none;width:100%;height:100%;border-radius:0;}
+/* 关闭:Esc 或右上 ×;有未保存 markup 关闭前确认。深色 HUD 仅用于全屏媒体预览。 */
+
+/* —— 媒体长宽比工具 —— */
+.ar-square{aspect-ratio:1/1;} .ar-photo{aspect-ratio:4/3;} .ar-classic{aspect-ratio:3/2;}
+.ar-wide{aspect-ratio:16/9;} .ar-ultrawide{aspect-ratio:2/1;}
+
+/* —— 响应式:网页轨断点(rem 单一事实源)——gutter/margin 随断点收、栏折叠、按钮堆叠 —— */
+@media (max-width:64rem){   /* < lg(1024):优先收第三栏 rightbar/inspector */
+  :root{--gutter:16px;--margin-x:24px;}
+  .page-shell .rightbar,.layout-rightbar{display:none;}
+}
+@media (max-width:48rem){   /* < md(768):侧栏折叠、三段工具栏换行、页眉操作降级 */
+  :root{--gutter:12px;--margin-x:16px;}
+  .grid-12{grid-template-columns:repeat(4,1fr);}      /* 8/12 列降为 4 概念列 */
+  .page-header{flex-direction:column;align-items:stretch;}
+  .modal__foot,.dlg-foot{flex-direction:column-reverse;align-items:stretch;}  /* 窄屏堆叠:确认在上、取消在下 */
+  .preview{padding:var(--s3);}
+}
+@media (max-height:30rem){   /* 矮窗口:收顶栏纵向间距 */
+  .page-header,.page-content{padding-block:var(--s3);}
 }

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aham UI · 状态布局</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);}
+  /* 仅少量示范框架样式;颜色/间距/圆角一律用 var(--token) */
+  .demo-block{margin-bottom:var(--s7);}
+  .demo-block > .text-subhead{display:block;margin-bottom:var(--s3);color:var(--ink-2);}
+  .skel-row{margin-bottom:var(--s3);}
+  .skel-row:last-child{margin-bottom:0;}
+  .notice-stack > .notice{margin-bottom:var(--s3);}
+  .notice-stack > .notice:last-child{margin-bottom:0;}
+</style>
+</head>
+<body>
+  <div class="page-shell">
+
+    <header class="page-header page-header--divider">
+      <nav class="page-header__crumb crumb">
+        <span>Aham UI</span><span>·</span><span>示范页</span><span>·</span><span>状态布局</span>
+      </nav>
+      <h1 class="page-header__title">状态布局 states</h1>
+      <p class="page-header__sub">空 / 加载 / 错误 / 通知四种状态布局（↔§8.7）。空态必给下一步、骨架占位 = 最终尺寸防 CLS、错误用三重指示。</p>
+    </header>
+
+    <div class="page-content">
+      <div class="container">
+
+        <div class="grid-12">
+
+          <!-- ① 空状态 -->
+          <section class="col-6 demo-block">
+            <span class="text-subhead">① 空状态 · 必给下一步</span>
+            <div class="card">
+              <div class="page-state">
+                <svg class="page-state__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="8" y="12" width="32" height="28" rx="3"></rect>
+                  <path d="M8 18h32"></path>
+                  <path d="M18 12V9a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"></path>
+                  <path d="M24 26v8M20 30h8"></path>
+                </svg>
+                <h2 class="page-state__title">还没有项目</h2>
+                <p class="page-state__desc">创建第一个项目后，这里会列出所有项目与最近活动。</p>
+                <div class="page-state__actions">
+                  <button class="btn btn--primary">新建项目</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ② 加载骨架 -->
+          <section class="col-6 demo-block">
+            <span class="text-subhead">② 加载骨架 · 占位 = 最终尺寸防 CLS</span>
+            <div class="card">
+              <div class="skel-row skeleton" style="height:var(--text-lg);width:40%;border-radius:var(--r-sm);"></div>
+              <div class="skel-row skeleton" style="height:var(--text-base);width:100%;border-radius:var(--r-sm);"></div>
+              <div class="skel-row skeleton" style="height:var(--text-base);width:100%;border-radius:var(--r-sm);"></div>
+              <div class="skel-row skeleton" style="height:var(--text-base);width:72%;border-radius:var(--r-sm);"></div>
+              <div class="skel-row skeleton" style="height:var(--text-base);width:88%;border-radius:var(--r-sm);"></div>
+            </div>
+          </section>
+
+          <!-- ③ 页面内联通知 -->
+          <section class="col-6 demo-block">
+            <span class="text-subhead">③ 页面内联通知 · 三重指示</span>
+            <div class="card">
+              <div class="notice-stack">
+                <div class="notice">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle><path d="M12 8h.01M11 12h1v4h1"></path>
+                  </svg>
+                  <span>系统将于今晚 23:00 进行例行维护，预计 10 分钟。</span>
+                </div>
+                <div class="notice notice--error">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path>
+                  </svg>
+                  <span>保存失败：网络连接中断，请检查后重试。</span>
+                </div>
+                <div class="notice notice--success">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"></circle><path d="m8.5 12 2.5 2.5 4.5-5"></path>
+                  </svg>
+                  <span>设置已保存，变更立即生效。</span>
+                </div>
+                <div class="notice notice--warning">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 4 2.5 20h19L12 4Z"></path><path d="M12 10v4M12 17h.01"></path>
+                  </svg>
+                  <span>当前套餐配额已使用 90%，请留意用量。</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ④ 错误整页态 -->
+          <section class="col-6 demo-block">
+            <span class="text-subhead">④ 错误整页态 · 可恢复</span>
+            <div class="card">
+              <div class="page-state">
+                <svg class="page-state__icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="24" cy="24" r="18"></circle>
+                  <path d="M24 15v11M24 32h.02"></path>
+                </svg>
+                <h2 class="page-state__title">加载失败</h2>
+                <p class="page-state__desc">无法获取数据，可能是网络问题或服务暂时不可用。</p>
+                <div class="page-state__actions">
+                  <button class="btn btn--secondary">重试</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <script src="../aham-ui.js"></script>
+</body>
+</html>

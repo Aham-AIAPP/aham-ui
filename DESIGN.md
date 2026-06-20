@@ -4,9 +4,10 @@
 > 北极星:Claude desktop 气质——极简、克制、留白、内容优先。性格:**冷色的纸、克制的金属感、对话式**。
 > 重构原则:**框架/方法/比例对齐 Apple HIG,取值全用 Aham**。机读值见 `tokens.json`(含亮+暗两套 + 文本样式体系)。AI 消费入口见 `AGENTS.md`。
 
-**七层结构**:0 原则 · 1 基础(含国际化/RTL、隐私) · 2 控件与组件 · 3 组合规则 · 4 模式 · 5 介质落地 · 6 输入 · 7 系统支撑。
+**八层结构**:0 原则 · 1 基础(含国际化/RTL、隐私) · 2 控件与组件 · 3 组合规则 · 4 模式 · 5 介质落地 · 6 输入 · 7 系统支撑 · **8 页面布局体系(v6.0 新增)**。
 
-**版本 v5.1**——在 v5.0(对照 Apple HIG 完整性审计补全 30 项:Dynamic Type、Differentiate Without Color、VoiceOver 契约、Drag and drop、Loading 分级、标准快捷键、焦点组、RTL、隐私等)基础上,清理 15 个旧/重复类。
+**版本 v6.0**——新增**第 8 层 页面布局体系**:把页面级布局从"散在 examples 的事实约定"升为成文规则,且**按落地介质分四轨**(网页/应用/Office/邮件)。覆盖:页面骨架与页型(Canonical Layouts)、页眉、搜索筛选、状态(空/加载/错误/骨架)、预览模式、内容密度、容器查询、弹窗按钮顺序、i18n-RTL 布局、z-index 阶梯、打印。补齐两轮调研(Apple HIG + 业内横扫 Material/Carbon/Ant/Polaris/Fluent/GOV.UK 等)缺口约 22 项。**断点改为网页 rem 为单一事实源、应用 dp 派生**(废止 v5 的 sm380/md860/lg1280)。
+此前:v5.1 清理 15 个旧/重复类;v5.0 对照 Apple HIG 完整性审计补全 30 项(Dynamic Type、Differentiate Without Color、VoiceOver、Drag and drop、Loading 分级、标准快捷键、焦点组、RTL、隐私等)。
 
 ---
 
@@ -205,6 +206,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 ### 3.3 动作主次
 一组一 primary;层级 primary>secondary>ghost>danger;主操作在右/末位;可见按钮 ≤3–4,多则收菜单;按钮间距 8–12,主次靠颜色非距离。
+**弹窗按钮顺序(硬规则,↔Apple Alerts;桌面+网页统一按 macOS,详见 §8.6)**:水平排**取消在左、确认/默认在右下**;默认按钮绑 `Return`(primary 单蓝)、`Esc`/`⌘.`=取消;**绝不把蓝色默认给破坏按钮**(破坏用 danger 且不设默认);未保存确认三按钮(左→右):取消 / 放弃(danger) / 保存。
 
 ### 3.4 容器与内容
 列表行高=控件高+padding,行内垂直居中;表单字段节奏 label→6→控件→4→hint,字段间 16–24;卡片 padding 16–24;嵌套 padding 递减(24→16→8);侧栏选中↔内容标题联动。
@@ -254,7 +256,112 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 ---
 
+## 8 页面布局体系 Page Layout（v6.0 新增·多轨）
+
+> 把页面级布局从"散在 examples 的事实约定"升为成文规则。**结构 ↔ 业内(Material/Carbon/Ant/Polaris/Fluent/GOV.UK/HIG),取值全用 Aham。** 机读值见 `tokens.json` 的 `breakpoint`/`contentWidth`/`grid`/`density`/`overlayWidth`/`dialog`/`track`/`canonicalLayout`。CSS 见 `aham-ui.css` 第 8 节。
+
+### 8.0 四轨总览（先选轨,再套规则）
+**Aham 同时落地四类介质,布局心智不同,必须分轨;每个页面模板先声明属哪一轨。**
+
+| 轨 | 居中/宽度心智 | 断点 | 类 | 备注 |
+|---|---|---|---|---|
+| **网页轨** | container `max-width` + `margin:auto` **居中收口** | rem(单一事实源) | `.track-web .container` | 再分桌面(顶栏)/移动(底栏 tab);吸底 CTA/固定页脚**合法** |
+| **应用轨** macOS | **左对齐铺满**,多余宽度展开 pane | dp(派生) | `.track-app .container` | 仅登录/向导/空态居中;**底部不放关键控件(此铁律仅本轨)** |
+| **Office 轨** | Word 流式 / Excel 网格 / PPT 固定画布(三子模型) | — | 见 `aham-ui-office.md` | 不可笼统称"固定画布" |
+| **邮件轨** | table + 内联样式 + 600px | — | — | 不保证 flex/grid/媒体查询;暗色 meta |
+
+> **核心冲突裁决**:"默认左对齐 vs 容器居中"不是对错,是**两轨分叉**。网页轨页面壳居中收口(examples 现状正确,勿纠正);应用轨左对齐铺满。**区分两个宽度:页面壳宽(宽)与正文阅读宽(窄,65ch,见 8.2)。**
+
+### 8.1 断点与响应式
+- **单一事实源 = 网页 rem 媒体查询(mobile-first,min-width 级联)**:`sm 40rem(640) / md 48rem(768) / lg 64rem(1024) / xl 80rem(1280) / 2xl 96rem(1536)`。提醒:**`sm:` = "≥640px"不是"手机"**;移动样式写无前缀基线。
+- **应用轨 dp 语义档由上表派生**:Compact<600 / Medium600 / Expanded840 / Large1200;**full-screen-first 晚折叠,优先砍第三栏(rightbar/inspector)**。
+- **高度断点**:`short 30rem(480)` 收顶栏/收纵向间距。
+- **容器查询(跨轨)**:**页面用视口断点,组件用容器查询**——同一卡片放主区/侧栏都正确(供 AI 拼装关键)。网页 `@container`/`cqi`(`.cq`),应用 `containerRelativeFrame`/`ViewThatFits`/`BoxWithConstraints`。
+- **可变字号/缩放**:布局用相对单位(rem/em/ch/cqi),容器随字号长高不溢出;网页同时满足 **200% text zoom(WCAG 1.4.4)+ 400% reflow(1.4.10)不横向滚动**;应用 Dynamic Type(见 1.3)。
+- **输入能力**:`pointer:coarse`/`any-hover` 下 hover-only 操作**必有常驻等价**,命中区随输入放大。
+
+### 8.2 容器与宽度
+- **页面壳 max-width 档(网页轨,居中)**:`page 1280 / content 1080 / form 560 / auth 420 / ultra 1536 / full 100%`(`--page-max` 等;按 12 栅格反推,Aham 自定)。
+- **正文阅读宽独立**:`read 65ch`(≈720),与页面壳分开——页面宽 ≠ 正文宽。
+- **应用轨**:内容**左对齐铺满**工作区,多余宽度展开第二/三 pane,**不居中**。
+- **超宽屏**:网页默认 margin 收束居中;数据密集页 `full`/`ultra` 扩列;多显示器/分屏**每窗口按自身容器宽独立响应**。
+- **栅格**:网页 12 列流动栅格(`.grid-12`);**gutter(列间)与 margin(页边)分离、随断点放大**(lg 24/32 → md 16/24 → sm 12/16)。**机制取舍**:二维骨架/卡片墙用 `grid`、一维工具栏/按钮组用 `flex`、卡片内跨卡片基线对齐用 `subgrid`。
+
+### 8.3 页面骨架与页型
+- **三层结构**:`.page-header`(页眉区)→ `.page-toolbar`(工具区)→ `.page-content`(内容区)。
+- **shell 组合**:`rail60 + sidebar264 + 内容 + rightbar340`;`<lg` 优先收 rightbar,`<md` 折 sidebar(**可折叠不默认隐藏**)。
+- **Pane 模型**:页面 = 1–3 个 pane(fixed/flexible/floating,**至少一个 flexible**)。
+- **Canonical Layouts(三大页型蓝图,栏比用"固定下限+弹性主区",与固定栏宽打通)**:
+  - **list-detail**:compact 单栏切换 + back 回列表;expanded 并排(list `clamp(264,30%,360)` + detail fill);大屏无选中显**占位详情**。判据:详情可独立成立。
+  - **supporting-pane**:compact 辅内容收底部 sheet;medium 主辅 ~50/50;expanded 主 fill + 辅栏 340 固定。判据:辅内容仅依附主内容。
+  - **feed**:compact 单列;medium/expanded 按最小卡片宽自适应多列。
+- **跨档状态保持**:折叠/旋转/分屏保留选中态 + 滚动位;双栏塌单栏 back 从详情回列表。
+- **阅读顺序**:区域 DOM 源序 = 视觉序 = Tab 序(慎用 flex `order`/`row-reverse`);`skip link` 作首个可聚焦元素。
+
+### 8.4 页眉规范
+- **标题左上对齐**:内容主标题 `.page-header__title`(Heading 24 / Title 32),置页眉区左上。
+- **两类标题分工**:`navbar/.nav-title`(15px,**<15 字符**,位置标识) vs 内容大标题(醒目,回答"这块是什么");二者不重复,**不印 app 名当标题**。
+- **面包屑/返回**:置标题**上方**(`--s3` 12);**与 back link 互斥**(不同页共存);超长用首项+末两项截断。
+- **副标题**:置主标题**下方**(`--s2` 8),**不与标题同行**。
+- **页面级主操作**:置页眉区**右端 trailing**(`space-between`);**全页只一个 primary**(单蓝)。
+- **间距**:页眉上下 `--s5` 24;标题与下方页签/分隔线 `--s4` 16。窄屏主操作降图标/进 More,面包屑截断。
+
+### 8.5 搜索与筛选布局
+- **搜索框落位**:全局搜索 → 工具区 **trailing(右)**;局部过滤 → 该列表**上方/钉顶**;**同控件不承担两种语义**。
+- **工具栏三段式**:`__lead`(导航/视图切换)— `__center`(次要控件)— `__trail`(搜索框 + 唯一主操作,常驻)。
+- **筛选 chips**:用 `.tag`(含 ×)放搜索框内/紧贴其下;复杂范围切换用 scope bar 放结果区顶部;默认从**最宽范围**开始。
+- **结果计数**:`.result-count` 并入内容区头部,**绝不置底**;**清除全部**置 chips 行尾。
+- **搜索框宽**:200–360;`<md` 折为图标触发。溢出系统化处理,**不手加 More 菜单**。
+
+### 8.6 弹窗操作（选型 + 按钮顺序）
+- **组件选型决策树**:关键信息/警告 → alert(`.dialog`,**绝不用 popover 报警告**);要求输入/小任务 → sheet(macOS 模态、浮于父窗、父窗变暗);少量临时 → popover(箭头指源、点外即关,**非模态自动关闭必须保存**);反复输入看结果 → panel。**一次只一个模态,不叠两个 alert/级联 popover。**
+- **按钮顺序(硬规则)**:**取消在左、确认/默认在右下**;竖排默认在顶、取消在底。`.modal__foot`/`.dlg-foot` `flex-end`,DOM 取消在前、确认在后。
+- **默认/破坏**:默认按钮绑 `Return`(primary 单蓝);`Esc`/`⌘.`=取消;**破坏性用 danger 且不设默认**;**绝不把蓝色默认给破坏按钮、绝不把取消设默认**。用户主动发起(点"删除这张")确认可作默认;非用户本意才红 + 不设默认。
+- **未保存确认**:任何关闭会丢内容(含 Esc/点外/下滑)前必弹三按钮 **取消 / 放弃(danger) / 保存(primary)**。
+- **焦点**:打开焦点落默认按钮(破坏场景落取消);焦点陷阱 + 关闭归还触发元素;`aria-modal`/`aria-labelledby`。
+- **宽度**:`dialog 380 / modal 360–480–640`;`<md` 按钮堆叠(确认在上、取消在下)。
+- **Web vs macOS**:Web 常见"确认在左"——**Aham 一律按 macOS(确认在右)**,桌面与网页一致。
+
+### 8.7 状态布局（空 / 加载 / 错误 / 通知）
+- **空状态** `.page-state`:图标 + 标题 + 正文 + **主 CTA(必给下一步)**;**默认整页级居中**,列表内嵌空态随容器左对齐。
+- **加载/骨架** `.skeleton`:**白名单**(容器/列表/表/数据)/ **黑名单**(按钮/输入/toast/弹窗/下拉);**>1s 才用**;**占位尺寸 = 最终尺寸防 CLS**;与虚拟列表协同。加载分级见 §4。
+- **错误/通知** `.notice`:inline 置内容区顶部/就近;**错误三重指示**(红框 + 图标 + 文案,不靠颜色单独传达);toast(瞬态,移动端常在底部) vs inline(任务流内)。
+
+### 8.8 内容密度
+- 三档 `[data-density]`:**comfortable**(行 44/控件 40/×1.25)/ **standard**(行 36/控件 32/×1,默认)/ **compact**(行 28/控件 28/×.75)。
+- **= 输入方式 × 宽度档**;**同页不混**;**触控/窄屏强制 comfortable** + 命中区放大。
+
+### 8.9 预览模式 Preview（Quick Look 式,↔Apple Quick Look/Panels/Going full screen）
+- **触发与语义**:**空格 = 轻量预览**、**双击/回车 = 打开(完整编辑/全屏会话)**;预览 = 临时单焦点、只读或轻量交互(看图/翻页/markup);非原生格式也能预览。
+- **容器** `.preview`:居中浮层(媒体,`max-width:min(90vw,1080)`,`object-fit:contain`)/ `.preview--full` 全屏(沉浸,可临时隐藏工具栏,光标移顶恢复)。
+- **翻页**:`.preview__nav` 左右两侧 + 快捷键 `←/→`;多文件 `.preview__count` 计数器。
+- **缩放**:默认 fit;`+/-` 或滚轮缩放、`0` 复位;放大态 `cursor:grab`。
+- **操作栏**:`.preview__bar` 顶部 trailing 放分享/导出/删除(删除遵 §8.6,可撤销则 Undo 不弹 alert)。
+- **inspector/元数据(↔Column views)**:**创建日期 / 修改日期 / 文件类型 / 大小** 四项,随选中实时刷新(panel/`rightbar`)。
+- **关闭**:`Esc` 或右上 `×`;退出全屏由用户决定;未保存 markup 关闭前确认。**深色 HUD 仅用于全屏媒体预览**,常规 inspector 用浅色面板。
+
+### 8.10 i18n / RTL / 缩放 对布局（从无障碍脚注升为布局维度,呼应 1.10）
+- **逻辑属性**:用 `margin-inline`/`padding-inline`/`inset-inline`,**禁硬编码 left/right**;RTL 全镜像(导航 leading↔trailing、面包屑/返回箭头/进度方向);不翻转清单见 1.10。
+- **文本扩张**:按钮/标签/菜单**不写死宽度**(`max-content` + 截断),先用最长(德语)/最短测;CJK 行宽用 `ch`/`em`。
+- **缩放**:见 8.1(相对单位 + 200%/400% 双判据 + 超阈值 inline→stacked)。
+
+### 8.11 层叠 / 滚动 / 软键盘 / 动效 / 打印
+- **z-index 阶梯**(token):`base0/sticky100/dropdown200/overlay300/modal400/toast500`;浮层族各建独立 stacking context;modal/drawer 开 **body scroll lock**。
+- **滚动/吸顶**:`.sticky-top` 给主体内容偏移防遮挡;长列表**虚拟化**(行等高/已知高、`.scroll-area` 固定高 + overflow、sticky 分组表头协同、骨架占位高 = 行高防 CLS)。
+- **软键盘(网页移动/触控)**:`visualViewport` 或 `interactive-widget=resizes-content`;聚焦输入 `scroll-into-view`;**吸底操作在键盘弹起时让位** + safe-area 内边距。
+- **布局形变动效**:pane 折叠/drawer/列表重排走过渡或 view transitions,`prefers-reduced-motion` 降级为瞬时(见 1.7)。
+- **打印/导出**:`@media print` 隐藏导航/交互件、`break-inside:avoid` 控分页、容器转全宽。
+
+### 8.12 介质四轨布局细则（呼应 §5）
+- **网页轨**:再分**桌面 web**(默认顶部水平导航,窄屏汉堡/drawer)与**移动 web**(底部 tab 合法主流 + 顶部精简栏);容器/正文/gutter/margin 用 **rem**(正文辅 ch),px 仅留 1px 描边;`env(safe-area-inset-*)`(前提 `<meta viewport ... viewport-fit=cover>`)。
+- **应用轨 macOS**:左对齐铺满 + 展开 pane;导航壳形变(Compact 底栏 → Medium rail → Expanded 常驻 sidebar);split header bars;safe area 避信号灯/灵动岛。
+- **Office 轨**:拆 **Word(流式文档,近网页内容轨)/ Excel(单元格网格,自有坐标系)/ PPT(固定画布,定宽定位+内容安全区+母版网格)** 三子模型;统一单蓝 + 冷色纸;详见 `aham-ui-office.md`。
+- **邮件轨(若含通知/营销邮件)**:table 布局/内联样式/600px 固定宽/暗色 meta,与网页轨明确区分;先占位,后续单独立项。
+
+---
+
 ## 诚实声明(汇总边界)
+0. **v6.0 布局体系的取值是 Aham 自定**:断点/容器宽/gutter 等数值按 12 栅格反推或沿用既有 token,**结构与顺序规则**(分轨、居中策略、按钮顺序、页型蓝图、容器查询)↔ 业内通行做法;部分 HIG 引述的平台归属在调研中已校正(visionOS/iPadOS 段勿当 macOS)。Office/邮件轨为占位,需单独立项落地验证。
 1. **取值不抄 Apple**:学框架/方法/比例,数值是 Aham(版权 + Inter≠SF + pt≠px)。Apple 数据为特定版本核对,随版本变,仅作参考。
 2. **暗色是提案**,需真机实测对比度(尤其暗色主按钮蓝底白字、Increase Contrast 下深字压深底)。
 3. **命中区更正**:Apple 唯一公开命中区数字是 44×44pt;"28pt 指针目标"是第三方约定**非 Apple 官方**。Aham 自定取值,保留"足够命中区 + padding"原则。

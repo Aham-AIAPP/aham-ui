@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aham UI · 预览模式 Preview</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  body{background:var(--panel);}
+  /* 占位图块:纯色,勿外链 */
+  .ph{display:block;width:100%;height:100%;
+    background:repeating-linear-gradient(135deg,var(--line) 0 14px,var(--panel) 14px 28px);}
+  .ph--card{border-radius:var(--r-md);}
+  .grid-card{cursor:default;}
+  .grid-card .card__foot{margin-top:var(--s3);}
+  /* 把 .preview__stage 从 fixed 浮层改为页面内相对定位演示其结构 */
+  .preview-demo{position:relative;max-width:none;max-height:none;height:480px;width:100%;}
+  .preview-demo .preview__body{background:var(--panel);}
+  .preview-demo .preview__body img,
+  .preview-demo .preview__body .ph{width:auto;max-width:100%;max-height:100%;object-fit:contain;}
+  .stage-img{width:100%;height:100%;}
+  /* inspector 元数据两列 */
+  .meta dt{font-size:var(--text-sm);}
+  .meta dd{font-size:var(--text-sm);font-family:var(--font-mono);text-align:right;}
+  .hint-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--s2);
+    font-size:var(--text-sm);color:var(--ink-2);}
+  .hint-list kbd{display:inline-block;min-width:18px;text-align:center;font-family:var(--font-mono);
+    font-size:11px;color:var(--ink);background:var(--white);border:1px solid var(--line);
+    border-radius:var(--r-xs);padding:1px 5px;margin-inline-end:6px;}
+</style>
+</head>
+<body>
+<div class="page-shell">
+  <div class="container container--content">
+
+    <header class="page-header page-header--divider">
+      <div class="page-header__main">
+        <nav class="page-header__crumb">
+          <span>资源库</span><span>/</span><span>访谈截图</span>
+        </nav>
+        <h1 class="page-header__title">预览模式</h1>
+        <p class="page-header__sub">Quick Look 式预览：空格预览 ≠ 双击打开。轻量翻看，不离开列表。</p>
+      </div>
+      <div class="page-header__actions">
+        <button class="btn btn--secondary">导出全部</button>
+        <button class="btn btn--primary">上传</button>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- 资源网格:几个 .card 内放 16:9 占位块 -->
+      <div class="page-toolbar">
+        <div class="page-toolbar__lead">
+          <span class="result-count">共 12 项</span>
+        </div>
+        <div class="page-toolbar__trail">
+          <span class="t-3" style="font-size:var(--text-sm)">空格预览 / 双击打开</span>
+        </div>
+      </div>
+
+      <div class="grid-12" style="margin-bottom:var(--s6)">
+        <div class="card col-3 grid-card">
+          <div class="ar-wide ph ph--card"></div>
+          <div class="card__foot"><span>截图 01.png</span><span>1.2 MB</span></div>
+        </div>
+        <div class="card--sel card col-3 grid-card">
+          <div class="ar-wide ph ph--card"></div>
+          <div class="card__foot"><span>截图 03.png</span><span class="status status--active">预览中</span></div>
+        </div>
+        <div class="card col-3 grid-card">
+          <div class="ar-wide ph ph--card"></div>
+          <div class="card__foot"><span>截图 07.png</span><span>0.9 MB</span></div>
+        </div>
+        <div class="card col-3 grid-card">
+          <div class="ar-wide ph ph--card"></div>
+          <div class="card__foot"><span>截图 12.png</span><span>2.4 MB</span></div>
+        </div>
+      </div>
+
+      <!-- 打开态预览 + inspector:左 stage,右元数据面板 -->
+      <div class="grid-12">
+
+        <!-- 预览舞台(相对定位嵌入,演示 .preview__stage 结构,不做全屏遮罩) -->
+        <div class="col-8">
+          <div class="preview__stage preview-demo">
+            <div class="preview__bar">
+              <span class="preview__count">3 / 12</span>
+              <div style="display:flex;gap:var(--s1)">
+                <button class="icon-btn" title="分享" aria-label="分享">↗</button>
+                <button class="icon-btn" title="导出" aria-label="导出">↧</button>
+                <button class="icon-btn" title="删除" aria-label="删除">×</button>
+              </div>
+            </div>
+            <div class="preview__body">
+              <!-- 16:9 占位图,object-fit contain;纯色内联,勿外链 -->
+              <div class="stage-img ar-wide ph"></div>
+            </div>
+            <button class="preview__nav preview__nav--prev" aria-label="上一张">‹</button>
+            <button class="preview__nav preview__nav--next" aria-label="下一张">›</button>
+          </div>
+        </div>
+
+        <!-- inspector 面板:元数据 -->
+        <aside class="col-4">
+          <div class="card">
+            <div class="card__head">
+              <span class="card__head ttl" style="font-size:var(--text-md);font-weight:var(--w-semibold)">截图 03.png</span>
+            </div>
+            <dl class="desc meta">
+              <dt>创建日期</dt><dd>2026-06-18 09:42</dd>
+              <dt>修改日期</dt><dd>2026-06-20 14:07</dd>
+              <dt>类型</dt><dd>PNG 图片</dd>
+              <dt>大小</dt><dd>1.8 MB</dd>
+            </dl>
+          </div>
+        </aside>
+
+      </div>
+
+      <!-- 底部交互注 -->
+      <div class="notice" style="margin-top:var(--s6)">
+        <ul class="hint-list">
+          <li><kbd>空格</kbd>预览　<kbd>双击</kbd>打开</li>
+          <li><kbd>←</kbd><kbd>→</kbd>翻页</li>
+          <li>缩放：默认 fit（适应窗口），可放大平移</li>
+          <li><kbd>Esc</kbd> / <kbd>×</kbd> 关闭</li>
+          <li>含未保存 markup（标注）时，关闭前弹确认</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="../aham-ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aham UI · 页面骨架 page-shell</title>
+<link rel="stylesheet" href="../aham-ui.css">
+<style>
+  /* 仅示范框架样式:颜色/间距/圆角一律用 var(--token) */
+  body{background:var(--panel);color:var(--ink);}
+  .demo-head{padding-block:var(--s6) var(--s4);}
+  .demo-head h1{font:var(--w-semibold) var(--text-2xl)/1.2 var(--font-sans-display);margin:0 0 var(--s2);}
+  .demo-head p{color:var(--ink-2);font-size:var(--text-md);margin:0;max-width:65ch;}
+  .section{margin-block-end:var(--s7);}
+  .section__note{color:var(--ink-2);font-size:var(--text-sm);margin:var(--s3) 0 0;max-width:65ch;}
+  /* “屏幕”外框:仅为在文档里圈出一个页面边界,业务页面无需此框 */
+  .frame{background:var(--white);border-radius:var(--radius-lg);box-shadow:0 0 0 1px var(--line);overflow:hidden;}
+  .frame__rail{display:flex;align-items:center;gap:var(--s2);padding-inline:var(--s4);padding-block:var(--s2);
+    border-block-end:1px solid var(--line);font-size:var(--text-xs);color:var(--ink-3);}
+  .frame__dot{width:8px;height:8px;border-radius:var(--radius-pill);background:var(--line-2);}
+  .frame__pad{padding-inline:var(--s5);}
+  .card-k{font-size:var(--text-xs);color:var(--ink-3);}
+  .card-v{font:var(--w-semibold) var(--text-xl)/1.1 var(--font-mono);margin-block:var(--s1) 0;}
+</style>
+</head>
+<body>
+
+<div class="container container--content">
+
+  <header class="demo-head">
+    <h1>页面骨架 · page-shell</h1>
+    <p>同一份内容,分别放进「网页轨」与「应用轨」,看页面三层结构(header / toolbar / content)如何随轨道收口或铺满。颜色与间距全部走 token,无裸值。</p>
+  </header>
+
+  <!-- ============ 上半:网页轨 ============ -->
+  <section class="section">
+    <div class="text-overline">轨道 A</div>
+    <div class="text-subheading">网页轨 · track-web</div>
+    <p class="section__note">内容用 <span class="text-mono">.container--content</span> 居中收口(约 1080),适合阅读型 / 营销型页面。下面整块就是一张完整的 page-shell。</p>
+
+    <div class="frame" style="margin-block-start:var(--s4)">
+      <div class="frame__rail"><span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span><span>track-web · 居中收口</span></div>
+
+      <div class="track-web">
+        <div class="container container--content">
+          <div class="page-shell">
+
+            <!-- 第一层:页头 -->
+            <header class="page-header page-header--divider">
+              <div class="page-header__main">
+                <nav class="page-header__crumb">资料库<span>/</span>会议<span>/</span>周会纪要</nav>
+                <h2 class="page-header__title">周会纪要</h2>
+                <p class="page-header__sub">2026-06-19 · 时长 00:42:18 · 4 人参与</p>
+              </div>
+              <div class="page-header__actions">
+                <button class="btn btn--secondary">分享</button>
+                <button class="btn btn--primary">导出</button>
+              </div>
+            </header>
+
+            <!-- 第二层:工具栏 三段式 -->
+            <div class="page-toolbar">
+              <div class="page-toolbar__lead">
+                <div class="filter-chips">
+                  <span class="tag">本周<button aria-label="移除">×</button></span>
+                  <span class="tag">会议<button aria-label="移除">×</button></span>
+                </div>
+                <span class="result-count">12 项</span>
+              </div>
+              <div class="page-toolbar__trail">
+                <input class="input toolbar-search" placeholder="在纪要中搜索…">
+                <button class="btn btn--ghost">筛选</button>
+              </div>
+            </div>
+
+            <!-- 第三层:内容 -->
+            <div class="page-content">
+              <div class="grid-12">
+                <div class="col-4">
+                  <div class="card">
+                    <div class="card-k">时长</div>
+                    <div class="card-v">42:18</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="card">
+                    <div class="card-k">说话人</div>
+                    <div class="card-v">4</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="card">
+                    <div class="card-k">状态</div>
+                    <div class="card-v" style="font:var(--w-semibold) var(--text-md)/1.4 var(--font-sans)">
+                      <span class="status status--ok">已完成</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <table class="doc-table">
+                    <thead>
+                      <tr>
+                        <th>议题</th>
+                        <th>负责人</th>
+                        <th class="num">用时</th>
+                        <th>结论</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>转写引擎离线化</td><td>李航</td><td class="num">12:30</td><td><span class="status status--ok">已定</span></td></tr>
+                      <tr><td>导出格式收敛</td><td>周敏</td><td class="num">08:05</td><td><span class="status status--active">推进中</span></td></tr>
+                      <tr><td>下周排期</td><td>王野</td><td class="num">06:40</td><td><span class="status status--warn">待确认</span></td></tr>
+                    </tbody>
+                    <tfoot>
+                      <tr><td><strong>合计</strong></td><td></td><td class="num"><strong>27:15</strong></td><td></td></tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 下半:应用轨 ============ -->
+  <section class="section">
+    <div class="text-overline">轨道 B</div>
+    <div class="text-subheading">应用轨 · track-app</div>
+    <p class="section__note">同样三层、同样内容,改用 <span class="text-mono">.track-app</span> 左对齐铺满(其下的 .container 自动取消居中与最大宽)。适合工具型 / 工作台页面,信息密度优先。</p>
+
+    <div class="frame" style="margin-block-start:var(--s4)">
+      <div class="frame__rail"><span class="frame__dot"></span><span class="frame__dot"></span><span class="frame__dot"></span><span>track-app · 左对齐铺满</span></div>
+
+      <div class="track-app frame__pad">
+        <div class="container">
+          <div class="page-shell">
+
+            <header class="page-header page-header--divider">
+              <div class="page-header__main">
+                <nav class="page-header__crumb">资料库<span>/</span>会议<span>/</span>周会纪要</nav>
+                <h2 class="page-header__title">周会纪要</h2>
+                <p class="page-header__sub">2026-06-19 · 时长 00:42:18 · 4 人参与</p>
+              </div>
+              <div class="page-header__actions">
+                <button class="btn btn--secondary">分享</button>
+                <button class="btn btn--primary">导出</button>
+              </div>
+            </header>
+
+            <div class="page-toolbar">
+              <div class="page-toolbar__lead">
+                <div class="filter-chips">
+                  <span class="tag">本周<button aria-label="移除">×</button></span>
+                  <span class="tag">会议<button aria-label="移除">×</button></span>
+                </div>
+                <span class="result-count">12 项</span>
+              </div>
+              <div class="page-toolbar__trail">
+                <input class="input toolbar-search" placeholder="在纪要中搜索…">
+                <button class="btn btn--ghost">筛选</button>
+              </div>
+            </div>
+
+            <div class="page-content">
+              <div class="grid-12">
+                <div class="col-4">
+                  <div class="card"><div class="card-k">时长</div><div class="card-v">42:18</div></div>
+                </div>
+                <div class="col-4">
+                  <div class="card"><div class="card-k">说话人</div><div class="card-v">4</div></div>
+                </div>
+                <div class="col-4">
+                  <div class="card"><div class="card-k">状态</div>
+                    <div class="card-v" style="font:var(--w-semibold) var(--text-md)/1.4 var(--font-sans)"><span class="status status--ok">已完成</span></div>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <table class="doc-table">
+                    <thead>
+                      <tr><th>议题</th><th>负责人</th><th class="num">用时</th><th>结论</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr><td>转写引擎离线化</td><td>李航</td><td class="num">12:30</td><td><span class="status status--ok">已定</span></td></tr>
+                      <tr><td>导出格式收敛</td><td>周敏</td><td class="num">08:05</td><td><span class="status status--active">推进中</span></td></tr>
+                      <tr><td>下周排期</td><td>王野</td><td class="num">06:40</td><td><span class="status status--warn">待确认</span></td></tr>
+                    </tbody>
+                    <tfoot>
+                      <tr><td><strong>合计</strong></td><td></td><td class="num"><strong>27:15</strong></td><td></td></tr>
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="section__note"><strong>两轨区别</strong>:网页轨把内容收进有限宽度并居中,留白对称、利于阅读;应用轨贴左铺满整片可用区,横向空间全部交给信息密度。结构完全一致,只换最外层 <span class="text-mono">.track-web</span> / <span class="text-mono">.track-app</span>,无需改动 header / toolbar / content。</p>
+  </section>
+
+  <!-- ============ 密度三档 ============ -->
+  <section class="section">
+    <div class="text-overline">密度</div>
+    <div class="text-subheading">data-density 三档</div>
+    <p class="section__note">在任意祖先元素加 <span class="text-mono">data-density</span>,行高随之收放;同一张表,左→右依次为 comfortable / standard / compact。</p>
+
+    <div class="grid-12 cq" style="margin-block-start:var(--s4)">
+      <div class="col-4" data-density="comfortable">
+        <div class="text-caption" style="margin-block-end:var(--s2)">comfortable · 44</div>
+        <table class="doc-table" data-density="comfortable">
+          <thead><tr><th>议题</th><th class="num">用时</th></tr></thead>
+          <tbody>
+            <tr><td>离线化</td><td class="num">12:30</td></tr>
+            <tr><td>导出收敛</td><td class="num">08:05</td></tr>
+            <tr><td>排期</td><td class="num">06:40</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-4" data-density="standard">
+        <div class="text-caption" style="margin-block-end:var(--s2)">standard · 36</div>
+        <table class="doc-table" data-density="standard">
+          <thead><tr><th>议题</th><th class="num">用时</th></tr></thead>
+          <tbody>
+            <tr><td>离线化</td><td class="num">12:30</td></tr>
+            <tr><td>导出收敛</td><td class="num">08:05</td></tr>
+            <tr><td>排期</td><td class="num">06:40</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-4" data-density="compact">
+        <div class="text-caption" style="margin-block-end:var(--s2)">compact · 28</div>
+        <table class="doc-table" data-density="compact">
+          <thead><tr><th>议题</th><th class="num">用时</th></tr></thead>
+          <tbody>
+            <tr><td>离线化</td><td class="num">12:30</td></tr>
+            <tr><td>导出收敛</td><td class="num">08:05</td></tr>
+            <tr><td>排期</td><td class="num">06:40</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="../aham-ui.js"></script>
+</body>
+</html>

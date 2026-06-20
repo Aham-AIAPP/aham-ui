@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v6.0 — 页面布局体系（第 8 层）+ 多轨
+重大更新:把页面级布局从"散在 examples 的事实约定"升为成文规则,并**按落地介质分四轨**(网页/应用/Office/邮件)。源于两轮调研(对照 Apple HIG 审计 + 业内横扫 Material/Carbon/Ant/Polaris/Fluent/GOV.UK/GNOME 等),补齐缺口约 22 项。
+- **新增 DESIGN.md 第 8 层 页面布局体系**:8.0 四轨总览(居中冲突裁决)· 8.1 断点与响应式 · 8.2 容器与宽度 · 8.3 页面骨架与页型(Pane 模型 + Canonical Layouts:list-detail/supporting-pane/feed)· 8.4 页眉 · 8.5 搜索筛选 · 8.6 弹窗(选型决策树 + 按钮顺序)· 8.7 状态(空/加载/错误/骨架)· 8.8 内容密度 · 8.9 预览模式 · 8.10 i18n/RTL/缩放 · 8.11 层叠/滚动/软键盘/动效/打印 · 8.12 介质四轨细则。
+- **tokens.json**:`breakpoint` 改为**网页 rem 单一事实源 + 应用 dp 派生 + 高度断点**(废止 v5 的 sm380/md860/lg1280);新增 `contentWidth`/`grid`/`density`/`overlayWidth`/`dialog`/`aspectRatio`/`canonicalLayout`/`track` 八组。
+- **aham-ui.css 第 8 节**:`.container`(轨道居中/铺满)、`.grid-12`、`.cq`(容器查询)、`.page-shell/.page-header/.page-toolbar/.page-content`、`[data-density]`、`.page-state/.notice`、`.preview`(预览模式)、`.ar-*`(长宽比)、弹窗按钮顺序与窄屏堆叠、rem 断点响应式;新增对应 `:root` 变量。
+- **关键裁决**:居中 vs 左对齐 = 网页轨/应用轨分叉(非对错);弹窗**取消左/确认右**(统一按 macOS,网页也照此);"底部不放控件"铁律**仅应用轨**,网页/移动轨吸底 CTA 豁免;页面用视口断点、组件用容器查询。
+- **新增示范页**:`page-shell.html` / `search-filter.html` / `preview.html` / `states.html`。
+- 守住全部铁规与 Aham 取值;Office/邮件轨为占位,待单独立项。
+
 ## v5.1 — 清理旧/重复类
 - **删除 8 个与新 `text-*` 重复的旧排版类**(`t-display`/`t-title`/`t-heading`/`t-card-title`/`t-body`/`t-ui`/`t-label`/`t-caption`);docs 与示范页的引用已迁移到 `text-*`。
 - **删除 7 个死代码类**(零引用:`review`/`checklist`/`avatar`/`num-input`/`frow`/`fsection`/`wrap-pad`)。

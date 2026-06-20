@@ -12,3 +12,6 @@ Icon?
 # Temp
 *.tmp
 *.log
+
+# local tooling
+.claude/
