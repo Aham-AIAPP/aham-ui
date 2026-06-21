@@ -6,6 +6,8 @@
 
 **八层结构**:0 原则 · 1 基础(含国际化/RTL、隐私) · 2 控件与组件 · 3 组合规则 · 4 模式 · 5 介质落地 · 6 输入 · 7 系统支撑 · **8 页面布局体系(v6.0 新增)**。
 
+**版本 v6.1**——第 2 层新增 **2.9 媒体与对话**(纳入自 AhamVoice 的 9 个招牌自创件:媒体播放器/逐句转写+说话人标记/正文排版/对话输入/附件卡/头像/侧栏三槽/认证壳/表单分组),CSS 进 `aham-ui.css` 第 9 节,示范 `examples/media.html`;**纯追加,八层结构与既有类不动**。同时全景展示页重建为手写可维护版(含右侧目录、汇总布局示范)。
+
 **版本 v6.0**——新增**第 8 层 页面布局体系**:把页面级布局从"散在 examples 的事实约定"升为成文规则,且**按落地介质分四轨**(网页/应用/Office/邮件)。覆盖:页面骨架与页型(Canonical Layouts)、页眉、搜索筛选、状态(空/加载/错误/骨架)、预览模式、内容密度、容器查询、弹窗按钮顺序、i18n-RTL 布局、z-index 阶梯、打印。补齐两轮调研(Apple HIG + 业内横扫 Material/Carbon/Ant/Polaris/Fluent/GOV.UK 等)缺口约 22 项。**断点改为网页 rem 为单一事实源、应用 dp 派生**(废止 v5 的 sm380/md860/lg1280)。
 此前:v5.1 清理 15 个旧/重复类;v5.0 对照 Apple HIG 完整性审计补全 30 项(Dynamic Type、Differentiate Without Color、VoiceOver、Drag and drop、Loading 分级、标准快捷键、焦点组、RTL、隐私等)。
 
@@ -134,7 +136,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 **命中区(更正)**:Apple **唯一公开**的命中区数字是 **44×44pt**(明确涵盖指针);macOS 实际控件约 22–24pt。"28pt 指针最小值"是第三方约定、**非 Apple 官方**。Aham 自定取值,但保留原则——**围绕小目标(图标按钮)加 padding 形成命中区**,桌面 ≥32(含 padding)、触屏 Large=44。
 
-### 2.1–2.8 组件(按 8 组,各守铁规)
+### 2.1–2.9 组件(按 9 组,各守铁规)
 - **2.1 动作 Actions**(全变体):
   - 按钮 `.btn`:层级 `--primary/secondary/ghost/danger` × 尺寸 `--sm/(md 默认)/--lg`;状态 hover/active/focus/disabled/**`.is-loading`**;变体 **全宽 `--block` / toggle `--toggle[aria-pressed]` / 链接 `--link`** / 图标+文字(gap) / 纯图标 `.icon-btn`。**一组一 primary;宽度自适应。**
   - 按钮组 `.btn-group`:相邻合并描边。
@@ -189,6 +191,17 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
   - **仅浮层有阴影;同心圆角。**
   - 示范:`examples/overlays.html`。
 - **2.8 布局容器**:外壳/栅格/堆叠/分隔/分割/滚动区。间距走 spacing scale。
+- **2.9 媒体与对话 Media & Conversation(v6.1,纳入自 AhamVoice)**:CSS 见 `aham-ui.css` 第 9 节,示范 `examples/media.html`。
+  - **媒体播放器 `.player` / `.player--mini`**:结构 `.player`(flex)= `.icon-btn`(播放/暂停)+ `.player__wave`(波形)+ `.player__time`(mono 时间码,`.sep` 分隔)。**波形=灰阶 `--ink-4` + 已播放段一抹蓝 `--accent` + 播放头 `.ph`**(落实 §2.5 既有"音频=灰阶波形+一抹蓝");波形 `role="slider"` 可聚焦带焦点环;`--mini` 矮档(卡片内试听)。约束:时间用 mono、蓝只染已播放段、波形不堆色。
+  - **逐句转写 `.transcript` + 说话人标记原子 `.speaker-marker`**:`.transcript__row`(grid:时间 mono | 说话人+文本),当前播放句 `.is-current` = **扁平灰**高亮(非蓝)。`.speaker-marker--s0..s5` **用形状区分类别(●■◆○□▬),不靠颜色**——单蓝体系表达多类别的范式,可复用到任何多类别场景。约束:类别区分必须形状/字母,灰度走查须可辨。
+  - **正文排版 `.prose`**:长文产物(纪要/逐字稿)排版,继承既有 token。约束:**行宽 = `--read-max`(65ch)、表格只横线、强调用字重不用衬线、代码 mono**。
+  - **对话式输入 `.composer`**:`.composer__input`(textarea,无边框)+ `.composer__bar`(`.composer__tools` 图标行 + `.composer__send` 主操作)。约束:**一组一 primary**(发送);`focus-within` 焦点环;Enter 发送为平台约定,**不 surface 成 chrome**。
+  - **附件/引用卡 `.attachment`**:grid = `.attachment__type`(mono 大写类型标)| `.attachment__body`(`__name` + `__meta`)| `.attachment__actions`。hover 描边 `--ink-3`。
+  - **头像 `.avatar`(`--xs/sm/lg/xl`)**:圆形 `--r-pill`,`--panel` 底 + **`--ink-2` 首字母**;**不加品牌色**。尺寸档 token `avatar.xs/sm/md/lg/xl` = 20/24/32/40/56。
+  - **侧栏三槽 `.sidebar__brand / __nav / __foot`**:官方 `.sidebar` 标准内部三槽(顶品牌 + 中导航 `flex:1` 撑开滚动 + 底固定项,底带分隔线)。是对 `.sidebar` 的组合,非新壳。
+  - **认证/居中页壳 `.auth-shell` + `.brand-mark`**:居中页(登录/向导),`__brand`(品牌标,`.brand-mark` = **唯一蓝点缀**的 logo 方块)+ `__card`(宽 `--auth-max` 420)。补 §8 应用轨"仅登录/向导/空态居中"。
+  - **表单分组 `.form-section` / `__title`**:`.field` 的上层分组容器(分组标题 + 一组字段),分组间顶部细线。
+  - **lint 自查(第 7 章)**:① `.speaker-marker` 等多类别**必有形状/文字通道,不只颜色**;② `.player` 波形蓝只在已播放段、时间 mono;③ `.prose` 表格无竖线、无衬线强调、行宽 ≤65ch;④ `.avatar` 不得使用品牌色/语义色;⑤ `.composer` 一组一 primary;⑥ 九件颜色/尺寸/圆角只引既有 token(头像尺寸用 `avatar.*`),无裸值;⑦ `.auth-shell` 蓝仅出现在 `.brand-mark`/主按钮。
 
 **暗色**:所有组件引用语义 token,暗色下值切换,组件零改动自动适配(已验证)。
 

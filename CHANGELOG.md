@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## v6.1 — 纳入 AhamVoice 招牌组件 + 全景页重建
+把 AhamVoice 沉淀的 9 个自创件正式纳入规范(纯追加,八层结构与既有类不动),并把不可编辑的打包全景页重建为手写可维护版。
+- **DESIGN.md 第 2 层新增 2.9 媒体与对话**:媒体播放器 `.player/.player--mini`(灰阶波形+一抹蓝+mono 时间码)、逐句转写 `.transcript` + 说话人标记 `.speaker-marker`(**形状区分类别,不靠颜色**)、正文排版 `.prose`(表格只横线/强调不衬线/行宽 65ch)、对话输入 `.composer`、附件卡 `.attachment`、头像 `.avatar`(不加品牌色)、侧栏三槽 `.sidebar__brand/__nav/__foot`、认证壳 `.auth-shell`+`.brand-mark`、表单分组 `.form-section`。各带第 7 章 lint 自查。
+- **aham-ui.css 新增第 9 节**承载上述 9 件 CSS(零类名冲突,只引既有 token)。
+- **tokens.json**:新增 `avatar` 尺寸档(20/24/32/40/56);版本 6.1.0。不为说话人标记加颜色 token(用形状,守铁律)。
+- **全景展示页 `index.html`/`docs.html` 重建**:原为 JS 打包 standalone(无源、不可维护)→ 手写单页,链 `aham-ui.css`/`aham-ui.js` 自举;右侧加简单 TOC(按大区);把页面布局四页(page-shell/search-filter/states/preview)内容**汇总进全景**;含暗色切换;保留 OG/社交卡片。
+- **示范目录 `examples/index.html`**:布局四页不再单列(已并入全景),新增「媒体与对话 v6.1」组指向 `examples/media.html`;四页文件保留不删。
+- 守全部铁规与 Aham 取值。
+
 ## v6.0 — 页面布局体系（第 8 层）+ 多轨
 重大更新:把页面级布局从"散在 examples 的事实约定"升为成文规则,并**按落地介质分四轨**(网页/应用/Office/邮件)。源于两轮调研(对照 Apple HIG 审计 + 业内横扫 Material/Carbon/Ant/Polaris/Fluent/GOV.UK/GNOME 等),补齐缺口约 22 项。
 - **新增 DESIGN.md 第 8 层 页面布局体系**:8.0 四轨总览(居中冲突裁决)· 8.1 断点与响应式 · 8.2 容器与宽度 · 8.3 页面骨架与页型(Pane 模型 + Canonical Layouts:list-detail/supporting-pane/feed)· 8.4 页眉 · 8.5 搜索筛选 · 8.6 弹窗(选型决策树 + 按钮顺序)· 8.7 状态(空/加载/错误/骨架)· 8.8 内容密度 · 8.9 预览模式 · 8.10 i18n/RTL/缩放 · 8.11 层叠/滚动/软键盘/动效/打印 · 8.12 介质四轨细则。
