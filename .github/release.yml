@@ -1,0 +1,14 @@
+# GitHub Releases「自动生成说明」分类（gh release create --generate-notes 时按此归类）
+changelog:
+  exclude:
+    authors:
+      - dependabot
+  categories:
+    - title: 新增
+      labels: ["feature", "enhancement"]
+    - title: 变更
+      labels: ["change", "refactor"]
+    - title: 修复
+      labels: ["bug", "fix"]
+    - title: 其他
+      labels: ["*"]
