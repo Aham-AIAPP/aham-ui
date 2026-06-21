@@ -43,3 +43,5 @@
 
 [Unreleased]: https://github.com/li599198347-svg/aham-ui/compare/v6.1.0...HEAD
 [6.1.0]: https://github.com/li599198347-svg/aham-ui/releases/tag/v6.1.0
+[6.0.0]: https://github.com/li599198347-svg/aham-ui/releases/tag/v6.0.0
+[5.1.0]: https://github.com/li599198347-svg/aham-ui/releases/tag/v5.1.0
