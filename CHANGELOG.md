@@ -1,4 +1,4 @@
-# 更新日志 CHANGELOG
+# Changelog 更新日志
 
 本项目所有重要变更记录于此。
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本 SemVer](https://semver.org/lang/zh-CN/)。
