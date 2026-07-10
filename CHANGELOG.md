@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+### 变更
+- 仓库迁移至新账号 [Aham-AIAPP](https://github.com/Aham-AIAPP)（旧账号不可用），全部链接更新；README 徽章行加「联系我（微信）」，「关于 Aham」加公众号/作者微信二维码，产品矩阵补 Aham Word。
+
+
 ## [6.1.0] - 2026-06-21
 ### 新增
 - 第 2 层新增 **2.9 媒体与对话**：9 个纳入自 AhamVoice 的招牌组件——媒体播放器 `.player`/`.player--mini`（灰阶波形 + 已播放段一抹蓝 + mono 时间码）、逐句转写 `.transcript` + 说话人标记 `.speaker-marker`（**形状区分类别、不靠颜色**）、正文排版 `.prose`、对话输入 `.composer`、附件卡 `.attachment`、头像 `.avatar`、侧栏三槽 `.sidebar__brand/__nav/__foot`、认证壳 `.auth-shell`、表单分组 `.form-section`；各带第 7 章 lint 自查。
@@ -41,7 +45,7 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/li599198347-svg/aham-ui/compare/v6.1.0...HEAD
-[6.1.0]: https://github.com/li599198347-svg/aham-ui/releases/tag/v6.1.0
-[6.0.0]: https://github.com/li599198347-svg/aham-ui/releases/tag/v6.0.0
-[5.1.0]: https://github.com/li599198347-svg/aham-ui/releases/tag/v5.1.0
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v6.1.0...HEAD
+[6.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.1.0
+[6.0.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.0.0
+[5.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v5.1.0

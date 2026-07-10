@@ -1,40 +1,41 @@
 # Aham UI — 供 AI 消费的设计系统
 
-[![Release](https://img.shields.io/github/v/release/li599198347-svg/aham-ui?color=336EE8)](https://github.com/li599198347-svg/aham-ui/releases)
+[![Release](https://img.shields.io/github/v/release/Aham-AIAPP/aham-ui?color=336EE8)](https://github.com/Aham-AIAPP/aham-ui/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-336EE8.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-Pages-336EE8.svg)](https://li599198347-svg.github.io/aham-ui/)
+[![Docs](https://img.shields.io/badge/docs-Pages-336EE8.svg)](https://aham-aiapp.github.io/aham-ui/)
 [![Type](https://img.shields.io/badge/type-Design%20System-336EE8.svg)](#)
+[![联系我](https://img.shields.io/badge/%E8%81%94%E7%B3%BB%E6%88%91-%E5%BE%AE%E4%BF%A1-336EE8.svg?logo=wechat&logoColor=white)](assets/wechat-qr.png)
 
 ![Aham UI — 供 AI 消费的设计系统](assets/social-preview.png)
 
-> **Aham 应用矩阵**：**Aham UI** · [Aham Survey](https://github.com/li599198347-svg/aham-survey) · [Aham Voice](https://github.com/li599198347-svg/aham-voice) · [Aham PPT](https://github.com/li599198347-svg/aham-ppt)
+> **Aham 应用矩阵**：**Aham UI** · [Aham Word](https://github.com/Aham-AIAPP/aham-word) · [Aham Survey](https://github.com/Aham-AIAPP/aham-survey) · [Aham Voice](https://github.com/Aham-AIAPP/aham-voice) · [Aham PPT](https://github.com/Aham-AIAPP/aham-ppt)
 
 把设计语言写成一份**机器可读、自洽**的单一事实源——AI 据此产出，字体、颜色、间距处处一致。
 
-**🖥 在线全景（所有组件就地预览）→ <https://li599198347-svg.github.io/aham-ui/>**
+**🖥 在线全景（所有组件就地预览）→ <https://aham-aiapp.github.io/aham-ui/>**
 
 ## 预览
 
-> 以下截图取自[在线全景页](https://li599198347-svg.github.io/aham-ui/)——这一页本身就是用 Aham UI 做成的「活样板」。
+> 以下截图取自[在线全景页](https://aham-aiapp.github.io/aham-ui/)——这一页本身就是用 Aham UI 做成的「活样板」。
 
 <table>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://li599198347-svg.github.io/aham-ui/"><img src="assets/shots/components.png" alt="组件库"></a>
+      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/components.png" alt="组件库"></a>
       <br><b>组件库</b> · 约 75 个组件，分 9 大类，每件守铁规
     </td>
     <td width="50%" valign="top">
-      <a href="https://li599198347-svg.github.io/aham-ui/"><img src="assets/shots/media.png" alt="媒体与对话"></a>
+      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/media.png" alt="媒体与对话"></a>
       <br><b>媒体与对话</b> · v6.1 招牌组件（播放器 / 逐句转写 / 对话输入）
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top">
-      <a href="https://li599198347-svg.github.io/aham-ui/"><img src="assets/shots/palette.png" alt="色板与文字"></a>
+      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/palette.png" alt="色板与文字"></a>
       <br><b>色板与文字</b> · 三层灰 + 单蓝 + 文字四级（带对比度）
     </td>
     <td width="50%" valign="top">
-      <a href="https://li599198347-svg.github.io/aham-ui/"><img src="assets/shots/layouts.png" alt="页面布局"></a>
+      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/layouts.png" alt="页面布局"></a>
       <br><b>页面布局</b> · 页眉 / 搜索筛选 / 状态 / 预览
     </td>
   </tr>
@@ -74,7 +75,7 @@
 | 单一事实源（机读 token，亮+暗+文本样式+布局+尺寸） | [`tokens.json`](./tokens.json) |
 | 完整规范（八层） | [`DESIGN.md`](./DESIGN.md) |
 | 参考实现 | [`aham-ui.css`](./aham-ui.css) · [`aham-ui.js`](./aham-ui.js) |
-| 在线全景展示页（所有组件就地预览） | [`index.html`](./index.html) · [Pages](https://li599198347-svg.github.io/aham-ui/) |
+| 在线全景展示页（所有组件就地预览） | [`index.html`](./index.html) · [Pages](https://aham-aiapp.github.io/aham-ui/) |
 | 示范源码 | [`examples/`](./examples/) |
 | Office 落地（HEX + 字体映射） | [`aham-ui-office.md`](./aham-ui-office.md) |
 | 设计依据（布局调研报告） | [`docs/`](./docs/) |
@@ -87,7 +88,7 @@
 
 ## 版本与许可
 
-- 版本与下载：[Releases](https://github.com/li599198347-svg/aham-ui/releases)
+- 版本与下载：[Releases](https://github.com/Aham-AIAPP/aham-ui/releases)
 - 变更记录：[CHANGELOG.md](CHANGELOG.md)（Keep a Changelog · SemVer）
 - 参与贡献：[CONTRIBUTING.md](CONTRIBUTING.md)
 - 许可：[MIT](LICENSE)
@@ -102,7 +103,14 @@ Aham 来自 *aha moment*。每个工具只把一件事做利落。
 
 | 应用 | 一句话 |
 |---|---|
-| [Aham UI](https://github.com/li599198347-svg/aham-ui) | 供 AI 消费的设计系统——写一次规范，AI 产出处处一致 |
-| [Aham Survey](https://github.com/li599198347-svg/aham-survey) | 现场调研工具（macOS）——聊一圈，调研结果自己长出来 |
-| [Aham Voice](https://github.com/li599198347-svg/aham-voice) | 录音转写与会议纪要（macOS）——录一段会，纪要已经写好 |
-| [Aham PPT](https://github.com/li599198347-svg/aham-ppt) | 咨询级 AI PPT 制作技能——丢一堆素材，幻灯片出来了 |
+| [Aham UI](https://github.com/Aham-AIAPP/aham-ui) | 供 AI 消费的设计系统——写一次规范，AI 产出处处一致 |
+| [Aham Word](https://github.com/Aham-AIAPP/aham-word) | 供 AI 消费的 Word 规范——AI 据规范产出处处一致的 .docx |
+| [Aham Survey](https://github.com/Aham-AIAPP/aham-survey) | 现场调研工具（macOS）——聊一圈，调研结果自己长出来 |
+| [Aham Voice](https://github.com/Aham-AIAPP/aham-voice) | 录音转写与会议纪要（macOS）——录一段会，纪要已经写好 |
+| [Aham PPT](https://github.com/Aham-AIAPP/aham-ppt) | 咨询级 AI PPT 制作技能——丢一堆素材，幻灯片出来了 |
+
+### 关注 · 交流
+
+公众号看更多 AI 工具实践与更新；也欢迎扫码加我，交流与反馈。
+
+<p><img src="assets/wechat-qr.png" width="640" alt="关注 Aham 公众号 / 加作者微信"></p>

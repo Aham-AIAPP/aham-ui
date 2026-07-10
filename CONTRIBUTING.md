@@ -4,7 +4,7 @@
 
 ## 报告问题 / 提议
 
-- 用 [Issue 模板](https://github.com/li599198347-svg/aham-ui/issues/new/choose) 提交：**Bug 反馈**（设计/CSS 不一致）或 **功能提议**（新组件/规范）。
+- 用 [Issue 模板](https://github.com/Aham-AIAPP/aham-ui/issues/new/choose) 提交：**Bug 反馈**（设计/CSS 不一致）或 **功能提议**（新组件/规范）。
 - 描述清楚：期望 vs 实际、所在文件、浏览器/环境。
 
 ## 核心理念：单一事实源
@@ -39,4 +39,4 @@
 
 ## 许可
 
-贡献默认遵 [MIT](./LICENSE)。维护者：@li599198347-svg
+贡献默认遵 [MIT](./LICENSE)。维护者：@Aham-AIAPP
