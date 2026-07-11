@@ -6,6 +6,16 @@
 
 ## [Unreleased]
 
+## [7.0.1] - 2026-07-11
+### 修复
+- **表格复选框由蓝改回墨色** `#262626`（守「选中 = 墨色，不用蓝」铁律；`preview/component-table.html` 的 `accent-color`）。
+- **dashboard 导航图标不渲染**：`lucide.createIcons()` 在 React 异步挂载前就调用了，改为挂载后重试兜底。
+- **GitHub Pages 部署**：新增 `.nojekyll`，自包含全景页按原样服务、不经 Jekyll（原失败为一次性 ID-token 超时，已随重推恢复）。
+### 变更
+- **README 章节统一到 Aham 家族模板**（为什么做 / 定位 / 能做什么 / 预览 / 开始使用 / 更新记录 / 关于 Aham / 关注·交流），与 aham-word / ppt / voice / survey 对齐；徽章补「联系我（微信）」与「在线全景」；「关于 Aham」矩阵补 Aham Word、Aham Excel（6 行）；预览配图刷新（dashboard / 图标 / 组件 / 色板）。
+### 新增
+- `ORIGIN.md`（来源与脱敏说明，对齐家族仓库）。
+
 ## [7.0.0] - 2026-07-11
 
 > **结构重构**：仓库改为「门面在根 + 完整设计系统在 `design-system/`」。设计系统整体采用组件库 / skill 打包格式（更利于 AI 消费）；根只保留 README 门面、LICENSE、CHANGELOG、社区文件、社交封面、在线全景、调研 docs。**这是破坏性的路径变更（消费方引用需更新），发版建议 MAJOR（v7.0.0）。**
@@ -62,7 +72,8 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.0.0...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.0.1...HEAD
+[7.0.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.0.1
 [7.0.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.0.0
 [6.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.1.0
 [6.0.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.0.0

@@ -2,116 +2,89 @@
 
 [![Release](https://img.shields.io/github/v/release/Aham-AIAPP/aham-ui?color=336EE8)](https://github.com/Aham-AIAPP/aham-ui/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-336EE8.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-Pages-336EE8.svg)](https://aham-aiapp.github.io/aham-ui/)
+[![在线全景](https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E5%85%A8%E6%99%AF-Pages-336EE8.svg)](https://aham-aiapp.github.io/aham-ui/)
 [![Type](https://img.shields.io/badge/type-Design%20System-336EE8.svg)](#)
 [![联系我](https://img.shields.io/badge/%E8%81%94%E7%B3%BB%E6%88%91-%E5%BE%AE%E4%BF%A1-336EE8.svg?logo=wechat&logoColor=white)](assets/wechat-qr.png)
 
-![Aham UI — 供 AI 消费的设计系统](assets/social-preview.png)
+![Aham UI — 写一次规范，AI 产出处处一致](assets/social-preview.png)
 
-> **Aham 应用矩阵**：**Aham UI** · [Aham Word](https://github.com/Aham-AIAPP/aham-word) · [Aham Survey](https://github.com/Aham-AIAPP/aham-survey) · [Aham Voice](https://github.com/Aham-AIAPP/aham-voice) · [Aham PPT](https://github.com/Aham-AIAPP/aham-ppt)
+## 为什么做
 
-把设计语言写成一份**机器可读、自洽**的单一事实源——AI 据此产出，字体、颜色、间距处处一致。
+让 AI 画个界面，几秒钟的事。但同一个需求做三次——**字体、间距、颜色，常常是三个样**。你把要求说得再细，它每次还是在「凭感觉」。
 
-**🖥 在线全景（所有组件就地预览）→ <https://aham-aiapp.github.io/aham-ui/>**
+问题不在 AI 不够聪明，在它手里**没有一份可依的标准**。
+
+这套设计系统为此而做：把一整套设计语言，写成一份**机器可读、自洽**的单一事实源，AI 据此产出、处处一致。它不是给人看的规范文档，是**供 AI 消费**的设计系统——写一次，AI 每次都照着来。
+
+## 定位
+
+产出的不是「某一个还行的界面」，而是一套**可定义、可复用、可传承的设计系统**：
+
+- **一致** — 取值集中在单一事实源 `tokens.json`，AI 每次从同一处取值，输出不再漂移。
+- **可定义** — 颜色 / 字号 / 间距 / 组件规则都是机读取值，可精确描述、可 diff、可版本管理。
+- **考虑全** — 从原则到页面布局分**八层**成文，组件带机读契约（什么别乱造），不会漏。
+- **克制一致** — 冷色的纸、钢蓝点缀、扁平无阴影、状态 = 符号 + 文字，是这套设计的性格。
+
+> 简言之：做的是「一套规范 + 据规范产出的一致性」，不是「一次性的漂亮界面」。
+
+## 能做什么
+
+核心是「取值 / 规范 / 组件」三层，让样式可定义、产出可一致：
+
+- **单一事实源（取值）** — `design-system/tokens.json`：颜色（亮 + 暗）、文本样式、间距、圆角、尺寸、图标。改这里 = 改全局。
+- **完整规范（规则）** — `design-system/DESIGN.md` **八层**：原则 / 基础 / 控件与组件 / 组合规则 / 模式 / 介质落地 / 输入 / 系统支撑 / **页面布局体系（分网页·应用·Office·邮件四轨）**。
+- **组件库（构件）** — **17 个组件**各带机读契约 `components/*.json` + 就地预览 `preview/*.html`；`components.css` / `colors_and_type.css` 即取即用；`ui_kits/dashboard/` 是成品示范。
+- **图标** — [Lucide](https://lucide.dev)（ISC）**51 个语义图标**，线性单色、跟随文字色，状态图标必配文字。
+- **Office 落地** — `aham-ui-office.md`：Word / Excel / PPT 的 HEX + 字体映射。
+- **一键换品牌** — 改 `tokens.json`（色值 / 字体 / 字号）即换皮，下游 CSS / 组件 / Office 全部派生，不动代码。
 
 ## 预览
 
-> 以下截图取自[在线全景页](https://aham-aiapp.github.io/aham-ui/)——这一页本身就是用 Aham UI 做成的「活样板」。
-
 <table>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/components.png" alt="组件库"></a>
-      <br><b>组件库</b> · 约 75 个组件，分 9 大类，每件守铁规
-    </td>
-    <td width="50%" valign="top">
-      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/media.png" alt="媒体与对话"></a>
-      <br><b>媒体与对话</b> · v6.1 招牌组件（播放器 / 逐句转写 / 对话输入）
-    </td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top">
-      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/palette.png" alt="色板与文字"></a>
-      <br><b>色板与文字</b> · 三层灰 + 单蓝 + 文字四级（带对比度）
-    </td>
-    <td width="50%" valign="top">
-      <a href="https://aham-aiapp.github.io/aham-ui/"><img src="assets/shots/layouts.png" alt="页面布局"></a>
-      <br><b>页面布局</b> · 页眉 / 搜索筛选 / 状态 / 预览
-    </td>
-  </tr>
+<tr>
+<td width="50%"><img src="assets/shots/dashboard.png" alt="成品 dashboard"><br><sub><b>成品 dashboard</b> · 侧栏 + 指标 + 图表 + 状态，整屏全用 token 拼出</sub></td>
+<td width="50%"><img src="assets/shots/icons.png" alt="图标层"><br><sub><b>图标层</b> · Lucide(ISC) 51 件 · currentColor 继承 ink</sub></td>
+</tr>
+<tr>
+<td width="50%"><img src="assets/shots/components.png" alt="组件 · 就地预览"><br><sub><b>组件 · 就地预览</b> · 只横线表 + 符号+文字状态 + 选中=墨色不用蓝</sub></td>
+<td width="50%"><img src="assets/shots/palette.png" alt="色板与文字"><br><sub><b>色板 + 文字</b> · 三层灰 + 单蓝 + 文字四级 + 文本样式</sub></td>
+</tr>
 </table>
 
 **🌗 亮 / 暗双色**（全景页右上角可切换）：
 
-![暗色模式](assets/shots/components-dark.png)
+<img src="assets/shots/components-dark.png" alt="暗色模式" width="100%">
 
-## 设计性格
+> 所有组件就地预览 → **在线全景页 <https://aham-aiapp.github.io/aham-ui/>**
 
-**冷色的纸、克制的金属感、对话式**——极简、克制、内容优先。
+## 开始使用
 
-- **单一强调色**：钢蓝 `#336EE8`，只用于点缀（logo / 主操作 / 发送 / 选中）。"第一眼就注意到蓝色，就算超标。"
-- **三层灰背景**（`#FFFFFF` / `#F3F3F3` / `#E7E7E7`），层级靠背景与留白、不靠阴影；卡片无边框无阴影，仅浮层有一层柔和阴影。
-- **单一无衬线**（Inter + 雅黑/黑体），层级只靠字号与字重；数字用等宽 JetBrains Mono。
-- **不靠颜色单独传达**：状态 = 符号 + 文字双通道；多类别用形状/文字区分（如说话人标记）。
-- 亮 / 暗双色 · 无障碍 + RTL。
+最简单：**把本仓库地址 `https://github.com/Aham-AIAPP/aham-ui` 发给 Claude，让它按 `design-system/` 消费**；或下载后把 `design-system/` 目录交给你的 AI。
 
-## 能力规模
+**AI 消费顺序**：`SKILL.md`（品牌要点）→ `tokens.json`（值）→ `DESIGN.md`（八层规则）→ `components/` + `preview/`（契约与预览）→ `colors_and_type.css` / `components.css`（运行时）→ `examples/` + `ui_kits/`（成品）→ `aham-ui-office.md`（Office）。
 
-- **八层规范**：原则 / 基础 / 控件与组件 / 组合规则 / 模式 / 介质落地 / 输入 / 系统支撑 / **页面布局体系**。
-- **约 75 个组件**（CSS 参考实现），其中 **17 件配机读契约 + 就地预览**（button / input / card / dialog / table / nav / checkbox / radio / toggle / segmented / progress / slider / search / tooltip / popover / menu + 图标）。
-- **三层 token 体系**（primitive → semantic → component），机读单一事实源。
-- **页面布局分四轨**：网页（居中收口 + 12 栅格 + rem 断点）/ 应用 macOS（左对齐铺满 + 展开 pane）/ Office（Word·Excel·PPT）/ 邮件。
-- 亮 / 暗双色 · 无障碍 + RTL + 容器查询 + 内容密度。
-
-> **方法论**：框架 / 比例 / 方法参考 Apple HIG 与业内主流设计系统（Material / Carbon / Ant / Polaris / Fluent / GOV.UK 等），**取值全部自定**（不抄 hex/pt）。经 Apple HIG 完整性审计补全 30 项，再经业内横扫补全页面级布局缺口约 22 项。
-
-## 怎么用（消费顺序）
-
-> **铁律：值只从 token 取，绝不自由发挥。** 完整设计系统在 **[`design-system/`](./design-system/)** —— 一个自包含、供 AI 消费的包（规范 + 机读 token + 17 组件契约与就地预览 + 图标 + Office 落地 + 成品 dashboard）。仓库根只放门面/说明与在线全景。
-
-| 用途 | 文件 |
-|---|---|
-| AI 消费入口 / 阅读顺序 | [`SKILL.md`](./design-system/SKILL.md) · [`AGENTS.md`](./design-system/AGENTS.md) · [`library-consumption.json`](./design-system/library-consumption.json) |
-| 单一事实源（机读 token，亮+暗+文本样式+布局+尺寸+图标） | [`tokens.json`](./design-system/tokens.json) |
-| 完整规范（八层） | [`DESIGN.md`](./design-system/DESIGN.md) |
-| 品牌参考（叙述版） | [`README.md`](./design-system/README.md) |
-| 运行时 CSS + 组件 CSS + 机读镜像 | [`colors_and_type.css`](./design-system/colors_and_type.css) · [`components.css`](./design-system/components.css) · [`css.json`](./design-system/css.json) |
-| 组件契约 + 就地预览（17 件，含图标） | [`components/`](./design-system/components/) · [`preview/`](./design-system/preview/) |
-| 图标（Lucide · ISC · 51 起始件 + 雪碧图） | [`icons/`](./design-system/icons/) |
-| 参考实现 + 示范 | [`aham-ui.css`](./design-system/aham-ui.css) · [`examples/`](./design-system/examples/) |
-| 成品 UI Kit | [`ui_kits/dashboard/`](./design-system/ui_kits/dashboard/) |
-| Office 落地（HEX + 字体映射） | [`aham-ui-office.md`](./design-system/aham-ui-office.md) |
-| 在线全景展示页（所有组件就地预览） | [`index.html`](./index.html) · [Pages](https://aham-aiapp.github.io/aham-ui/) |
-| 设计依据（布局调研报告） | [`docs/`](./docs/) |
-
-**AI 消费顺序**：`design-system/SKILL.md`（品牌要点）→ `tokens.json`（值）→ `DESIGN.md`（八层规则）→ `components/` + `preview/`（契约与预览）→ `colors_and_type.css` / `components.css`（运行时）→ `examples/` + `ui_kits/`（成品）→ `aham-ui-office.md`（Office）。
-
-## 性质说明
-
-这是**设计规范 + 参考实现（CSS）**，主要供 AI 据规范产出一致输出；组件 CSS 尚未在生产级 React / Swift 中逐一验证。
-
-## 版本与许可
-
-- 版本与下载：[Releases](https://github.com/Aham-AIAPP/aham-ui/releases)
-- 变更记录：[CHANGELOG.md](CHANGELOG.md)（Keep a Changelog · SemVer）
-- 参与贡献：[CONTRIBUTING.md](CONTRIBUTING.md)
-- 许可：[MIT](LICENSE)
+> 想换成你自己的品牌？复制 `tokens.json`，改色值 / 字号 / 间距——下游 CSS、组件、Office 全部派生，**不改规则本身**。
 
 ---
 
+## 更新记录
+
+[Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md)（Keep a Changelog · SemVer） · [CONTRIBUTING](CONTRIBUTING.md) · [MIT](LICENSE)
+
 ## 关于 Aham
 
-> **把灵光一现，做成能用的 AI 工具。**
-
-Aham 来自 *aha moment*。每个工具只把一件事做利落。
+> 把灵光一现，做成能用的 AI 工具。Aham 来自 *aha moment*，每个工具只把一件事做利落，共享同一套设计地基。
 
 | 应用 | 一句话 |
 |---|---|
-| [Aham UI](https://github.com/Aham-AIAPP/aham-ui) | 供 AI 消费的设计系统——写一次规范，AI 产出处处一致 |
+| **Aham UI**（本仓库） | 供 AI 消费的设计系统——写一次规范，AI 产出处处一致 |
 | [Aham Word](https://github.com/Aham-AIAPP/aham-word) | 供 AI 消费的 Word 规范——AI 据规范产出处处一致的 .docx |
-| [Aham Survey](https://github.com/Aham-AIAPP/aham-survey) | 现场调研工具（macOS）——聊一圈，调研结果自己长出来 |
-| [Aham Voice](https://github.com/Aham-AIAPP/aham-voice) | 录音转写与会议纪要（macOS）——录一段会，纪要已经写好 |
-| [Aham PPT](https://github.com/Aham-AIAPP/aham-ppt) | 咨询级 AI PPT 制作技能——丢一堆素材，幻灯片出来了 |
+| [Aham PPT](https://github.com/Aham-AIAPP/aham-ppt) | 克制的 AI PPT 制作技能——把素材做成方案级 PPT |
+| Aham Excel | 供 AI 消费的 Excel 规范——开发中 🚧 |
+| [Aham Voice](https://github.com/Aham-AIAPP/aham-voice) | 录音转写与会议纪要（macOS）——本地离线转写，纪要走你自己的模型 |
+| [Aham Survey](https://github.com/Aham-AIAPP/aham-survey) | 现场调研工具（macOS）——本地优先，把现场对话做成结构化调研成果 |
+
+来源与脱敏说明见 [`ORIGIN.md`](ORIGIN.md)。
 
 ### 关注 · 交流
 
