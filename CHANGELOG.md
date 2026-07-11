@@ -5,6 +5,8 @@
 单一事实源在 `tokens.json`，下游（DESIGN.md / aham-ui.css / Office）全部派生。
 
 ## [Unreleased]
+### 修复
+- 全景页 `index.html` 顶栏版本徽章由硬编码 `v6.1` 改为**读取 `tokens.json` 动态显示**（离线兜底当前版本），并去掉 banner 示范里过时的具体版本文案——不再随发版过时。
 
 ## [7.0.1] - 2026-07-11
 ### 修复

@@ -106,7 +106,7 @@
 
 </style>
 <style>/* =============================================================================
-   Aham UI — v6.1 (Apple HIG 框架重构 + 审计补全 + 清理旧/重复类;取值全用 Aham)
+   Aham UI — v7.0 (组件库 + 图标层 + Apple HIG 框架;取值全用 Aham)
    北极星：Claude desktop 气质——极简、克制、留白、内容优先。默认是"不加"。
    字体重设计：砍掉衬线混排，统一 Inter(西文)+雅黑/黑体(中文) 一套无衬线 + JetBrains Mono(数字)。
    纯 CSS 组件库——不依赖 React，任意 HTML 直接用 class 拼原型。
@@ -941,7 +941,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
     <div style="display:flex;align-items:center;gap:11px;">
       <span style="width:26px;height:26px;border-radius:7px;background:var(--accent);display:block;flex:none;"></span>
       <span style="font-weight:600;font-size:16px;letter-spacing:-.01em;color:var(--ink);">Aham&nbsp;UI</span>
-      <span style="font-family:var(--font-mono);font-size:11px;color:var(--ink-2);border:1px solid var(--line);border-radius:4px;padding:1px 6px;">v6.1</span>
+      <span id="aham-ver" style="font-family:var(--font-mono);font-size:11px;color:var(--ink-2);border:1px solid var(--line);border-radius:4px;padding:1px 6px;">v7.0.1</span>
     </div>
     <span style="margin-left:14px;font-size:13px;color:var(--ink-3);">供 AI 消费的设计系统 · 活样板</span>
     <div style="margin-left:auto;" class="seg" role="tablist" aria-label="主题切换">
@@ -1657,7 +1657,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
         </div>
         <div style="grid-column:span 2;display:flex;flex-direction:column;gap:8px;">
           <div style="background:var(--panel);border-radius:8px;padding:0;min-height:88px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:8px;">
-            <div class="banner" style="width:100%;background:var(--white);"><span class="status status--active">新版本</span><span style="font-size:13px;color:var(--ink-2);">v6.1 已就绪,清理 15 个旧类。</span><button class="btn btn--link" style="margin-left:auto;">查看</button></div>
+            <div class="banner" style="width:100%;background:var(--white);"><span class="status status--active">新版本</span><span style="font-size:13px;color:var(--ink-2);">新版本已就绪，见更新记录。</span><button class="btn btn--link" style="margin-left:auto;">查看</button></div>
           </div>
           <div style="font-size:12px;color:var(--ink);">横幅 <span style="color:var(--ink-3);">Banner</span></div>
         </div>
@@ -2949,4 +2949,4 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 .form-section__hint{font-size:var(--text-xs);color:var(--ink-2);margin-top:-10px;}
 
 </style>
-</body></html>
+<script>fetch('design-system/tokens.json').then(function(r){return r.json()}).then(function(t){var v=t&&t['$meta']&&t['$meta'].version;var e=document.getElementById('aham-ver');if(v&&e)e.textContent='v'+v;}).catch(function(){});</script></body></html>
