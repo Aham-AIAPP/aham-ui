@@ -564,6 +564,10 @@ function App() {
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
-<script>lucide.createIcons();</script>
+<script>
+  // React 渲染是异步的(Babel 先转译),必须等挂载后再画图标,并重试几次兜底
+  function drawIcons(){ try{ if(window.lucide&&lucide.createIcons) lucide.createIcons(); }catch(e){} }
+  [300,800,1500,2600].forEach(function(t){ setTimeout(drawIcons,t); });
+</script>
 </body>
 </html>
