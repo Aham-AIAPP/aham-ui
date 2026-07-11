@@ -1,0 +1,43 @@
+{
+  "slug": "menu",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["menu", "dropdown-menu", "context-menu", "action-menu"],
+  "variantDimensions": [
+    { "axis": "type", "values": ["dropdown", "context"] },
+    { "axis": "state", "values": ["default", "hover", "disabled"] }
+  ],
+  "representativeVariants": [
+    "dropdown-default",
+    "context-default"
+  ],
+  "anatomy": {
+    "parts": ["panel", "menu-item", "icon", "label", "shortcut", "separator", "submenu-arrow"],
+    "required": ["panel", "menu-item", "label"]
+  },
+  "structurePatterns": [
+    "Panel = white (tier1), radius lg (12px) bottom, md (8px) top",
+    "Shadow = popover shadow (0 3px 12px rgba(20,20,20,0.06))",
+    "Menu item height = 28px (compact) with 8px padding",
+    "Hover = fill hover (rgba(20,20,20,0.04)) — NOT blue",
+    "Selected/active = flat gray (tier3-line #E7E7E7)",
+    "Icon column = 20px fixed width (--icon-size-md)",
+    "Shortcut = mono (13px), ink-tertiary, right-aligned",
+    "Separator = 1px tier3-line with 8px horizontal margin",
+    "Danger menu item text = semantic danger (#9E3D31) on hover"
+  ],
+  "usageHints": [
+    "Triggered by button click (dropdown) or right-click (context)",
+    "Menu items should be sorted: most frequent first",
+    "Disabled items shown but non-interactive — ink-tertiary color",
+    "Submenu indicator = small chevron icon on item right edge"
+  ],
+  "doNotInvent": [
+    "Blue hover state — hover is subtle fill only",
+    "Icons in every menu item — only for items that benefit from visual recognition",
+    "Thick separators — 1px line only",
+    "Checkmarks in menu for multi-select — use Submenu or separate controls"
+  ],
+  "unknowns": ["Nested submenu depth limit", "Long menu scrolling behavior"]
+}

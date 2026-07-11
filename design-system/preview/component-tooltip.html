@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tooltip — Aham UI</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    /* ================================================
+       Tooltip — Preview Styles
+       ================================================ */
+
+    /* ---- 演示容器 ---- */
+    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+    .header { padding-bottom: var(--space-2, 8px); }
+    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+    .demo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 64px 48px; }
+    .demo-cell { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .demo-cell-label { font-family: var(--font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-tertiary); }
+
+    /* ---- 目标元素容器 ---- */
+    .target-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .target {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      height: 48px;
+      background: var(--ui-panel);
+      border: 1px solid var(--ui-border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-primary);
+      cursor: default;
+      user-select: none;
+      transition: background 0.15s ease;
+    }
+
+    .target-wrapper:hover .target {
+      background: var(--ui-border);
+    }
+
+    /* ---- Tooltip 基础 ---- */
+    .tooltip {
+      position: absolute;
+      padding: 6px 12px;
+      background: #262626;
+      color: #ffffff;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.4;
+      border-radius: 6px;
+      max-width: 240px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+    }
+
+    .target-wrapper:hover .tooltip {
+      opacity: 1;
+    }
+
+    /* ---- 箭头(4px 三角) ---- */
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+    }
+
+    /* ===== Position variants ===== */
+
+    /* 上 */
+    [data-pos="top"] .tooltip {
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    [data-pos="top"] .tooltip::after {
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid #262626;
+    }
+
+    /* 下 */
+    [data-pos="bottom"] .tooltip {
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    [data-pos="bottom"] .tooltip::after {
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-bottom: 4px solid #262626;
+    }
+
+    /* 左 */
+    [data-pos="left"] .tooltip {
+      right: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    [data-pos="left"] .tooltip::after {
+      left: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 4px solid #262626;
+    }
+
+    /* 右 */
+    [data-pos="right"] .tooltip {
+      left: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    [data-pos="right"] .tooltip::after {
+      right: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-right: 4px solid #262626;
+    }
+
+    /* ---- 说明标注 ---- */
+    .usage-note {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 48px;
+      padding: 12px 16px;
+      background: var(--ui-panel);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+    .usage-note::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ink-tertiary);
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Tooltip</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">方向变体</span>
+<div class="rail">
+  <div class="demo-grid">
+    <div class="demo-cell" data-pos="top">
+      <span class="demo-cell-label">上 (top)</span>
+      <div class="target-wrapper"><span class="target">悬停此处</span><span class="tooltip">保存</span></div>
+    </div>
+    <div class="demo-cell" data-pos="bottom">
+      <span class="demo-cell-label">下 (bottom)</span>
+      <div class="target-wrapper"><span class="target">悬停此处</span><span class="tooltip">删除</span></div>
+    </div>
+    <div class="demo-cell" data-pos="left">
+      <span class="demo-cell-label">左 (left)</span>
+      <div class="target-wrapper"><span class="target">悬停此处</span><span class="tooltip">新建文件</span></div>
+    </div>
+    <div class="demo-cell" data-pos="right">
+      <span class="demo-cell-label">右 (right)</span>
+      <div class="target-wrapper"><span class="target">悬停此处</span><span class="tooltip">更多选项</span></div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

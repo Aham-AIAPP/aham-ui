@@ -1,0 +1,40 @@
+{
+  "slug": "segmented-control",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["segmented-control", "segmented-button", "tab-picker"],
+  "variantDimensions": [
+    { "axis": "size", "values": ["sm", "md"] },
+    { "axis": "state", "values": ["default", "selected", "disabled"] },
+    { "axis": "count", "values": ["2", "3", "4"] }
+  ],
+  "representativeVariants": [
+    "md-3-default",
+    "md-3-selected",
+    "md-3-disabled"
+  ],
+  "anatomy": {
+    "parts": ["container", "segment", "label", "selected-indicator"],
+    "required": ["container", "segment", "label"]
+  },
+  "structurePatterns": [
+    "Container = panel background (#F3F3F3), radius md (8px)",
+    "Selected segment = white background — NOT blue fill",
+    "Selected text = ink-primary, unselected = ink-secondary",
+    "Segments separated by 2px gap (no visible divider lines)",
+    "Height = 32px (--layout-btn-height) for md, 28px for sm",
+    "Each segment has 12px horizontal padding"
+  ],
+  "usageHints": [
+    "Use for mutually exclusive view modes (list/grid, day/week/month)",
+    "Best for 2-4 segments — more should use dropdown menu",
+    "Active segment is WHITE card, not blue"
+  ],
+  "doNotInvent": [
+    "Blue selected segment — selected = white, not blue",
+    "Divider lines between segments — use gap instead",
+    "Square corners on container — use md radius"
+  ],
+  "unknowns": ["Icon+label combo segments", "Segmented control overflow behavior"]
+}

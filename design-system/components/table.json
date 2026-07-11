@@ -1,0 +1,45 @@
+{
+  "slug": "table",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["table", "datagrid", "data-table", "list"],
+  "variantDimensions": [
+    { "axis": "density", "values": ["comfortable", "standard", "compact"] },
+    { "axis": "type", "values": ["data", "selection", "sortable"] }
+  ],
+  "representativeVariants": [
+    "data-standard",
+    "selection-standard",
+    "sortable-standard"
+  ],
+  "anatomy": {
+    "parts": ["header-row", "data-row", "cell", "sort-indicator", "checkbox", "pagination"],
+    "required": ["header-row", "data-row", "cell"]
+  },
+  "structurePatterns": [
+    "Horizontal rules ONLY between rows — NO vertical lines, NO zebra stripes",
+    "Header cells = subhead style (13px, 500 weight), ink-secondary color",
+    "Data cells = body style (14px, 400 weight), ink-primary color",
+    "Numeric cells = right-aligned, mono font (JetBrains Mono)",
+    "Row heights: comfortable 44px, standard 36px, compact 28px",
+    "Selected row = flat gray background (tier3-line), NOT blue",
+    "Hover row = subtle fill (rgba(20,20,20,0.04))",
+    "Border color = tier3-line (#E7E7E7)"
+  ],
+  "usageHints": [
+    "Numbers right-aligned with mono font — essential for scanability",
+    "Status indicators = 6px dot + text, never colored pills or blocks",
+    "Sort indicator = subtle arrow, not accent blue unless active",
+    "Pagination below table, right-aligned",
+    "Density matches input mode: touch = comfortable, pointer = standard"
+  ],
+  "doNotInvent": [
+    "Vertical grid lines — Aham tables are horizontal-only",
+    "Zebra striping / alternating row colors",
+    "Full-row color backgrounds for status",
+    "Rounded table borders — tables are edge-to-edge within container",
+    "Sticky columns without explicit need"
+  ],
+  "unknowns": ["Column resize behavior", "Row expansion/inline edit pattern"]
+}

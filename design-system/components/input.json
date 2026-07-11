@@ -1,0 +1,42 @@
+{
+  "slug": "input",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["input", "text-field", "form-control"],
+  "variantDimensions": [
+    { "axis": "type", "values": ["text", "textarea", "select", "search"] },
+    { "axis": "state", "values": ["default", "hover", "focus", "disabled", "error"] }
+  ],
+  "representativeVariants": [
+    "text-default",
+    "textarea-default",
+    "select-default",
+    "search-default"
+  ],
+  "anatomy": {
+    "parts": ["label", "input-area", "placeholder", "helper-text", "error-text", "icon-leading"],
+    "required": ["input-area"]
+  },
+  "structurePatterns": [
+    "Input height = 36px (--layout-control-height)",
+    "Border = 1px solid --color-border (tier3-line #E7E7E7)",
+    "Border-radius = 8px (--radius-md)",
+    "Focus ring = 3px rgba(51,110,232,0.20)",
+    "Background = white (tier1) in default, panel (tier2) when disabled",
+    "Text uses ink-primary, placeholder uses ink-tertiary"
+  ],
+  "usageHints": [
+    "Label above input, not inside",
+    "Error state shows text below in semantic danger color, no red border fill",
+    "Search variant has magnifier icon on left",
+    "Never use colored backgrounds for inputs — white or panel only"
+  ],
+  "doNotInvent": [
+    "Filled/contained input backgrounds — Aham inputs are outlined only",
+    "Rounded-full inputs — use md radius (8px)",
+    "Underlined-only variant",
+    "Color-coded input borders beyond focus ring"
+  ],
+  "unknowns": ["Character count display", "Password visibility toggle"]
+}

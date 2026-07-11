@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); font-size: var(--aham-typography-fontSize-base); line-height: var(--aham-typography-lineHeight-normal); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; align-items: flex-start; gap: var(--space-3); }
+.story-label { width: 92px; flex-shrink: 0; font-size: var(--aham-typography-fontSize-xs); font-weight: var(--aham-typography-fontWeight-medium); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding-top: 10px; }
+.rail { display: flex; flex-direction: column; gap: var(--space-1); flex: 1; min-width: 0; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+
+/* @component-css-start */
+/* Component definitions — extracted to components.css by deterministic script */
+.input { height: var(--layout-control-height); padding: 0 var(--space-3); border: var(--border-width-thin) solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); color: var(--color-ink-primary); font-family: var(--font-sans); font-size: var(--aham-typography-fontSize-base); outline: none; width: 100%; box-sizing: border-box; transition: border-color var(--duration-fast) var(--ease-standard), box-shadow var(--duration-fast) var(--ease-standard); }
+.input::placeholder { color: var(--color-ink-tertiary); }
+.input:focus { border-color: var(--color-accent); box-shadow: var(--shadow-focus-ring); }
+.input:disabled { background: var(--color-surface-panel); color: var(--color-ink-tertiary); opacity: var(--opacity-disabled); cursor: not-allowed; }
+.textarea { height: auto; min-height: 80px; padding: var(--space-2) var(--space-3); resize: vertical; }
+.input-error-text { font-size: var(--aham-typography-fontSize-xs); color: var(--color-danger); }
+.input-affix { position: relative; display: flex; align-items: center; width: 100%; }
+.input-affix-icon { position: absolute; left: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--color-ink-tertiary); pointer-events: none; display: flex; align-items: center; }
+.input-affix .input { padding-left: 34px; }
+.input-suffix { position: absolute; right: var(--space-3); top: 50%; transform: translateY(-50%); color: var(--color-ink-tertiary); pointer-events: none; display: flex; align-items: center; }
+.select-native { appearance: none; cursor: pointer; padding-right: 34px; }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+  <div class="header"><h2>Input</h2></div>
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">默认</span>
+      <div class="rail"><input class="input" type="text" placeholder="请输入内容" data-evidence-sample="text-default"></div>
+    </div>
+    <div class="story">
+      <span class="story-label">已填写</span>
+      <div class="rail"><input class="input" type="text" value="编辑中的文本内容" data-evidence-sample="text-default"></div>
+    </div>
+    <div class="story">
+      <span class="story-label">禁用</span>
+      <div class="rail"><input class="input" type="text" value="禁用状态" disabled data-evidence-sample="text-default"></div>
+    </div>
+    <div class="story">
+      <span class="story-label">错误</span>
+      <div class="rail">
+        <input class="input" type="text" value="错误内容" data-evidence-sample="text-default">
+        <span class="input-error-text">请输入有效内容</span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+  <div class="stage">
+    <div class="story">
+      <span class="story-label">多行文本</span>
+      <div class="rail"><textarea class="input textarea" placeholder="请输入多行内容..." data-evidence-sample="textarea-default"></textarea></div>
+    </div>
+    <div class="story">
+      <span class="story-label">搜索</span>
+      <div class="rail">
+        <div class="input-affix" data-evidence-sample="search-default">
+          <span class="input-affix-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+          <input class="input" type="text" placeholder="搜索...">
+        </div>
+      </div>
+    </div>
+    <div class="story">
+      <span class="story-label">下拉选择</span>
+      <div class="rail">
+        <div class="input-affix" data-evidence-sample="select-default">
+          <select class="input select-native">
+            <option value="" disabled selected>请选择选项</option>
+            <option value="1">选项一</option>
+            <option value="2">选项二</option>
+            <option value="3">选项三</option>
+          </select>
+          <span class="input-suffix"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "headBoilerplate": "<link rel=\"stylesheet\" href=\"../../colors_and_type.css\">",
+  "corePreviewComponents": [
+    {
+      "slug": "button",
+      "reason": "fixed slot \"button\"; semantic=button:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/button.json",
+      "priority": 1,
+      "slot": "button"
+    },
+    {
+      "slug": "nav",
+      "reason": "fixed slot \"navigation\"; semantic=navigation:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/nav.json",
+      "priority": 2,
+      "slot": "navigation"
+    },
+    {
+      "slug": "card",
+      "reason": "fixed slot \"card\"; semantic=card:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/card.json",
+      "priority": 3,
+      "slot": "card"
+    },
+    {
+      "slug": "table",
+      "reason": "fixed slot \"table\"; semantic=table:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/table.json",
+      "priority": 4,
+      "slot": "table"
+    },
+    {
+      "slug": "dialog",
+      "reason": "fallback after fixed slots; semantic=dialog:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/dialog.json",
+      "priority": 5
+    },
+    {
+      "slug": "input",
+      "reason": "fallback after fixed slots; semantic=input:0.75; policy=fixed-slots-first",
+      "evidenceFile": "components/input.json",
+      "priority": 6
+    }
+  ],
+  "supportEvidenceComponents": [],
+  "allowedComponents": [
+    "button",
+    "nav",
+    "card",
+    "table",
+    "dialog",
+    "input"
+  ],
+  "screenBlueprints": [
+    {
+      "name": null,
+      "componentSlugs": [],
+      "role": "primary"
+    },
+    {
+      "name": null,
+      "componentSlugs": [],
+      "role": "secondary"
+    },
+    {
+      "name": null,
+      "componentSlugs": [],
+      "role": "secondary"
+    }
+  ],
+  "productContext": {
+    "kitType": null,
+    "productType": null,
+    "dominantCopy": [],
+    "pageNames": [],
+    "selectedFrameNames": []
+  },
+  "selectionPolicy": "fixed-slots-first",
+  "slotAssignments": [
+    {
+      "slot": "button",
+      "slug": "button",
+      "reason": "semantic"
+    },
+    {
+      "slot": "navigation",
+      "slug": "nav",
+      "reason": "semantic"
+    },
+    {
+      "slot": "card",
+      "slug": "card",
+      "reason": "semantic"
+    },
+    {
+      "slot": "table",
+      "slug": "table",
+      "reason": "semantic"
+    }
+  ],
+  "missingFixedSlots": [
+    "menu",
+    "tag"
+  ],
+  "fallbackComponents": [
+    "dialog",
+    "input"
+  ],
+  "needsNarrative": false,
+  "forbiddenInventedComponents": [],
+  "lowConfidence": false,
+  "warnings": [
+    "missing-fixed-slot:menu",
+    "missing-fixed-slot:tag"
+  ]
+}

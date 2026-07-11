@@ -58,7 +58,7 @@
 ## 能力规模
 
 - **八层规范**：原则 / 基础 / 控件与组件 / 组合规则 / 模式 / 介质落地 / 输入 / 系统支撑 / **页面布局体系**。
-- **约 75 个组件**，分 9 大类（含 v6.1 新增「媒体与对话」组）。
+- **约 75 个组件**（CSS 参考实现），其中 **17 件配机读契约 + 就地预览**（button / input / card / dialog / table / nav / checkbox / radio / toggle / segmented / progress / slider / search / tooltip / popover / menu + 图标）。
 - **三层 token 体系**（primitive → semantic → component），机读单一事实源。
 - **页面布局分四轨**：网页（居中收口 + 12 栅格 + rem 断点）/ 应用 macOS（左对齐铺满 + 展开 pane）/ Office（Word·Excel·PPT）/ 邮件。
 - 亮 / 暗双色 · 无障碍 + RTL + 容器查询 + 内容密度。
@@ -67,20 +67,24 @@
 
 ## 怎么用（消费顺序）
 
-> **铁律：值只从 token 取，绝不自由发挥。**
+> **铁律：值只从 token 取，绝不自由发挥。** 完整设计系统在 **[`design-system/`](./design-system/)** —— 一个自包含、供 AI 消费的包（规范 + 机读 token + 17 组件契约与就地预览 + 图标 + Office 落地 + 成品 dashboard）。仓库根只放门面/说明与在线全景。
 
 | 用途 | 文件 |
 |---|---|
-| AI 消费入口（先读这页） | [`AGENTS.md`](./AGENTS.md) |
-| 单一事实源（机读 token，亮+暗+文本样式+布局+尺寸） | [`tokens.json`](./tokens.json) |
-| 完整规范（八层） | [`DESIGN.md`](./DESIGN.md) |
-| 参考实现 | [`aham-ui.css`](./aham-ui.css) · [`aham-ui.js`](./aham-ui.js) |
+| AI 消费入口 / 阅读顺序 | [`SKILL.md`](./design-system/SKILL.md) · [`AGENTS.md`](./design-system/AGENTS.md) · [`library-consumption.json`](./design-system/library-consumption.json) |
+| 单一事实源（机读 token，亮+暗+文本样式+布局+尺寸+图标） | [`tokens.json`](./design-system/tokens.json) |
+| 完整规范（八层） | [`DESIGN.md`](./design-system/DESIGN.md) |
+| 品牌参考（叙述版） | [`README.md`](./design-system/README.md) |
+| 运行时 CSS + 组件 CSS + 机读镜像 | [`colors_and_type.css`](./design-system/colors_and_type.css) · [`components.css`](./design-system/components.css) · [`css.json`](./design-system/css.json) |
+| 组件契约 + 就地预览（17 件，含图标） | [`components/`](./design-system/components/) · [`preview/`](./design-system/preview/) |
+| 图标（Lucide · ISC · 51 起始件 + 雪碧图） | [`icons/`](./design-system/icons/) |
+| 参考实现 + 示范 | [`aham-ui.css`](./design-system/aham-ui.css) · [`examples/`](./design-system/examples/) |
+| 成品 UI Kit | [`ui_kits/dashboard/`](./design-system/ui_kits/dashboard/) |
+| Office 落地（HEX + 字体映射） | [`aham-ui-office.md`](./design-system/aham-ui-office.md) |
 | 在线全景展示页（所有组件就地预览） | [`index.html`](./index.html) · [Pages](https://aham-aiapp.github.io/aham-ui/) |
-| 示范源码 | [`examples/`](./examples/) |
-| Office 落地（HEX + 字体映射） | [`aham-ui-office.md`](./aham-ui-office.md) |
 | 设计依据（布局调研报告） | [`docs/`](./docs/) |
 
-**AI 消费顺序**：`tokens.json`（值）→ `DESIGN.md`（八层规则）→ `aham-ui.css`（组件 + 布局 + 文本样式 + 暗色）→ `examples/`（成品）→ `aham-ui-office.md`（Office）。
+**AI 消费顺序**：`design-system/SKILL.md`（品牌要点）→ `tokens.json`（值）→ `DESIGN.md`（八层规则）→ `components/` + `preview/`（契约与预览）→ `colors_and_type.css` / `components.css`（运行时）→ `examples/` + `ui_kits/`（成品）→ `aham-ui-office.md`（Office）。
 
 ## 性质说明
 

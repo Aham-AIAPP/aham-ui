@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aham 仪表盘 — UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<link rel="stylesheet" href="../../components.css">
+<script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+/* ═══ UIKit Page-Level Layout ═══ */
+.uikit-shell{width:100%;max-width:1184px;margin:0 auto;overflow:hidden;display:grid;grid-template-columns:var(--uikit-sidebar-w,220px) minmax(0,1fr);gap:0;height:100vh;max-height:100vh}
+.uikit-sidebar,.uikit-main,.uikit-toolbar{min-width:0}
+.uikit-sidebar{overflow:hidden;max-width:100%;display:flex;flex-direction:column;border-right:var(--border-width-thin) solid var(--color-border)}
+[data-component]{min-width:0;max-width:100%;overflow:hidden}
+.uikit-toolbar{display:flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-4);border-bottom:var(--border-width-thin) solid var(--color-border);background:var(--color-surface);min-height:52px;box-sizing:border-box}
+.uikit-responsive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4)}
+.uikit-table-wrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.uikit-truncate{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.uikit-nowrap{white-space:nowrap;flex-shrink:0}
+.uikit-action-cell{display:flex;align-items:center;gap:var(--space-2);min-width:0;max-width:160px;overflow:hidden}
+.uikit-action{min-width:0;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:900px){.uikit-shell{grid-template-columns:minmax(0,1fr)}.uikit-sidebar{display:none}.uikit-responsive-grid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){.uikit-toolbar{flex-direction:column;align-items:stretch}.uikit-responsive-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* ═══ UIKit Supplementary ═══ */
+.uikit-main{display:flex;flex-direction:column;overflow:hidden;background:var(--color-bg-panel)}
+.uikit-content{flex:1;overflow-y:auto;padding:var(--space-5)}
+.uikit-sidebar-brand{padding:var(--space-4) var(--space-4) var(--space-2);display:flex;align-items:center;gap:var(--space-2)}
+.uikit-sidebar-brand-name{font-family:var(--font-display);font-size:var(--aham-typography-fontSize-lg);font-weight:var(--aham-typography-fontWeight-semibold);color:var(--color-ink-primary)}
+.uikit-sidebar-nav{flex:1;overflow-y:auto;padding:0;display:flex;flex-direction:column}
+.uikit-sidebar-footer{padding:var(--space-2);border-top:var(--border-width-thin) solid var(--color-border)}
+.uikit-toolbar-spacer{flex:1;min-width:0}
+.uikit-search-wrap{position:relative;display:flex;align-items:center;width:260px}
+.uikit-search-wrap .input{padding-left:34px}
+.uikit-search-icon{position:absolute;left:var(--space-3);top:50%;transform:translateY(-50%);color:var(--color-ink-tertiary);pointer-events:none;display:flex;align-items:center}
+.uikit-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-4);margin-bottom:var(--space-5)}
+.uikit-stat-card{padding:var(--space-4);background:var(--color-surface);border-radius:var(--radius-lg)}
+.uikit-stat-label{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);margin-bottom:var(--space-1)}
+.uikit-stat-value{font-family:var(--font-mono);font-size:var(--aham-typography-fontSize-2xl);font-weight:var(--aham-typography-fontWeight-semibold);color:var(--color-ink-primary)}
+.uikit-stat-delta{font-size:var(--aham-typography-fontSize-xs);margin-top:var(--space-1)}
+.uikit-chart-section{background:var(--color-surface);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5)}
+.uikit-chart-title{font-size:var(--aham-typography-fontSize-sm);font-weight:var(--aham-typography-fontWeight-medium);color:var(--color-ink-primary);margin-bottom:var(--space-4)}
+.uikit-bar-chart{display:flex;align-items:flex-end;gap:var(--space-3);height:160px}
+.uikit-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:var(--space-2);height:100%;justify-content:flex-end}
+.uikit-bar-fill{width:100%;max-width:48px;background:var(--color-accent);border-radius:var(--radius-xs) var(--radius-xs) 0 0;transition:height var(--duration-slow) var(--ease-out);min-height:4px}
+.uikit-bar-label{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);white-space:nowrap}
+.uikit-section-header{font-size:var(--aham-typography-fontSize-sm);font-weight:var(--aham-typography-fontWeight-medium);color:var(--color-ink-primary);margin-bottom:var(--space-3)}
+.uikit-form-group{margin-bottom:var(--space-4)}
+.uikit-form-label{font-size:var(--aham-typography-fontSize-sm);font-weight:var(--aham-typography-fontWeight-medium);color:var(--color-ink-primary);margin-bottom:var(--space-1);display:block}
+.uikit-form-hint{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);margin-top:var(--space-1)}
+.uikit-settings-card{background:var(--color-surface);border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:var(--space-4)}
+.uikit-settings-title{font-size:var(--aham-typography-fontSize-base);font-weight:var(--aham-typography-fontWeight-semibold);color:var(--color-ink-primary);margin-bottom:var(--space-4)}
+.uikit-table-card{background:var(--color-surface);border-radius:var(--radius-lg);overflow:hidden}
+.uikit-table-header{padding:var(--space-3) var(--space-4);display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}
+.uikit-filter-row{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+
+/* Dialog overlay */
+.uikit-overlay{position:fixed;inset:0;background:var(--color-overlay);display:flex;align-items:center;justify-content:center;z-index:var(--z-modal)}
+.uikit-dlg-wrapper{animation:uikit-fade-in var(--duration-fast) var(--ease-out)}
+@keyframes uikit-fade-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Card composition in dashboard */
+.uikit-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-4);margin-bottom:var(--space-5)}
+.uikit-card-grid .card{width:auto}
+
+/* Page header */
+.uikit-page-title{font-family:var(--font-display);font-size:var(--aham-typography-fontSize-xl);font-weight:var(--aham-typography-fontWeight-semibold);color:var(--color-ink-primary);margin-bottom:var(--space-1)}
+.uikit-page-desc{font-size:var(--aham-typography-fontSize-sm);color:var(--color-ink-secondary);margin-bottom:var(--space-5)}
+
+@media (max-width:900px){
+  .uikit-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .uikit-card-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .uikit-stat-grid{grid-template-columns:minmax(0,1fr)}
+  .uikit-content{padding:var(--space-3)}
+  .uikit-toolbar{flex-wrap:wrap;gap:var(--space-2)}
+  .uikit-search-wrap{width:100%}
+}
+</style>
+</head>
+<body style="margin:0;background:var(--color-bg-app);font-family:var(--font-sans);color:var(--color-ink-primary)">
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useCallback } = React;
+
+/* ── Mock data ── */
+const STATS = [
+  { label:'项目总数', value:'248', delta:'+12本月', up:true },
+  { label:'活跃用户', value:'1,847', delta:'+8.3%', up:true },
+  { label:'接口调用', value:'128.6K', delta:'-3.2%', up:false },
+  { label:'平均响应', value:'142ms', delta:'-18ms', up:true },
+];
+const CHART_DATA = [
+  { label:'1月', val:45 },{ label:'2月', val:62 },{ label:'3月', val:58 },
+  { label:'4月', val:78 },{ label:'5月', val:85 },{ label:'6月', val:92 },
+  { label:'7月', val:100 },{ label:'8月', val:88 },
+];
+const RECENT_ITEMS = [
+  { name:'项目 Alpha', status:'进行中', count:12480, amount:45200, date:'2026-07-03' },
+  { name:'项目 Beta', status:'已完成', count:8350, amount:28900, date:'2026-07-01' },
+  { name:'项目 Gamma', status:'进行中', count:5600, amount:17300, date:'2026-06-28' },
+  { name:'项目 Delta', status:'待审核', count:2100, amount:9400, date:'2026-06-25' },
+];
+
+const FULL_TABLE_DATA = [
+  ...RECENT_ITEMS,
+  { name:'项目 Epsilon', status:'已归档', count:9800, amount:32100, date:'2026-06-20' },
+  { name:'项目 Zeta', status:'进行中', count:4200, amount:15600, date:'2026-06-15' },
+];
+
+const STATUS_MAP = {
+  '进行中': 'success',
+  '已完成': '',
+  '待审核': 'warning',
+  '已归档': '',
+};
+
+/* ── Components ── */
+
+/* Navigation — Sidebar */
+function Sidebar({ view, onViewChange }) {
+  const items = [
+    { id:'dashboard', icon:'bar-chart-3', label:'概览' },
+    { id:'data', icon:'database', label:'数据管理' },
+    { id:'settings', icon:'settings', label:'设置' },
+  ];
+  return (
+    <nav className="uikit-sidebar" data-component="nav">
+      <div className="uikit-sidebar-brand">
+        <span className="uikit-sidebar-brand-name">Aham</span>
+      </div>
+      <div className="uikit-sidebar-nav">
+        <div className="nav-section">导航</div>
+        {items.map(item => (
+          <div
+            key={item.id}
+            className={`nav-item${view===item.id?' active':''}`}
+            onClick={() => onViewChange(item.id)}
+          >
+            <span className="nav-icon"><i data-lucide={item.icon} style={{width:20,height:20}}></i></span>
+            <span className="nav-label uikit-truncate">{item.label}</span>
+          </div>
+        ))}
+        <div className="nav-divider"></div>
+        <div className="nav-section">项目</div>
+        <div className="nav-item"><span className="nav-icon"><i data-lucide="folder" style={{width:20,height:20}}></i></span><span className="nav-label uikit-truncate">全部项目</span><span className="nav-badge">24</span></div>
+        <div className="nav-item"><span className="nav-icon"><i data-lucide="star" style={{width:20,height:20}}></i></span><span className="nav-label uikit-truncate">收藏</span><span className="nav-badge">6</span></div>
+        <div className="nav-item"><span className="nav-icon"><i data-lucide="archive" style={{width:20,height:20}}></i></span><span className="nav-label uikit-truncate">归档</span></div>
+      </div>
+      <div className="uikit-sidebar-footer">
+        <div className="nav-item"><span className="nav-icon"><i data-lucide="user" style={{width:20,height:20}}></i></span><span className="nav-label uikit-truncate">管理员</span></div>
+      </div>
+    </nav>
+  );
+}
+
+/* Toolbar */
+function Toolbar({ onSearch }) {
+  return (
+    <div className="uikit-toolbar">
+      <div className="uikit-search-wrap">
+        <span className="uikit-search-icon"><i data-lucide="search" style={{width:16,height:16}}></i></span>
+        <input className="input" type="text" placeholder="搜索项目、接口、用户..." data-component="input" onChange={e=>onSearch&&onSearch(e.target.value)} style={{width:'100%'}}/>
+      </div>
+      <div className="uikit-toolbar-spacer"></div>
+      <button className="btn btn-md btn-ghost uikit-nowrap" data-component="button"><i data-lucide="bell" style={{width:16,height:16,display:'inline-block',verticalAlign:'middle'}}></i></button>
+      <button className="btn btn-md btn-primary uikit-nowrap" data-component="button"><i data-lucide="plus" style={{width:16,height:16,display:'inline-block',verticalAlign:'middle',marginRight:4}}></i>新建项目</button>
+    </div>
+  );
+}
+
+/* ── Dialog ── */
+function DialogOverlay({ type, title, message, onConfirm, onCancel, children }) {
+  const isDestructive = type === 'danger';
+  const widthClass = type === 'alert' ? 'dlg-sm' : 'dlg-md';
+  const isForm = type === 'form';
+  return (
+    <div className="uikit-overlay" onClick={onCancel}>
+      <div className={`uikit-dlg-wrapper dlg ${widthClass}`} data-component="dialog" onClick={e=>e.stopPropagation()} style={{background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-modal)', overflow:'hidden'}}>
+        <div className="dlg-hd">
+          <span className="dlg-tt">{title}</span>
+          <button className="dlg-close" aria-label="关闭" onClick={onCancel}>
+            <i data-lucide="x" style={{width:16,height:16}}></i>
+          </button>
+        </div>
+        <div className="dlg-bd">
+          {isForm ? children : <p style={{margin:0}}>{message}</p>}
+        </div>
+        <div className="dlg-ft">
+          <button className="btn btn-md btn-secondary" onClick={onCancel} data-component="button">取消</button>
+          {isDestructive ? (
+            <button className="btn btn-md btn-danger" onClick={onConfirm} data-component="button">确认删除</button>
+          ) : (
+            <button className="btn btn-md btn-primary" onClick={onConfirm} data-component="button">确认</button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Dashboard View ── */
+function Dashboard({ onOpenDialog }) {
+  const maxVal = Math.max(...CHART_DATA.map(d=>d.val));
+  return (
+    <div className="uikit-content">
+      <div className="uikit-page-title">概览</div>
+      <div className="uikit-page-desc">项目运行状态总览，数据每 5 分钟自动刷新。</div>
+
+      {/* Stat Cards */}
+      <div className="uikit-stat-grid">
+        {STATS.map((s,i) => (
+          <div key={i} className="uikit-stat-card" data-component="card">
+            <div className="uikit-stat-label">{s.label}</div>
+            <div className="uikit-stat-value">{s.value}</div>
+            <div className="uikit-stat-delta" style={{color: s.up ? 'var(--color-success)' : 'var(--color-danger)'}}>{s.delta}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Chart section */}
+      <div className="uikit-chart-section">
+        <div className="uikit-chart-title">月度接口调用量</div>
+        <div className="uikit-bar-chart">
+          {CHART_DATA.map((d,i) => (
+            <div key={i} className="uikit-bar-col">
+              <div className="uikit-bar-fill" style={{height:`${(d.val/maxVal)*140}px`}}></div>
+              <div className="uikit-bar-label">{d.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Card grid — showing interactive and default cards */}
+      <div className="uikit-section-header">近期项目</div>
+      <div className="uikit-card-grid">
+        {RECENT_ITEMS.slice(0,2).map((item,i) => (
+          <div key={i} className={`card${i===0?' card-interactive':''}`} data-component="card" style={{width:'auto'}}>
+            <div className="card-header">{item.name}</div>
+            <div className="card-body">
+              <div className="card-title">{item.name}</div>
+              <div><span className={`status-dot ${STATUS_MAP[item.status]}`}></span>{item.status}</div>
+              <div className="card-meta">数量: {item.count.toLocaleString()} | 金额: {item.amount.toLocaleString()}</div>
+            </div>
+            <div className="card-footer">
+              <span className="card-action" onClick={()=>onOpenDialog('confirm','项目详情',`查看 ${item.name} 的详细信息？`,false)}>查看详情</span>
+            </div>
+          </div>
+        ))}
+        {RECENT_ITEMS.slice(2,4).map((item,i) => (
+          <div key={i+2} className={`card${i===1?' card-selected':''}`} data-component="card" style={{width:'auto'}}>
+            <div className="card-header">{item.name}</div>
+            <div className="card-body">
+              <div className="card-title">{item.name}</div>
+              <div><span className={`status-dot ${STATUS_MAP[item.status]}`}></span>{item.status}</div>
+              <div className="card-meta">数量: {item.count.toLocaleString()} | 金额: {item.amount.toLocaleString()}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Table preview — sortable */}
+      <div className="uikit-table-card">
+        <div className="uikit-table-header">
+          <span style={{fontSize:'var(--aham-typography-fontSize-sm)',fontWeight:'var(--aham-typography-fontWeight-medium)',color:'var(--color-ink-primary)'}}>最近更新</span>
+          <button className="btn btn-md btn-ghost uikit-nowrap" data-component="button">查看全部</button>
+        </div>
+        <div className="uikit-table-wrap">
+          <table className="aham-table" data-component="table">
+            <thead>
+              <tr>
+                <th>名称</th>
+                <th>状态</th>
+                <th className="num sort asc">数量</th>
+                <th className="num">金额</th>
+                <th>更新时间</th>
+              </tr>
+            </thead>
+            <tbody>
+              {RECENT_ITEMS.map((row,i) => (
+                <tr key={i}>
+                  <td>{row.name}</td>
+                  <td><span className={`status-dot ${STATUS_MAP[row.status]}`}></span>{row.status}</td>
+                  <td className="num">{row.count.toLocaleString()}</td>
+                  <td className="num">{row.amount.toLocaleString()}</td>
+                  <td>{row.date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Data View ── */
+function DataView() {
+  const [selected, setSelected] = useState(new Set());
+  const [sortKey, setSortKey] = useState(null);
+  const [sortDir, setSortDir] = useState('asc');
+  const [filter, setFilter] = useState('');
+
+  const toggleSelect = useCallback((idx) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(idx) ? next.delete(idx) : next.add(idx);
+      return next;
+    });
+  }, []);
+
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortDir(d => d==='asc'?'desc':'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  };
+
+  let rows = FULL_TABLE_DATA;
+  if (filter) {
+    const q = filter.toLowerCase();
+    rows = rows.filter(r => r.name.toLowerCase().includes(q) || r.status.includes(q));
+  }
+  if (sortKey) {
+    rows = [...rows].sort((a,b) => {
+      const va = sortKey==='count'?a.count:sortKey==='amount'?a.amount:a[sortKey]||'';
+      const vb = sortKey==='count'?b.count:sortKey==='amount'?b.amount:b[sortKey]||'';
+      return sortDir==='asc' ? (va>vb?1:-1) : (va<vb?-1:1);
+    });
+  }
+
+  const getSortClass = (key) => sortKey===key ? `sort ${sortDir}` : 'sort';
+
+  return (
+    <div className="uikit-content">
+      <div className="uikit-page-title">数据管理</div>
+      <div className="uikit-page-desc">管理所有项目数据，支持筛选、排序与多选操作。</div>
+
+      {/* Filter + actions toolbar */}
+      <div className="uikit-table-header" style={{paddingLeft:0,paddingRight:0}}>
+        <div className="uikit-filter-row">
+          <div className="uikit-search-wrap" style={{width:220}}>
+            <span className="uikit-search-icon"><i data-lucide="search" style={{width:16,height:16}}></i></span>
+            <input className="input" type="text" placeholder="筛选项目..." data-component="input" value={filter} onChange={e=>setFilter(e.target.value)} style={{width:'100%'}}/>
+          </div>
+          <div style={{position:'relative',display:'inline-flex'}}>
+            <select className="input select-native" data-component="input" defaultValue="" style={{paddingRight:34,width:130}}>
+              <option value="">全部状态</option>
+              <option value="进行中">进行中</option>
+              <option value="已完成">已完成</option>
+              <option value="待审核">待审核</option>
+              <option value="已归档">已归档</option>
+            </select>
+          </div>
+        </div>
+        <div style={{display:'flex',gap:'var(--space-2)'}}>
+          <button className="btn btn-md btn-secondary uikit-nowrap" data-component="button" disabled={selected.size===0}>批量操作</button>
+          <button className="btn btn-md btn-danger uikit-nowrap" data-component="button" disabled={selected.size===0}>删除选中</button>
+        </div>
+      </div>
+
+      {/* Selection table */}
+      <div className="uikit-table-card">
+        <div className="uikit-table-wrap">
+          <table className="aham-table" data-component="table">
+            <thead>
+              <tr>
+                <th className="sel"></th>
+                <th className={getSortClass('name')} onClick={()=>handleSort('name')}>名称</th>
+                <th>状态</th>
+                <th className={`num ${getSortClass('count')}`} onClick={()=>handleSort('count')}>数量</th>
+                <th className={`num ${getSortClass('amount')}`} onClick={()=>handleSort('amount')}>金额</th>
+                <th className={getSortClass('date')} onClick={()=>handleSort('date')}>更新时间</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row,i) => {
+                const selClass = selected.has(i) ? 'selected' : '';
+                return (
+                  <tr key={i} className={selClass}>
+                    <td className="sel"><input type="checkbox" checked={selected.has(i)} onChange={()=>toggleSelect(i)}/></td>
+                    <td>{row.name}</td>
+                    <td><span className={`status-dot ${STATUS_MAP[row.status]}`}></span>{row.status}</td>
+                    <td className="num">{row.count.toLocaleString()}</td>
+                    <td className="num">{row.amount.toLocaleString()}</td>
+                    <td>{row.date}</td>
+                    <td>
+                      <div className="uikit-action-cell">
+                        <button className="btn btn-sm btn-ghost uikit-action" data-component="button">编辑</button>
+                        <button className="btn btn-sm btn-ghost" data-component="button" style={{color:'var(--color-danger)'}}>删除</button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Settings View ── */
+function Settings({ onOpenDialog }) {
+  const [name, setName] = useState('项目 Alpha');
+  const [desc, setDesc] = useState('核心业务接口管理平台');
+  const [env, setEnv] = useState('production');
+  const [errors, setErrors] = useState({});
+
+  const handleSave = () => {
+    const errs = {};
+    if (!name.trim()) errs.name = '项目名称不能为空';
+    if (!desc.trim()) errs.desc = '描述不能为空';
+    setErrors(errs);
+    if (Object.keys(errs).length === 0) {
+      onOpenDialog('form', '保存设置', '', false);
+    }
+  };
+
+  return (
+    <div className="uikit-content">
+      <div className="uikit-page-title">设置</div>
+      <div className="uikit-page-desc">项目基本配置与偏好设置。</div>
+
+      {/* Form inputs card */}
+      <div className="uikit-settings-card" data-component="card">
+        <div className="uikit-settings-title">项目信息</div>
+
+        {/* Text input — default */}
+        <div className="uikit-form-group">
+          <label className="uikit-form-label">项目名称</label>
+          <input className="input" type="text" value={name} onChange={e=>setName(e.target.value)} placeholder="输入项目名称" data-component="input"/>
+          {errors.name && <div className="input-error-text">{errors.name}</div>}
+        </div>
+
+        {/* Textarea */}
+        <div className="uikit-form-group">
+          <label className="uikit-form-label">项目描述</label>
+          <textarea className="input textarea" value={desc} onChange={e=>setDesc(e.target.value)} placeholder="输入项目描述" data-component="input" rows={3}></textarea>
+          {errors.desc && <div className="input-error-text">{errors.desc}</div>}
+          <div className="uikit-form-hint">简要描述项目用途与核心功能。</div>
+        </div>
+
+        {/* Select input */}
+        <div className="uikit-form-group">
+          <label className="uikit-form-label">运行环境</label>
+          <div style={{position:'relative',display:'inline-block',width:'100%'}}>
+            <select className="input select-native" value={env} onChange={e=>setEnv(e.target.value)} data-component="input" style={{width:'100%'}}>
+              <option value="development">开发环境</option>
+              <option value="staging">预发布环境</option>
+              <option value="production">生产环境</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Disabled input */}
+        <div className="uikit-form-group">
+          <label className="uikit-form-label">项目 ID</label>
+          <input className="input" type="text" value="proj_8f3a2b" disabled data-component="input" style={{width:'100%'}}/>
+        </div>
+
+        {/* Error state input */}
+        <div className="uikit-form-group" style={{marginBottom:0}}>
+          <label className="uikit-form-label">API 密钥 (示例错误态)</label>
+          <input className="input" type="text" defaultValue="expired_key_123" data-component="input" style={{width:'100%',borderColor:'var(--color-danger)'}}/>
+          <div className="input-error-text">密钥已过期，请重新生成。</div>
+        </div>
+      </div>
+
+      {/* Action buttons */}
+      <div style={{display:'flex',justifyContent:'flex-end',gap:'var(--space-2)'}}>
+        <button className="btn btn-md btn-secondary" data-component="button">重置</button>
+        <button className="btn btn-md btn-primary" data-component="button" onClick={handleSave}>保存设置</button>
+      </div>
+
+      {/* Danger zone — nav tabs style separator */}
+      <div style={{marginTop:'var(--space-7)'}}>
+        <div className="uikit-section-header" style={{color:'var(--color-danger)'}}>危险区域</div>
+        <div className="uikit-settings-card" data-component="card">
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+            <div>
+              <div style={{fontSize:'var(--aham-typography-fontSize-base)',fontWeight:'var(--aham-typography-fontWeight-medium)',color:'var(--color-ink-primary)'}}>删除项目</div>
+              <div className="uikit-form-hint">此操作不可撤销，所有数据将被永久删除。</div>
+            </div>
+            <button className="btn btn-md btn-danger uikit-nowrap" data-component="button" onClick={()=>onOpenDialog('danger','删除项目','确定要删除此项目吗？此操作不可撤销，所有关联数据将被永久删除。',true)}>删除项目</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Nav Tabs */}
+      <div style={{marginTop:'var(--space-5)'}}>
+        <div className="uikit-section-header">通知偏好 (Tab 示例)</div>
+        <div className="tab-bar" data-component="nav" style={{marginBottom:'var(--space-3)'}}>
+          <div className="tab-item active">全部通知</div>
+          <div className="tab-item">仅重要</div>
+          <div className="tab-item">已静音</div>
+        </div>
+        <div style={{fontSize:'var(--aham-typography-fontSize-sm)',color:'var(--color-ink-secondary)'}}>当前选中: 全部通知 — 接收所有项目相关的邮件与站内通知。</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ── */
+function App() {
+  const [view, setView] = useState('dashboard');
+  const [dialog, setDialog] = useState(null);
+
+  const openDialog = useCallback((type, title, message, isDestructive) => {
+    setDialog({ type, title, message, isDestructive, formData: type==='form'?{}:null });
+  }, []);
+
+  const closeDialog = useCallback(() => setDialog(null), []);
+  const confirmDialog = useCallback(() => {
+    setDialog(null);
+  }, []);
+
+  return (
+    <div className="uikit-shell" data-layout-guard="uikit-v1" style={{'--uikit-sidebar-w':'264px'}}>
+      <Sidebar view={view} onViewChange={setView} />
+      <div className="uikit-main">
+        <Toolbar />
+        {view === 'dashboard' && <Dashboard onOpenDialog={openDialog} />}
+        {view === 'data' && <DataView />}
+        {view === 'settings' && <Settings onOpenDialog={openDialog} />}
+      </div>
+
+      {/* Dialog */}
+      {dialog && (
+        <DialogOverlay
+          type={dialog.type}
+          title={dialog.title}
+          message={dialog.message}
+          isDestructive={dialog.isDestructive}
+          onConfirm={confirmDialog}
+          onCancel={closeDialog}
+        >
+          {dialog.type === 'form' && (
+            <div>
+              <div className="dlg-fld">
+                <label className="dlg-lbl">项目名称</label>
+                <input className="dlg-inp" type="text" defaultValue="项目 Alpha" />
+              </div>
+              <div className="dlg-fld">
+                <label className="dlg-lbl">备注</label>
+                <input className="dlg-inp" type="text" placeholder="可选" />
+              </div>
+            </div>
+          )}
+        </DialogOverlay>
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

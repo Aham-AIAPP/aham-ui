@@ -1,0 +1,106 @@
+{
+  "components": [
+    {
+      "slug": "button",
+      "name": "Button",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "input",
+      "name": "Input",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "card",
+      "name": "Card",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "dialog",
+      "name": "Dialog",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "table",
+      "name": "Table",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "nav",
+      "name": "Navigation",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "checkbox",
+      "name": "Checkbox",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "radio-button",
+      "name": "Radio Button",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "toggle",
+      "name": "Toggle",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "segmented-control",
+      "name": "Segmented Control",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "progress-indicator",
+      "name": "Progress Indicator",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "slider",
+      "name": "Slider",
+      "confidence": "medium",
+      "variantCount": 3
+    },
+    {
+      "slug": "search-field",
+      "name": "Search Field",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "tooltip",
+      "name": "Tooltip",
+      "confidence": "medium",
+      "variantCount": 4
+    },
+    {
+      "slug": "popover",
+      "name": "Popover",
+      "confidence": "medium",
+      "variantCount": 2
+    },
+    {
+      "slug": "menu",
+      "name": "Menu",
+      "confidence": "medium",
+      "variantCount": 2
+    },
+    {
+      "slug": "icon",
+      "name": "Icon",
+      "confidence": "high",
+      "variantCount": 51
+    }
+  ]
+}

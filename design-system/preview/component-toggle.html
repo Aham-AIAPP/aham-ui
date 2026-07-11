@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toggle — Aham UI</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--color-bg-app);color:var(--aham-color-ink-primary);font-family:var(--aham-typography-fontFamily-sans);display:flex;justify-content:center;padding:var(--space-6,24px);}
+.specimen{width:100%;max-width:960px;display:flex;flex-direction:column;gap:var(--space-6,24px);}
+.header{padding-bottom:var(--space-2,8px);}
+.header h2{margin:0;font-family:var(--aham-typography-fontFamily-sansDisplay);font-size:var(--aham-typography-fontSize-lg,18px);font-weight:600;line-height:1.2;color:var(--aham-color-ink-primary);}
+.stage{display:flex;flex-direction:column;gap:var(--space-5,20px);}
+.story{display:flex;flex-direction:column;gap:var(--space-3,12px);}
+.story-label{font-size:var(--aham-typography-fontSize-xs,12px);font-weight:var(--aham-typography-fontWeight-medium,500);color:var(--aham-color-ink-tertiary);text-transform:uppercase;letter-spacing:.5px;padding:var(--space-1,4px) 0;}
+.rail{display:flex;gap:var(--space-3,12px);flex-wrap:wrap;align-items:flex-start;}
+.divider{border:none;border-top:1px solid var(--aham-color-surface-tier3-line);margin:var(--space-1,4px) 0;}
+.gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--aham-spacing-5);}
+.vr{display:flex;flex-direction:column;gap:var(--aham-spacing-3);padding:var(--aham-spacing-4);border-radius:var(--aham-radius-lg);}
+.vr-h{font-size:var(--aham-typography-fontSize-xs);font-weight:500;color:var(--aham-color-ink-tertiary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--aham-spacing-1);}
+/* === Toggle — compact === */
+.tg{display:inline-flex;align-items:center;gap:var(--aham-spacing-3);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+.tg input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.tg-tr{position:relative;flex-shrink:0;border-radius:var(--aham-radius-pill);background:var(--aham-color-surface-tier2-panel);transition:background var(--aham-motion-duration-base) var(--aham-motion-easing-standard)}
+.tg-kb{position:absolute;border-radius:var(--aham-radius-pill);background:var(--aham-color-surface-tier1-white);transition:transform var(--aham-motion-duration-base) var(--aham-motion-easing-standard);top:2px;left:2px}
+.tg-lbl{font-size:var(--aham-typography-fontSize-base);color:var(--aham-color-ink-primary);line-height:1.4}
+/* size: md */
+.tg-md .tg-tr{width:40px;height:22px}
+.tg-md .tg-kb{width:18px;height:18px}
+.tg-md input:checked~.tg-tr{background:var(--aham-color-accent-default)}
+.tg-md input:checked~.tg-tr .tg-kb{transform:translateX(18px)}
+/* size: sm */
+.tg-sm .tg-tr{width:32px;height:18px}
+.tg-sm .tg-kb{width:14px;height:14px}
+.tg-sm input:checked~.tg-tr{background:var(--aham-color-accent-default)}
+.tg-sm input:checked~.tg-tr .tg-kb{transform:translateX(14px)}
+/* disabled */
+.tg input:disabled~.tg-tr{background:var(--aham-color-ink-quaternary)!important}
+.tg input:disabled~.tg-lbl{color:var(--aham-color-ink-tertiary)}
+/* focus */
+.tg input:focus-visible~.tg-tr{outline:var(--aham-focusRing-width) solid var(--aham-focusRing-color);outline-offset:var(--aham-focusRing-offset)}
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Toggle / Switch</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">Medium (md)</span>
+<div class="rail">
+<div class="gr">
+<div class="vr"><span class="vr-h">Off</span><label class="tg tg-md"><input type="checkbox"><span class="tg-tr"><span class="tg-kb"></span></span><span class="tg-lbl">Notifications</span></label></div>
+<div class="vr"><span class="vr-h">On</span><label class="tg tg-md"><input type="checkbox" checked><span class="tg-tr"><span class="tg-kb"></span></span><span class="tg-lbl">Dark Mode</span></label></div>
+</div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Disabled (md)</span>
+<div class="rail">
+<div class="gr">
+<div class="vr"><span class="vr-h">Disabled Off</span><label class="tg tg-md"><input type="checkbox" disabled><span class="tg-tr"><span class="tg-kb"></span></span><span class="tg-lbl">Autosave</span></label></div>
+<div class="vr"><span class="vr-h">Disabled On</span><label class="tg tg-md"><input type="checkbox" checked disabled><span class="tg-tr"><span class="tg-kb"></span></span><span class="tg-lbl">Autosave</span></label></div>
+</div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Small (sm)</span>
+<div class="rail">
+<div class="gr">
+<div class="vr"><span class="vr-h">Off</span><label class="tg tg-sm"><input type="checkbox"><span class="tg-tr"><span class="tg-kb"></span></span><span class="tg-lbl">Notifications</span></label></div>
+<div class="vr"><span class="vr-h">On</span><label class="tg tg-sm"><input type="checkbox" checked><span class="tg-tr"><span class="tg-kb"></span></span><span class="tg-lbl">Dark Mode</span></label></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dialog — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+
+/* @component-css-start */
+.dlg { background: var(--color-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-modal); overflow: hidden; }
+.dlg-sm { width: 380px; max-width: 100%; }
+.dlg-md { width: 480px; max-width: 100%; }
+.dlg-hd { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-4) 0; min-width: 0; }
+.dlg-tt { font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg); font-weight: var(--aham-typography-fontWeight-semibold); line-height: var(--aham-typography-lineHeight-snug); color: var(--color-ink-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dlg-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; border: none; background: none; color: var(--color-ink-tertiary); cursor: pointer; border-radius: var(--radius-xs); transition: background .15s, color .15s; padding: 0; }
+.dlg-close:hover { background: var(--color-fill-hover); color: var(--color-ink-primary); }
+.dlg-close svg { width: 16px; height: 16px; }
+.dlg-bd { padding: var(--space-3) var(--space-4); font-size: var(--aham-typography-fontSize-base); line-height: var(--aham-typography-lineHeight-normal); color: var(--color-ink-secondary); }
+.dlg-bd>:last-child { margin-bottom: 0; }
+.dlg-ft { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); }
+.btn { display: inline-flex; align-items: center; justify-content: center; height: var(--layout-btn-height); padding: 0 var(--space-4); font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); font-family: var(--font-sans); border-radius: var(--radius-sm); border: none; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; flex-shrink: 0; min-width: var(--layout-btn-height); }
+.btn-cancel { background: var(--color-bg-panel); color: var(--color-ink-primary); }
+.btn-cancel:hover { background: var(--color-bg-selected); }
+.btn-primary { background: var(--color-accent); color: var(--color-ink-on-accent); }
+.btn-primary:hover { background: var(--color-accent-hover); }
+.btn-danger { background: var(--color-danger); color: #FFFFFF; }
+.btn-danger:hover { filter: brightness(1.08); }
+.dlg-fld { display: flex; flex-direction: column; gap: var(--space-1); }
+.dlg-fld+.dlg-fld { margin-top: var(--space-3); }
+.dlg-lbl { font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); color: var(--color-ink-primary); }
+.dlg-inp { height: var(--layout-control-height); padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--aham-typography-fontSize-base); font-family: var(--font-sans); color: var(--color-ink-primary); background: var(--color-surface); outline: none; transition: border-color .15s; width: 100%; box-sizing: border-box; }
+.dlg-inp:focus { border-color: var(--color-accent); box-shadow: var(--shadow-focus-ring); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-close" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" fill="currentColor"/>
+  </symbol>
+</svg>
+<div class="specimen">
+<div class="header"><h2>Dialog</h2></div>
+<div class="stage">
+<div class="story" style="flex-direction:row;align-items:flex-start;gap:var(--space-4)">
+<span class="story-label" style="width:72px;flex-shrink:0;padding-top:var(--space-4)">确认</span>
+<div class="rail"><div class="dlg dlg-md">
+<div class="dlg-hd"><span class="dlg-tt">删除项目</span><button class="dlg-close" aria-label="关闭"><svg><use href="#icon-close"/></svg></button></div>
+<div class="dlg-bd">确定要删除"品牌官网"项目吗？此操作不可撤销，所有关联文件和设置将被永久移除。</div>
+<div class="dlg-ft"><button class="btn btn-cancel">取消</button><button class="btn btn-danger">删除</button></div>
+</div></div>
+</div>
+
+<div class="story" style="flex-direction:row;align-items:flex-start;gap:var(--space-4)">
+<span class="story-label" style="width:72px;flex-shrink:0;padding-top:var(--space-4)">提示</span>
+<div class="rail"><div class="dlg dlg-sm">
+<div class="dlg-hd"><span class="dlg-tt">会话已过期</span><button class="dlg-close" aria-label="关闭"><svg><use href="#icon-close"/></svg></button></div>
+<div class="dlg-bd">您的会话因长时间未操作已过期，请重新登录以继续工作。</div>
+<div class="dlg-ft"><button class="btn btn-primary">重新登录</button></div>
+</div></div>
+</div>
+
+<hr class="divider">
+
+<div class="story" style="flex-direction:row;align-items:flex-start;gap:var(--space-4)">
+<span class="story-label" style="width:72px;flex-shrink:0;padding-top:var(--space-4)">表单</span>
+<div class="rail"><div class="dlg dlg-md">
+<div class="dlg-hd"><span class="dlg-tt">新建工作区</span><button class="dlg-close" aria-label="关闭"><svg><use href="#icon-close"/></svg></button></div>
+<div class="dlg-bd">
+<div class="dlg-fld"><label class="dlg-lbl">名称</label><input class="dlg-inp" type="text" placeholder="工作区名称" value="设计系统"></div>
+<div class="dlg-fld"><label class="dlg-lbl">描述</label><input class="dlg-inp" type="text" placeholder="可选描述"></div>
+</div>
+<div class="dlg-ft"><button class="btn btn-cancel">取消</button><button class="btn btn-primary">创建</button></div>
+</div></div>
+</div>
+</div>
+</div>
+</body>
+</html>

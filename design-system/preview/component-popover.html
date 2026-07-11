@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Popover — Aham UI Preview</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    /* ---- Popover 组件样式 ---- */
+    .popover-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 触发器示意 */
+    .popover-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 16px;
+      border: 1px solid var(--ui-border);
+      border-radius: var(--radius-md);
+      background: var(--ui-panel);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink-primary);
+      cursor: default;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* Popover Panel */
+    .popover {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      min-width: 200px;
+      max-width: 360px;
+      padding: 8px;
+      background: #FFFFFF;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px rgba(20,20,20,0.06);
+    }
+
+    /* Arrow: 8px triangle using border trick */
+    .popover-arrow,
+    .popover-arrow::before {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: inherit;
+    }
+
+    .popover-arrow {
+      visibility: hidden;
+    }
+
+    .popover-arrow::before {
+      visibility: visible;
+      content: '';
+      transform: rotate(45deg);
+    }
+
+    /* Arrow placements */
+    .popover[data-placement="bottom"] .popover-arrow {
+      top: -4px;
+      left: 50%;
+      margin-left: -4px;
+    }
+
+    .popover[data-placement="top"] .popover-arrow {
+      bottom: -4px;
+      left: 50%;
+      margin-left: -4px;
+    }
+
+    /* Popover content items */
+    .popover-content {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    /* 信息面板内容 */
+    .popover-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 4px;
+    }
+
+    .popover-info-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .popover-info-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .popover-info-dot.is-green  { background: var(--accent-green); }
+    .popover-info-dot.is-gray   { background: var(--ink-tertiary); }
+
+    .popover-info-label {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      min-width: 52px;
+    }
+
+    .popover-info-value {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--ink-primary);
+    }
+
+    .popover-info-desc {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+
+    /* 分隔线 */
+    .popover-divider {
+      height: 1px;
+      background: var(--ui-border);
+      margin: 4px 0;
+    }
+
+    /* 上下文菜单项 */
+    .popover-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink-primary);
+      cursor: default;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .popover-item:hover {
+      background: var(--ui-panel);
+    }
+
+    .popover-item.is-disabled {
+      color: var(--ink-disabled);
+      cursor: default;
+    }
+
+    .popover-item.is-disabled:hover {
+      background: transparent;
+    }
+
+    .popover-item-icon {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--ink-tertiary);
+    }
+
+    .popover-item-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .popover-item-label {
+      flex: 1;
+    }
+
+    .popover-item-shortcut {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .popover-item-hint {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--ink-tertiary);
+    }
+
+    /* 设置内容片段 */
+    .popover-settings {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 4px;
+    }
+
+    .popover-setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    .popover-setting-label {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink-primary);
+    }
+
+    /* 简单 toggle 示意 */
+    .popover-toggle {
+      width: 28px;
+      height: 16px;
+      border-radius: 8px;
+      background: var(--ui-border);
+      position: relative;
+      cursor: default;
+      flex-shrink: 0;
+    }
+
+    .popover-toggle.is-on {
+      background: var(--ink-primary);
+    }
+
+    .popover-toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      transition: transform 0.15s;
+    }
+
+    .popover-toggle.is-on::after {
+      transform: translateX(12px);
+    }
+
+    /* ---- 页面布局 ---- */
+    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+    .header { padding-bottom: var(--space-2, 8px); }
+    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+    .popover-demo-area { display: flex; gap: 64px; flex-wrap: wrap; align-items: flex-start; }
+    .popover-demo-group { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+    .popover-label { font-family: var(--font-sans); font-size: 12px; color: var(--ink-tertiary); text-align: center; }
+    .popover-spacer { height: 40px; }
+  </style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Popover</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">默认信息面板 · Bottom</span>
+<div class="rail">
+  <div class="popover-demo-area">
+    <div class="popover-demo-group">
+      <div class="popover-wrapper">
+        <span class="popover-trigger">触发器</span>
+        <div class="popover" data-placement="bottom">
+          <div class="popover-arrow"></div>
+          <div class="popover-content">
+            <div class="popover-info">
+              <div class="popover-info-row"><span class="popover-info-dot is-green"></span><span class="popover-info-label">状态</span><span class="popover-info-value">正常运行</span></div>
+              <div class="popover-info-row"><span class="popover-info-dot is-gray"></span><span class="popover-info-label">延迟</span><span class="popover-info-value">12 ms</span></div>
+              <div class="popover-info-desc" style="margin-top:4px;">最后一次同步于 3 分钟前，数据通路正常。</div>
+            </div>
+          </div>
+        </div>
+        <span class="popover-label">Bottom · 带箭头（默认）</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Top 位置 · 上下文菜单</span>
+<div class="rail">
+  <div class="popover-demo-area">
+    <div class="popover-demo-group">
+      <div class="popover-wrapper">
+        <div class="popover" data-placement="top">
+          <div class="popover-arrow"></div>
+          <div class="popover-content">
+            <div class="popover-info">
+              <div class="popover-info-row"><span class="popover-info-label">模型</span><span class="popover-info-value">Aham v2.1</span></div>
+              <div class="popover-info-row"><span class="popover-info-label">版本</span><span class="popover-info-value">2026.07</span></div>
+              <div class="popover-info-desc" style="margin-top:4px;">当前使用最新稳定版推理引擎。</div>
+            </div>
+          </div>
+        </div>
+        <span class="popover-trigger">触发器</span>
+        <span class="popover-label">Top · 箭头朝下</span>
+      </div>
+    </div>
+    <div class="popover-demo-group">
+      <div class="popover-wrapper">
+        <span class="popover-trigger">触发器</span>
+        <div class="popover" data-placement="bottom">
+          <div class="popover-arrow"></div>
+          <div class="popover-content">
+            <div class="popover-item"><span class="popover-item-icon"><svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg></span><span class="popover-item-label">打开文件</span><span class="popover-item-shortcut">⌘O</span></div>
+            <div class="popover-item"><span class="popover-item-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22 6 12 13 2 6"/></svg></span><span class="popover-item-label">复制链接</span><span class="popover-item-shortcut">⌘L</span></div>
+            <div class="popover-divider"></div>
+            <div class="popover-item"><span class="popover-item-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span class="popover-item-label">偏好设置</span><span class="popover-item-shortcut">⌘,</span></div>
+            <div class="popover-divider"></div>
+            <div class="popover-item is-disabled"><span class="popover-item-icon"><svg viewBox="0 0 24 24"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg></span><span class="popover-item-label">删除项目</span><span class="popover-item-shortcut">⌘⌫</span></div>
+          </div>
+        </div>
+        <span class="popover-label">上下文菜单</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">设置片段 · Bottom</span>
+<div class="rail">
+  <div class="popover-demo-area">
+    <div class="popover-demo-group">
+      <div class="popover-wrapper">
+        <span class="popover-trigger">触发器</span>
+        <div class="popover" data-placement="bottom">
+          <div class="popover-arrow"></div>
+          <div class="popover-content">
+            <div class="popover-settings">
+              <div class="popover-setting-row"><span class="popover-setting-label">推送通知</span><span class="popover-toggle is-on"></span></div>
+              <div class="popover-setting-row"><span class="popover-setting-label">声音提示</span><span class="popover-toggle"></span></div>
+              <div class="popover-setting-row"><span class="popover-setting-label">自动同步</span><span class="popover-toggle is-on"></span></div>
+            </div>
+          </div>
+        </div>
+        <span class="popover-label">设置片段 · 带开关</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

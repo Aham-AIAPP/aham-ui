@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Button — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+/* @component-css-start */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); border: none; cursor: pointer; font-family: var(--font-sans); font-weight: var(--aham-typography-fontWeight-medium); border-radius: var(--radius-md); white-space: nowrap; transition: background .15s, color .15s; line-height: 1; flex-shrink: 0; text-decoration: none; }
+.btn-sm { height: 28px; padding: 0 var(--space-3); font-size: var(--aham-typography-fontSize-xs); min-width: 28px; }
+.btn-md { height: var(--layout-btn-height); padding: 0 var(--space-4); font-size: var(--aham-typography-fontSize-base); min-width: var(--layout-btn-height); }
+.btn-lg { height: 40px; padding: 0 var(--space-5); font-size: var(--aham-typography-fontSize-md); min-width: 40px; }
+.btn-primary { background: var(--color-accent); color: var(--aham-color-ink-on-accent); }
+.btn-primary:hover { background: var(--color-accent-hover); }
+.btn-primary:active { background: var(--color-accent-press); }
+.btn-secondary { background: var(--color-surface-panel); color: var(--color-ink-primary); }
+.btn-secondary:hover { background: var(--color-border); }
+.btn-ghost { background: transparent; color: var(--color-ink-primary); }
+.btn-ghost:hover { background: var(--color-fill-hover); }
+.btn-ghost:active { background: var(--color-fill-active); }
+.btn-danger { background: var(--aham-color-semantic-danger-bg); color: var(--color-danger); }
+.btn-danger:hover { filter: brightness(.94); }
+.btn:disabled { opacity: var(--opacity-disabled); cursor: not-allowed; pointer-events: none; }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Button</h2></div>
+<div class="stage">
+<div class="story">
+<span class="story-label">变体</span>
+<div class="rail"><button class="btn btn-md btn-primary">发送</button><button class="btn btn-md btn-secondary">取消</button><button class="btn btn-md btn-ghost">文本按钮</button><button class="btn btn-md btn-danger">删除</button></div>
+</div>
+<hr class="divider">
+<div class="story">
+<span class="story-label">尺寸与状态</span>
+<div class="rail"><button class="btn btn-sm btn-primary">小</button><button class="btn btn-md btn-primary">中</button><button class="btn btn-lg btn-primary">大</button><button class="btn btn-md btn-primary" disabled>禁用</button></div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radio Button — Aham UI</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* ── Reset & Base ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--color-bg-app);color:var(--color-ink-primary);font-family:var(--font-sans);font-size:var(--aham-typography-fontSize-base);line-height:1.55;display:flex;justify-content:center;padding:var(--space-6,24px);}
+.specimen{width:100%;max-width:960px;display:flex;flex-direction:column;gap:var(--space-6,24px);}
+.header{padding-bottom:var(--space-2,8px);}
+.header h2{margin:0;font-family:var(--font-display);font-size:var(--aham-typography-fontSize-lg,18px);font-weight:var(--aham-typography-fontWeight-semibold,600);color:var(--color-ink-primary);}
+.stage{display:flex;flex-direction:column;gap:var(--space-5,20px);}
+.story{display:flex;flex-direction:column;gap:var(--space-3,12px);}
+.story-label{font-size:var(--aham-typography-fontSize-xs,12px);font-weight:var(--aham-typography-fontWeight-medium,500);color:var(--color-ink-tertiary);text-transform:uppercase;letter-spacing:.5px;padding:var(--space-1,4px) 0;}
+.rail{display:flex;gap:var(--space-3,12px);flex-wrap:wrap;align-items:flex-start;}
+.divider{border:none;border-top:1px solid var(--color-border,#E5E7EB);margin:var(--space-1,4px) 0;}
+.variant-card{display:flex;flex-direction:column;gap:var(--space-3);background:var(--color-bg-panel);border-radius:var(--radius-md);padding:var(--space-4);min-width:180px;}
+.variant-card .state-label{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);font-weight:500;font-family:var(--font-mono);}
+/* ── Radio Button ── */
+.radio{display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer;position:relative}
+.radio input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
+.radio-ring{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color var(--duration-fast) var(--ease-standard),box-shadow var(--duration-fast) var(--ease-standard);background:transparent}
+.radio-dot{width:6px;height:6px;border-radius:50%;background:transparent;transition:background var(--duration-fast) var(--ease-standard)}
+.radio-label{font-size:var(--aham-typography-fontSize-base);color:var(--color-ink-primary);user-select:none}
+/* ── Unselected ── */
+/* default — ring uses --color-border, dot transparent */
+/* ── Selected ── */
+.radio input:checked+.radio-ring .radio-dot{background:var(--color-ink-primary)}
+.radio input:checked+.radio-ring{border-color:var(--color-border)}
+/* ── Focus ── */
+.radio input:focus-visible+.radio-ring{box-shadow:var(--shadow-focus-ring);outline:none}
+/* ── Disabled ── */
+.radio input:disabled+.radio-ring{border-color:var(--color-ink-quaternary)}
+.radio input:disabled:checked+.radio-ring .radio-dot{background:var(--color-ink-quaternary)}
+.radio input:disabled~.radio-label{color:var(--color-ink-quaternary)}
+.radio input:disabled~*{cursor:not-allowed}
+.radio:has(input:disabled){cursor:not-allowed}
+/* ── Group ── */
+.radio-group{display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-4);background:var(--color-bg-panel);border-radius:var(--radius-md);max-width:320px}
+.radio-group .group-label{font-size:var(--aham-typography-fontSize-sm);font-weight:500;color:var(--color-ink-secondary);margin-bottom:var(--space-1)}
+.radio-group .radio-label{font-size:var(--aham-typography-fontSize-base)}
+/* ── Dark mode preview hint ── */
+.theme-hint{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);margin-top:var(--space-5)}
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Radio Button</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">States</span>
+<div class="rail">
+
+  <div class="variant-card">
+    <span class="state-label">md-unselected</span>
+    <label class="radio">
+      <input type="radio" name="state-demo">
+      <span class="radio-ring"><span class="radio-dot"></span></span>
+      <span class="radio-label">Option A</span>
+    </label>
+  </div>
+
+  <div class="variant-card">
+    <span class="state-label">md-selected</span>
+    <label class="radio">
+      <input type="radio" name="state-demo2" checked>
+      <span class="radio-ring"><span class="radio-dot"></span></span>
+      <span class="radio-label">Option B</span>
+    </label>
+  </div>
+
+  <div class="variant-card">
+    <span class="state-label">md-disabled (unselected)</span>
+    <label class="radio">
+      <input type="radio" name="state-disabled" disabled>
+      <span class="radio-ring"><span class="radio-dot"></span></span>
+      <span class="radio-label">Option C</span>
+    </label>
+  </div>
+
+  <div class="variant-card">
+    <span class="state-label">md-disabled (selected)</span>
+    <label class="radio">
+      <input type="radio" name="state-disabled2" checked disabled>
+      <span class="radio-ring"><span class="radio-dot"></span></span>
+      <span class="radio-label">Option D</span>
+    </label>
+  </div>
+
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Group Example</span>
+<div class="rail">
+<div class="radio-group">
+  <span class="group-label">Select delivery method</span>
+  <label class="radio">
+    <input type="radio" name="delivery" value="standard" checked>
+    <span class="radio-ring"><span class="radio-dot"></span></span>
+    <span class="radio-label">Standard (5-7 days)</span>
+  </label>
+  <label class="radio">
+    <input type="radio" name="delivery" value="express">
+    <span class="radio-ring"><span class="radio-dot"></span></span>
+    <span class="radio-label">Express (2-3 days)</span>
+  </label>
+  <label class="radio">
+    <input type="radio" name="delivery" value="overnight">
+    <span class="radio-ring"><span class="radio-dot"></span></span>
+    <span class="radio-label">Overnight (next day)</span>
+  </label>
+</div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Anatomy</span>
+<div class="rail">
+  <div class="variant-card">
+    <span class="state-label">outer-ring</span>
+    <label class="radio">
+      <span class="radio-ring" style="border-color:var(--color-border);background:transparent"></span>
+      <span class="radio-label" style="color:var(--color-ink-tertiary)">16px 1.5px stroke</span>
+    </label>
+  </div>
+  <div class="variant-card">
+    <span class="state-label">inner-dot</span>
+    <label class="radio">
+      <span class="radio-ring" style="border-color:var(--color-border)"><span class="radio-dot" style="background:var(--color-ink-primary);width:6px;height:6px"></span></span>
+      <span class="radio-label" style="color:var(--color-ink-tertiary)">6px ink-primary</span>
+    </label>
+  </div>
+  <div class="variant-card">
+    <span class="state-label">focus-ring</span>
+    <label class="radio">
+      <span class="radio-ring" style="border-color:var(--color-border);box-shadow:var(--shadow-focus-ring)"><span class="radio-dot" style="background:var(--color-ink-primary);width:6px;height:6px"></span></span>
+      <span class="radio-label" style="color:var(--color-ink-tertiary)">3px accent 20%</span>
+    </label>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

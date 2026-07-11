@@ -1,0 +1,41 @@
+{
+  "slug": "progress-indicator",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["progress", "loading", "spinner", "progress-bar"],
+  "variantDimensions": [
+    { "axis": "type", "values": ["linear", "circular"] },
+    { "axis": "determinate", "values": ["indeterminate", "determinate"] },
+    { "axis": "size", "values": ["sm", "md"] }
+  ],
+  "representativeVariants": [
+    "linear-determinate",
+    "linear-indeterminate",
+    "circular-determinate",
+    "circular-indeterminate"
+  ],
+  "anatomy": {
+    "parts": ["track", "fill"],
+    "required": ["track", "fill"]
+  },
+  "structurePatterns": [
+    "Linear track = 4px height, full width, tier3-line color (#E7E7E7)",
+    "Linear fill = accent blue (#336EE8) — only 4px high subtle indication",
+    "Circular = 20px diameter (sm) or 32px (md), 3px stroke width",
+    "Circular track = tier3-line, fill = accent blue",
+    "Determinate shows % via CSS animation width/stroke-dashoffset",
+    "Indeterminate loops via CSS animation"
+  ],
+  "usageHints": [
+    "Blue fill is acceptable here as a progress signal — thin and subtle",
+    "Linear for page/content loading, circular for inline actions",
+    "No text label within the progress — use caption below if needed"
+  ],
+  "doNotInvent": [
+    "Large thick progress bars — 4px max for linear",
+    "Gradient fills — solid blue only",
+    "Overlay spinners — use linear at top of content area"
+  ],
+  "unknowns": ["Buffering/secondary track pattern"]
+}

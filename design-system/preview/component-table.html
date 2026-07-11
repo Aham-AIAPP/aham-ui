@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>表格 — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+
+/* @component-css-start */
+.aham-table { width: 100%; border-collapse: collapse; }
+.aham-table thead th { font-family: var(--font-sans); font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); color: var(--color-ink-secondary); text-align: start; padding: 0 var(--space-3); height: 36px; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+.aham-table thead th.num { text-align: end; font-family: var(--font-mono); }
+.aham-table tbody td { font-family: var(--font-sans); font-size: var(--aham-typography-fontSize-base); font-weight: var(--aham-typography-fontWeight-regular); color: var(--color-ink-primary); padding: 0 var(--space-3); height: 36px; border-bottom: 1px solid var(--color-border); }
+.aham-table tbody td.num { text-align: end; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.aham-table tbody tr:hover td { background: var(--color-fill-hover); transition: background .15s; }
+.aham-table tbody tr.selected td { background: var(--color-bg-selected); }
+.aham-table thead th.sort { cursor: pointer; user-select: none; }
+.aham-table thead th.sort::after { content: ''; display: inline-block; width: 0; height: 0; margin-inline-start: 4px; vertical-align: middle; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid var(--color-ink-tertiary); }
+.aham-table thead th.sort.asc::after { border-top-color: var(--color-accent); }
+.aham-table thead th.sort.desc::after { border-top: none; border-bottom: 4px solid var(--color-accent); }
+.aham-table .sel { width: 36px; text-align: center; padding: 0 !important; }
+.aham-table .sel input[type="checkbox"] { width: 16px; height: 16px; margin: 0; cursor: pointer; accent-color: var(--color-accent); }
+.status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-inline-end: 6px; vertical-align: middle; background: var(--color-ink-tertiary); flex-shrink: 0; }
+.status-dot.success { background: var(--color-success); }
+.status-dot.warning { background: var(--color-warning); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>表格</h2></div>
+<div class="stage">
+<div class="story">
+<span class="story-label">数据表格</span>
+<div class="rail">
+<table class="aham-table">
+<thead><tr><th>名称</th><th>状态</th><th class="num sort asc">数量</th><th class="num">金额</th><th>更新时间</th></tr></thead>
+<tbody>
+<tr><td>项目 Alpha</td><td><span class="status-dot success"></span>进行中</td><td class="num">12,480</td><td class="num">45,200</td><td>2026-07-01</td></tr>
+<tr><td>项目 Beta</td><td><span class="status-dot"></span>已完成</td><td class="num">8,350</td><td class="num">128,000</td><td>2026-06-28</td></tr>
+<tr><td>项目 Gamma</td><td><span class="status-dot warning"></span>待启动</td><td class="num">1,200</td><td class="num">9,800</td><td>2026-07-04</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr class="divider">
+<div class="story">
+<span class="story-label">可选择表格</span>
+<div class="rail">
+<table class="aham-table">
+<thead><tr><th class="sel"><input type="checkbox"></th><th>名称</th><th>状态</th><th class="num">数量</th><th>更新时间</th></tr></thead>
+<tbody>
+<tr class="selected"><td class="sel"><input type="checkbox" checked></td><td>项目 Alpha</td><td><span class="status-dot success"></span>进行中</td><td class="num">12,480</td><td>2026-07-01</td></tr>
+<tr><td class="sel"><input type="checkbox"></td><td>项目 Beta</td><td><span class="status-dot"></span>已完成</td><td class="num">8,350</td><td>2026-06-28</td></tr>
+<tr><td class="sel"><input type="checkbox"></td><td>项目 Gamma</td><td><span class="status-dot warning"></span>待启动</td><td class="num">1,200</td><td>2026-07-04</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

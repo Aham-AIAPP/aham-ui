@@ -1,0 +1,74 @@
+{
+  "slug": "icon",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "semanticTypeCandidates": [
+    "icon",
+    "glyph"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "axis": "context",
+      "values": [
+        "standalone",
+        "with-label",
+        "icon-button",
+        "status"
+      ]
+    }
+  ],
+  "representativeVariants": [
+    "search-md",
+    "send-with-label",
+    "settings-icon-button",
+    "success-status"
+  ],
+  "anatomy": {
+    "parts": [
+      "glyph"
+    ],
+    "required": [
+      "glyph"
+    ]
+  },
+  "structurePatterns": [
+    "Concrete set = Lucide (ISC); linear, monochrome, no fill, round cap+join",
+    "24-grid native stroke 2px; effective stroke scales with size (16px≈1.3 / 20px≈1.7 / 24px=2)",
+    "currentColor inherits ink token — icons are never colored, never accent-blue-filled",
+    "Sizes 16 / 20 / 24 from iconSize tokens",
+    "Referenced via sprite: <svg class=\"icon\"><use href=\"icons/aham-icons.svg#i-{name}\"/></svg>"
+  ],
+  "usageHints": [
+    "Icons are for navigation / send / toolbar — not decorative filler in content",
+    "Status icons must be paired with text (differentiate without color)",
+    "Icon-only buttons must carry an accessible name (aria-label)",
+    "Semantic name (i-success) is stable; underlying Lucide name is recorded in icons/icons.json — swap source without touching call sites",
+    "Track sources: web/Office/email = Lucide; macOS app = SF Symbols by name (not yet landed)"
+  ],
+  "doNotInvent": [
+    "Emoji, multicolor or filled icons",
+    "Accent-blue-filled icons — blue is garnish",
+    "Brand-colored file-type icons — use a DOCX text badge",
+    "Icons as the sole carrier of meaning without an accessible name"
+  ],
+  "unknowns": [
+    "SF Symbols per-name mapping for the macOS app track (deferred)"
+  ],
+  "source": {
+    "name": "Lucide",
+    "license": "ISC",
+    "version": "lucide-static 1.24.0",
+    "count": 51,
+    "manifest": "icons/icons.json",
+    "sprite": "icons/aham-icons.svg"
+  }
+}

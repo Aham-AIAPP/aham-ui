@@ -1,0 +1,39 @@
+{
+  "slug": "radio-button",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["radio-button", "radio", "option-selector"],
+  "variantDimensions": [
+    { "axis": "state", "values": ["unselected", "selected", "disabled"] },
+    { "axis": "size", "values": ["sm", "md"] }
+  ],
+  "representativeVariants": [
+    "md-unselected",
+    "md-selected",
+    "md-disabled"
+  ],
+  "anatomy": {
+    "parts": ["outer-ring", "inner-dot", "label"],
+    "required": ["outer-ring", "inner-dot"]
+  },
+  "structurePatterns": [
+    "Radio circle = 16px outer ring, 1.5px stroke",
+    "Border color = --color-border (#E7E7E7) when unselected",
+    "Selected = outer ring stays border color, inner dot = 6px ink-primary (#262626) — NOT blue",
+    "Disabled = quaternary ink (#C4C4C4) for both ring and dot",
+    "Label = body text (14px) to the right, 8px gap (--space-2)",
+    "Focus ring = 3px rgba(51,110,232,0.20)"
+  ],
+  "usageHints": [
+    "Use for mutually exclusive selection within a group",
+    "At least 2 options in a group — never a standalone radio",
+    "Selected indicator is INK dot, not accent blue"
+  ],
+  "doNotInvent": [
+    "Blue selected dot — selected = ink-primary",
+    "Rounded-square radio buttons — always circular",
+    "Button-group style radio — use Segmented Control instead"
+  ],
+  "unknowns": ["Radio group vertical vs horizontal layout spacing"]
+}

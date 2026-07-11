@@ -1,0 +1,356 @@
+/* ========================================================================
+   Aham UI — Colors & Type
+   Source: structured-spec (tokens.json v6.1.0)
+   Generated from the canonical token source. Do not edit by hand.
+   ======================================================================== */
+
+/* ── Font Imports ──────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Inter+Display:opsz,wght@20..44,600&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap');
+
+/* ══════════════════════════════════════════════════════════════════════
+   LIGHT MODE (default)
+   ══════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── surface ──────────────────────────────────────────────────── */
+  --aham-surface-tier1:      #FFFFFF;
+  --aham-surface-tier2:      #F3F3F3;
+  --aham-surface-tier3:      #E7E7E7;
+
+  /* ─── ink ──────────────────────────────────────────────────────── */
+  --aham-ink-primary:        #262626;
+  --aham-ink-secondary:      #6E6E6E;
+  --aham-ink-tertiary:       #9B9B9B;
+  --aham-ink-quaternary:     #C4C4C4;
+  --aham-ink-on-accent:      #FFFFFF;
+
+  /* ─── accent (blue) ────────────────────────────────────────────── */
+  --aham-accent-default:     #336EE8;
+  --aham-accent-hover:       #5C8BED;
+  --aham-accent-press:       #164EC3;
+  --aham-accent-tint-border: #C8D3EA;
+  --aham-accent-tint-surface: #EDF0F7;
+
+  /* ─── semantic ─────────────────────────────────────────────────── */
+  --aham-success:            #5A7A60;
+  --aham-success-bg:         #F0F2F0;
+  --aham-warning:            #8A7333;
+  --aham-warning-bg:         #F4F1E9;
+  --aham-danger:             #9E3D31;
+  --aham-danger-bg:          #F4ECEA;
+
+  /* ─── fill (neutral interaction) ───────────────────────────────── */
+  --aham-fill-hover:         rgba(20,20,20,.04);
+  --aham-fill-active:        rgba(20,20,20,.08);
+
+  /* ─── alias (portable semantic) ────────────────────────────────── */
+  --color-surface:           var(--aham-surface-tier1);
+  --color-ink-primary:       var(--aham-ink-primary);
+  --color-ink-secondary:     var(--aham-ink-secondary);
+  --color-ink-tertiary:      var(--aham-ink-tertiary);
+  --color-accent:            var(--aham-accent-default);
+  --color-accent-hover:      var(--aham-accent-hover);
+  --color-accent-press:      var(--aham-accent-press);
+  --color-success:           var(--aham-success);
+  --color-warning:           var(--aham-warning);
+  --color-danger:            var(--aham-danger);
+  --color-bg-app:            var(--aham-surface-tier1);
+  --color-bg-panel:          var(--aham-surface-tier2);
+  --color-bg-hover:          var(--aham-surface-tier2);
+  --color-bg-selected:       var(--aham-surface-tier3);
+  --color-border:            var(--aham-surface-tier3);
+  --color-fill-hover:        var(--aham-fill-hover);
+  --color-fill-active:       var(--aham-fill-active);
+  --color-focus-ring:        rgba(51,110,232,0.20);
+  --color-overlay:           rgba(20,20,20,0.28);
+  --color-ink-on-accent:     var(--aham-ink-on-accent);
+
+  /* ─── spacing ──────────────────────────────────────────────────── */
+  --space-0:                 0;
+  --space-1:                 4px;
+  --space-2:                 8px;
+  --space-3:                 12px;
+  --space-4:                 16px;
+  --space-5:                 24px;
+  --space-6:                 32px;
+  --space-7:                 48px;
+  --space-8:                 64px;
+  --space-9:                 96px;
+
+  /* ─── radius ───────────────────────────────────────────────────── */
+  --radius-xs:               4px;
+  --radius-sm:               6px;
+  --radius-md:               8px;
+  --radius-lg:               12px;
+  --radius-xl:               16px;
+  --radius-2xl:              20px;
+  --radius-pill:             999px;
+
+  /* ─── shadow ───────────────────────────────────────────────────── */
+  --shadow-none:             none;
+  --shadow-xs:               none;
+  --shadow-sm:               none;
+  --shadow-md:               0 2px 8px rgba(20,20,20,0.05);
+  --shadow-pop:              0 3px 12px rgba(20,20,20,0.06);
+  --shadow-modal:            0 12px 36px rgba(20,20,20,0.10);
+  --shadow-ring-focus:       0 0 0 3px rgba(51,110,232,0.20);
+
+  /* ─── typography – families ────────────────────────────────────── */
+  --font-sans:               'Inter', 'Microsoft YaHei', 'SimHei', system-ui, -apple-system, sans-serif;
+  --font-mono:               'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-sans-display:       'Inter Display', 'Inter', 'Microsoft YaHei', system-ui, sans-serif;
+
+  /* ─── typography – sizes ───────────────────────────────────────── */
+  --text-xs:                 12px;
+  --text-sm:                 13px;
+  --text-base:               14px;
+  --text-md:                 15px;
+  --text-lg:                 17px;
+  --text-xl:                 20px;
+  --text-2xl:                24px;
+  --text-3xl:                32px;
+  --text-display:            44px;
+
+  /* ─── typography – weights ─────────────────────────────────────── */
+  --weight-regular:          400;
+  --weight-medium:           500;
+  --weight-semibold:         600;
+  --weight-bold:             700;
+
+  /* ─── typography – line heights ────────────────────────────────── */
+  --leading-tight:           1.2;
+  --leading-snug:            1.35;
+  --leading-normal:          1.55;
+  --leading-relaxed:         1.7;
+
+  /* ─── layout ───────────────────────────────────────────────────── */
+  --layout-rail-width:       60px;
+  --layout-sidebar-width:    264px;
+  --layout-rightbar-width:   340px;
+  --layout-topbar-height:    52px;
+  --layout-control-height:   36px;
+  --layout-btn-height:       32px;
+
+  /* ─── z-index ──────────────────────────────────────────────────── */
+  --z-base:                  0;
+  --z-sticky:                100;
+  --z-dropdown:              200;
+  --z-overlay:               300;
+  --z-modal:                 400;
+  --z-toast:                 500;
+
+  /* ─── motion ───────────────────────────────────────────────────── */
+  --duration-fast:           0.12s;
+  --duration-base:           0.18s;
+  --duration-slow:           0.28s;
+  --easing-standard:         cubic-bezier(.2,0,0,1);
+  --easing-out:              cubic-bezier(0,0,.2,1);
+
+  /* ─── border ───────────────────────────────────────────────────── */
+  --border-thin:             1px;
+  --border-thick:            1.5px;
+
+  /* ─── focus ring ───────────────────────────────────────────────── */
+  --focus-ring-color:        rgba(51,110,232,.20);
+  --focus-ring-width:        3px;
+  --focus-ring-offset:       2px;
+
+  /* ─── icon ─────────────────────────────────────────────────────── */
+  --icon-sm:                 16px;
+  --icon-md:                 20px;
+  --icon-lg:                 24px;
+
+  /* ─── opacity ──────────────────────────────────────────────────── */
+  --opacity-disabled:        0.4;
+
+  /* ─── avatar ───────────────────────────────────────────────────── */
+  --avatar-xs:               20px;
+  --avatar-sm:               24px;
+  --avatar-md:               32px;
+  --avatar-lg:               40px;
+  --avatar-xl:               56px;
+
+  /* ─── overlay / dialog ─────────────────────────────────────────── */
+  --dialog-width:            380px;
+  --modal-min-width:         360px;
+  --modal-width:             480px;
+  --modal-max-width:         640px;
+  --drawer-width:            400px;
+  --preview-max-w:           1080px;
+  --preview-max-h:           90vh;
+
+  /* ─── density (standard default) ───────────────────────────────── */
+  --density-row-height:      36px;
+  --density-control-height:  32px;
+  --density-spacing-scale:   1;
+
+  /* ─── content width ────────────────────────────────────────────── */
+  --content-page:            1280px;
+  --content-content:         1080px;
+  --content-read:            65ch;
+  --content-form:            560px;
+  --content-auth:            420px;
+  --content-ultra:           1536px;
+  --content-full:            100%;
+
+  /* ══════════════════════════════════════════════════════════════════
+     BACKWARD-COMPATIBILITY ALIASES (preview pages reference these)
+     ══════════════════════════════════════════════════════════════════ */
+
+  /* Short names used by macOS-sourced previews */
+  --ink-primary:             var(--aham-ink-primary);
+  --ink-secondary:           var(--aham-ink-secondary);
+  --ink-tertiary:            var(--aham-ink-tertiary);
+  --ink-disabled:            var(--aham-ink-quaternary);
+  --ui-surface:              var(--aham-surface-tier1);
+  --ui-panel:                var(--aham-surface-tier2);
+  --ui-border:               var(--aham-surface-tier3);
+  --ui-border-light:         var(--aham-surface-tier2);
+  --accent-blue:             var(--aham-accent-default);
+  --accent-red:              var(--aham-danger);
+  --accent-green:            var(--aham-success);
+  --accent-yellow:           var(--aham-warning);
+  --status-dot-size:         6px;
+
+  /* --aham-typography-* aliases (used by original 6 previews) */
+  --aham-typography-fontSize-xs:      var(--text-xs);
+  --aham-typography-fontSize-sm:      var(--text-sm);
+  --aham-typography-fontSize-base:    var(--text-base);
+  --aham-typography-fontSize-md:      var(--text-md);
+  --aham-typography-fontSize-lg:      var(--text-lg);
+  --aham-typography-fontSize-xl:      var(--text-xl);
+  --aham-typography-fontSize-2xl:     var(--text-2xl);
+  --aham-typography-fontSize-3xl:     var(--text-3xl);
+  --aham-typography-fontSize-display: var(--text-display);
+  --aham-typography-fontWeight-regular:  var(--weight-regular);
+  --aham-typography-fontWeight-medium:   var(--weight-medium);
+  --aham-typography-fontWeight-semibold: var(--weight-semibold);
+  --aham-typography-fontWeight-bold:     var(--weight-bold);
+  --aham-typography-lineHeight-tight:    var(--leading-tight);
+  --aham-typography-lineHeight-snug:     var(--leading-snug);
+  --aham-typography-lineHeight-normal:   var(--leading-normal);
+  --aham-typography-lineHeight-relaxed:  var(--leading-relaxed);
+  --aham-typography-fontFamily-sans:     var(--font-sans);
+  --aham-typography-fontFamily-mono:     var(--font-mono);
+  --aham-typography-fontFamily-sansDisplay: var(--font-sans-display);
+  --aham-typography-opticalSizeThreshold: 20px;
+
+  /* --aham-spacing-* aliases */
+  --aham-spacing-0:          var(--space-0);
+  --aham-spacing-1:          var(--space-1);
+  --aham-spacing-2:          var(--space-2);
+  --aham-spacing-3:          var(--space-3);
+  --aham-spacing-4:          var(--space-4);
+  --aham-spacing-5:          var(--space-5);
+  --aham-spacing-6:          var(--space-6);
+  --aham-spacing-7:          var(--space-7);
+  --aham-spacing-8:          var(--space-8);
+  --aham-spacing-9:          var(--space-9);
+
+  /* --aham-* name variants */
+  --aham-radius-pill:        var(--radius-pill);
+  --aham-radius-lg:          var(--radius-lg);
+  --aham-contentWidth-content: var(--content-content);
+  --aham-opacity-disabled:   var(--opacity-disabled);
+  --aham-focusRing-width:    var(--focus-ring-width);
+  --aham-focusRing-color:    var(--focus-ring-color);
+  --aham-focusRing-offset:   var(--focus-ring-offset);
+  --aham-textStyles-heading-fontSize: var(--text-2xl);
+  --aham-color-semantic-danger-bg: var(--aham-danger-bg);
+  --aham-color-ink-quaternary: var(--aham-ink-quaternary);
+  --aham-color-accent-default: var(--aham-accent-default);
+  --aham-color-accent-hover: var(--aham-accent-hover);
+  --aham-color-accent-press: var(--aham-accent-press);
+  --aham-color-surface-tier1-white: var(--aham-surface-tier1);
+  --aham-color-surface-tier2-panel: var(--aham-surface-tier2);
+  --aham-color-surface-tier3-line:  var(--aham-surface-tier3);
+  --aham-color-ink-on-accent: var(--aham-ink-on-accent);
+  --aham-color-ink-primary:   var(--aham-ink-primary);
+  --aham-color-ink-secondary: var(--aham-ink-secondary);
+  --aham-color-ink-tertiary:  var(--aham-ink-tertiary);
+
+  /* motion aliases */
+  --aham-motion-duration-fast:  var(--duration-fast);
+  --aham-motion-duration-base:  var(--duration-base);
+  --aham-motion-duration-slow:  var(--duration-slow);
+  --aham-motion-easing-standard: var(--easing-standard);
+  --aham-motion-easing-out:     var(--easing-out);
+
+  /* Extra alias variants used by some previews */
+  --font-display:            var(--font-sans-display);
+  --color-surface-panel:     var(--color-bg-panel);
+  --color-surface-line:      var(--color-border);
+  --color-ink-quaternary:    var(--aham-ink-quaternary);
+  --border-width-thin:       var(--border-thin);
+  --border-width-thick:      var(--border-thick);
+  --shadow-focus-ring:       var(--shadow-ring-focus);
+  --ease-standard:           var(--easing-standard);
+  --ease-out:                var(--easing-out);
+  --content-width-content:   var(--content-content);
+  --uikit-sidebar-w:         var(--layout-sidebar-width);
+  --icon-size-md:            var(--icon-md);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DARK MODE
+   ══════════════════════════════════════════════════════════════════════ */
+
+.dark {
+  /* ─── surface ──────────────────────────────────────────────────── */
+  --aham-surface-tier1:      #1C1C1C;
+  --aham-surface-tier2:      #2A2A2A;
+  --aham-surface-tier3:      #3A3A3A;
+
+  /* ─── ink ──────────────────────────────────────────────────────── */
+  --aham-ink-primary:        #F5F5F5;
+  --aham-ink-secondary:      #A8A8A8;
+  --aham-ink-tertiary:       #767676;
+  --aham-ink-quaternary:     #4A4A4A;
+  --aham-ink-on-accent:      #FFFFFF;
+
+  /* ─── accent (blue) ────────────────────────────────────────────── */
+  --aham-accent-default:     #5C8BED;
+  --aham-accent-hover:       #7BA3F0;
+  --aham-accent-press:       #336EE8;
+  /* tint-border & tint-surface stay unchanged in dark */
+  --aham-accent-tint-border: #C8D3EA;
+  --aham-accent-tint-surface: #EDF0F7;
+
+  /* ─── semantic ─────────────────────────────────────────────────── */
+  --aham-success:            #8FB096;
+  --aham-warning:            #C2A855;
+  --aham-danger:             #D08070;
+
+  /* ─── fill (neutral interaction) ───────────────────────────────── */
+  --aham-fill-hover:         rgba(255,255,255,.06);
+  --aham-fill-active:        rgba(255,255,255,.10);
+
+  /* ─── alias (portable semantic) ────────────────────────────────── */
+  --color-surface:           var(--aham-surface-tier1);
+  --color-ink-primary:       var(--aham-ink-primary);
+  --color-ink-secondary:     var(--aham-ink-secondary);
+  --color-ink-tertiary:      var(--aham-ink-tertiary);
+  --color-accent:            var(--aham-accent-default);
+  --color-accent-hover:      var(--aham-accent-hover);
+  --color-accent-press:      var(--aham-accent-press);
+  --color-success:           var(--aham-success);
+  --color-warning:           var(--aham-warning);
+  --color-danger:            var(--aham-danger);
+  --color-bg-app:            var(--aham-surface-tier1);
+  --color-bg-panel:          var(--aham-surface-tier2);
+  --color-bg-hover:          var(--aham-surface-tier2);
+  --color-bg-selected:       var(--aham-surface-tier3);
+  --color-border:            var(--aham-surface-tier3);
+  --color-fill-hover:        var(--aham-fill-hover);
+  --color-fill-active:       var(--aham-fill-active);
+  --color-focus-ring:        rgba(92,139,237,0.30);
+  --color-overlay:           rgba(0,0,0,0.50);
+  --color-ink-on-accent:     var(--aham-ink-on-accent);
+
+  /* ─── shadow (dark elevation) ──────────────────────────────────── */
+  --shadow-md:               0 2px 8px rgba(0,0,0,0.25);
+  --shadow-pop:              0 3px 12px rgba(0,0,0,0.30);
+  --shadow-modal:            0 12px 36px rgba(0,0,0,0.40);
+  --shadow-ring-focus:       0 0 0 3px rgba(92,139,237,0.30);
+}

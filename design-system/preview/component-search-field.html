@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Field — Aham UI</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    /* ================================================================
+       Search Field — Aham UI Component
+       Anatomy: [icon-search] [input-area] [clear-button]
+       ================================================================ */
+
+    .search-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 280px;
+      border: 1px solid var(--ui-border);
+      border-radius: var(--radius-md);
+      background: var(--ui-surface);
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+    .search-field:hover {
+      border-color: var(--ink-tertiary);
+    }
+    .search-field:focus-within,
+    .search-field.is-focused {
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(51, 110, 232, 0.20);
+    }
+
+    /* ---- Size variants ---- */
+    .search-field--md { height: 36px; }
+    .search-field--sm { height: 28px; }
+
+    /* ---- Search icon (left) ---- */
+    .search-field__icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--ink-tertiary);
+      pointer-events: none;
+      z-index: 1;
+      flex: none;
+    }
+
+    /* ---- Input area ---- */
+    .search-field__input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink-primary);
+      outline: none;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+    }
+    .search-field--md .search-field__input {
+      padding: 0 32px 0 34px;
+    }
+    .search-field--sm .search-field__input {
+      padding: 0 12px 0 30px;
+      font-size: 13px;
+    }
+    .search-field__input::placeholder {
+      color: var(--ink-tertiary);
+    }
+
+    /* ---- Clear button (right, shown on value) ---- */
+    .search-field__clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      border: none;
+      border-radius: 50%;
+      background: var(--ink-tertiary);
+      color: #fff;
+      cursor: pointer;
+      display: none;
+      place-items: center;
+      padding: 0;
+      line-height: 1;
+      font-size: 10px;
+      z-index: 1;
+      transition: background 0.12s;
+    }
+    .search-field__clear:hover {
+      background: var(--ink-secondary);
+    }
+    .search-field--value .search-field__clear {
+      display: grid;
+    }
+
+    /* ---- Disabled ---- */
+    .search-field--disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ---- Typing cursor animation ---- */
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    .cursor::after {
+      content: '';
+      display: inline-block;
+      width: 1.5px;
+      height: 14px;
+      background: var(--ink-primary);
+      margin-left: 1px;
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    /* ---- Extra label for sim-input layout (typing state) ---- */
+    .input-sim {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      flex: 1;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--ink-primary);
+      white-space: nowrap;
+    }
+    .search-field--md .input-sim {
+      padding: 0 32px 0 34px;
+    }
+
+    /* ---- Preview page layout ---- */
+    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+    .header { padding-bottom: var(--space-2, 8px); }
+    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+    .variant-grid { display: flex; flex-direction: column; gap: 16px; }
+    .variant-label { font-family: var(--font-sans); font-weight: 500; font-size: 12px; color: var(--ink-secondary); margin-bottom: 4px; letter-spacing: 0.01em; }
+  </style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Search Field</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">md-empty</span>
+<div class="rail">
+  <div class="search-field search-field--md">
+    <svg class="search-field__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input class="search-field__input" type="text" placeholder="搜索文件…">
+  </div>
+</div>
+</div>
+
+<div class="story">
+<span class="story-label">md-typing</span>
+<div class="rail">
+  <div class="search-field search-field--md is-focused">
+    <svg class="search-field__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <div class="input-sim"><span>设计系统<span class="cursor"></span></span></div>
+  </div>
+</div>
+</div>
+
+<div class="story">
+<span class="story-label">md-value</span>
+<div class="rail">
+  <div class="search-field search-field--md search-field--value">
+    <svg class="search-field__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input class="search-field__input" type="text" value="设计系统" aria-label="搜索">
+    <button class="search-field__clear" aria-label="清除">&#x00D7;</button>
+  </div>
+</div>
+</div>
+
+<div class="story">
+<span class="story-label">md-disabled</span>
+<div class="rail">
+  <div class="search-field search-field--md search-field--disabled">
+    <svg class="search-field__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input class="search-field__input" type="text" placeholder="搜索文件…" disabled>
+  </div>
+</div>
+</div>
+
+<div class="story">
+<span class="story-label">sm-default</span>
+<div class="rail">
+  <div class="search-field search-field--sm">
+    <svg class="search-field__icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+      <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <input class="search-field__input" type="text" placeholder="搜索项目…">
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

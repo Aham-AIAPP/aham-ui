@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segmented Control — Aham UI Component Preview</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    /* ==============================================================
+       Segmented Control — 组件样式 (自包含,预览用)
+       Container = #F3F3F3 panel, 选中段 = 白底, 间距 2px, 高 32px
+       ============================================================== */
+
+    .segmented-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: 32px;
+      padding: 0;
+      background: #F3F3F3;             /* --ui-panel */
+      border-radius: 8px;              /* --radius-md */
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .segment {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0 12px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink-secondary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1;
+      letter-spacing: 0.005em;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background 0.15s ease, color 0.15s ease;
+      box-sizing: border-box;
+      outline: none;
+    }
+
+    .segment:focus-visible {
+      box-shadow: inset 0 0 0 1.5px var(--accent-blue);
+    }
+
+    .segment.is-selected {
+      background: #FFFFFF;             /* --ui-surface */
+      color: var(--ink-primary);
+      border-radius: 6px;              /* container-radius - gap = 8 - 2 */
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.04);
+    }
+
+    .segment:not(.is-selected):hover {
+      color: var(--ink-primary);
+    }
+
+    .segment:not(.is-selected):active {
+      color: var(--ink-primary);
+    }
+
+    /* ---- 禁用状态 ---- */
+    .segmented-control.is-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    /* ---- 预览布局 ---- */
+    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+    .header { padding-bottom: var(--space-2, 8px); }
+    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+    .preview-block { display: flex; flex-direction: column; gap: 12px; }
+    .preview-group { display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 20px; background: #FAFAFA; border-radius: 8px; }
+    .variant-label { font-family: var(--font-mono); font-size: 11px; font-weight: 500; color: var(--ink-tertiary); min-width: 72px; }
+
+    .caption-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .caption-tag {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink-tertiary);
+    }
+
+    /* ---- Sm variant ---- */
+    .segmented-control.sm {
+      height: 28px;
+    }
+    .segmented-control.sm .segment {
+      padding: 0 10px;
+      font-size: 12px;
+    }
+    .segmented-control.sm .segment.is-selected {
+      border-radius: 5px;    /* (28-2)/something — keep proportional */
+    }
+
+    /* ---- 状态说明底色 ---- */
+    .preview-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* ---- 同心圆角 demo (第 3 章规则) ---- */
+    .demo-note {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Segmented Control</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">2-Segment</span>
+<div class="rail">
+  <div class="preview-block">
+    <div class="preview-group"><span class="variant-label">Default</span><div class="segmented-control"><button class="segment">List</button><button class="segment is-selected">Grid</button></div></div>
+    <div class="preview-group"><span class="variant-label">Hover</span><div class="segmented-control"><button class="segment" style="color:var(--ink-primary);">List</button><button class="segment is-selected">Grid</button></div></div>
+    <div class="preview-group"><span class="variant-label">Disabled</span><div class="segmented-control is-disabled"><button class="segment">List</button><button class="segment is-selected">Grid</button></div></div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">3-Segment</span>
+<div class="rail">
+  <div class="preview-block">
+    <div class="preview-group"><span class="variant-label">Default</span><div class="segmented-control"><button class="segment">Day</button><button class="segment is-selected">Week</button><button class="segment">Month</button></div></div>
+    <div class="preview-group"><span class="variant-label">Hover</span><div class="segmented-control"><button class="segment">Day</button><button class="segment is-selected">Week</button><button class="segment" style="color:var(--ink-primary);">Month</button></div></div>
+    <div class="preview-group"><span class="variant-label">Disabled</span><div class="segmented-control is-disabled"><button class="segment">Day</button><button class="segment is-selected">Week</button><button class="segment">Month</button></div></div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">4-Segment</span>
+<div class="rail">
+  <div class="preview-block">
+    <div class="preview-group"><span class="variant-label">Default</span><div class="segmented-control"><button class="segment">All</button><button class="segment is-selected">Files</button><button class="segment">Photos</button><button class="segment">Links</button></div></div>
+    <div class="preview-group"><span class="variant-label">Hover</span><div class="segmented-control"><button class="segment" style="color:var(--ink-primary);">All</button><button class="segment is-selected">Files</button><button class="segment">Photos</button><button class="segment">Links</button></div></div>
+    <div class="preview-group"><span class="variant-label">Disabled</span><div class="segmented-control is-disabled"><button class="segment">All</button><button class="segment is-selected">Files</button><button class="segment">Photos</button><button class="segment">Links</button></div></div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Size Variants</span>
+<div class="rail">
+  <div class="preview-block">
+    <div class="preview-group"><span class="variant-label">md</span><div class="segmented-control"><button class="segment">Day</button><button class="segment is-selected">Week</button><button class="segment">Month</button></div><span style="font-size:12px;color:var(--ink-tertiary);">32px</span></div>
+    <div class="preview-group"><span class="variant-label">sm</span><div class="segmented-control sm"><button class="segment">Day</button><button class="segment is-selected">Week</button><button class="segment">Month</button></div><span style="font-size:12px;color:var(--ink-tertiary);">28px</span></div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

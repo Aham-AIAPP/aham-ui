@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkbox — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body{margin:0;background:var(--color-bg-app);font-family:var(--font-sans);color:var(--color-ink-primary);display:flex;justify-content:center;padding:var(--space-6,24px);}
+.specimen{width:100%;max-width:960px;display:flex;flex-direction:column;gap:var(--space-6,24px);}
+.header{padding-bottom:var(--space-2,8px);}
+.header h2{margin:0;font-family:var(--font-display);font-size:var(--aham-typography-fontSize-lg,18px);font-weight:var(--aham-typography-fontWeight-semibold,600);color:var(--color-ink-primary);}
+.stage{display:flex;flex-direction:column;gap:var(--space-5,20px);}
+.story{display:flex;flex-direction:column;gap:var(--space-3,12px);}
+.story-label{font-size:var(--aham-typography-fontSize-xs,12px);font-weight:var(--aham-typography-fontWeight-medium,500);color:var(--color-ink-tertiary);text-transform:uppercase;letter-spacing:.5px;padding:var(--space-1,4px) 0;}
+.rail{display:flex;gap:var(--space-3,12px);flex-wrap:wrap;align-items:flex-start;}
+.divider{border:none;border-top:1px solid var(--color-border,#E5E7EB);margin:var(--space-1,4px) 0;}
+.vstack{display:flex;flex-direction:column;gap:var(--space-2);}
+.checkbox{display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer;user-select:none;margin-right:var(--space-4);margin-bottom:var(--space-2);}
+.checkbox input{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.checkbox .box{position:relative;flex-shrink:0;border:1.5px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-bg-app);transition:background var(--duration-fast) var(--ease-standard),border-color var(--duration-fast) var(--ease-standard);}
+.checkbox.md .box{width:16px;height:16px;}
+.checkbox.sm .box{width:14px;height:14px;}
+.checkbox .label-text{font-family:var(--font-sans);font-size:var(--aham-typography-fontSize-base);color:var(--color-ink-primary);line-height:1.4;}
+.checkbox .box::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity var(--duration-fast) var(--ease-standard);}
+.checkbox.checked .box{background:var(--color-ink-primary);border-color:var(--color-ink-primary);}
+.checkbox.md.checked .box::after{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4.5L3.5 7L9 1' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/10px 8px no-repeat;}
+.checkbox.sm.checked .box::after{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='6' viewBox='0 0 8 6'%3E%3Cpath d='M1 3L3 5L7 1' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/8px 6px no-repeat;}
+.checkbox.mixed .box{background:var(--color-bg-app);border-color:var(--color-border);}
+.checkbox.md.mixed .box::after{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='2' viewBox='0 0 8 2'%3E%3Cpath d='M1 1H7' stroke='%23262626' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center/8px 2px no-repeat;}
+.checkbox.sm.mixed .box::after{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='2' viewBox='0 0 6 2'%3E%3Cpath d='M1 1H5' stroke='%23262626' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center/6px 2px no-repeat;}
+.checkbox.disabled{cursor:not-allowed;}
+.checkbox.disabled .box{border-color:var(--aham-color-ink-quaternary);}
+.checkbox.disabled .label-text{color:var(--color-ink-tertiary);}
+.checkbox.disabled.checked .box{background:var(--aham-color-ink-quaternary);border-color:var(--aham-color-ink-quaternary);}
+.checkbox.disabled.mixed .box{background:var(--color-bg-app);border-color:var(--aham-color-ink-quaternary);}
+.checkbox.disabled.mixed .box::after{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='2' viewBox='0 0 8 2'%3E%3Cpath d='M1 1H7' stroke='%23C4C4C4' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center/8px 2px no-repeat;}
+.checkbox.disabled.sm.mixed .box::after{opacity:1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='2' viewBox='0 0 6 2'%3E%3Cpath d='M1 1H5' stroke='%23C4C4C4' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") center/6px 2px no-repeat;}
+.checkbox:focus-within .box{box-shadow:0 0 0 3px rgba(51,110,232,0.20);}
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Checkbox</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">Medium</span>
+<div class="rail">
+<label class="checkbox md"><input type="checkbox"><span class="box"></span><span class="label-text">Enable notifications</span></label>
+<label class="checkbox md checked"><input type="checkbox" checked><span class="box"></span><span class="label-text">Remember me</span></label>
+<label class="checkbox md mixed"><input type="checkbox"><span class="box"></span><span class="label-text">Select all</span></label>
+<label class="checkbox md disabled"><input type="checkbox" disabled><span class="box"></span><span class="label-text">Agree to terms</span></label>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Small</span>
+<div class="rail">
+<label class="checkbox sm"><input type="checkbox"><span class="box"></span><span class="label-text">Enable notifications</span></label>
+<label class="checkbox sm checked"><input type="checkbox" checked><span class="box"></span><span class="label-text">Remember me</span></label>
+<label class="checkbox sm mixed"><input type="checkbox"><span class="box"></span><span class="label-text">Select all</span></label>
+<label class="checkbox sm disabled"><input type="checkbox" disabled><span class="box"></span><span class="label-text">Agree to terms</span></label>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Group Example</span>
+<div class="vstack">
+<label class="checkbox md checked"><input type="checkbox" checked><span class="box"></span><span class="label-text">Select all</span></label>
+<label class="checkbox md checked"><input type="checkbox" checked><span class="box"></span><span class="label-text">Enable notifications</span></label>
+<label class="checkbox md"><input type="checkbox"><span class="box"></span><span class="label-text">Remember me</span></label>
+<label class="checkbox md checked"><input type="checkbox" checked><span class="box"></span><span class="label-text">Agree to terms</span></label>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

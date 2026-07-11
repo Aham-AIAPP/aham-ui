@@ -1,0 +1,40 @@
+{
+  "slug": "tooltip",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["tooltip", "hover-card"],
+  "variantDimensions": [
+    { "axis": "position", "values": ["top", "bottom", "left", "right"] }
+  ],
+  "representativeVariants": [
+    "top",
+    "bottom",
+    "left",
+    "right"
+  ],
+  "anatomy": {
+    "parts": ["background", "text", "arrow"],
+    "required": ["background", "text"]
+  },
+  "structurePatterns": [
+    "Background = ink-primary (#262626) with high opacity",
+    "Text = white, footnote size (13px), weight 400",
+    "Padding = 6px 12px (--space-1 --space-3)",
+    "Radius = sm (6px)",
+    "Arrow = 4px triangle pointing to the attached element",
+    "Max width = 240px",
+    "Appears on hover with 0.3s delay"
+  ],
+  "usageHints": [
+    "Use for icon-only buttons to describe the action",
+    "Do NOT use for critical information user needs before interacting",
+    "Keep text short — 1-5 words maximum"
+  ],
+  "doNotInvent": [
+    "Colored tooltips — always ink-primary background",
+    "Tooltips on mobile (use visible labels instead)",
+    "Rich content tooltips (HTML or images)"
+  ],
+  "unknowns": ["Tooltip delay customization"]
+}

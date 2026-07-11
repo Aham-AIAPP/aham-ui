@@ -1,0 +1,38 @@
+{
+  "slug": "slider",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["slider", "range-slider", "seek-bar"],
+  "variantDimensions": [
+    { "axis": "state", "values": ["default", "active", "disabled"] },
+    { "axis": "orientation", "values": ["horizontal", "vertical"] }
+  ],
+  "representativeVariants": [
+    "horizontal-default",
+    "horizontal-active",
+    "horizontal-disabled"
+  ],
+  "anatomy": {
+    "parts": ["track", "fill", "knob"],
+    "required": ["track", "knob"]
+  },
+  "structurePatterns": [
+    "Track = 4px height, tier3-line (#E7E7E7) background",
+    "Fill (before knob) = accent blue (#336EE8)",
+    "Knob = circular, 16px diameter, white fill, flat (no shadow)",
+    "Knob border = 1.5px tier3-line",
+    "Active knob = subtle panel gray (#F3F3F3)"
+  ],
+  "usageHints": [
+    "Use for adjustable numeric values where precision is secondary",
+    "Blue fill before the knob is acceptable — it's a thin track indicator",
+    "Show current value label above knob when available"
+  ],
+  "doNotInvent": [
+    "Large/thick knob shadows — Aham is flat",
+    "Colored slider tracks other than blue",
+    "Tick marks without explicit requirement"
+  ],
+  "unknowns": ["Range slider (dual knob) pattern"]
+}

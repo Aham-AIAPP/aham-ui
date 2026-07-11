@@ -1,0 +1,38 @@
+{
+  "slug": "popover",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["popover", "popup", "contextual-menu", "dropdown-panel"],
+  "variantDimensions": [
+    { "axis": "position", "values": ["bottom", "top", "right", "left"] }
+  ],
+  "representativeVariants": [
+    "bottom",
+    "top"
+  ],
+  "anatomy": {
+    "parts": ["panel", "arrow", "content"],
+    "required": ["panel", "content"]
+  },
+  "structurePatterns": [
+    "Panel = white background (tier1), radius lg (12px)",
+    "Shadow = popover shadow only (0 3px 12px rgba(20,20,20,0.06))",
+    "Min width = 200px, max width = 360px",
+    "Padding = 8px (--space-2)",
+    "Arrow = 8px triangle pointing to the trigger element",
+    "Dismisses on click outside or Esc key"
+  ],
+  "usageHints": [
+    "Use for temporary contextual info — not for critical actions",
+    "Popover is NOT an alert — never put warnings in a popover",
+    "Close on click-outside (light dismiss)",
+    "Do NOT stack popovers (no cascading popovers)"
+  ],
+  "doNotInvent": [
+    "Modal behavior — popovers are non-modal by design",
+    "Blue headers or accent bars in popover",
+    "Multiple nested popovers"
+  ],
+  "unknowns": ["Popover with scrollable content max height"]
+}

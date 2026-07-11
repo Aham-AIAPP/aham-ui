@@ -1,0 +1,46 @@
+{
+  "slug": "nav",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["navigation", "sidebar", "tab-bar", "nav-rail"],
+  "variantDimensions": [
+    { "axis": "type", "values": ["sidebar", "rail", "tabs"] },
+    { "axis": "state", "values": ["default", "active", "hover", "collapsed"] }
+  ],
+  "representativeVariants": [
+    "sidebar-default",
+    "rail-default",
+    "tabs-default"
+  ],
+  "anatomy": {
+    "parts": ["nav-item", "icon", "label", "badge", "divider", "section-header"],
+    "required": ["nav-item"]
+  },
+  "structurePatterns": [
+    "Sidebar width = 264px (--layout-sidebar-width)",
+    "Rail width = 60px (--layout-rail-width)",
+    "Active item = flat gray background (tier3-line #E7E7E7), ink-primary text",
+    "NOT blue — active state is monochrome",
+    "Hover = subtle fill (rgba(20,20,20,0.04))",
+    "Section headers = caption style (12px, ink-tertiary), uppercase or muted",
+    "Nav item height = 36px (standard density)",
+    "Icon size = 20px (--icon-size-md)",
+    "Tab underline = 2px accent blue (#336EE8) on selected tab — the ONLY place blue appears in nav",
+    "Tab text = ink-secondary default, ink-primary when selected"
+  ],
+  "usageHints": [
+    "Web track: top horizontal nav (desktop) or bottom tab bar (mobile)",
+    "App track: rail (60px) + optional sidebar (264px) on left",
+    "Active indicator is monochrome gray, not blue — blue reserved for tab underline only",
+    "Badge on nav item uses mono number, subtle gray bg",
+    "Collapsed sidebar shows icons only with tooltip on hover"
+  ],
+  "doNotInvent": [
+    "Blue active backgrounds on nav items — active = flat gray",
+    "Colored icons in nav — all icons are ink-secondary monochrome",
+    "Floating/detached navigation",
+    "Animated icon transitions beyond standard easing"
+  ],
+  "unknowns": ["Nested submenu expansion pattern", "Mobile hamburger menu transition"]
+}

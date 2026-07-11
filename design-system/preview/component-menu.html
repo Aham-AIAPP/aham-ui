@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu — Aham UI Preview</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    /* ============================================================
+       Menu 组件样式 — Dropdown & Context
+       ============================================================ */
+
+    /* ---- Menu Panel ---- */
+    .menu {
+      display: inline-flex;
+      flex-direction: column;
+      min-width: 180px;
+      padding: 4px 0;
+      background: #FFFFFF;
+      box-shadow: 0 3px 12px rgba(20,20,20,0.06);
+    }
+
+    /* Dropdown: top 8px, bottom 12px */
+    .menu.is-dropdown {
+      border-radius: 8px 8px 12px 12px;
+    }
+
+    /* Context: all corners 12px */
+    .menu.is-context {
+      border-radius: 12px;
+    }
+
+    /* ---- Menu Item ---- */
+    .menu-item {
+      display: flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 8px;
+      margin: 0 4px;
+      border-radius: var(--radius-sm, 4px);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink-primary);
+      cursor: default;
+      user-select: none;
+      transition: background 0.1s;
+      /* 保证 focus-visible 可见 */
+      position: relative;
+    }
+
+    .menu-item:hover {
+      background: rgba(20,20,20,0.04);
+    }
+
+    .menu-item:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(51,110,232,0.20);
+    }
+
+    /* ---- 图标区 (20px) ---- */
+    .menu-item-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-right: 8px;
+      color: var(--ink-tertiary);
+    }
+
+    .menu-item-icon svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ---- 标签 ---- */
+    .menu-item-label {
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    /* ---- 快捷键 ---- */
+    .menu-item-shortcut {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      margin-left: 24px;
+      white-space: nowrap;
+    }
+
+    /* ---- Disabled ---- */
+    .menu-item.is-disabled {
+      color: var(--ink-disabled);
+    }
+
+    .menu-item.is-disabled .menu-item-icon {
+      color: var(--ink-disabled);
+    }
+
+    .menu-item.is-disabled .menu-item-shortcut {
+      color: var(--ink-disabled);
+    }
+
+    .menu-item.is-disabled:hover {
+      background: transparent;
+    }
+
+    /* ---- Danger ---- */
+    .menu-item.is-danger {
+      color: var(--ink-primary);
+    }
+
+    .menu-item.is-danger .menu-item-icon {
+      color: var(--ink-tertiary);
+    }
+
+    .menu-item.is-danger:hover {
+      color: #9E3D31;
+      background: rgba(20,20,20,0.04);
+    }
+
+    .menu-item.is-danger:hover .menu-item-icon {
+      color: #9E3D31;
+    }
+
+    /* ---- Separator ---- */
+    .menu-separator {
+      height: 1px;
+      background: var(--ui-border);
+      margin: 4px 8px;
+    }
+
+    /* ---- Trigger 示意 ---- */
+    .menu-trigger {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      padding: 0 16px;
+      border: 1px solid var(--ui-border);
+      border-radius: var(--radius-md, 8px);
+      background: var(--ui-panel);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink-primary);
+      cursor: default;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    /* ============ 演示布局 ============ */
+    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+    .header { padding-bottom: var(--space-2, 8px); }
+    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+    .menu-demo-area { display: flex; gap: 80px; flex-wrap: wrap; align-items: flex-start; }
+    .menu-demo-group { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .menu-demo-group.is-center { align-items: center; }
+    .menu-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .menu-legend-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-tertiary); }
+    .menu-legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .menu-legend-swatch.is-hover   { background: rgba(20,20,20,0.04); }
+    .menu-legend-swatch.is-danger  { background: #9E3D31; }
+    .menu-legend-swatch.is-focus   { background: rgba(51,110,232,0.20); }
+    .menu-legend-swatch.is-sep     { background: var(--ui-border); }
+  </style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Menu</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">图例</span>
+<div class="rail">
+  <div class="menu-legend">
+    <span class="menu-legend-item"><span class="menu-legend-swatch is-hover"></span>悬浮态 (rgba(20,20,20,0.04))</span>
+    <span class="menu-legend-item"><span class="menu-legend-swatch is-focus"></span>焦点环 (3px rgba(51,110,232,0.20))</span>
+    <span class="menu-legend-item"><span class="menu-legend-swatch is-sep"></span>分隔线 (1px tier3-line)</span>
+    <span class="menu-legend-item"><span class="menu-legend-swatch is-danger"></span>危险项 (#9E3D31)</span>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Dropdown Menu</span>
+<div class="rail">
+  <div class="menu-demo-area">
+    <div class="menu-demo-group is-center">
+      <span class="menu-trigger">文件操作 ▾</span>
+      <div class="menu is-dropdown" role="menu">
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span><span class="menu-item-label">新建文件</span><span class="menu-item-shortcut">⌘N</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span><span class="menu-item-label">打开…</span><span class="menu-item-shortcut">⌘O</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span><span class="menu-item-label">保存</span><span class="menu-item-shortcut">⌘S</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/><line x1="15" y1="3" x2="15" y2="8"/></svg></span><span class="menu-item-label">另存为…</span><span class="menu-item-shortcut">⇧⌘S</span></div>
+        <div class="menu-separator" role="separator"></div>
+        <div class="menu-item is-disabled" role="menuitem" aria-disabled="true"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span><span class="menu-item-label">导出</span><span class="menu-item-shortcut">⌘E</span></div>
+        <div class="menu-separator" role="separator"></div>
+        <div class="menu-item is-danger" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></span><span class="menu-item-label">删除</span><span class="menu-item-shortcut">⌘⌫</span></div>
+      </div>
+      <span class="text-caption" style="color:var(--ink-tertiary);">圆角: 上 8px · 下 12px</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Context Menu</span>
+<div class="rail">
+  <div class="menu-demo-area">
+    <div class="menu-demo-group">
+      <div class="menu is-context" role="menu">
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg></span><span class="menu-item-label">新建文件</span><span class="menu-item-shortcut">⌘N</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span><span class="menu-item-label">打开…</span><span class="menu-item-shortcut">⌘O</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span><span class="menu-item-label">保存</span><span class="menu-item-shortcut">⌘S</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/><line x1="15" y1="3" x2="15" y2="8"/></svg></span><span class="menu-item-label">另存为…</span><span class="menu-item-shortcut">⇧⌘S</span></div>
+        <div class="menu-separator" role="separator"></div>
+        <div class="menu-item is-disabled" role="menuitem" aria-disabled="true"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span><span class="menu-item-label">导出</span><span class="menu-item-shortcut">⌘E</span></div>
+        <div class="menu-separator" role="separator"></div>
+        <div class="menu-item is-danger" role="menuitem" tabindex="0"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></span><span class="menu-item-label">删除</span><span class="menu-item-shortcut">⌘⌫</span></div>
+      </div>
+      <span class="text-caption" style="color:var(--ink-tertiary);">圆角: 全部 12px</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">交互状态</span>
+<div class="rail">
+  <div class="menu-demo-area">
+    <div class="menu-demo-group">
+      <div class="menu is-context" role="menu">
+        <div class="menu-item" role="menuitem" tabindex="0" style="background:rgba(20,20,20,0.04);"><span class="menu-item-label">悬浮态 (hover)</span></div>
+        <div class="menu-item" role="menuitem" tabindex="0" style="box-shadow:0 0 0 3px rgba(51,110,232,0.20);"><span class="menu-item-label">焦点态 (focus-visible)</span></div>
+        <div class="menu-item is-disabled" role="menuitem" aria-disabled="true"><span class="menu-item-label">禁用态 (disabled)</span></div>
+        <div class="menu-separator" role="separator"></div>
+        <div class="menu-item is-danger" role="menuitem" tabindex="0" style="color:#9E3D31;background:rgba(20,20,20,0.04);"><span class="menu-item-icon" style="color:#9E3D31;"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span><span class="menu-item-label">危险项悬浮态</span></div>
+      </div>
+      <span class="text-caption" style="color:var(--ink-tertiary);">模拟状态示意（无实际交互）</span>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

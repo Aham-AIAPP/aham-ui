@@ -1,0 +1,40 @@
+{
+  "slug": "toggle",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["toggle", "switch", "toggle-switch", "boolean-toggle"],
+  "variantDimensions": [
+    { "axis": "state", "values": ["off", "on", "disabled-off", "disabled-on"] },
+    { "axis": "size", "values": ["sm", "md"] }
+  ],
+  "representativeVariants": [
+    "md-off",
+    "md-on",
+    "md-disabled-off",
+    "md-disabled-on"
+  ],
+  "anatomy": {
+    "parts": ["track", "knob", "label"],
+    "required": ["track", "knob"]
+  },
+  "structurePatterns": [
+    "Track = pill shape, md: 40x22px, sm: 32x18px",
+    "Off state = panel gray (#F3F3F3) track, white knob — NO blue tint track",
+    "On state = accent blue (#336EE8) track, white knob — the ONE place blue fill is legitimate",
+    "Disabled = quaternary gray (#C4C4C4) track",
+    "Knob is circular with no shadow — flat",
+    "Label = body text (14px) on left or right"
+  ],
+  "usageHints": [
+    "Use for binary settings that take immediate effect (no submit needed)",
+    "Toggle is the ONLY component where blue fill is allowed — it signals 'on'",
+    "Do not use for actions with secondary confirmation"
+  ],
+  "doNotInvent": [
+    "Green 'on' state — Aham uses blue #336EE8 for 'on'",
+    "Rounded-square track — always pill (--radius-pill: 999px)",
+    "Shadow on knob — Aham is flat"
+  ],
+  "unknowns": ["Label position preference (left vs right)"]
+}

@@ -106,6 +106,12 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
   border:none;border-radius:var(--r-md);background:transparent;color:var(--ink-2);cursor:pointer;transition:background .12s;}
 .icon-btn:hover{background:var(--panel);color:var(--ink);}
 
+/* ---- Icon glyph — 线性单色 SVG(currentColor 继承 ink);具体集 = Lucide(ISC)。用 <svg class="icon"><use href="…#i-name"/></svg> ---- */
+.icon{display:inline-block;width:var(--icon-md);height:var(--icon-md);vertical-align:-.125em;color:inherit;flex:none;}
+.icon--sm{width:var(--icon-sm);height:var(--icon-sm);}
+.icon--lg{width:var(--icon-lg);height:var(--icon-lg);}
+.icon--thin{stroke-width:1.5;}   /* Lucide 原生 2px@24;此档用于需更轻描边处(有效描边随尺寸变细:16px≈1.3) */
+
 /* ---- Form controls — monochrome; checked = ink, never blue ---- */
 .field{display:flex;flex-direction:column;gap:6px;}
 .field > .label{font-size:var(--text-xs);color:var(--ink-2);}

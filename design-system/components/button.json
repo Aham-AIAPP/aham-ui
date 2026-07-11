@@ -1,0 +1,42 @@
+{
+  "slug": "button",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["button", "action", "cta"],
+  "variantDimensions": [
+    { "axis": "variant", "values": ["primary", "secondary", "ghost", "danger"] },
+    { "axis": "size", "values": ["sm", "md", "lg"] },
+    { "axis": "state", "values": ["default", "hover", "press", "disabled"] }
+  ],
+  "representativeVariants": [
+    "primary-md-default",
+    "secondary-md-default",
+    "ghost-md-default",
+    "danger-md-default"
+  ],
+  "anatomy": {
+    "parts": ["label", "icon-leading", "icon-trailing"],
+    "required": ["label"]
+  },
+  "structurePatterns": [
+    "All variants share same padding and radius",
+    "Primary uses accent blue (#336EE8) background with white text",
+    "Secondary uses panel (#F3F3F3) background with ink-primary text",
+    "Ghost has no background, only text color on interaction",
+    "Danger uses muted red semantic color"
+  ],
+  "usageHints": [
+    "One primary button per view — accent blue is a garnish, not a fill",
+    "Default button height = 32px (--layout-btn-height)",
+    "Use medium weight (500) for button labels",
+    "Radius md (8px) for all buttons"
+  ],
+  "doNotInvent": [
+    "Outline variant — not in Aham system",
+    "Large fill areas of accent blue — blue is garnish only",
+    "Rounded-full/pill buttons — use md radius (8px)",
+    "Gradient or shadow on buttons — Aham is flat"
+  ],
+  "unknowns": ["Exact loading state behavior", "Icon-only button sizing"]
+}

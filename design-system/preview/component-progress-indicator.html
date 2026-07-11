@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Indicator — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-5, 20px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+.col { display: flex; flex-direction: column; gap: var(--space-2); }
+.caption { font-size: var(--aham-typography-fontSize-xs); color: var(--color-ink-secondary); margin-top: var(--space-1); }
+
+/* Linear progress */
+.linear-progress { width: 240px; }
+.linear-track { height: 4px; background: var(--color-surface-line); border-radius: var(--radius-pill); overflow: hidden; position: relative; width: 100%; }
+.linear-fill { height: 100%; background: var(--color-accent); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
+
+/* Linear indeterminate */
+.linear-indeterminate .linear-fill { width: 40%; animation: linear-indeterminate 1.4s var(--ease-standard) infinite; }
+
+@keyframes linear-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+/* Circular progress */
+.circular-progress { display: inline-flex; align-items: center; justify-content: center; }
+.circular-track { fill: none; stroke: var(--color-surface-line); stroke-width: 3; }
+.circular-fill { fill: none; stroke: var(--color-accent); stroke-width: 3; stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset var(--duration-base) var(--ease-standard); }
+
+/* Circular indeterminate */
+.circular-indeterminate .circular-fill { animation: circular-rotate 1.2s linear infinite; stroke-dasharray: 80; stroke-dashoffset: 80; }
+
+@keyframes circular-rotate {
+  0% { transform: rotate(-90deg); }
+  100% { transform: rotate(270deg); }
+}
+
+/* Circular mr (margin-right) for inline display */
+.cir-sm { width: 20px; height: 20px; }
+.cir-md { width: 32px; height: 32px; }
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Progress Indicator</h2></div>
+<div class="stage">
+
+<div class="story">
+<span class="story-label">Linear Determinate</span>
+<div class="rail">
+  <div class="col">
+    <div class="linear-progress">
+      <div class="linear-track"><div class="linear-fill" style="width:25%"></div></div>
+    </div>
+    <span class="caption">25% &middot; Loading...</span>
+  </div>
+  <div class="col">
+    <div class="linear-progress">
+      <div class="linear-track"><div class="linear-fill" style="width:50%"></div></div>
+    </div>
+    <span class="caption">50% &middot; Processing...</span>
+  </div>
+  <div class="col">
+    <div class="linear-progress">
+      <div class="linear-track"><div class="linear-fill" style="width:75%"></div></div>
+    </div>
+    <span class="caption">75% &middot; Processing...</span>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Linear Indeterminate</span>
+<div class="rail">
+  <div class="col">
+    <div class="linear-progress linear-indeterminate">
+      <div class="linear-track"><div class="linear-fill"></div></div>
+    </div>
+    <span class="caption">Loading...</span>
+  </div>
+  <div class="col">
+    <div class="linear-progress linear-indeterminate">
+      <div class="linear-track"><div class="linear-fill"></div></div>
+    </div>
+    <span class="caption">Processing...</span>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Circular Determinate</span>
+<div class="rail">
+  <div class="col">
+    <svg class="circular-progress cir-sm" viewBox="0 0 20 20" aria-label="25%">
+      <circle class="circular-track" cx="10" cy="10" r="8.5"/>
+      <circle class="circular-fill" cx="10" cy="10" r="8.5" stroke-dasharray="53.4" stroke-dashoffset="40"/>
+    </svg>
+    <span class="caption">25%</span>
+  </div>
+  <div class="col">
+    <svg class="circular-progress cir-sm" viewBox="0 0 20 20" aria-label="50%">
+      <circle class="circular-track" cx="10" cy="10" r="8.5"/>
+      <circle class="circular-fill" cx="10" cy="10" r="8.5" stroke-dasharray="53.4" stroke-dashoffset="26.7"/>
+    </svg>
+    <span class="caption">50%</span>
+  </div>
+  <div class="col">
+    <svg class="circular-progress cir-sm" viewBox="0 0 20 20" aria-label="75%">
+      <circle class="circular-track" cx="10" cy="10" r="8.5"/>
+      <circle class="circular-fill" cx="10" cy="10" r="8.5" stroke-dasharray="53.4" stroke-dashoffset="13.35"/>
+    </svg>
+    <span class="caption">75%</span>
+  </div>
+  <div class="col">
+    <svg class="circular-progress cir-md" viewBox="0 0 32 32" aria-label="25%">
+      <circle class="circular-track" cx="16" cy="16" r="14.5"/>
+      <circle class="circular-fill" cx="16" cy="16" r="14.5" stroke-dasharray="91.1" stroke-dashoffset="68.3"/>
+    </svg>
+    <span class="caption">25%</span>
+  </div>
+  <div class="col">
+    <svg class="circular-progress cir-md" viewBox="0 0 32 32" aria-label="50%">
+      <circle class="circular-track" cx="16" cy="16" r="14.5"/>
+      <circle class="circular-fill" cx="16" cy="16" r="14.5" stroke-dasharray="91.1" stroke-dashoffset="45.55"/>
+    </svg>
+    <span class="caption">50%</span>
+  </div>
+  <div class="col">
+    <svg class="circular-progress cir-md" viewBox="0 0 32 32" aria-label="75%">
+      <circle class="circular-track" cx="16" cy="16" r="14.5"/>
+      <circle class="circular-fill" cx="16" cy="16" r="14.5" stroke-dasharray="91.1" stroke-dashoffset="22.78"/>
+    </svg>
+    <span class="caption">75%</span>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">Circular Indeterminate</span>
+<div class="rail">
+  <div class="col">
+    <svg class="circular-progress cir-sm circular-indeterminate" viewBox="0 0 20 20" aria-label="Loading...">
+      <circle class="circular-track" cx="10" cy="10" r="8.5"/>
+      <circle class="circular-fill" cx="10" cy="10" r="8.5"/>
+    </svg>
+    <span class="caption">Loading...</span>
+  </div>
+  <div class="col">
+    <svg class="circular-progress cir-md circular-indeterminate" viewBox="0 0 32 32" aria-label="Processing...">
+      <circle class="circular-track" cx="16" cy="16" r="14.5"/>
+      <circle class="circular-fill" cx="16" cy="16" r="14.5"/>
+    </svg>
+    <span class="caption">Processing...</span>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

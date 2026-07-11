@@ -1,0 +1,44 @@
+{
+  "slug": "dialog",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["dialog", "modal", "alert", "sheet"],
+  "variantDimensions": [
+    { "axis": "type", "values": ["confirm", "form", "alert"] },
+    { "axis": "width", "values": ["dialog", "modal", "modal-wide"] }
+  ],
+  "representativeVariants": [
+    "confirm-modal",
+    "form-modal",
+    "alert-dialog"
+  ],
+  "anatomy": {
+    "parts": ["overlay", "panel", "header", "body", "footer", "close-button"],
+    "required": ["overlay", "panel", "body", "footer"]
+  },
+  "structurePatterns": [
+    "Overlay = rgba(20,20,20,0.28) backdrop",
+    "Dialog panel = white (tier1) with 12px radius (--radius-lg)",
+    "Modal shadow only (0 12px 36px, subtle) — no resting shadows elsewhere",
+    "Button order: cancel on LEFT, confirm on RIGHT",
+    "Return key binds to confirm (primary) button",
+    "Destructive button never gets blue default or Return binding",
+    "Widths: dialog 380px, modal 480px, modal-wide 640px",
+    "Header uses title style, body uses body style"
+  ],
+  "usageHints": [
+    "alert = critical info/warning (never use popover for warnings)",
+    "sheet = input/small task",
+    "One modal at a time — never stack two alerts",
+    "Cancel always on left, confirm/destructive on right",
+    "No blue on destructive buttons"
+  ],
+  "doNotInvent": [
+    "Side-sheet or bottom-sheet without explicit need",
+    "Blue confirm button in destructive dialogs",
+    "Stacked modals",
+    "Animated/bouncy modal transitions — Aham motion is restrained"
+  ],
+  "unknowns": ["Unsaved-changes detection before close", "Multi-step dialog wizard pattern"]
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigation — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.header .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.rail { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+.demo-tabs-width { width: 480px; }
+
+/* @component-css-start */
+/* Navigation — Sidebar */
+.nav-sidebar { width: var(--layout-sidebar-width); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-2) 0; display: flex; flex-direction: column; overflow: hidden; }
+.nav-section { padding: var(--space-2) var(--space-4) var(--space-1); font-size: 12px; font-weight: 500; color: var(--color-ink-tertiary); letter-spacing: 0.04em; white-space: nowrap; }
+.nav-item { display: flex; align-items: center; height: var(--layout-control-height); padding: 0 var(--space-3); margin: 0 var(--space-1); gap: var(--space-2); border-radius: var(--radius-md); cursor: pointer; color: var(--color-ink-secondary); font-size: 14px; white-space: nowrap; transition: background var(--duration-fast) var(--ease-out); }
+.nav-item:hover { background: var(--color-fill-hover); }
+.nav-item.active { background: var(--color-bg-selected); color: var(--color-ink-primary); }
+.nav-item .nav-icon { width: var(--icon-size-md); height: var(--icon-size-md); flex-shrink: 0; opacity: 0.65; }
+.nav-item.active .nav-icon { opacity: 1; }
+.nav-item .nav-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.nav-item .nav-badge { font-family: var(--font-mono); font-size: 11px; font-weight: 500; background: var(--color-surface-panel); color: var(--color-ink-secondary); border-radius: var(--radius-pill); padding: 1px 6px; min-width: 18px; text-align: center; flex-shrink: 0; line-height: 1.5; }
+.nav-divider { height: 1px; background: var(--color-border); margin: var(--space-1) var(--space-3); flex-shrink: 0; }
+
+/* Navigation — Tabs */
+.tab-bar { display: flex; gap: 0; border-bottom: var(--border-width-thin) solid var(--color-border); }
+.tab-item { padding: 10px var(--space-4); font-size: 14px; color: var(--color-ink-secondary); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out); white-space: nowrap; flex-shrink: 0; }
+.tab-item:hover { background: var(--color-fill-hover); color: var(--color-ink-primary); }
+.tab-item.active { color: var(--color-ink-primary); border-bottom-color: var(--color-accent); font-weight: 500; }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Navigation</h2><span class="story-label">侧边导航</span></div>
+<div class="stage"><div class="story"><div class="rail"><nav class="nav-sidebar" data-evidence-sample="sidebar-default"><div class="nav-section">导航</div><div class="nav-item active"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/layout-dashboard.svg" alt=""><span class="nav-label">概览</span></div><div class="nav-item"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/search.svg" alt=""><span class="nav-label">搜索</span></div><div class="nav-item"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/bar-chart-3.svg" alt=""><span class="nav-label">数据面板</span><span class="nav-badge">5</span></div><div class="nav-divider"></div><div class="nav-section">项目</div><div class="nav-item"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/folder.svg" alt=""><span class="nav-label">全部项目</span></div><div class="nav-item"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/star.svg" alt=""><span class="nav-label">收藏</span></div><div class="nav-divider"></div><div class="nav-section">设置</div><div class="nav-item"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/settings.svg" alt=""><span class="nav-label">偏好设置</span></div><div class="nav-item"><img class="nav-icon" src="https://cdn.jsdelivr.net/npm/lucide-static@1.8.0/icons/bell.svg" alt=""><span class="nav-label">通知</span><span class="nav-badge">12</span></div></nav></div></div></div>
+<hr class="divider">
+<div class="header"><h2>标签导航</h2></div>
+<div class="stage"><div class="story"><div class="rail demo-tabs-width"><div class="tab-bar" data-evidence-sample="tabs-default"><div class="tab-item active">概览</div><div class="tab-item">设置</div><div class="tab-item">成员</div><div class="tab-item">计费</div><div class="tab-item">日志</div></div></div></div></div>
+</div>
+</body>
+</html>

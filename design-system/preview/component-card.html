@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+/* Page scaffold — NOT extracted */
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+
+/* @component-css-start */
+/* Component definitions — extracted to components.css by deterministic script */
+.card { background: var(--color-surface); border-radius: var(--radius-lg); overflow: hidden; width: 280px; flex-shrink: 0; }
+.card-header { padding: var(--space-3) var(--space-4) 0; font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); line-height: var(--aham-typography-lineHeight-snug); color: var(--color-ink-primary); }
+.card-body { padding: var(--space-3) var(--space-4); font-size: var(--aham-typography-fontSize-base); font-weight: var(--aham-typography-fontWeight-regular); line-height: var(--aham-typography-lineHeight-normal); color: var(--color-ink-secondary); }
+.card-footer { padding: 0 var(--space-4) var(--space-3); display: flex; justify-content: flex-end; gap: var(--space-2); }
+.card-interactive { cursor: pointer; transition: background .15s; }
+.card-interactive:hover { background: var(--color-bg-hover); }
+.card-selected { background: var(--color-bg-selected); }
+.card-title { font-size: var(--aham-typography-fontSize-base); font-weight: var(--aham-typography-fontWeight-semibold); color: var(--color-ink-primary); margin-bottom: var(--space-1); }
+.card-meta { font-size: var(--aham-typography-fontSize-xs); color: var(--color-ink-tertiary); margin-top: var(--space-2); }
+.card-action { font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); color: var(--color-accent); cursor: pointer; text-decoration: none; white-space: nowrap; }
+.card-action:hover { color: var(--color-accent-hover); }
+/* @component-css-end */
+</style>
+</head>
+<body>
+<div class="specimen">
+<div class="header"><h2>Card</h2></div>
+<div class="stage">
+<div class="story">
+<span class="story-label">默认卡片</span>
+<div class="rail">
+  <div class="card">
+    <div class="card-header">构建状态</div>
+    <div class="card-body">
+      <div class="card-title">main 分支</div>
+      最近构建通过 · 3 分钟前
+      <div class="card-meta">#2847 · a1b2c3d</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title">存储用量</div>
+      已用 12.4 GB / 50 GB
+      <div class="card-meta">本月新增 2.1 GB</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<hr class="divider">
+
+<div class="story">
+<span class="story-label">交互状态</span>
+<div class="rail">
+  <div class="card card-interactive">
+    <div class="card-header">项目</div>
+    <div class="card-body">
+      <div class="card-title">aham-ui</div>
+      设计系统组件库 · TypeScript
+      <div class="card-meta">更新于 2 小时前</div>
+    </div>
+    <div class="card-footer">
+      <a class="card-action" href="javascript:void(0)">打开</a>
+    </div>
+  </div>
+  <div class="card card-selected">
+    <div class="card-header">最近部署</div>
+    <div class="card-body">
+      <div class="card-title">production</div>
+      部署成功 · v2.4.1
+      <div class="card-meta">2026-07-05 14:30</div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

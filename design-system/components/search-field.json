@@ -1,0 +1,41 @@
+{
+  "slug": "search-field",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["search", "search-field", "search-input", "search-bar"],
+  "variantDimensions": [
+    { "axis": "size", "values": ["sm", "md"] },
+    { "axis": "state", "values": ["empty", "typing", "value", "disabled"] }
+  ],
+  "representativeVariants": [
+    "md-empty",
+    "md-typing",
+    "md-value",
+    "md-disabled"
+  ],
+  "anatomy": {
+    "parts": ["icon-search", "input-area", "clear-button", "placeholder"],
+    "required": ["input-area", "icon-search"]
+  },
+  "structurePatterns": [
+    "Same as Input component but with magnifier icon on the left",
+    "Height = 36px (--layout-control-height) for md",
+    "Border = 1px solid --color-border, radius md (8px)",
+    "Magnifier icon = 16px, ink-tertiary (#9B9B9B)",
+    "Clear button appears on the right when value is present",
+    "Focus ring = 3px rgba(51,110,232,0.20)"
+  ],
+  "usageHints": [
+    "Use toolbar variant for page-level search (--layout-control-height: 36px)",
+    "Compact variant for inline filter/search bars (28px)",
+    "Clear button uses ghost button interaction — no visible border",
+    "Search icon is ALWAYS ink-tertiary, never accent blue"
+  ],
+  "doNotInvent": [
+    "Blue search icon — search icon is ink-tertiary (#9B9B9B)",
+    "Rounded-pill search bar — use md radius (8px)",
+    "Autocomplete dropdown in the search component — it's a separate component"
+  ],
+  "unknowns": ["Search field inside segmented toolbar", "Keyboard shortcut display"]
+}

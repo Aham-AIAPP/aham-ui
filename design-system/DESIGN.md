@@ -6,6 +6,8 @@
 
 **八层结构**:0 原则 · 1 基础(含国际化/RTL、隐私) · 2 控件与组件 · 3 组合规则 · 4 模式 · 5 介质落地 · 6 输入 · 7 系统支撑 · **8 页面布局体系(v6.0 新增)**。
 
+**版本 v7.0**——仓库重构:完整设计系统移入 `design-system/`(采用组件库 / skill 打包格式,17 组件契约 + 就地预览 + dashboard,更利于 AI 消费);§1.6 图标落地为具体集 **Lucide(ISC)** 51 件(分轨:web/Office/邮件 = Lucide,macOS app = SF Symbols 按名,后续)。纯结构 + 图标补充,八层结构与 token 值不变。
+
 **版本 v6.1**——第 2 层新增 **2.9 媒体与对话**(纳入自 AhamVoice 的 9 个招牌自创件:媒体播放器/逐句转写+说话人标记/正文排版/对话输入/附件卡/头像/侧栏三槽/认证壳/表单分组),CSS 进 `aham-ui.css` 第 9 节,示范 `examples/media.html`;**纯追加,八层结构与既有类不动**。同时全景展示页重建为手写可维护版(含右侧目录、汇总布局示范)。
 
 **版本 v6.0**——新增**第 8 层 页面布局体系**:把页面级布局从"散在 examples 的事实约定"升为成文规则,且**按落地介质分四轨**(网页/应用/Office/邮件)。覆盖:页面骨架与页型(Canonical Layouts)、页眉、搜索筛选、状态(空/加载/错误/骨架)、预览模式、内容密度、容器查询、弹窗按钮顺序、i18n-RTL 布局、z-index 阶梯、打印。补齐两轮调研(Apple HIG + 业内横扫 Material/Carbon/Ant/Polaris/Fluent/GOV.UK 等)缺口约 22 项。**断点改为网页 rem 为单一事实源、应用 dp 派生**(废止 v5 的 sm380/md860/lg1280)。
@@ -90,7 +92,20 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:≥20px 用 Inter Disp
 圆角:xs4 / sm6 / md8(控件)/ lg12(卡片)/ xl16(modal)/ pill999。**层次=flat**:静置/hover 无阴影,深度靠三层层差(代替材质);仅浮层有阴影(菜单 `.05`/popover `.06`/modal `.10`)。**同心圆角**:子圆角=父圆角−间距(详见 3.1)。
 
 ### 1.6 图标
-尺寸:16/20/24。线性、单色、1.5px、无填充,一套;**权重随相邻文字字重**(↔SF Symbols 方法)。**克制**:内容区用 `•`+文字,图标仅导航/发送栏。禁 emoji、多色/填充图标、品牌色文件图标(文件类型用 `DOCX` 文字 badge)。
+**尺寸**:16/20/24(取 `iconSize`)。**线性、单色、无填充,一套**;`currentColor` 继承 ink,不加品牌色。**克制**:内容区用 `•`+文字,图标仅导航/发送/工具栏。禁 emoji、多色/填充图标、品牌色文件图标(文件类型用 `DOCX` 文字 badge)。
+
+**具体集 = Lucide(ISC)**。原生描边 2px@24 网格,有效描边随尺寸缩放(16px≈1.3 / 20px≈1.7 / 24px=2),整体呈「≈1.5px」观感;需更轻用 `.icon--thin`(1.5)。Lucide 为**单字重**;若要「权重随相邻文字字重」(↔SF Symbols 方法),走 SF Symbols(macOS 轨)或 Phosphor,后续。
+
+**分轨来源**(结构一致,来源按轨——没人把 SF Symbols 发到 web):
+
+| 轨 | 图标源 |
+|---|---|
+| 网页 / Office / 邮件 | **Lucide**(内联 SVG + `<use>` 雪碧图;邮件不支持则 PNG 回退) |
+| macOS app | **SF Symbols** 按名引用(`Image(systemName:)`,苹果原生;**不导出、不入库**;后续落地) |
+
+**用法**:`<svg class="icon"><use href="icons/aham-icons.svg#i-search"/></svg>`(`.icon--sm/--lg` 换档)。**命名**:语义名稳定(`i-success`),底层 Lucide 名记录在 `icons/icons.json`(51 起始件,含 `sfSymbol` 预留列)——换源不动业务名。**状态图标**必须配文字(守 §1.8 不靠颜色单独传达);**纯图标按钮**必须有 `aria-label`(守 §1.8 VoiceOver)。
+
+> 图标来自 [Lucide](https://lucide.dev)(ISC),许可全文见 `icons/LICENSE`。SF Symbols 版权属 Apple,仅可用于苹果平台 App 及其 mockup,**不纳入本 MIT 仓库**。
 
 ### 1.7 动效
 服务反馈不表演,默认不动。时长:fast .12s / base .18s / slow .28s。缓动 `cubic-bezier(.2,0,0,1)`。禁循环/弹跳/视差/>.3s。

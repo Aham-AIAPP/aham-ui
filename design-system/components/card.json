@@ -1,0 +1,42 @@
+{
+  "slug": "card",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["card", "panel", "container", "section"],
+  "variantDimensions": [
+    { "axis": "type", "values": ["default", "interactive", "selected"] },
+    { "axis": "padding", "values": ["compact", "default", "spacious"] }
+  ],
+  "representativeVariants": [
+    "default-default",
+    "interactive-default",
+    "selected-default"
+  ],
+  "anatomy": {
+    "parts": ["header", "body", "footer", "media"],
+    "required": ["body"]
+  },
+  "structurePatterns": [
+    "Cards have NO border and NO shadow in resting state — Aham is flat",
+    "Background = white (tier1) on white page; panel (tier2) on panel page",
+    "Selected state = flat gray background (tier3-line #E7E7E7), NOT blue",
+    "Border-radius = 12px (--radius-lg)",
+    "Header uses subhead style (13px, 500 weight)",
+    "Body uses body style (14px, 400 weight)",
+    "Concentric radius: child radius = parent radius - padding gap"
+  ],
+  "usageHints": [
+    "Cards separate by whitespace, never by borders or shadows",
+    "One primary action per card maximum",
+    "Card title uses body style (14px semibold) or lg (17px) for prominent cards",
+    "Footer actions aligned right"
+  ],
+  "doNotInvent": [
+    "Card borders, outlines, or shadows — Aham cards are flat",
+    "Blue selection state — selected = flat gray (tier3-line)",
+    "Elevated/hover-lift cards",
+    "Color-accented card headers or sidebars"
+  ],
+  "unknowns": ["Card drag-to-reorder behavior", "Card collapse/expand pattern"]
+}

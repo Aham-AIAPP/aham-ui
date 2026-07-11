@@ -1,0 +1,41 @@
+{
+  "slug": "checkbox",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "medium",
+  "semanticTypeCandidates": ["checkbox", "toggle-boolean", "selection-control"],
+  "variantDimensions": [
+    { "axis": "state", "values": ["unchecked", "checked", "mixed", "disabled"] },
+    { "axis": "size", "values": ["sm", "md"] }
+  ],
+  "representativeVariants": [
+    "md-unchecked",
+    "md-checked",
+    "md-mixed",
+    "md-disabled"
+  ],
+  "anatomy": {
+    "parts": ["box", "checkmark", "label"],
+    "required": ["box"]
+  },
+  "structurePatterns": [
+    "Checkbox box = 16px square, 6px radius (--radius-sm)",
+    "Border = 1.5px solid --color-border (#E7E7E7) when unchecked",
+    "Checked = flat ink-primary (#262626) fill + white checkmark — NOT blue",
+    "Mixed state = ink-primary line inside box",
+    "Disabled = quaternary ink (#C4C4C4) border, label at ink-tertiary",
+    "Label = body text (14px) to the right, 8px gap (--space-2)",
+    "Focus ring = 3px rgba(51,110,232,0.20)"
+  ],
+  "usageHints": [
+    "Active/checked state is INK, not blue — blue only for focus ring",
+    "Use mixed/indeterminate for tree nodes with partial selection",
+    "Do not use checkboxes for single-choice — use radio buttons"
+  ],
+  "doNotInvent": [
+    "Blue fill on checked state — checkmark = ink-primary",
+    "Rounded-full checkboxes — use sm radius (6px)",
+    "Animated transitions beyond standard Aham easing"
+  ],
+  "unknowns": ["Inline vs block label layout for long labels"]
+}
