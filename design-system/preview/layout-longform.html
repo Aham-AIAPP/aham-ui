@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>长文排版示范 — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* ── page shell ─────────────────────────────────────────────────── */
+  body {
+    margin: 0;
+    background: var(--color-bg-app);
+    font-family: var(--font-sans);
+    color: var(--color-ink-primary);
+    display: flex;
+    justify-content: center;
+    padding: var(--space-8) var(--space-5);
+    -webkit-font-smoothing: antialiased;
+  }
+  .doc {
+    width: 100%;
+    max-width: var(--content-read); /* 65ch,长文阅读宽 */
+  }
+
+  /* ── page header (标题左上 + trailing 操作) ─────────────────────── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding-block: var(--space-5) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--space-7);
+  }
+  .page-header__main { min-width: 0; }
+  .page-header__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-tertiary);
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-2);
+  }
+  .page-header__title {
+    margin: 0;
+    font-family: var(--font-sans-display);
+    font-size: var(--text-3xl); /* 32, Title */
+    line-height: var(--leading-tight);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    letter-spacing: -0.01em;
+  }
+  .page-header__meta {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+    line-height: var(--leading-snug);
+  }
+  .page-header__meta .sep { margin: 0 var(--space-2); color: var(--color-ink-quaternary); }
+
+  .theme-toggle {
+    flex-shrink: 0;
+    height: var(--layout-btn-height);
+    padding: 0 var(--space-3);
+    border: none;
+    background: transparent;
+    color: var(--color-ink-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--easing-standard);
+  }
+  .theme-toggle:hover { background: var(--color-fill-hover); color: var(--color-ink-primary); }
+  .theme-toggle:active { background: var(--color-fill-active); }
+  .theme-toggle:focus-visible { outline: none; box-shadow: var(--shadow-ring-focus); }
+
+  /* ── prose:长文排版 (§1.3.1) ────────────────────────────────────── */
+  .prose {
+    font-family: var(--font-sans);
+    font-size: var(--text-lg); /* 17, Body-L,长文正文 */
+    line-height: var(--leading-cjk); /* CJK 1.75 */
+    color: var(--color-ink-primary);
+  }
+
+  /* 段落:段间距 1em(=1×font-size),禁首行缩进,末段去 margin */
+  .prose p {
+    margin: 0 0 1em 0;
+    margin-block-end: 1em;
+  }
+  .prose p:last-child { margin-block-end: 0; }
+  .prose .lead {
+    color: var(--color-ink-secondary);
+    font-size: var(--text-md);
+  }
+
+  /* 标题层级:前距 > 后距(标题贴近自己的正文),对齐 8 基网格 */
+  .prose h2 {
+    margin: var(--space-7) 0 var(--space-5) 0; /* 48 / 24 */
+    font-family: var(--font-sans-display);
+    font-size: var(--text-2xl); /* 24, Heading */
+    line-height: var(--leading-tight);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    letter-spacing: -0.005em;
+  }
+  .prose h2:first-child { margin-block-start: 0; }
+  .prose h3 {
+    margin: var(--space-6) 0 var(--space-4) 0; /* 32 / 16 */
+    font-family: var(--font-sans-display);
+    font-size: var(--text-xl); /* 20, Subheading */
+    line-height: var(--leading-snug);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+  }
+
+  /* 引用块:serif 字体(按任务要求)+ 左边线 + 浅底 */
+  .prose blockquote {
+    margin: var(--space-6) 0;
+    padding: var(--space-4) var(--space-5);
+    border-inline-start: 3px solid var(--color-ink-tertiary);
+    background: var(--color-bg-panel);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-primary);
+  }
+  .prose blockquote p { margin: 0; }
+  .prose blockquote cite {
+    display: block;
+    margin-top: var(--space-3);
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+  }
+
+  /* 代码:inline 浅底不破坏行高;block 上下留白 */
+  .prose code {
+    font-family: var(--font-mono);
+  }
+  .prose :not(pre) > code {
+    background: var(--color-bg-panel);
+    padding: 1px 4px;
+    border-radius: var(--radius-xs);
+    font-size: 0.88em;
+    color: var(--color-ink-primary);
+  }
+  .prose pre {
+    margin: var(--space-5) 0;
+    padding: var(--space-4);
+    background: var(--color-bg-panel);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm); /* 13, 略小于正文 */
+    line-height: var(--leading-normal);
+    color: var(--color-ink-primary);
+    overflow-x: auto;
+  }
+  .prose pre code { font-size: inherit; background: none; padding: 0; }
+
+  /* 列表:项间距 8,marker 三级墨色 */
+  .prose ul,
+  .prose ol {
+    margin: var(--space-4) 0;
+    padding-inline-start: var(--space-5);
+  }
+  .prose li {
+    margin-block: var(--space-2);
+    line-height: var(--leading-cjk);
+  }
+  .prose li::marker { color: var(--color-ink-tertiary); }
+  .prose li:first-child { margin-block-start: 0; }
+  .prose li:last-child { margin-block-end: 0; }
+
+  /* 图文 baseline 对齐(禁 center) */
+  .prose .figure-inline {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin: var(--space-5) 0;
+  }
+  .prose .figure-inline svg { flex-shrink: 0; }
+  .prose .figure-inline .caption {
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    color: var(--color-ink-secondary);
+  }
+
+  /* 表格:只横线,数字右对齐 mono */
+  .prose table {
+    width: 100%;
+    margin: var(--space-5) 0;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+  .prose th,
+  .prose td {
+    padding: var(--space-2) var(--space-3);
+    text-align: start;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .prose th {
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    border-bottom: 1.5px solid var(--color-border);
+  }
+  .prose td.num,
+  .prose th.num {
+    font-family: var(--font-mono);
+    text-align: end;
+  }
+  .prose tr:last-child td { border-bottom: none; }
+
+  /* 链接:唯一蓝,仅链接 */
+  .prose a {
+    color: var(--color-accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--aham-accent-tint-border);
+  }
+  .prose a:hover { color: var(--color-accent-hover); border-bottom-color: var(--color-accent-hover); }
+
+  /* SVG 三层表面示意(用变量,暗色自适应) */
+  .surface-diagram .sd-tier1 { fill: var(--aham-surface-tier1); stroke: var(--color-border); stroke-width: 1; }
+  .surface-diagram .sd-tier2 { fill: var(--aham-surface-tier2); }
+  .surface-diagram .sd-tier3 { fill: var(--aham-surface-tier3); }
+  .surface-diagram .sd-label { fill: var(--color-ink-secondary); font-family: var(--font-mono); font-size: 10px; }
+
+  /* 窄屏减边距 */
+  @media (max-width: 48rem) {
+    body { padding: var(--space-5) var(--space-4); }
+  }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <!-- page-header:标题左上 + 暗色切换 trailing -->
+  <header class="page-header">
+    <div class="page-header__main">
+      <div class="page-header__eyebrow">设计系统 · 长文排版</div>
+      <h1 class="page-header__title">设计系统为什么重要</h1>
+      <div class="page-header__meta">
+        Aham 设计团队<span class="sep">·</span>2026-07-18<span class="sep">·</span>约 5 分钟阅读
+      </div>
+    </div>
+    <button class="theme-toggle" onclick="document.body.classList.toggle('dark')" aria-label="切换深浅色主题">切换主题</button>
+  </header>
+
+  <!-- prose:长文正文区 -->
+  <article class="prose" lang="zh">
+
+    <p class="lead">设计系统常被误解为「组件库的另一种叫法」。但真正让它发挥作用的,不是那一份组件清单,而是背后关于颜色、字号、间距、状态的决策逻辑。本文以 Aham 设计系统为例,说明长文排版规则如何在真实文档中落地。</p>
+
+    <h2>为什么需要设计系统</h2>
+    <p>设计系统不是一个组件库,也不是一份设计稿集合。它是团队对「界面应该长什么样、为什么这样」的共识,沉淀成可复用的 token、组件和规则。当团队规模扩大、产品线变多时,没有设计系统意味着每个新功能都要从零开始决策颜色、字号、间距,大量时间被消耗在重复的微观判断上。好的设计系统把决策前置:一次定义,处处复用,让设计师和工程师把精力留给真正重要的产品问题。它同时也降低出错概率——一致的 token 保证对比度达标,统一的组件状态让用户在不同模块获得相同的心智模型。最终,设计系统让产品在扩张中保持克制与统一。</p>
+
+    <blockquote>
+      <p>克制不是匮乏,而是把每一次表达都用在刀刃上。好的系统不是让设计师无事可做,而是让他们不再为同样的小事反复争论。</p>
+      <cite>— Aham 设计原则</cite>
+    </blockquote>
+
+    <h2>设计系统的核心组成</h2>
+
+    <h3>Token:决策的最小单元</h3>
+    <p>Token 是设计决策的最小单元。Aham 把颜色拆成三层表面、四级墨色与单一强调蓝,把字号收敛为 11 个语义样式,把间距统一到 4 基网格。组件只引用语义层 token,不直接消费原始值。例如正文阅读宽度用 <code>--content-read</code>(65ch),CJK 行高用 <code>--leading-cjk</code>(1.75),段间距用 <code>1em</code>。这样改一处全端更新,暗色模式也能零改动适配。</p>
+
+    <h3>组件与规则</h3>
+    <p>组件是 token 的组合,规则是组件之间的约束。Aham 的核心组成可以归纳为以下几层:</p>
+    <ul>
+      <li>Token:颜色、字号、间距、圆角的单一事实源</li>
+      <li>组件:按钮、输入、表格等可复用件,全状态覆盖</li>
+      <li>组合规则:同心圆角、对齐网格、动作主次</li>
+      <li>模式:表单、列表、详情等页型蓝图</li>
+      <li>介质落地:网页、桌面、Office、邮件分轨</li>
+    </ul>
+
+    <h2>落地的步骤</h2>
+    <p>设计系统不是一次交付,而是一个持续演进的过程。建议按以下顺序推进:</p>
+    <ol>
+      <li>先定义 token,建立 primitive → semantic → component 三层</li>
+      <li>沉淀核心组件,约定全状态与变体</li>
+      <li>写下组合规则与禁区,用预览页验证</li>
+      <li>接入暗色与无障碍校验,持续迭代</li>
+    </ol>
+
+    <h2>代码示例</h2>
+    <p>长文排版的 CSS 落地并不复杂,关键是用对 token。下面是本页正文区使用的核心规则:</p>
+    <pre><code>.prose:lang(zh) {
+  line-height: var(--leading-cjk);
+  max-width: var(--content-read);
+}
+.prose p {
+  margin-block-end: 1em;
+}
+.prose p:last-child {
+  margin-block-end: 0;
+}</code></pre>
+
+    <h2>图文混排与基线对齐</h2>
+    <p>图文同行时优先 baseline 对齐,而非垂直居中。居中在字号或字高变化时容易错位,baseline 对齐则让文字基线与图形底边成线,更稳。下图为 Aham 三层表面示意,与说明文字 baseline 对齐:</p>
+    <div class="figure-inline">
+      <svg class="surface-diagram" width="240" height="120" viewBox="0 0 240 120" role="img" aria-label="Aham 三层表面层级示意">
+        <rect class="sd-tier1" x="0.5" y="0.5" width="239" height="119"/>
+        <rect class="sd-tier2" x="16" y="16" width="208" height="88"/>
+        <rect class="sd-tier3" x="32" y="32" width="176" height="56"/>
+        <text class="sd-label" x="120" y="64" text-anchor="middle">tier1 · tier2 · tier3</text>
+      </svg>
+      <span class="caption">三层靠纯色层差区分深度:内容层(白)、面板层(浅灰)、线/选中层(灰),不依赖阴影或材质。</span>
+    </div>
+
+    <h2>中西文混排的行高</h2>
+    <p>在 Aham 设计系统中,正文行高遵循 CJK 1.75、西文 1.5 的双轨策略。这是因为在同样字号下,汉字字面占比约 95%,而拉丁字母(Latin)仅约 70%,套用西文行高会让中文段落显得局促。W3C clreq 规范明确建议 CJK 行高需 1.7–1.8,我们取 1.75 作为折中。你可以在这段文字里观察到中英文混排时的呼吸感——行高足够容纳汉字的完整字面,同时 Latin 字母与标点也不显得松散。更多细节可参考 <a href="#">clreq 中文排版需求</a>。</p>
+
+    <h2>文本样式对照</h2>
+    <p>下表节选 Aham 11 个语义样式中与长文排版相关的几档,数字列右对齐并使用等宽字体:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>样式</th>
+          <th class="num">字号(px)</th>
+          <th class="num">行高</th>
+          <th class="num">字重</th>
+          <th>用途</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Body</td>
+          <td class="num">14</td>
+          <td class="num">1.55</td>
+          <td class="num">400</td>
+          <td>默认正文</td>
+        </tr>
+        <tr>
+          <td>Body-L</td>
+          <td class="num">17</td>
+          <td class="num">1.50</td>
+          <td class="num">400</td>
+          <td>长文正文</td>
+        </tr>
+        <tr>
+          <td>Heading</td>
+          <td class="num">24</td>
+          <td class="num">1.25</td>
+          <td class="num">600</td>
+          <td>章节标题</td>
+        </tr>
+        <tr>
+          <td>Mono</td>
+          <td class="num">14</td>
+          <td class="num">—</td>
+          <td class="num">400</td>
+          <td>代码 / 数字</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>这只是一个起点。真正的设计系统会在真实产品中反复打磨,把每一次微观决策都沉淀回 token 与规则,让下一个功能不必从零开始。</p>
+
+  </article>
+
+</div>
+</body>
+</html>

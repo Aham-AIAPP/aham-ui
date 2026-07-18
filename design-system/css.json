@@ -320,11 +320,15 @@
     "family": {
       "font-sans": "'Inter', 'Microsoft YaHei', 'SimHei', system-ui, -apple-system, sans-serif",
       "font-mono": "'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace",
-      "font-sans-display": "'Inter Display', 'Inter', 'Microsoft YaHei', system-ui, sans-serif"
+      "font-sans-display": "'Inter Display', 'Inter', 'Microsoft YaHei', system-ui, sans-serif",
+      "font-serif": "'New York', 'Iowan Old Style', 'Apple Garamond', 'Songti SC', 'SimSun', serif",
+      "font-display": "'Inter Display', 'Inter', 'Microsoft YaHei', system-ui, sans-serif"
+    },
+    "lineHeight": {
+      "text-cjk-line-height": "1.75"
     },
     "size": {},
-    "weight": {},
-    "lineHeight": {}
+    "weight": {}
   },
   "shadow": {
     "shadow-md": {
@@ -386,7 +390,8 @@
     "radius-xl": "16px",
     "radius-2xl": "20px",
     "radius-pill": "999px",
-    "aham-radius-pill": "999px"
+    "aham-radius-pill": "999px",
+    "aham-radius-lg": "12px"
   },
   "spacing": {
     "space-0": "0px",
@@ -398,7 +403,8 @@
     "space-6": "32px",
     "space-7": "48px",
     "space-8": "64px",
-    "space-9": "96px"
+    "space-9": "96px",
+    "space-paragraph": "16px"
   },
   "size": {}
 }

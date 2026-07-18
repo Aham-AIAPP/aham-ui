@@ -77,6 +77,7 @@
   --space-7:                 48px;
   --space-8:                 64px;
   --space-9:                 96px;
+  --space-paragraph:         var(--space-4);
 
   /* ─── radius ───────────────────────────────────────────────────── */
   --radius-xs:               4px;
@@ -100,6 +101,7 @@
   --font-sans:               'Inter', 'Microsoft YaHei', 'SimHei', system-ui, -apple-system, sans-serif;
   --font-mono:               'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --font-sans-display:       'Inter Display', 'Inter', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-serif:              'New York', 'Iowan Old Style', 'Apple Garamond', 'Songti SC', 'SimSun', serif;
 
   /* ─── typography – sizes ───────────────────────────────────────── */
   --text-xs:                 12px;
@@ -111,6 +113,7 @@
   --text-2xl:                24px;
   --text-3xl:                32px;
   --text-display:            44px;
+  --text-cjk-line-height:    var(--leading-cjk);
 
   /* ─── typography – weights ─────────────────────────────────────── */
   --weight-regular:          400;
@@ -123,6 +126,7 @@
   --leading-snug:            1.35;
   --leading-normal:          1.55;
   --leading-relaxed:         1.7;
+  --leading-cjk:             1.75;
 
   /* ─── layout ───────────────────────────────────────────────────── */
   --layout-rail-width:       60px;
@@ -184,6 +188,7 @@
   --density-row-height:      36px;
   --density-control-height:  32px;
   --density-spacing-scale:   1;
+  --density-row-height-compact: 32px;
 
   /* ─── content width ────────────────────────────────────────────── */
   --content-page:            1280px;
@@ -193,6 +198,10 @@
   --content-auth:            420px;
   --content-ultra:           1536px;
   --content-full:            100%;
+
+  /* ─── measure (reading width aliases) ──────────────────────────── */
+  --measure-read:            65ch;
+  --measure-cjk:             32em;
 
   /* ══════════════════════════════════════════════════════════════════
      BACKWARD-COMPATIBILITY ALIASES (preview pages reference these)
@@ -231,6 +240,7 @@
   --aham-typography-lineHeight-snug:     var(--leading-snug);
   --aham-typography-lineHeight-normal:   var(--leading-normal);
   --aham-typography-lineHeight-relaxed:  var(--leading-relaxed);
+  --aham-typography-lineHeight-cjk:      var(--leading-cjk);
   --aham-typography-fontFamily-sans:     var(--font-sans);
   --aham-typography-fontFamily-mono:     var(--font-mono);
   --aham-typography-fontFamily-sansDisplay: var(--font-sans-display);

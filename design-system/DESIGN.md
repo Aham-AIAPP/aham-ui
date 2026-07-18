@@ -83,6 +83,23 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:≥20px 用 Inter Disp
 
 **可读性红线(↔Apple Typography)**:正文最大行长 ~60–75 字符(`ch`/`max-width` 限);最小可读字号 ≥12px(macOS Body 基准 **13**、网页 14,**可不同**);**禁两端对齐**、禁长段斜体/全大写。
 
+#### 1.3.1 长文排版细则（v7.0.1 补）
+适用于长文产物(纪要、逐字稿、文档正文、`.prose`);UI 界面文字不受此节约束。取值走 Aham token,结构与业界共识对齐。
+
+**CJK 行高覆盖**:正文行高西文 `1.5`、CJK `1.75`(token `--leading-cjk`)。**做法**:用 `:lang(zh)` 或 CSS 变量按内容语言切换——`.prose:lang(zh) { line-height: var(--leading-cjk); }`。**为什么**:汉字字面占比约 `95%`、西文约 `70%`,CJK 套用西文行高会偏紧;有研究支撑(W3C clreq)CJK 行高需 `1.7–1.8`。
+
+**段间距**:段间距 = `1×font-size`(正文 `16px` → 段间距 `16px`,token `--space-paragraph`);**段间距 > 行内行距**;**禁首行缩进**;最后一段去 `margin`。**做法**:`.prose p { margin-block-end: 1em; } .prose p:last-child { margin-block-end: 0; }`。**为什么**:网页排版共识用段间距分段,业界无大厂用首行缩进;段间距大于行内行距段落才分明。
+
+**垂直韵律**:行高与间距都对齐 `4px` 网格(`16`/`20`/`24`/`28`/`32`);**布局间距单位 `8px`,字体行高单位 `4px`**。**做法**:行高取 `4` 的倍数,段间距/区块间距取 `8` 的倍数;不出现无法对齐基线的奇数行高。**为什么**:对齐基线让标题、段落、列表、图注在垂直方向成线,避免参差;业界除 Apple 外普遍遵循。
+
+**标题→正文间距**:H1 后接正文间距 = `1×H1 字号`,H2/H3 类推;标题前距 > 标题后距(标题贴近自己的正文)。**做法**:用 section-break 分级(token `--space-section-lg` `48` / `--space-section-md` `32` / `--space-section-sm` `24`),H1 前距最大、H3 前距最小;同级标题前后距全局一致。**为什么**:有研究支撑(GOV.UK section-break)标题与所属内容距离要小于与上一节的距离,读者才能感知归属。
+
+**引用块**:字号 = 正文或略大(`17px`);左缘不缩进,用 `3px` 左边线 `--ink-3` + 浅底 `--panel` 区分;**不引入衬线字体**(守 §1.3 禁衬线铁律)。**做法**:`.prose blockquote { border-inline-start: 3px solid var(--ink-3); background: var(--panel); padding-inline: 16px; margin-block: 1em; }`。**为什么**:业界有以衬线字体区分引用的做法(IBM Carbon),但 Aham 单一无衬线,改用边线/底色/缩进达成同等对比。
+
+**代码块**:等宽 `JetBrains Mono`;字号 `13–14px`;行高 `1.5`(比正文略宽);块级上下留白 `1em`;**inline code 用浅底 `--panel` 不破坏行高**(`padding: 1px 4px` + `border-radius: 4px`,不加 `margin`、不改 `line-height`)。**做法**:`.prose pre { font-size: 13px; line-height: 1.5; margin-block: 1em; } .prose :not(pre) > code { background: var(--panel); padding: 1px 4px; }`。**为什么**:等宽字号略小于正文不抢视觉重心;行高略宽便于读长行;inline code 不破坏行高是排版基本功。
+
+**图文 baseline 对齐**:图文混排优先 **baseline 对齐**,不居中。**做法**:图文同行用 `vertical-align: baseline`(默认),flex 容器用 `align-items: baseline`;**禁**用 `align-items: center` 处理图文同行(居中仅用于纯图标按钮等无文字基线场景)。**为什么**:有研究支撑(Twilio Paste)baseline 对齐比居中稳,居中在字号/字高变化时易错位。
+
 ### 1.4 布局与间距
 间距(4 基):`4/8/12/16/24/32/48/64/96`。**留白是首要分隔,先加间距再考虑线。** 布局:rail 60 / sidebar 264 / rightbar 340 / topbar 52。断点(仅 web):≤860 折叠/转单列,≤380 压窄。
 
@@ -385,6 +402,28 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 - **应用轨 macOS**:左对齐铺满 + 展开 pane;导航壳形变(Compact 底栏 → Medium rail → Expanded 常驻 sidebar);split header bars;safe area 避信号灯/灵动岛。
 - **Office 轨**:拆 **Word(流式文档,近网页内容轨)/ Excel(单元格网格,自有坐标系)/ PPT(固定画布,定宽定位+内容安全区+母版网格)** 三子模型;统一单蓝 + 冷色纸;详见 `aham-ui-office.md`。
 - **邮件轨(若含通知/营销邮件)**:table 布局/内联样式/600px 固定宽/暗色 meta,与网页轨明确区分;先占位,后续单独立项。
+
+### 8.13 信息密集表格（v7.0.1 补）
+- **列宽策略**:**至少留一列不设 `width` 弹性填充**;其余列按内容设 `min-width` 而非写死 `width`;`scroll.x` 推荐大于总列宽,让横向滚动条可见。**为什么**:全列定宽在窄屏挤压或留白,留一列弹性吸收宽度变化;业界共识。
+- **横向溢出**:列多时**横向滚动 + 冻结首列**(`.sticky-col` 已有);冻结列右边线 `--ink-3` 提示边界。**为什么**:B 端密集场景列数常超屏宽,冻结首列保证行身份可读;横向滚动比折叠列更可预测。
+- **表头吸顶**:长表用 `sticky` 表头(`position: sticky; top: 0`);吸顶表头底边线 `--ink-3`。**为什么**:滚动时表头保持可见,否则用户丢失列语义;业界通行。
+- **单元格截断**:**标题/短文本 `truncate` + `tooltip`**(单行省略 + hover 显全文);**正文 `wrap` 换行**不截断;长 URL/路径用 `word-break`。**为什么**:标题截断有 tooltip 兜底无损信息,正文截断丢内容;业界共识先换行再 tooltip。
+- **表头行高 = 数据行高**:**不混用**;表头靠加粗 + 底边线区分,不靠加高。**为什么**:表头与数据行同基线,扫视时列对齐;业界明确不混用。
+- **列间最小 padding `16px`**:单元格左右 padding ≥ `16`(compact 档可 `12`,**不小于 `12`**);数字列右对齐 mono。**为什么**:列间留白是首要分隔(守 §1.4),过窄会让相邻列粘连。
+
+### 8.14 仪表盘模块布局（v7.0.1 补）
+- **Bento 模块用 Fixed-wide**:容器宽 `1280–1296px`;**不用 Fluid 流体栅格**铺满超宽屏。**为什么**:有研究支撑(Atlassian)大视口下流体栅格让模块失去视觉关系,间距与比例失调;Fixed-wide 保持模块间稳定关系。
+- **模块间距 `32–40px`**:模块间 `--space-block`(`32` 默认 / `40` 强调分区);模块内 padding `16–24`。**为什么**:模块是独立单元,间距大于组件间距(`8–16`)才能"成块";业界区块间距普遍 `32+`。
+- **Hybrid box 模式**:模块内 = 表头/工具栏(流体宽 + 固定高)+ 数据区(流体宽 + 流体高)。**做法**:模块 `display: grid; grid-template-rows: auto 1fr;`,头部固定高、数据区 `1fr`。**为什么**:数据区需随内容/视口伸缩,头部工具栏应稳定;业界 Hybrid box 模式。
+- **数据可视化区用 aspect ratio 约束**:图表区 `aspect-ratio: 16/9` 或固定高(如 `240px`),避免数据量变化导致模块高度跳动。**为什么**:图表高度抖动破坏模块对齐,aspect ratio 让模块尺寸稳定。
+
+### 8.15 表单布局（v7.0.1 补）
+- **label 位置**:**短 label 左 horizontal**(label + 控件同行);**长 label 上 vertical**(label 在控件上方)。**为什么**:短 label 同行省纵向空间、便于扫视;长 label 同行会挤压控件或换行错乱;业界共识。
+- **label/控件 span 比例**:horizontal 模式 label:控件 = `8:16` 或 `6:18`(约 `1:2` 或 `1:3`);label 文本超长切 vertical。**做法**:`grid-template-columns: minmax(120px, 1fr) 3fr` 或等比例 span。**为什么**:label 列固定上限防超长 label 挤压控件;业界通行。
+- **单表单内可混用 horizontal/vertical**:同表单不同字段按 label 长度分别选位;**同区组内保持一致**。**为什么**:强制统一会牺牲长 label 字段可用性;业界共识允许混用。
+- **字段间距**:组内 `8` / 组件间 `16` / 区块间 `32`(三段式,与 §3.5 一致);`.form-section` 间顶部细线 + `32` 间距。**为什么**:三段式间距让"字段—组件—区块"层级分明;业界通行。
+- **长表单用 progressive disclosure 分步**:超 1 屏表单拆步骤(`.steps`)+ 每步保存;或用 `.accordion` 折叠非当前区。**为什么**:长表单一次铺满造成认知过载,分步降低单步负荷。
+- **破坏性操作不设默认按钮**:"删除/重置"用 danger 且不绑 `Return`;主操作"保存"绑 `Return`(守 §3.3/§8.6)。**为什么**:防回车误触破坏性操作;铁律。
 
 ---
 

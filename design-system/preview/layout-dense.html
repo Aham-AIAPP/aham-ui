@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>信息密集布局示范 — Aham</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  /* ═══ page shell · 网页轨 居中收口 --content-page 1280 ════════════ */
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--color-bg-app);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-primary);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+    padding: var(--space-6) var(--space-5) var(--space-8);
+  }
+  .page { width: 100%; max-width: var(--content-page); }
+
+  /* ═══ page-header · §8.4 标题左上 + 主操作右上 ════════════════════ */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-4);
+    padding-block: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .page-header__main { min-width: 0; }
+  .page-header__eyebrow {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-tertiary);
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-2);
+  }
+  .page-header__title {
+    margin: 0;
+    font-family: var(--font-sans-display);
+    font-size: var(--text-2xl);
+    line-height: var(--leading-tight);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    letter-spacing: -0.005em;
+  }
+  .page-header__meta {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+  }
+  .page-header__meta .sep { margin: 0 var(--space-2); color: var(--color-ink-quaternary); }
+  .page-header__meta .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .page-header__actions { display: flex; align-items: center; gap: var(--space-2); flex-shrink: 0; }
+
+  /* ═══ buttons · 扁平无阴影 ════════════════════════════════════════ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    height: var(--layout-btn-height);
+    padding: 0 var(--space-3);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-ink-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--duration-fast) var(--easing-standard),
+                color var(--duration-fast) var(--easing-standard),
+                border-color var(--duration-fast) var(--easing-standard);
+  }
+  .btn:focus-visible { outline: none; box-shadow: var(--shadow-ring-focus); }
+  .btn--primary {
+    background: var(--color-accent);
+    color: var(--color-ink-on-accent);
+    border-color: var(--color-accent);
+  }
+  .btn--primary:hover { background: var(--color-accent-hover); border-color: var(--color-accent-hover); }
+  .btn--primary:active { background: var(--color-accent-press); border-color: var(--color-accent-press); }
+  .btn--secondary {
+    background: var(--aham-surface-tier1);
+    border-color: var(--color-border);
+    color: var(--color-ink-primary);
+  }
+  .btn--secondary:hover { background: var(--color-fill-hover); }
+  .btn--secondary:active { background: var(--color-fill-active); }
+  .btn--ghost { background: transparent; color: var(--color-ink-secondary); }
+  .btn--ghost:hover { background: var(--color-fill-hover); color: var(--color-ink-primary); }
+  .btn--ghost:active { background: var(--color-fill-active); }
+  .btn--danger {
+    background: transparent;
+    color: var(--color-danger);
+    border-color: transparent;
+  }
+  .btn--danger:hover { background: var(--aham-danger-bg); }
+  .btn .icon { width: var(--icon-sm); height: var(--icon-sm); flex-shrink: 0; }
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--layout-btn-height); height: var(--layout-btn-height);
+    border: 1px solid transparent; border-radius: var(--radius-md);
+    background: transparent; color: var(--color-ink-secondary);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--easing-standard), color var(--duration-fast) var(--easing-standard);
+  }
+  .icon-btn:hover { background: var(--color-fill-hover); color: var(--color-ink-primary); }
+  .icon-btn:focus-visible { outline: none; box-shadow: var(--shadow-ring-focus); }
+  .icon-btn .icon { width: var(--icon-sm); height: var(--icon-sm); }
+
+  /* ═══ page-toolbar · §8.5 三段式 ══════════════════════════════════ */
+  .page-toolbar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+  .toolbar__lead { flex: 0 0 auto; }
+  .toolbar__center { flex: 1 1 auto; display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+  .toolbar__trail { flex: 0 0 auto; display: flex; align-items: center; gap: var(--space-3); }
+
+  .search { position: relative; display: flex; align-items: center; width: 248px; }
+  .search > .icon {
+    position: absolute; left: var(--space-3);
+    width: var(--icon-sm); height: var(--icon-sm);
+    color: var(--color-ink-tertiary); pointer-events: none;
+  }
+  .search input {
+    width: 100%;
+    height: var(--layout-btn-height);
+    padding: 0 var(--space-3) 0 calc(var(--icon-sm) + var(--space-4));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--aham-surface-tier1);
+    color: var(--color-ink-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    transition: border-color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+  }
+  .search input::placeholder { color: var(--color-ink-tertiary); }
+  .search input:hover { border-color: var(--color-ink-quaternary); }
+  .search input:focus { outline: none; border-color: var(--color-accent); box-shadow: var(--shadow-ring-focus); }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: var(--space-1);
+    height: var(--layout-btn-height);
+    padding: 0 var(--space-1) 0 var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--aham-surface-tier1);
+    color: var(--color-ink-secondary);
+    font-size: var(--text-sm);
+  }
+  .chip__x {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--icon-sm); height: var(--icon-sm);
+    border: none; background: transparent; color: var(--color-ink-tertiary);
+    cursor: pointer; padding: 0;
+  }
+  .chip__x:hover { color: var(--color-ink-primary); }
+  .chip__x .icon { width: 12px; height: 12px; }
+
+  .result-count { font-size: var(--text-sm); color: var(--color-ink-secondary); }
+  .result-count .num { font-family: var(--font-mono); color: var(--color-ink-primary); font-variant-numeric: tabular-nums; }
+
+  /* ═══ page-content ═══════════════════════════════════════════════ */
+  .page-content { display: flex; flex-direction: column; gap: var(--space-7); padding-top: var(--space-6); }
+  .section-label {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-tertiary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-3);
+  }
+
+  /* ═══ §8.14 仪表盘 Bento(Fixed-wide,模块间距 32) ═══════════════ */
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-6); /* 32px,§8.14 模块间距默认 */
+  }
+  .module {
+    background: var(--aham-surface-tier1);
+    border: 1px solid var(--color-border); /* 极浅边框,无 box-shadow */
+    border-radius: var(--radius-lg);
+    padding: var(--space-5); /* 24,模块内 padding */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-width: 0;
+  }
+  .module--span6 { grid-column: span 6; }
+  .module--span3 { grid-column: span 3; }
+  .module--span12 { grid-column: span 12; }
+  .module__head {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: var(--space-3);
+  }
+  .module__title {
+    margin: 0;
+    font-family: var(--font-sans-display);
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    line-height: var(--leading-snug);
+  }
+  .module__hint { font-size: var(--text-xs); color: var(--color-ink-tertiary); }
+
+  /* big number + trend(形状传达方向,不靠颜色) */
+  .metric { display: flex; flex-direction: column; gap: var(--space-2); }
+  .metric__value {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric__value .unit {
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+    font-weight: var(--weight-regular);
+    margin-inline-start: var(--space-1);
+  }
+  .metric__trend {
+    display: inline-flex; align-items: center; gap: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .metric__trend .icon { width: 12px; height: 12px; }
+
+  /* mini bar chart(灰阶序列 + 当前项加重) */
+  .barchart {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-2);
+    height: 120px;
+    padding-top: var(--space-2);
+  }
+  .barchart__bar {
+    flex: 1 1 0;
+    background: var(--aham-ink-quaternary);
+    border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+    min-height: 4px;
+  }
+  .barchart__bar.is-current { background: var(--color-ink-primary); }
+  .barchart__axis {
+    display: flex; justify-content: space-between;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-tertiary);
+  }
+
+  /* progress bar */
+  .progress { display: flex; flex-direction: column; gap: var(--space-2); }
+  .progress__track {
+    height: 6px;
+    background: var(--aham-surface-tier3);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+  .progress__fill {
+    height: 100%;
+    background: var(--color-ink-primary);
+    border-radius: var(--radius-pill);
+  }
+  .progress__meta {
+    display: flex; justify-content: space-between;
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+  }
+  .progress__meta .num { font-family: var(--font-mono); color: var(--color-ink-primary); font-variant-numeric: tabular-nums; }
+
+  /* status distribution · horizontal bars(灰阶分级) */
+  .dist { display: flex; flex-direction: column; gap: var(--space-3); }
+  .dist__row {
+    display: grid;
+    grid-template-columns: 96px 1fr 56px;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .dist__label { font-size: var(--text-sm); color: var(--color-ink-secondary); display: inline-flex; align-items: center; }
+  .dist__bar-track {
+    height: 8px;
+    background: var(--aham-surface-tier2);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+  .dist__bar { height: 100%; border-radius: var(--radius-pill); background: var(--aham-ink-quaternary); }
+  .dist__bar.lvl-1 { background: var(--color-ink-primary); }
+  .dist__bar.lvl-2 { background: var(--aham-ink-secondary); }
+  .dist__bar.lvl-3 { background: var(--aham-ink-tertiary); }
+  .dist__bar.lvl-4 { background: var(--aham-ink-quaternary); }
+  .dist__bar.lvl-5 { background: var(--color-danger); }
+  .dist__count {
+    font-family: var(--font-mono); font-size: var(--text-sm);
+    color: var(--color-ink-primary); text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ═══ §8.13 信息密集表格 ══════════════════════════════════════════ */
+  .table-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: auto; /* 横向溢出 + 纵向吸顶 */
+    max-height: 380px; /* 让 sticky thead 生效 */
+    background: var(--aham-surface-tier1);
+  }
+  .dense-table {
+    width: 100%;
+    min-width: 1320px; /* > 视口宽,让横向滚动条可见 §8.13 */
+    border-collapse: collapse;
+    table-layout: fixed; /* 配合列宽策略,保证截断生效 */
+    font-size: var(--text-sm);
+  }
+  .dense-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--aham-surface-tier1);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-secondary);
+    text-align: start;
+    height: var(--density-row-height); /* 36,与数据行同高 */
+    padding: 0 var(--space-4); /* 列间最小 padding 16 */
+    border-bottom: 1px solid var(--color-border); /* 吸顶表头底边线 */
+    white-space: nowrap;
+    font-size: var(--text-sm);
+  }
+  .dense-table tbody td {
+    height: var(--density-row-height);
+    padding: 0 var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-ink-primary);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* 默认截断;正文列用 .cell-wrap 覆盖 */
+  }
+  .dense-table tbody tr:hover td { background: var(--color-fill-hover); }
+  .dense-table tbody tr.selected td { background: var(--color-bg-selected); } /* 选中=扁平灰,非蓝 */
+  .dense-table tbody tr:last-child td { border-bottom: none; }
+
+  /* 冻结首列:position sticky left 0,右边线提示边界 */
+  .dense-table .col-sticky {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--aham-surface-tier1);
+    border-inline-end: 1px solid var(--color-border);
+  }
+  .dense-table thead th.col-sticky { z-index: 3; } /* 左上角最高 */
+  .dense-table tbody tr:hover .col-sticky { background: var(--color-fill-hover); }
+  .dense-table tbody tr.selected .col-sticky { background: var(--color-bg-selected); }
+
+  /* 正文列:换行不截断 */
+  .cell-wrap {
+    white-space: normal !important;
+    word-break: break-word;
+    color: var(--color-ink-secondary);
+    line-height: var(--leading-snug);
+  }
+
+  /* 数值列右对齐 mono */
+  .num { text-align: end; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+  .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+  /* 列宽策略:固定列设 width,备注列不设(弹性填充 §8.13) */
+  .w-check { width: 40px; }
+  .w-order { width: 168px; }
+  .w-customer { width: 184px; }
+  .w-material { width: 196px; }
+  .w-num { width: 88px; }
+  .w-price { width: 96px; }
+  .w-amount { width: 116px; }
+  .w-status { width: 108px; }
+  .w-time { width: 132px; }
+  .w-remark { /* 不设 width,弹性填充 */ }
+
+  /* status = 6px 点 + 文字(绝不 pill) */
+  .status-dot {
+    display: inline-block;
+    width: var(--status-dot-size);
+    height: var(--status-dot-size);
+    border-radius: 50%;
+    margin-inline-end: var(--space-2);
+    background: var(--color-ink-tertiary);
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .status-dot.is-success { background: var(--color-success); }
+  .status-dot.is-warning { background: var(--color-warning); }
+  .status-dot.is-danger { background: var(--color-danger); }
+
+  .row-check { text-align: center; }
+  .row-check input[type="checkbox"] {
+    width: 14px; height: 14px; margin: 0; cursor: pointer;
+    accent-color: var(--color-ink-primary); /* 选中墨色,非蓝 */
+  }
+
+  /* ═══ §8.15 表单布局 ═════════════════════════════════════════════ */
+  .form-card {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--aham-surface-tier1);
+    padding: var(--space-6);
+  }
+  .form-card__title {
+    margin: 0 0 var(--space-1) 0;
+    font-family: var(--font-sans-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+  }
+  .form-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-ink-secondary);
+    margin: 0 0 var(--space-5) 0;
+  }
+
+  /* fieldset · 区块间 32 */
+  .form-section {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--space-6) 0; /* 区块间 32 */
+    min-inline-size: 0;
+  }
+  .form-section:last-of-type { margin-block-end: 0; }
+  .form-section__title {
+    display: block;
+    padding: 0;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink-primary);
+    margin: 0 0 var(--space-4) 0;
+    letter-spacing: 0.02em;
+  }
+
+  .form-fields { display: flex; flex-direction: column; gap: var(--space-4); /* 组件间 16 */ }
+
+  .field { display: flex; flex-direction: column; gap: var(--space-2); /* 组内 8 */ }
+  .field--horizontal {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) 3fr; /* label:控件 ≈ 1:3(6:18) §8.15 */
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .field__label {
+    font-size: var(--text-sm);
+    color: var(--color-ink-primary);
+    font-weight: var(--weight-medium);
+  }
+  .field__label .req { color: var(--color-danger); margin-inline-start: 2px; }
+  .field__control { min-width: 0; }
+
+  .input, .select, .textarea {
+    width: 100%;
+    height: var(--density-control-height); /* 32 */
+    padding: 0 var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--aham-surface-tier1);
+    color: var(--color-ink-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    transition: border-color var(--duration-fast) var(--easing-standard), box-shadow var(--duration-fast) var(--easing-standard);
+  }
+  .input:hover, .select:hover, .textarea:hover { border-color: var(--color-ink-quaternary); }
+  .input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--color-accent); box-shadow: var(--shadow-ring-focus); }
+  .textarea {
+    height: auto;
+    min-height: 88px;
+    padding: var(--space-2) var(--space-3);
+    line-height: var(--leading-normal);
+    resize: vertical;
+  }
+  /* select 自绘箭头(CSS border,暗色自适应) */
+  .select-wrap { position: relative; }
+  .select-wrap .select { appearance: none; padding-inline-end: calc(var(--space-3) * 2 + var(--icon-sm)); }
+  .select-wrap::after {
+    content: '';
+    position: absolute;
+    right: var(--space-3);
+    top: 50%;
+    width: 6px; height: 6px;
+    border-right: 1.5px solid var(--color-ink-secondary);
+    border-bottom: 1.5px solid var(--color-ink-secondary);
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+  }
+  .field__hint { font-size: var(--text-xs); color: var(--color-ink-tertiary); }
+
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-top: var(--space-5);
+    margin-top: var(--space-5);
+    border-top: 1px solid var(--color-border);
+  }
+  .form-actions__group { display: flex; align-items: center; gap: var(--space-2); }
+
+  /* ═══ responsive ═════════════════════════════════════════════════ */
+  @media (max-width: 64rem) {
+    .bento { grid-template-columns: repeat(6, 1fr); }
+    .module--span12 { grid-column: span 6; }
+  }
+  @media (max-width: 48rem) {
+    body { padding: var(--space-4); }
+    .page-header { flex-wrap: wrap; }
+    .page-header__actions { width: 100%; justify-content: flex-end; }
+    .bento { grid-template-columns: 1fr; gap: var(--space-4); }
+    .module--span6, .module--span3, .module--span12 { grid-column: span 1; }
+    .field--horizontal { grid-template-columns: 1fr; }
+    .form-actions { flex-direction: column; align-items: stretch; }
+    .form-actions__group { justify-content: flex-end; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ═══ page-header ══════════════════════════════════════════════ -->
+  <header class="page-header">
+    <div class="page-header__main">
+      <div class="page-header__eyebrow">订单中心 · 数据管理</div>
+      <h1 class="page-header__title">订单管理</h1>
+      <div class="page-header__meta">
+        共 <span class="num">128</span> 条订单<span class="sep">·</span>本月成交 <span class="num">¥486,200</span><span class="sep">·</span>更新于 2026-07-18 11:42
+      </div>
+    </div>
+    <div class="page-header__actions">
+      <button class="btn btn--ghost" onclick="document.body.classList.toggle('dark')" aria-label="切换深浅色主题">切换主题</button>
+      <button class="btn btn--primary">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        新建订单
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ page-toolbar · §8.5 三段式(lead 搜索 / center 批量操作 / trail 计数) ═ -->
+  <div class="page-toolbar">
+    <div class="toolbar__lead">
+      <div class="search">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="搜索订单号、客户或物料" aria-label="搜索订单">
+      </div>
+    </div>
+    <div class="toolbar__center">
+      <span class="chip">状态:待发货
+        <button class="chip__x" aria-label="移除筛选"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </span>
+      <button class="btn btn--ghost">导出</button>
+      <button class="btn btn--ghost">批量发货</button>
+      <button class="btn btn--ghost">批量取消</button>
+      <button class="icon-btn" aria-label="更多操作"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button>
+    </div>
+    <div class="toolbar__trail">
+      <span class="result-count">共 <span class="num">10</span> 条</span>
+    </div>
+  </div>
+
+  <!-- ═══ page-content ═════════════════════════════════════════════ -->
+  <main class="page-content">
+
+    <!-- 场景 2:仪表盘 Bento(§8.14) -->
+    <section aria-labelledby="bento-label">
+      <div class="section-label" id="bento-label">仪表盘模块布局 · §8.14</div>
+      <div class="bento">
+
+        <!-- 模块 1:迷你柱状图(span 6) -->
+        <div class="module module--span6">
+          <div class="module__head">
+            <h2 class="module__title">近 7 日成交趋势</h2>
+            <span class="module__hint">单位:万元</span>
+          </div>
+          <div class="barchart" role="img" aria-label="近 7 日成交柱状图,从 07-12 到 07-18 依次为 12.4、15.8、14.2、18.6、16.1、19.3、21.0 万元,今日为 21.0">
+            <div class="barchart__bar" style="height: 59%"></div>
+            <div class="barchart__bar" style="height: 75%"></div>
+            <div class="barchart__bar" style="height: 68%"></div>
+            <div class="barchart__bar" style="height: 89%"></div>
+            <div class="barchart__bar" style="height: 77%"></div>
+            <div class="barchart__bar" style="height: 92%"></div>
+            <div class="barchart__bar is-current" style="height: 100%"></div>
+          </div>
+          <div class="barchart__axis">
+            <span>07-12</span><span>07-13</span><span>07-14</span><span>07-15</span><span>07-16</span><span>07-17</span><span>07-18</span>
+          </div>
+        </div>
+
+        <!-- 模块 2:数字 + 趋势(span 3) -->
+        <div class="module module--span3">
+          <div class="module__head">
+            <h2 class="module__title">今日成交金额</h2>
+          </div>
+          <div class="metric">
+            <div class="metric__value">¥186,420<span class="unit">元</span></div>
+            <div class="metric__trend">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              <span>+12.4% 较昨日</span>
+            </div>
+          </div>
+          <div class="module__hint">本周累计 ¥724,860,环比 +8.1%</div>
+        </div>
+
+        <!-- 模块 3:进度条(span 3) -->
+        <div class="module module--span3">
+          <div class="module__head">
+            <h2 class="module__title">本周发货进度</h2>
+          </div>
+          <div class="progress">
+            <div class="progress__track"><div class="progress__fill" style="width: 61%"></div></div>
+            <div class="progress__meta">
+              <span>已发 <span class="num">14</span> 单</span>
+              <span>共 <span class="num">23</span> 单</span>
+            </div>
+          </div>
+          <div class="module__hint">剩余 9 单待处理,其中 3 单为加急</div>
+        </div>
+
+        <!-- 模块 4:订单状态分布(span 12) -->
+        <div class="module module--span12">
+          <div class="module__head">
+            <h2 class="module__title">订单状态分布</h2>
+            <span class="module__hint">本月共 128 单</span>
+          </div>
+          <div class="dist">
+            <div class="dist__row">
+              <span class="dist__label"><span class="status-dot is-success"></span>已完成</span>
+              <div class="dist__bar-track"><div class="dist__bar lvl-1" style="width: 42%"></div></div>
+              <span class="dist__count">54</span>
+            </div>
+            <div class="dist__row">
+              <span class="dist__label"><span class="status-dot"></span>已发货</span>
+              <div class="dist__bar-track"><div class="dist__bar lvl-2" style="width: 28%"></div></div>
+              <span class="dist__count">36</span>
+            </div>
+            <div class="dist__row">
+              <span class="dist__label"><span class="status-dot is-warning"></span>待发货</span>
+              <div class="dist__bar-track"><div class="dist__bar lvl-3" style="width: 18%"></div></div>
+              <span class="dist__count">23</span>
+            </div>
+            <div class="dist__row">
+              <span class="dist__label"><span class="status-dot is-warning"></span>待审核</span>
+              <div class="dist__bar-track"><div class="dist__bar lvl-4" style="width: 8%"></div></div>
+              <span class="dist__count">10</span>
+            </div>
+            <div class="dist__row">
+              <span class="dist__label"><span class="status-dot is-danger"></span>异常</span>
+              <div class="dist__bar-track"><div class="dist__bar lvl-5" style="width: 4%"></div></div>
+              <span class="dist__count">5</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+     </section>
+
+    <!-- 场景 1:信息密集表格(§8.13) -->
+    <section aria-labelledby="table-label">
+      <div class="section-label" id="table-label">信息密集表格 · §8.13</div>
+      <div class="table-wrap">
+        <table class="dense-table">
+          <thead>
+            <tr>
+              <th class="w-check row-check"><input type="checkbox" aria-label="全选"></th>
+              <th class="col-sticky w-order">订单号</th>
+              <th class="w-customer">客户</th>
+              <th class="w-material">物料</th>
+              <th class="w-num num">数量</th>
+              <th class="w-price num">单价</th>
+              <th class="w-amount num">金额</th>
+              <th class="w-status">状态</th>
+              <th class="w-time">创建时间</th>
+              <th class="w-remark">备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0718-001">SO-2026-0718-001</td>
+              <td class="w-customer" title="苏州市恒达精密机械有限公司">苏州市恒达精密机械有限公司</td>
+              <td class="w-material" title="轴承座 6204-ZZ">轴承座 6204-ZZ</td>
+              <td class="w-num num">480</td>
+              <td class="w-price num">32.50</td>
+              <td class="w-amount num">15,600.00</td>
+              <td class="w-status"><span class="status-dot is-warning"></span>待发货</td>
+              <td class="w-time mono">2026-07-18 09:12</td>
+              <td class="w-remark cell-wrap">客户要求周五前送达,需加盖防潮包装</td>
+            </tr>
+            <tr class="selected">
+              <td class="w-check row-check"><input type="checkbox" checked aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0718-002">SO-2026-0718-002</td>
+              <td class="w-customer" title="宁波鸿运汽配制造">宁波鸿运汽配制造</td>
+              <td class="w-material" title="制动盘总成 D-4321">制动盘总成 D-4321</td>
+              <td class="w-num num">120</td>
+              <td class="w-price num">186.00</td>
+              <td class="w-amount num">22,320.00</td>
+              <td class="w-status"><span class="status-dot"></span>已发货</td>
+              <td class="w-time mono">2026-07-18 10:34</td>
+              <td class="w-remark cell-wrap">顺丰陆运,运单号 SF1234567890</td>
+            </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0717-038">SO-2026-0717-038</td>
+              <td class="w-customer" title="上海联晟电子科技">上海联晟电子科技</td>
+              <td class="w-material" title="PCB 主板 v3.2">PCB 主板 v3.2</td>
+              <td class="w-num num">2,400</td>
+              <td class="w-price num">18.80</td>
+              <td class="w-amount num">45,120.00</td>
+              <td class="w-status"><span class="status-dot is-warning"></span>待审核</td>
+              <td class="w-time mono">2026-07-17 16:48</td>
+              <td class="w-remark cell-wrap">需附出厂检验报告,客户质检员到场验收</td>
+            </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0717-035">SO-2026-0717-035</td>
+              <td class="w-customer" title="杭州明远自动化设备">杭州明远自动化设备</td>
+              <td class="w-material" title="伺服电机 750W">伺服电机 750W</td>
+              <td class="w-num num">36</td>
+              <td class="w-price num">1,280.00</td>
+              <td class="w-amount num">46,080.00</td>
+              <td class="w-status"><span class="status-dot is-success"></span>已完成</td>
+              <td class="w-time mono">2026-07-17 14:20</td>
+              <td class="w-remark cell-wrap">—</td>
+            </tr>
+            <tr>
+               <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+               <td class="col-sticky w-order mono" title="SO-2026-0716-052">SO-2026-0716-052</td>
+               <td class="w-customer" title="常熟德昌五金制品">常熟德昌五金制品</td>
+               <td class="w-material" title="不锈钢螺栓 M8×30">不锈钢螺栓 M8×30</td>
+               <td class="w-num num">12,000</td>
+               <td class="w-price num">0.85</td>
+               <td class="w-amount num">10,200.00</td>
+               <td class="w-status"><span class="status-dot is-warning"></span>待发货</td>
+               <td class="w-time mono">2026-07-16 11:05</td>
+               <td class="w-remark cell-wrap">分两批发货,首批 5000 件,余量下周一交付</td>
+             </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0716-047">SO-2026-0716-047</td>
+              <td class="w-customer" title="无锡振华模具科技">无锡振华模具科技</td>
+              <td class="w-material" title="模架组件 A-100">模架组件 A-100</td>
+              <td class="w-num num">8</td>
+              <td class="w-price num">4,500.00</td>
+              <td class="w-amount num">36,000.00</td>
+              <td class="w-status"><span class="status-dot"></span>已发货</td>
+              <td class="w-time mono">2026-07-16 09:33</td>
+              <td class="w-remark cell-wrap">包含定制导柱,请收货后核对零件清单</td>
+            </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0715-061">SO-2026-0715-061</td>
+              <td class="w-customer" title="嘉兴天奇精密机械">嘉兴天奇精密机械</td>
+              <td class="w-material" title="铝合金外壳 C-77">铝合金外壳 C-77</td>
+              <td class="w-num num">600</td>
+              <td class="w-price num">58.00</td>
+              <td class="w-amount num">34,800.00</td>
+              <td class="w-status"><span class="status-dot is-success"></span>已完成</td>
+              <td class="w-time mono">2026-07-15 17:50</td>
+              <td class="w-remark cell-wrap">—</td>
+            </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0715-058">SO-2026-0715-058</td>
+              <td class="w-customer" title="苏州博远医疗器械">苏州博远医疗器械</td>
+              <td class="w-material" title="医用不锈钢管 φ8">医用不锈钢管 φ8</td>
+              <td class="w-num num">320</td>
+              <td class="w-price num">72.50</td>
+              <td class="w-amount num">23,200.00</td>
+              <td class="w-status"><span class="status-dot is-danger"></span>异常</td>
+              <td class="w-time mono">2026-07-15 15:12</td>
+              <td class="w-remark cell-wrap">物料短缺,需与采购确认补货时间后再回复交期</td>
+            </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0714-072">SO-2026-0714-072</td>
+              <td class="w-customer" title="南京凯瑞光电">南京凯瑞光电</td>
+              <td class="w-material" title="光学镜片组 50mm">光学镜片组 50mm</td>
+              <td class="w-num num">150</td>
+              <td class="w-price num">215.00</td>
+              <td class="w-amount num">32,250.00</td>
+              <td class="w-status"><span class="status-dot is-warning"></span>待审核</td>
+              <td class="w-time mono">2026-07-14 10:18</td>
+              <td class="w-remark cell-wrap">客户提供新版图纸,需技术部复核公差后再排产</td>
+            </tr>
+            <tr>
+              <td class="w-check row-check"><input type="checkbox" aria-label="选择该行"></td>
+              <td class="col-sticky w-order mono" title="SO-2026-0714-069">SO-2026-0714-069</td>
+              <td class="w-customer" title="上海浦东新区华盛机电">上海浦东新区华盛机电</td>
+              <td class="w-material" title="精密导轨 HGR25">精密导轨 HGR25</td>
+              <td class="w-num num">180</td>
+              <td class="w-price num">165.00</td>
+              <td class="w-amount num">29,700.00</td>
+              <td class="w-status"><span class="status-dot"></span>已发货</td>
+              <td class="w-time mono">2026-07-14 08:55</td>
+              <td class="w-remark cell-wrap">加急件,已通知仓库优先拣货并安排次日送达</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 场景 3:表单布局(§8.15) -->
+    <section aria-labelledby="form-label">
+      <div class="section-label" id="form-label">表单布局 · §8.15</div>
+      <div class="form-card">
+        <h2 class="form-card__title">新建订单</h2>
+        <p class="form-card__desc">字段按 label 长度混用 horizontal 与 vertical:短 label 同行,长 label 置顶;组件间 16px,区块间 32px。</p>
+
+        <!-- fieldset 1:horizontal 短 label(订单号 / 客户 / 物料) -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">订单基础信息</legend>
+          <div class="form-fields">
+
+            <div class="field field--horizontal">
+              <label class="field__label" for="f-order">订单号<span class="req">*</span></label>
+              <div class="field__control">
+                <input class="input" id="f-order" type="text" value="SO-2026-0718-003" placeholder="系统自动生成">
+              </div>
+            </div>
+
+            <div class="field field--horizontal">
+              <label class="field__label" for="f-customer">客户<span class="req">*</span></label>
+              <div class="field__control select-wrap">
+                <select class="select" id="f-customer">
+                  <option>苏州市恒达精密机械有限公司</option>
+                  <option>宁波鸿运汽配制造</option>
+                  <option>上海联晟电子科技</option>
+                  <option>杭州明远自动化设备</option>
+                  <option>常熟德昌五金制品</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field field--horizontal">
+              <label class="field__label" for="f-material">物料<span class="req">*</span></label>
+              <div class="field__control select-wrap">
+                <select class="select" id="f-material">
+                  <option>轴承座 6204-ZZ</option>
+                  <option>制动盘总成 D-4321</option>
+                  <option>PCB 主板 v3.2</option>
+                  <option>伺服电机 750W</option>
+                  <option>不锈钢螺栓 M8×30</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        </fieldset>
+
+        <!-- fieldset 2:vertical 长 label(需求数量 / 订单备注与交付要求) -->
+        <fieldset class="form-section">
+          <legend class="form-section__title">数量与交付说明</legend>
+          <div class="form-fields">
+
+            <div class="field">
+              <label class="field__label" for="f-qty">需求数量(件)<span class="req">*</span></label>
+              <div class="field__control">
+                <input class="input" id="f-qty" type="number" value="480">
+              </div>
+              <span class="field__hint">请输入本次订单的需求数量,单位为件;批量大于 5000 时建议拆分多单。</span>
+            </div>
+
+            <div class="field">
+              <label class="field__label" for="f-remark">订单备注与交付要求</label>
+              <div class="field__control">
+                <textarea class="textarea" id="f-remark" placeholder="客户要求周五前送达,需加盖防潮包装并附出厂检验报告……"></textarea>
+              </div>
+              <span class="field__hint">支持多行文本,最长 500 字;关键交付时间、包装、质检要求请明确写明。</span>
+            </div>
+
+          </div>
+        </fieldset>
+
+        <!-- form-actions:删除 danger 不设默认;取消在左、保存在右(primary) -->
+        <div class="form-actions">
+          <div class="form-actions__group">
+            <button class="btn btn--danger">删除订单</button>
+          </div>
+          <div class="form-actions__group">
+            <button class="btn btn--secondary">取消</button>
+            <button class="btn btn--primary">保存</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+</body>
+</html>
+
