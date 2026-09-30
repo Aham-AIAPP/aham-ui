@@ -1,0 +1,8 @@
+/* Quotation example only: long-form terms, attachments, private note. Shared structure is in ../workbench.css. */
+:where(.aham-workbench) .dq-private{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s1)}
+:where(.aham-workbench) .dq-terms-full{padding:var(--wb-s5) 0}
+:where(.aham-workbench) .dq-terms-full p{color:var(--wb-muted);line-height:1.75;margin-block:var(--wb-s2) var(--wb-s5)}
+:where(.aham-workbench) .dq-file{display:flex;align-items:center;gap:var(--wb-s3);padding:var(--wb-s4) 0;border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .dq-file>div{flex:1;min-width:0}
+:where(.aham-workbench) .dq-file strong{display:block;font-weight:500}
+:where(.aham-workbench) .dq-file span{color:var(--wb-muted)}

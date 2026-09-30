@@ -1,27 +1,27 @@
 /* Breakpoints are substituted from canonical tokens; CSS variables do not work in media conditions. */
 @media (max-width: {{workbench.formBreakpoint}}) {
- .aham-workbench .dq-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
+ .aham-workbench .wb-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width: {{workbench.contextBreakpoint}}) {
- .aham-workbench .dq-layout {grid-template-columns:1fr}
- .aham-workbench .dq-context {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--dq-s5)}
+ .aham-workbench .wb-layout {grid-template-columns:1fr}
+ .aham-workbench .wb-context {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s5)}
 }
 @media (max-width: {{workbench.mobileBreakpoint}}) {
  .aham-workbench,.aham-workbench.expanded {display:block}
- .aham-workbench .dq-rail {flex-direction:row;justify-content:space-between;padding:var(--dq-s2);border-bottom:1px solid var(--dq-line)}
- .aham-workbench .dq-rail-group {display:none}
- .aham-workbench .dq-rail-foot {margin:0;padding:0}
- .aham-workbench .dq-fields,.aham-workbench .dq-context,.aham-workbench .dq-bottom-info {grid-template-columns:1fr}
- .aham-workbench .dq-title,.aham-workbench .dq-line-heading,.aham-workbench .dq-footer {flex-wrap:wrap}
- .aham-workbench .dq-breadcrumb {height:auto;min-height:var(--dq-breadcrumb)}
- .aham-workbench .dq-breadcrumb>div {flex-wrap:wrap}
- .aham-workbench .dq-demo {display:none}
- .aham-workbench .dq-tabs {gap:var(--dq-s3)}
- .aham-workbench button,.aham-workbench input {min-height:var(--dq-touch)}
- .aham-workbench input,.aham-workbench textarea {font-size:var(--dq-s4)}
- .aham-workbench .dq-table {min-width:calc(var(--dq-table-min) + var(--dq-s8))}
+ .aham-workbench .wb-rail {flex-direction:row;justify-content:space-between;padding:var(--wb-s2);border-bottom:1px solid var(--wb-line)}
+ .aham-workbench .wb-nav-group {display:none}
+ .aham-workbench .wb-nav-foot {margin:0;padding:0}
+ .aham-workbench .wb-fields,.aham-workbench .wb-context,.aham-workbench .wb-doc-notes {grid-template-columns:1fr}
+ .aham-workbench .wb-page-head,.aham-workbench .wb-tabs-bar,.aham-workbench .wb-footer {flex-wrap:wrap}
+ .aham-workbench .wb-crumbs {height:auto;min-height:var(--wb-breadcrumb)}
+ .aham-workbench .wb-crumbs>div {flex-wrap:wrap}
+ .aham-workbench .wb-crumbs-meta {display:none}
+ .aham-workbench .wb-tabs {gap:var(--wb-s3)}
+ .aham-workbench button,.aham-workbench input {min-height:var(--wb-touch)}
+ .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-s4)}
+ .aham-workbench .wb-table {min-width:calc(var(--wb-table-min) + var(--wb-s8))}
 }
 @media (pointer:coarse) {
- .aham-workbench button,.aham-workbench input {min-height:var(--dq-touch);min-width:var(--dq-touch)}
- .aham-workbench input,.aham-workbench textarea {font-size:var(--dq-s4)}
+ .aham-workbench button,.aham-workbench input {min-height:var(--wb-touch);min-width:var(--wb-touch)}
+ .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-s4)}
 }

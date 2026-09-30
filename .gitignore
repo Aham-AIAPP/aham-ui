@@ -3,6 +3,8 @@
 .AppleDouble
 .LSOverride
 Icon?
+# macOS 默认不区分大小写，Icon? 会误伤 icons/ 目录，这里放回
+!icons/
 
 # Editors
 .vscode/

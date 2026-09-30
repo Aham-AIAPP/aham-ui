@@ -21,7 +21,7 @@
 
 | 区域 | Token / 规则 |
 |---|---|
-| 收起导航 / 展开导航 | `workbench.railWidth` 52px / `navWidth` 148px |
+| 收起导航 / 展开导航 | `workbench.railWidth` 52px / `navWidth` 148px；只用于工作台页面，应用轨和 content 网页用 `layout` 组 |
 | 面包屑 | `breadcrumbHeight` 40px，窄屏允许换行 |
 | 主内容 | `minmax(0,1fr)`，不用 content max-width 截断数据区 |
 | 右侧摘要 | `contextWidth` 240px；较预览加宽以容纳较大金额和 12px 文字 |
@@ -83,7 +83,9 @@
 
 ## 8. 实现与验收入口
 
-加载 `workbench.css`，根节点加 `.aham-workbench`；CSS 通过 `:where()` 隔离，断点覆盖来自生成文件。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，本例不下载字体；安装 Inter / JetBrains 或由产品合法自托管即可统一字形。
+加载 `workbench.css`，根节点加 `.aham-workbench`；CSS 通过 `:where()` 隔离，断点覆盖来自生成文件。
+
+类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，本例不下载字体；安装 Inter / JetBrains 或由产品合法自托管即可统一字形。
 
 四个组合契约：`workbench`、`document-form`、`editable-table`、`context-panel`。参考 [CRM 报价单](examples/crm-quotation.html)。基础组件聚合仍为兼容资产；本次恢复了 17 个预览的提取边界并去除页面脚手架污染，但不声称所有历史预览都已完成可访问性和 Token 改造。
 

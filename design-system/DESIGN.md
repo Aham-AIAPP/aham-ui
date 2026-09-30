@@ -373,7 +373,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 - **错误/通知** `.notice`:inline 置内容区顶部/就近;**错误三重指示**(红框 + 图标 + 文案,不靠颜色单独传达);toast(瞬态,移动端常在底部) vs inline(任务流内)。
 
 ### 8.8 内容密度
-- 三档 `[data-density]`:**comfortable**(行 44/控件 40/×1.25)/ **standard**(行 36/控件 32/×1,默认)/ **compact**(行 28/控件 28/×.75)。
+- 三档 `[data-density]`:**comfortable**(行 44/控件 40/×1.25)/ **standard**(行 36/控件 32/×1,默认)/ **compact**(行 32/控件 28/×.75,v7.0.2 由 28 校准为 32)。
 - **= 输入方式 × 宽度档**;**同页不混**;**触控/窄屏强制 comfortable** + 命中区放大。
 
 ### 8.9 预览模式 Preview（Quick Look 式,↔Apple Quick Look/Panels/Going full screen）
@@ -425,6 +425,14 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 - **长表单用 progressive disclosure 分步**:超 1 屏表单拆步骤(`.steps`)+ 每步保存;或用 `.accordion` 折叠非当前区。**为什么**:长表单一次铺满造成认知过载,分步降低单步负荷。
 - **破坏性操作不设默认按钮**:"删除/重置"用 danger 且不绑 `Return`;主操作"保存"绑 `Return`(守 §3.3/§8.6)。**为什么**:防回车误触破坏性操作;铁律。
 
+### 8.16 网页工作台与高密度业务单据（v7.1）
+
+网页轨细分 content 与 workbench。前文居中收口适用于 content；工作台全宽、内容左对齐，超宽时优先扩展数据区。完整规则见 [WORKBENCH.md](WORKBENCH.md)，属于本规范的正式扩展。
+
+C 风格保持 Aham 的颜色、字体、按钮圆角和状态表达，只增加业务工作台结构。紧凑行 32px；标准单行仍为 36px；两行详情模式 48px。触摸 / 窄屏控件至少 44px。数值来自 tokens.json；正文和输入不低于 12px。
+
+外框尺寸分两套，按轨道取用。`layout` 组（rail 60 / sidebar 264 / rightbar 340）用于应用轨和 content 网页；`workbench` 组用于 `.aham-workbench` 页面。两套不混用。
+
 ---
 
 ## 诚实声明(汇总边界)
@@ -435,9 +443,3 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 4. **tracking 未入 token**:字体特定,SF 值不适用 Inter,留待 Inter 实测/opsz 轴。
 5. **行为类规范需真实代码验证**:拖放完整交互、VoiceOver 实际朗读、焦点组键盘导航、Dynamic Type 实际缩放——规范给规则 + CSS 给视觉/媒体查询支持,**完整行为在阶段 6 于真实 React/Swift 落地验证**。
 6. **base 14px / 4 基网格是 Aham 自定**(桌面/数据密度;Apple 现行未官方规定 8pt 网格),非未对齐。
-
-## 8.12 网页工作台与高密度业务单据（v7.1）
-
-网页轨细分 content 与 workbench。前文居中收口适用于 content；工作台全宽、内容左对齐，超宽时优先扩展数据区。完整规则见 [WORKBENCH.md](WORKBENCH.md)，属于本规范的正式扩展。
-
-C 风格保持 Aham 的颜色、字体、按钮圆角和状态表达，只增加业务工作台结构。紧凑行 32px；标准单行仍为 36px；两行详情模式 48px。触摸 / 窄屏控件至少 44px。数值来自 tokens.json；正文和输入不低于 12px。

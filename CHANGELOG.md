@@ -1,19 +1,26 @@
 # Changelog 更新日志
 
-## 7.1.0 — 2026-09-30
-
-- 新增 C 风格 web-workbench 子模式：全宽壳、三列单据、32px 紧凑明细 / 48px 双行详情、响应式摘要。
-- 新增四个组合模式契约、WORKBENCH 规范、迁移规划和可运行 CRM 报价示例。
-- 增加 Token 生成与漂移校验、组件 CSS 提取器、金额和草稿恢复测试及 CI。
-- 修正消费顺序、表格 28/32px 冲突、状态 pill 描述和 dialog 全局按钮覆盖。旧页面默认布局保持不变，工作台显式启用。
-
 本项目所有重要变更记录于此。
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本 SemVer](https://semver.org/lang/zh-CN/)。
 单一事实源在 `tokens.json`，下游（DESIGN.md / aham-ui.css / Office）全部派生。
 
 ## [Unreleased]
+### 变更
+- 工作台通用类统一为 `wb-` 前缀、变量为 `--wb-`；报价单专用样式移到 `examples/crm-quotation.css`。报价示例外观不变（三种宽度、六种状态逐元素比对无差异）。
+- 新增 7.2 规划 `docs/workbench-7.2-plan.md`：列表页、侧面板、命令面板与快捷键，参考 Circle 的布局与交互。
 ### 修复
+- DESIGN.md §8.8 紧凑行高由 28 改为 32，与 tokens.json 一致；重复的 §8.12 工作台一节改为 §8.16。
+- 写明两套外框尺寸的分工：`layout` 组用于应用轨与 content 网页，`workbench` 组用于工作台。
+- `.gitignore` 的 `Icon?` 在 macOS 上误匹配 `icons/`，导致 `design-system/icons/` 从未进入 git；已加 `!icons/` 放回。
+- 新增 3 条回归测试：通用层不含页面专用类、示例引用的图标存在、DESIGN.md 行高与小节编号一致。
 - 全景页 `index.html` 顶栏版本徽章由硬编码 `v6.1` 改为**读取 `tokens.json` 动态显示**（离线兜底当前版本），并去掉 banner 示范里过时的具体版本文案——不再随发版过时。
+
+## [7.1.0] - 2026-09-30
+
+- 新增 C 风格 web-workbench 子模式：全宽壳、三列单据、32px 紧凑明细 / 48px 双行详情、响应式摘要。
+- 新增四个组合模式契约、WORKBENCH 规范、迁移规划和可运行 CRM 报价示例。
+- 增加 Token 生成与漂移校验、组件 CSS 提取器、金额和草稿恢复测试及 CI。
+- 修正消费顺序、表格 28/32px 冲突、状态 pill 描述和 dialog 全局按钮覆盖。旧页面默认布局保持不变，工作台显式启用。
 
 ## [7.0.2] - 2026-07-18
 
