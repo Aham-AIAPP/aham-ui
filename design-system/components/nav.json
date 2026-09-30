@@ -24,7 +24,7 @@
     "NOT blue — active state is monochrome",
     "Hover = subtle fill (rgba(20,20,20,0.04))",
     "Section headers = caption style (12px, ink-tertiary), uppercase or muted",
-    "Nav item height = 36px (standard density)",
+    "导航项高 36px（standard 密度），用于应用轨和 content 网页；网页工作台的导航项是 32px（token workbench.navItemHeight，WORKBENCH §2），两套按轨道取用，不混用（DESIGN §8.16）",
     "Icon size = 20px (--icon-size-md)",
     "Tab underline = 2px accent blue (#336EE8) on selected tab — the ONLY place blue appears in nav",
     "Tab text = ink-secondary default, ink-primary when selected"

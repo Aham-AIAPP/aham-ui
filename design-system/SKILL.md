@@ -1,6 +1,6 @@
 ---
 name: aham-design
-description: Use this skill to generate well-branded interfaces and assets for Aham — a developer-tool dashboard design system. Contains essential design guidelines, colors, type, fonts, and UI kit components for prototyping dashboard UIs.
+description: Use this skill to generate well-branded interfaces and assets for Aham — the design system for Aham's AI tools and for ToB business interfaces (web content pages, the web workbench for lists, records, documents and settings, macOS apps, Office files and email). Contains tokens, rules, component contracts, fonts, icons and reference CSS / JS.
 user-invocable: true
 ---
 

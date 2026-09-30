@@ -93,7 +93,7 @@
 :where(.aham-workbench) .wb-find input{background:transparent;width:100%;min-width:0;border:0;padding:var(--wb-s1)}
 :where(.aham-workbench) .wb-table-scroll{overflow-x:auto;max-width:100%}
 :where(.aham-workbench) .wb-table{width:100%;min-width:var(--wb-table-min);border-collapse:collapse;table-layout:fixed}
-:where(.aham-workbench) .wb-table th{font-weight:500;color:var(--wb-muted);text-align:start;background:var(--wb-panel);height:var(--wb-s6);white-space:nowrap}
+:where(.aham-workbench) .wb-table th{font-weight:500;color:var(--wb-muted);text-align:start;background:var(--wb-bg);height:var(--wb-row);white-space:nowrap}
 :where(.aham-workbench) .wb-table :is(th,td){padding:0 var(--wb-s2);border-bottom:1px solid var(--wb-line)}
 :where(.aham-workbench) .wb-table td{height:var(--wb-row);vertical-align:middle;white-space:nowrap}
 :where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-panel)}
@@ -198,14 +198,17 @@
 :where(.aham-workbench) .wb-toggle-chips{display:flex;flex-wrap:wrap;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-toggle-chip{height:var(--wb-s5);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius-pill);background:transparent;box-shadow:inset 0 0 0 1px var(--wb-line);color:var(--wb-muted);font-size:var(--wb-body)}
 :where(.aham-workbench) .wb-toggle-chip[aria-pressed=true]{background:var(--wb-selected);box-shadow:none;color:var(--wb-ink)}
-:where(.aham-workbench) .wb-list-table thead th{position:sticky;top:0;z-index:2}
-:where(.aham-workbench) .wb-list-table td{height:var(--wb-row-list)}
-:where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-table td{height:var(--wb-row)}
+/* List rows: header, group rows and data rows share one height (DESIGN §8.13); the header has no fill of its own (DESIGN §0) and
+   uses the content surface only so that it covers rows scrolling beneath it. */
+:where(.aham-workbench) .wb-list-table{--wb-list-row:var(--wb-row-list)}
+:where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-table{--wb-list-row:var(--wb-row)}
+:where(.aham-workbench) .wb-list-table thead th{position:sticky;top:0;z-index:2;height:var(--wb-list-row)}
+:where(.aham-workbench) .wb-list-table td{height:var(--wb-list-row)}
 :where(.aham-workbench) .wb-list-table tr[data-selected] td{background:var(--wb-selected)}
 :where(.aham-workbench) .wb-list-table :is(th,td).wb-check{padding:0;text-align:center}
 :where(.aham-workbench) .wb-check-hit{display:grid;place-items:center;min-height:calc(var(--wb-row) - 1px);cursor:pointer}
 :where(.aham-workbench) .wb-list-table input[type=checkbox]{display:inline-block;width:auto;height:auto;margin:0;padding:0;border:0;appearance:auto;accent-color:var(--wb-ink);vertical-align:middle}
-:where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-s6);z-index:1;height:var(--wb-row-list);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-list-row);z-index:1;height:var(--wb-list-row);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-group-toggle{display:inline-flex;align-items:center;gap:var(--wb-s2);height:var(--wb-header-control);padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;font-weight:500}
 :where(.aham-workbench) .wb-group-toggle:hover{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-group-toggle svg{transition:transform var(--wb-fast) var(--wb-ease)}

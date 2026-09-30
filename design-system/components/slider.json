@@ -19,19 +19,19 @@
   },
   "structurePatterns": [
     "Track = 4px height, tier3-line (#E7E7E7) background",
-    "Fill (before knob) = accent blue (#336EE8)",
+    "圆钮之前的填充 = 墨色（ink-primary），与进度条一致；不用蓝色",
     "Knob = circular, 16px diameter, white fill, flat (no shadow)",
     "Knob border = 1.5px tier3-line",
     "Active knob = subtle panel gray (#F3F3F3)"
   ],
   "usageHints": [
     "Use for adjustable numeric values where precision is secondary",
-    "Blue fill before the knob is acceptable — it's a thin track indicator",
+    "填充用墨色；蓝色只用于焦点环",
     "Show current value label above knob when available"
   ],
   "doNotInvent": [
     "Large/thick knob shadows — Aham is flat",
-    "Colored slider tracks other than blue",
+    "彩色或蓝色的滑块轨道",
     "Tick marks without explicit requirement"
   ],
   "unknowns": ["Range slider (dual knob) pattern"]

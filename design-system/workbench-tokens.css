@@ -170,7 +170,7 @@
  .aham-workbench .wb-chip {flex:none;height:var(--wb-touch)}
  .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
  .aham-workbench {--wb-check-col:var(--wb-touch)}
- .aham-workbench .wb-list-table td {height:var(--wb-touch)}
+ .aham-workbench .wb-list-table,.aham-workbench .wb-list[data-list-density] .wb-list-table {--wb-list-row:var(--wb-touch)}
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
  .aham-workbench .wb-toasts {left:var(--wb-s4);right:var(--wb-s4);width:auto}
  .aham-workbench :is(.wb-palette,.wb-create) {margin-top:var(--wb-s4)}
@@ -178,7 +178,7 @@
 @media (pointer:coarse) {
  .aham-workbench button,.aham-workbench input:not([type=checkbox],[type=radio]) {min-height:var(--wb-touch);min-width:var(--wb-touch)}
  .aham-workbench {--wb-check-col:var(--wb-touch)}
- .aham-workbench .wb-list-table td {height:var(--wb-touch)}
+ .aham-workbench .wb-list-table,.aham-workbench .wb-list[data-list-density] .wb-list-table {--wb-list-row:var(--wb-touch)}
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
  .aham-workbench .wb-seg.sm {height:auto}
  .aham-workbench .wb-chip {height:var(--wb-touch)}

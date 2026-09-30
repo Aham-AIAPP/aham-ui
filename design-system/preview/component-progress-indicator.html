@@ -20,7 +20,7 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 /* @component-css-start */
 .linear-progress { width: 240px; }
 .linear-track { height: 4px; background: var(--color-surface-line); border-radius: var(--radius-pill); overflow: hidden; position: relative; width: 100%; }
-.linear-fill { height: 100%; background: var(--color-accent); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
+.linear-fill { height: 100%; background: var(--color-ink-primary); border-radius: var(--radius-pill); transition: width var(--duration-base) var(--ease-standard); }
 .linear-indeterminate .linear-fill { width: 40%; animation: linear-indeterminate 1.4s var(--ease-standard) infinite; }
 @keyframes linear-indeterminate {
   0% { transform: translateX(-100%); }
@@ -28,7 +28,7 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 }
 .circular-progress { display: inline-flex; align-items: center; justify-content: center; }
 .circular-track { fill: none; stroke: var(--color-surface-line); stroke-width: 3; }
-.circular-fill { fill: none; stroke: var(--color-accent); stroke-width: 3; stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset var(--duration-base) var(--ease-standard); }
+.circular-fill { fill: none; stroke: var(--color-ink-primary); stroke-width: 3; stroke-linecap: round; transform: rotate(-90deg); transform-origin: center; transition: stroke-dashoffset var(--duration-base) var(--ease-standard); }
 .circular-indeterminate .circular-fill { animation: circular-rotate 1.2s linear infinite; stroke-dasharray: 80; stroke-dashoffset: 80; }
 @keyframes circular-rotate {
   0% { transform: rotate(-90deg); }

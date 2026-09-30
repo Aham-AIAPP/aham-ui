@@ -69,6 +69,7 @@ const LEGACY_COLORS = {
   'aham-success': 'color.semantic.success', 'aham-success-bg': 'color.semantic.success-bg', 'aham-warning': 'color.semantic.warning', 'aham-warning-bg': 'color.semantic.warning-bg',
   'aham-danger': 'color.semantic.danger', 'aham-danger-bg': 'color.semantic.danger-bg', 'aham-fill-hover': 'color.fill.hover', 'aham-fill-active': 'color.fill.active',
   'color-focus-ring': 'color.alias.focus-ring', 'color-overlay': 'color.alias.overlay', 'focus-ring-color': 'focusRing.color',
+  'color-action-bg': 'color.alias.action-bg', 'color-action-bg-hover': 'color.alias.action-bg-hover',
 };
 const LEGACY_ROOT = {
   ...LEGACY_COLORS,

@@ -66,6 +66,9 @@
   --color-focus-ring:        rgba(51,110,232,0.20);
   --color-overlay:           rgba(20,20,20,0.28);
   --color-ink-on-accent:     var(--aham-ink-on-accent);
+  /* 主按钮底色，亮暗一致（tokens color.alias.action-bg），暗色块不覆盖 */
+  --color-action-bg:         #164EC3;
+  --color-action-bg-hover:   #336EE8;
 
   /* ─── spacing ──────────────────────────────────────────────────── */
   --space-0:                 0;
@@ -216,7 +219,6 @@
   --ui-surface:              var(--aham-surface-tier1);
   --ui-panel:                var(--aham-surface-tier2);
   --ui-border:               var(--aham-surface-tier3);
-  --ui-border-light:         var(--aham-surface-tier2);
   --accent-blue:             var(--aham-accent-default);
   --accent-red:              var(--aham-danger);
   --accent-green:            var(--aham-success);

@@ -23,7 +23,7 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 .aham-table thead th.num { text-align: end; font-family: var(--font-mono); }
 .aham-table tbody td { font-family: var(--font-sans); font-size: var(--aham-typography-fontSize-base); font-weight: var(--aham-typography-fontWeight-regular); color: var(--color-ink-primary); padding: 0 var(--space-3); height: 36px; border-bottom: 1px solid var(--color-border); }
 .aham-table tbody td.num { text-align: end; font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-.aham-table tbody tr:hover td { background: var(--color-fill-hover); transition: background .15s; }
+.aham-table tbody tr:hover td { background: var(--color-fill-hover); transition: background var(--duration-fast); }
 .aham-table tbody tr.selected td { background: var(--color-bg-selected); }
 .aham-table thead th.sort { cursor: pointer; user-select: none; }
 .aham-table thead th.sort::after { content: ''; display: inline-block; width: 0; height: 0; margin-inline-start: 4px; vertical-align: middle; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 4px solid var(--color-ink-tertiary); }

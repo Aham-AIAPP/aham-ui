@@ -126,12 +126,16 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:Inter Variable 自带�
 | 网页 / Office / 邮件 | **Lucide**(内联 SVG + `<use>` 雪碧图;邮件不支持则 PNG 回退) |
 | macOS app | **SF Symbols** 按名引用(`Image(systemName:)`,苹果原生;**不导出、不入库**;后续落地) |
 
-**用法**:`<svg class="icon"><use href="icons/aham-icons.svg#i-search"/></svg>`(`.icon--sm/--lg` 换档)。**命名**:语义名稳定(`i-success`),底层 Lucide 名记录在 `icons/icons.json`(51 起始件,含 `sfSymbol` 预留列)——换源不动业务名。**状态图标**必须配文字(守 §1.8 不靠颜色单独传达);**纯图标按钮**必须有 `aria-label`(守 §1.8 VoiceOver)。
+**用法**:`<svg class="icon"><use href="icons/aham-icons.svg#i-search"/></svg>`(`.icon--sm/--lg` 换档)。**命名**:语义名稳定(`i-success`),底层 Lucide 名记录在 `icons/icons.json`(现有 53 件,含 `sfSymbol` 预留列)——换源不动业务名。**状态图标**必须配文字(守 §1.8 不靠颜色单独传达);**纯图标按钮**必须有 `aria-label`(守 §1.8 VoiceOver)。
 
 > 图标来自 [Lucide](https://lucide.dev)(ISC),许可全文见 `icons/LICENSE`。SF Symbols 版权属 Apple,仅可用于苹果平台 App 及其 mockup,**不纳入本 MIT 仓库**。
 
 ### 1.7 动效
 服务反馈不表演,默认不动。时长:fast .12s / base .18s / slow .28s。缓动 `cubic-bezier(.2,0,0,1)`。禁循环/弹跳/视差/>.3s。
+
+**时长只取三档 token**:CSS 写 `var(--dur-fast)` 等变量,不写 .15s 这类档外值。悬停、勾选、开关、箭头旋转用 fast;面板展开、宽度变化用 base;大面积进出用 slow。
+
+**加载反馈例外**:spinner、骨架屏 `.skeleton`、不确定进度条 `.progress.is-indeterminate` 可以循环播放。它们表示「还在处理」,属于 §4 加载分级里的必要反馈。例外只限这三种,装饰性循环仍然禁止。它们的循环周期(现为 .6–1.4s)不受 .3s 上限和三档时长的约束。按钮 `.is-loading` 里的 spinner 和图片占位 `.image-box.loading` 分别算 spinner 和骨架屏。系统开启减少动态效果时,动画只播一次且时长接近 0,见下一段。
 
 **Reduce Motion 响应(↔Apple)**:`prefers-reduced-motion:reduce` 时,缩放/滑动/旋转**替换为 dissolve/淡入淡出**或直接切换(无过渡);禁视差与自动播放。**CSS 已实现该媒体查询**。
 
@@ -150,6 +154,8 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:Inter Variable 自带�
 
 ### 1.9 内容文案
 语气克制直接不夸张;术语全系统一致;按钮用动词;空状态一句+一出路;错误说"发生什么+怎么办";数字格式统一(千分位/时间 `2026-06-19`/百分比位数一致)。
+
+**确认弹窗**:标题写动作和对象(「删除 3 条记录」),正文写后果(「删除后无法恢复」),标题和正文都不用问句(不写「确定要删除吗?」)。按钮文字与标题的动词一致。
 
 **文案体系(↔Apple Writing / Inclusion)**:按钮/菜单**动词开头**;正文第二人称("你");避免行话与带性别/文化偏见措辞;西文标题式 vs 句首大写保持一致;**空白屏必须给下一步动作 + 按钮/链接**(不只"暂无数据")。
 

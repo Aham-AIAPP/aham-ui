@@ -24,7 +24,7 @@
     "Radius = sm (6px)",
     "Arrow = 4px triangle pointing to the attached element",
     "Max width = 240px",
-    "Appears on hover with 0.3s delay"
+    "悬停 500ms 后出现，键盘聚焦时立即出现（WORKBENCH §12.7，workbench.js 的 TOOLTIP_DELAY）"
   ],
   "usageHints": [
     "Use for icon-only buttons to describe the action",
@@ -36,5 +36,5 @@
     "Tooltips on mobile (use visible labels instead)",
     "Rich content tooltips (HTML or images)"
   ],
-  "unknowns": ["Tooltip delay customization"]
+  "unknowns": []
 }
