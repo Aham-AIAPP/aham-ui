@@ -1,0 +1,372 @@
+{
+  "$meta": {
+    "source": "Lucide",
+    "license": "ISC",
+    "version": "lucide-static 1.24.0",
+    "grid": 24,
+    "strokeWidth": 2,
+    "style": "outline / round cap+join",
+    "color": "currentColor(继承 ink token)",
+    "usage": "<svg class=\"icon\"><use href=\"icons/aham-icons.svg#i-search\"/></svg>",
+    "note": "语义名 → Lucide 名;sfSymbol 预留(macOS app 轨后续按名映射,本轮未落地)。web/Office/邮件三轨用本集。"
+  },
+  "icons": [
+    {
+      "name": "search",
+      "lucide": "search",
+      "category": "通用",
+      "usage": "搜索框 / 工具栏搜索",
+      "sfSymbol": null
+    },
+    {
+      "name": "filter",
+      "lucide": "filter",
+      "category": "通用",
+      "usage": "筛选 / 过滤",
+      "sfSymbol": null
+    },
+    {
+      "name": "close",
+      "lucide": "x",
+      "category": "通用",
+      "usage": "关闭 / 清除 / 移除标签",
+      "sfSymbol": null
+    },
+    {
+      "name": "check",
+      "lucide": "check",
+      "category": "通用",
+      "usage": "确认 / 完成 / 选中标记",
+      "sfSymbol": null
+    },
+    {
+      "name": "plus",
+      "lucide": "plus",
+      "category": "通用",
+      "usage": "新增 / 添加",
+      "sfSymbol": null
+    },
+    {
+      "name": "minus",
+      "lucide": "minus",
+      "category": "通用",
+      "usage": "减少 / 折叠",
+      "sfSymbol": null
+    },
+    {
+      "name": "menu",
+      "lucide": "menu",
+      "category": "通用",
+      "usage": "汉堡菜单 / 更多导航",
+      "sfSymbol": null
+    },
+    {
+      "name": "more",
+      "lucide": "ellipsis",
+      "category": "通用",
+      "usage": "更多操作(横向省略)",
+      "sfSymbol": null
+    },
+    {
+      "name": "settings",
+      "lucide": "settings",
+      "category": "通用",
+      "usage": "设置 / 偏好",
+      "sfSymbol": null
+    },
+    {
+      "name": "edit",
+      "lucide": "pencil",
+      "category": "通用",
+      "usage": "编辑 / 重命名",
+      "sfSymbol": null
+    },
+    {
+      "name": "trash",
+      "lucide": "trash-2",
+      "category": "通用",
+      "usage": "删除(破坏性,须配确认)",
+      "sfSymbol": null
+    },
+    {
+      "name": "copy",
+      "lucide": "copy",
+      "category": "通用",
+      "usage": "复制",
+      "sfSymbol": null
+    },
+    {
+      "name": "link",
+      "lucide": "link",
+      "category": "通用",
+      "usage": "链接 / 复制链接",
+      "sfSymbol": null
+    },
+    {
+      "name": "external",
+      "lucide": "external-link",
+      "category": "通用",
+      "usage": "新窗口打开 / 外链",
+      "sfSymbol": null
+    },
+    {
+      "name": "refresh",
+      "lucide": "refresh-cw",
+      "category": "通用",
+      "usage": "刷新 / 重试",
+      "sfSymbol": null
+    },
+    {
+      "name": "eye",
+      "lucide": "eye",
+      "category": "通用",
+      "usage": "显示 / 预览",
+      "sfSymbol": null
+    },
+    {
+      "name": "eye-off",
+      "lucide": "eye-off",
+      "category": "通用",
+      "usage": "隐藏 / 遮蔽密码",
+      "sfSymbol": null
+    },
+    {
+      "name": "lock",
+      "lucide": "lock",
+      "category": "通用",
+      "usage": "锁定 / 私密 / 认证",
+      "sfSymbol": null
+    },
+    {
+      "name": "download",
+      "lucide": "download",
+      "category": "通用",
+      "usage": "下载 / 导出",
+      "sfSymbol": null
+    },
+    {
+      "name": "upload",
+      "lucide": "upload",
+      "category": "通用",
+      "usage": "上传 / 导入",
+      "sfSymbol": null
+    },
+    {
+      "name": "chevron-down",
+      "lucide": "chevron-down",
+      "category": "方向",
+      "usage": "展开 / 下拉",
+      "sfSymbol": null
+    },
+    {
+      "name": "chevron-up",
+      "lucide": "chevron-up",
+      "category": "方向",
+      "usage": "收起 / 上滚",
+      "sfSymbol": null
+    },
+    {
+      "name": "chevron-left",
+      "lucide": "chevron-left",
+      "category": "方向",
+      "usage": "上一项 / 返回",
+      "sfSymbol": null
+    },
+    {
+      "name": "chevron-right",
+      "lucide": "chevron-right",
+      "category": "方向",
+      "usage": "进入 / 下一项 / 列表项箭头",
+      "sfSymbol": null
+    },
+    {
+      "name": "arrow-left",
+      "lucide": "arrow-left",
+      "category": "方向",
+      "usage": "后退",
+      "sfSymbol": null
+    },
+    {
+      "name": "arrow-right",
+      "lucide": "arrow-right",
+      "category": "方向",
+      "usage": "前进 / 提交流转",
+      "sfSymbol": null
+    },
+    {
+      "name": "info",
+      "lucide": "info",
+      "category": "状态",
+      "usage": "信息提示",
+      "sfSymbol": null
+    },
+    {
+      "name": "success",
+      "lucide": "circle-check",
+      "category": "状态",
+      "usage": "成功(须配文字,不靠颜色单独传达)",
+      "sfSymbol": null
+    },
+    {
+      "name": "warning",
+      "lucide": "triangle-alert",
+      "category": "状态",
+      "usage": "警告(须配文字)",
+      "sfSymbol": null
+    },
+    {
+      "name": "error",
+      "lucide": "circle-x",
+      "category": "状态",
+      "usage": "错误(须配文字)",
+      "sfSymbol": null
+    },
+    {
+      "name": "help",
+      "lucide": "circle-help",
+      "category": "状态",
+      "usage": "帮助 / 说明",
+      "sfSymbol": null
+    },
+    {
+      "name": "play",
+      "lucide": "play",
+      "category": "媒体与对话",
+      "usage": "播放(player)",
+      "sfSymbol": null
+    },
+    {
+      "name": "pause",
+      "lucide": "pause",
+      "category": "媒体与对话",
+      "usage": "暂停(player)",
+      "sfSymbol": null
+    },
+    {
+      "name": "mic",
+      "lucide": "mic",
+      "category": "媒体与对话",
+      "usage": "录音 / 语音输入",
+      "sfSymbol": null
+    },
+    {
+      "name": "send",
+      "lucide": "send",
+      "category": "媒体与对话",
+      "usage": "发送(对话输入 composer)",
+      "sfSymbol": null
+    },
+    {
+      "name": "attachment",
+      "lucide": "paperclip",
+      "category": "媒体与对话",
+      "usage": "附件(attachment 卡)",
+      "sfSymbol": null
+    },
+    {
+      "name": "file",
+      "lucide": "file",
+      "category": "媒体与对话",
+      "usage": "文件 / 文稿",
+      "sfSymbol": null
+    },
+    {
+      "name": "folder",
+      "lucide": "folder",
+      "category": "媒体与对话",
+      "usage": "文件夹 / 归档",
+      "sfSymbol": null
+    },
+    {
+      "name": "user",
+      "lucide": "user",
+      "category": "账户与导航",
+      "usage": "个人 / 头像占位",
+      "sfSymbol": null
+    },
+    {
+      "name": "users",
+      "lucide": "users",
+      "category": "账户与导航",
+      "usage": "团队 / 多人 / 说话人",
+      "sfSymbol": null
+    },
+    {
+      "name": "bell",
+      "lucide": "bell",
+      "category": "账户与导航",
+      "usage": "通知",
+      "sfSymbol": null
+    },
+    {
+      "name": "mail",
+      "lucide": "mail",
+      "category": "账户与导航",
+      "usage": "邮件(邮件轨)",
+      "sfSymbol": null
+    },
+    {
+      "name": "calendar",
+      "lucide": "calendar",
+      "category": "账户与导航",
+      "usage": "日期 / 日程",
+      "sfSymbol": null
+    },
+    {
+      "name": "clock",
+      "lucide": "clock",
+      "category": "账户与导航",
+      "usage": "时间 / 时长(配 mono 时间码)",
+      "sfSymbol": null
+    },
+    {
+      "name": "home",
+      "lucide": "house",
+      "category": "账户与导航",
+      "usage": "首页",
+      "sfSymbol": null
+    },
+    {
+      "name": "globe",
+      "lucide": "globe",
+      "category": "账户与导航",
+      "usage": "语言 / 站点 / 国际化",
+      "sfSymbol": null
+    },
+    {
+      "name": "log-out",
+      "lucide": "log-out",
+      "category": "账户与导航",
+      "usage": "退出登录",
+      "sfSymbol": null
+    },
+    {
+      "name": "star",
+      "lucide": "star",
+      "category": "其它",
+      "usage": "收藏 / 评分",
+      "sfSymbol": null
+    },
+    {
+      "name": "bookmark",
+      "lucide": "bookmark",
+      "category": "其它",
+      "usage": "书签 / 标记",
+      "sfSymbol": null
+    },
+    {
+      "name": "sun",
+      "lucide": "sun",
+      "category": "其它",
+      "usage": "亮色模式",
+      "sfSymbol": null
+    },
+    {
+      "name": "moon",
+      "lucide": "moon",
+      "category": "其它",
+      "usage": "暗色模式",
+      "sfSymbol": null
+    }
+  ]
+}
