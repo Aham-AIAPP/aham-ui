@@ -180,6 +180,7 @@ code{font-family:var(--font-mono);font-size:.92em}
 /* 10 Rules */
 .pano-rules{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:0 24px}
 .pano-rules li{display:grid;grid-template-columns:28px minmax(0,1fr);align-content:start;gap:2px 8px;padding:16px 0;border-top:1px solid var(--line)}
+.pano-card-head:has(+ .pano-rules){margin-bottom:0;padding-bottom:4px;border-bottom:0}
 .pano-rules .n{grid-row:span 2;padding-top:3px;font:12px var(--font-mono);color:var(--ink-3)}
 .pano-rules strong{font-size:14px;font-weight:600;color:var(--ink)}
 .pano-rules p{margin:0;font-size:13px;line-height:1.55;color:var(--ink-2)}
