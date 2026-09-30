@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [7.2.1] - 2026-09-30
+
+> **次级按钮统一与仓库清理**：工作台次级按钮改为与基础层相同的白底描边，WORKBENCH 新增两层组件对照表；移除误提交的设计库镜像，归档调研诊断文档。
+
 ### 新增
 - WORKBENCH §8 新增两层组件对照表：主按钮、次级按钮、文字按钮、危险按钮、分段控件、标签、焦点在基础层与工作台的类名和共同写法。
 - 归档 v7.0.2 的排版布局调研诊断到 `docs/排版布局规范-调研诊断.md`。
@@ -158,7 +162,8 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.2.0...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.2.1...HEAD
+[7.2.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.1
 [7.2.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.0
 [7.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.1.0
 [7.0.2]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.0.2
