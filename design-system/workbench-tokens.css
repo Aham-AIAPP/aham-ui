@@ -17,7 +17,6 @@
   --wb-row-detail: 48px;
   --wb-rail: 52px;
   --wb-nav: 240px;
-  --wb-context: 240px;
   --wb-table-min: 680px;
   --wb-label: 72px;
   --wb-dot: 6px;
@@ -36,7 +35,6 @@
   --wb-z-nav: 400;
   --wb-z-scrim: 300;
   --wb-bp-context: 64rem;
-  --wb-bp-mobile: 40rem;
   --wb-fast: 0.12s;
   --wb-ease: cubic-bezier(.2,0,0,1);
   --wb-pop-min: 200px;

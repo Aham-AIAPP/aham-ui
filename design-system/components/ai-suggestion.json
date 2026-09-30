@@ -1,0 +1,64 @@
+{
+  "slug": "ai-suggestion",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-ai.html",
+  "reference": "examples/record-detail.html",
+  "intent": "字段级 AI 建议：建议值 + 依据，采纳或忽略",
+  "specification": "WORKBENCH.md §14.4",
+  "api": "showSuggestion(anchor, { key, label, value, reason?, onAccept, onDismiss? }) → { remove } | null",
+  "variantDimensions": [
+    {
+      "axis": "reason",
+      "values": [
+        "with-reason",
+        "value-only"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "note",
+      "marker",
+      "value",
+      "reason",
+      "accept",
+      "dismiss"
+    ],
+    "required": [
+      "note",
+      "value",
+      "accept",
+      "dismiss"
+    ]
+  },
+  "markup": {
+    "note": "<div class=\"wb-ai-suggest\" role=\"note\" aria-label=\"AI 建议把阶段改为商务谈判\"><svg aria-hidden=\"true\"><use href=\"icons/aham-icons.svg#i-ai\"/></svg><span>建议：<strong>商务谈判</strong></span><span class=\"wb-ai-reason\">依据：最近一次跟进已约定现场调研</span><span class=\"wb-ai-suggest-actions\"><button class=\"wb-btn sm ghost\">采纳</button><button class=\"wb-btn sm ghost\">忽略</button></span></div>"
+  },
+  "rules": [
+    "放在对应字段下方，一页一次只显示一条",
+    "建议不自动填入字段",
+    "采纳走和手动修改相同的路径：立即生效、提示条确认并可撤销",
+    "忽略后本页不再提示同一个值",
+    "只在用户开启 AI 后出现"
+  ],
+  "states": [
+    "shown",
+    "accepted",
+    "dismissed"
+  ],
+  "keyboard": [
+    "采纳 / 忽略可 Tab 到达，操作后焦点回到字段"
+  ],
+  "accessibility": [
+    "role=\"note\"，可访问名写明字段与建议值"
+  ],
+  "doNotInvent": [
+    "一次列出多条建议",
+    "自动替换字段值",
+    "蓝色或彩色的建议标签"
+  ]
+}

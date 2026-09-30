@@ -2,7 +2,7 @@
   "$meta": {
     "source": "Lucide",
     "license": "ISC",
-    "version": "lucide-static 1.24.0",
+    "version": "lucide-static 1.24.0；ai / stop 两件取自 lucide-react 1.16.0（同为 ISC）",
     "grid": 24,
     "strokeWidth": 2,
     "style": "outline / round cap+join",
@@ -366,6 +366,20 @@
       "lucide": "moon",
       "category": "其它",
       "usage": "暗色模式",
+      "sfSymbol": null
+    },
+    {
+      "name": "ai",
+      "lucide": "sparkles",
+      "category": "AI",
+      "usage": "AI 生成内容的标记 / 问 AI 入口",
+      "sfSymbol": null
+    },
+    {
+      "name": "stop",
+      "lucide": "circle-stop",
+      "category": "AI",
+      "usage": "停止生成",
       "sfSymbol": null
     }
   ]

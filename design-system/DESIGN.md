@@ -6,11 +6,11 @@
 
 **八层结构**:0 原则 · 1 基础(含国际化/RTL、隐私) · 2 控件与组件 · 3 组合规则 · 4 模式 · 5 介质落地 · 6 输入 · 7 系统支撑 · **8 页面布局体系(v6.0 新增)**。
 
-**版本 v7.2**——网页工作台扩展：外框与 40px 页眉横条、列表与筛选、列表键盘与记录详情、命令面板与快捷键、设置页，规则见 `WORKBENCH.md` §2、§9–13；颜色字体沿用本规范，布局交互照 Circle / Linear。
+**版本 v7.2**——网页工作台扩展：外框与 40px 页眉横条、列表与筛选、列表键盘与记录详情、命令面板与快捷键、设置页、AI 协作，规则见 `WORKBENCH.md` §2、§9–14；颜色字体沿用本规范，布局交互照 Circle / Linear。
 
 **版本 v7.0**——仓库重构:完整设计系统移入 `design-system/`(采用组件库 / skill 打包格式,17 组件契约 + 就地预览 + dashboard,更利于 AI 消费);§1.6 图标落地为具体集 **Lucide(ISC)** 51 件(分轨:web/Office/邮件 = Lucide,macOS app = SF Symbols 按名,后续)。纯结构 + 图标补充,八层结构与 token 值不变。
 
-**版本 v6.1**——第 2 层新增 **2.9 媒体与对话**(纳入自 AhamVoice 的 9 个招牌自创件:媒体播放器/逐句转写+说话人标记/正文排版/对话输入/附件卡/头像/侧栏三槽/认证壳/表单分组),CSS 进 `aham-ui.css` 第 9 节,示范 `examples/media.html`;**纯追加,八层结构与既有类不动**。同时全景展示页重建为手写可维护版(含右侧目录、汇总布局示范)。
+**版本 v6.1**——第 2 层新增 **2.9 媒体与对话**(纳入自 AhamVoice 的 9 个招牌自创件:媒体播放器/逐句转写+说话人标记/正文排版/对话输入/附件卡/头像/侧栏三槽/认证壳/表单分组),CSS 进 `aham-ui.css` 第 9 节,示范见全景页 `index.html` 的「基础组件 · 2.9」;**纯追加,八层结构与既有类不动**。同时全景展示页重建为手写可维护版(含右侧目录、汇总布局示范)。
 
 **版本 v6.0**——新增**第 8 层 页面布局体系**:把页面级布局从"散在 examples 的事实约定"升为成文规则,且**按落地介质分四轨**(网页/应用/Office/邮件)。覆盖:页面骨架与页型(Canonical Layouts)、页眉、搜索筛选、状态(空/加载/错误/骨架)、预览模式、内容密度、容器查询、弹窗按钮顺序、i18n-RTL 布局、z-index 阶梯、打印。补齐两轮调研(Apple HIG + 业内横扫 Material/Carbon/Ant/Polaris/Fluent/GOV.UK 等)缺口约 22 项。**断点改为网页 rem 为单一事实源、应用 dp 派生**(废止 v5 的 sm380/md860/lg1280)。
 此前:v5.1 清理 15 个旧/重复类;v5.0 对照 Apple HIG 完整性审计补全 30 项(Dynamic Type、Differentiate Without Color、VoiceOver、Drag and drop、Loading 分级、标准快捷键、焦点组、RTL、隐私等)。
@@ -227,7 +227,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
   - **仅浮层有阴影;同心圆角。**
   - 示范:`examples/overlays.html`。
 - **2.8 布局容器**:外壳/栅格/堆叠/分隔/分割/滚动区。间距走 spacing scale。
-- **2.9 媒体与对话 Media & Conversation(v6.1,纳入自 AhamVoice)**:CSS 见 `aham-ui.css` 第 9 节,示范 `examples/media.html`。
+- **2.9 媒体与对话 Media & Conversation(v6.1,纳入自 AhamVoice)**:CSS 见 `aham-ui.css` 第 9 节,示范见全景页 `index.html` 的「基础组件 · 2.9」。
   - **媒体播放器 `.player` / `.player--mini`**:结构 `.player`(flex)= `.icon-btn`(播放/暂停)+ `.player__wave`(波形)+ `.player__time`(mono 时间码,`.sep` 分隔)。**波形=灰阶 `--ink-4` + 已播放段一抹蓝 `--accent` + 播放头 `.ph`**(落实 §2.5 既有"音频=灰阶波形+一抹蓝");波形 `role="slider"` 可聚焦带焦点环;`--mini` 矮档(卡片内试听)。约束:时间用 mono、蓝只染已播放段、波形不堆色。
   - **逐句转写 `.transcript` + 说话人标记原子 `.speaker-marker`**:`.transcript__row`(grid:时间 mono | 说话人+文本),当前播放句 `.is-current` = **扁平灰**高亮(非蓝)。`.speaker-marker--s0..s5` **用形状区分类别(●■◆○□▬),不靠颜色**——单蓝体系表达多类别的范式,可复用到任何多类别场景。约束:类别区分必须形状/字母,灰度走查须可辨。
   - **正文排版 `.prose`**:长文产物(纪要/逐字稿)排版,继承既有 token。约束:**行宽 = `--read-max`(65ch)、表格只横线、强调用字重不用衬线、代码 mono**。
@@ -300,7 +300,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 - **命名**:token 三层(primitive→semantic→component,组件只引语义);class BEM-like + `.text-*`。
 - **AI 消费**:`AGENTS.md` 入口;`tokens.json` 单一事实源;`examples/` 成品。
-- **校验(交付前必过)**:HEX 白名单 / 字体越界 / 表格竖线 / 一组多 primary / 对比度 <4.5 / 圆角越档——出现即失败(圆角警告)。`scripts/lint-design.mjs` 已覆盖:HEX 白名单、token 与运行时 CSS 变量一致、常用文字组合对比度、表格竖线、远程字体、圆角越档(警告);一组多 primary 仍靠人工检查。
+- **校验(交付前必过)**:HEX 白名单 / 字体越界 / 表格竖线 / 一组多 primary / 对比度 <4.5 / 圆角越档——出现即失败(圆角警告)。`scripts/lint-design.mjs` 已覆盖:HEX 白名单、token 与运行时 CSS 变量一致、常用文字组合对比度、表格竖线、远程字体、圆角越档(警告,≤2px 的细线与形状标记除外);一组多 primary 仍靠人工检查。
 - **治理**:单一事实源 `tokens.json`;**token 派生管线**(→网页CSS/Swift/Office HEX,改一处全端更新);语义化版本+`CHANGELOG.md`;改 token 先改源再派生,新组件默认不加。
 
 ---
@@ -437,7 +437,7 @@ C 风格保持 Aham 的颜色、字体、按钮圆角和状态表达，只增加
 
 **取舍规则**：Aham 与 Linear 冲突时，颜色、字体、形状与图形语言以 Aham 为准；布局、交互、信息密度与键盘操作以 Linear / Circle 为准。Linear 的标志性控件（筛选条件标签、命令面板）保留原形，例外写在对应章节（WORKBENCH §1）。
 
-7.2 在此基础上补充列表页、详情页、快速操作与设置页（WORKBENCH §9–13）。
+7.2 在此基础上补充列表页、详情页、快速操作、设置页与 AI 协作（WORKBENCH §9–14）。
 
 外框尺寸分两套，按轨道取用。`layout` 组（rail 60 / sidebar 264 / rightbar 340）用于应用轨和 content 网页；`workbench` 组用于 `.aham-workbench` 页面。两套不混用。
 

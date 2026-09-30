@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workbench AI — Aham UI Preview</title>
+  <link rel="stylesheet" href="../workbench.css">
+  <style>
+body { margin: 0; }
+/* Preview scaffold only; component styles come from workbench.css. */
+.pv { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+.pv-row > * { min-width: 0; max-width: 100%; }
+.pv h1 { font-size: 20px; font-weight: 500; }
+.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
+.pv-story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
+.pv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; align-items: start; }
+.pv-grid > div { min-width: 0; }
+.pv-cap { display: block; margin-top: 8px; color: var(--wb-muted); font-size: 12px; }
+.pv-props { width: 240px; max-width: 100%; }
+.pv-confirm { width: min(380px, 100%); padding: 24px; border-radius: 12px; background: var(--wb-pop-bg); box-shadow: 0 0 0 1px var(--wb-line); }
+.pv-entries { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  </style>
+</head>
+<body>
+<div class="aham-workbench wb-bare" data-theme="light">
+<main class="pv">
+  <header><h1>AI 协作 · 状态预览</h1></header>
+  <p>AI 负责起草、总结和建议，人来决定是否采纳。区块沿用评论块的写法：次级底色、无边框、无阴影，也不用单独的颜色。下面的区块都是 <code>workbench.js</code> 的实际组件，文字由本地模拟输出，没有连接任何模型服务。规则见 WORKBENCH §14。</p>
+
+  <section class="pv-story">
+    <div class="pv-label">入口 · 就地按钮与 ⌘K 里的「AI」一组</div>
+    <div class="pv-entries" id="pv-entries"></div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">生成结果 · 五种状态</div>
+    <div class="pv-grid">
+      <div><div id="pv-consent"></div><span class="pv-cap">需要开启：首次使用前说明会发送什么</span></div>
+      <div><div id="pv-generating"></div><span class="pv-cap">生成中：逐段出现，可停止（Esc 也可以）</span></div>
+      <div><div id="pv-done"></div><span class="pv-cap">完成：标记、依据、一个主操作</span></div>
+      <div><div id="pv-stopped"></div><span class="pv-cap">已停止：保留已生成的部分</span></div>
+      <div><div id="pv-failed"></div><span class="pv-cap">失败：写明原因，可以重试</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">字段建议 · 一次只显示一条，采纳走普通修改路径</div>
+    <div class="pv-props wb-props" id="pv-props">
+      <section class="wb-props-section"><h2 class="wb-props-title">属性</h2>
+        <div class="wb-prop" id="pv-stage-row"><span>阶段</span><button type="button" class="wb-prop-value" id="pv-stage">方案评估</button></div>
+        <div class="wb-prop"><span>负责人</span><span class="wb-prop-value">林悦</span></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">修改数据前确认 · 静态样式与实际弹窗</div>
+    <div class="pv-grid">
+      <div class="pv-confirm" id="pv-confirm-static"></div>
+      <div><button type="button" class="wb-btn sm" id="pv-confirm-open">打开确认弹窗</button><span class="pv-cap">确认后才写入，写入后提示条提供撤销</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">实际触发 · 生成、停止、重新生成</div>
+    <div><button type="button" class="wb-btn sm" id="pv-live-start">生成一段摘要</button></div>
+    <div id="pv-live"></div>
+  </section>
+</main>
+</div>
+<script type="module">
+import {icon, escapeHtml, initTheme, initTooltips, createAIOutput, showSuggestion, openAIConfirm, toast} from '../workbench.js';
+import {simulateStream, holdStream, summaryText} from '../examples/ai-sample.mjs';
+const root = document.querySelector('.aham-workbench');
+initTheme(root);
+initTooltips(root);
+const $ = s => root.querySelector(s);
+const record = { name: '青禾医疗器械有限公司', stage: '方案评估', owner: '林悦', lastContact: '2026-09-29' };
+const sources = [{ label: 'CUS-2026-0001 的属性' }, { label: '2026-09-29 的跟进评论' }];
+const text = summaryText(record);
+const ready = () => false;
+
+$('#pv-entries').innerHTML = `<button type="button" class="wb-btn sm ghost">${icon('ai')}<span>生成摘要</span></button><button type="button" class="wb-btn sm ghost">${icon('ai')}<span>AI 起草</span></button><span class="pv-cap" style="margin:0">⌘K 面板里的「AI」一组：生成摘要 · 起草跟进记录 · 建议下一步…</span>`;
+createAIOutput($('#pv-consent'), { title: '记录摘要', sources, needsConsent: () => true, generate: ({ signal }) => simulateStream(text, { signal }) });
+createAIOutput($('#pv-generating'), { title: '记录摘要', sources, needsConsent: ready, generate: ({ signal }) => holdStream(text.split('\n\n')[0], { signal }) });
+createAIOutput($('#pv-done'), { title: '记录摘要', sources, needsConsent: ready, adoptLabel: '存为评论', onEdit: () => {}, generate: ({ signal }) => simulateStream(text, { signal, delay: 0 }) });
+const stopped = createAIOutput($('#pv-stopped'), { title: '起草跟进记录', sources, needsConsent: ready, generate: ({ signal }) => simulateStream('今天与客户确认了现场调研安排，约定下周二上门。\n\n待办：发送设备接口清单模板，确认参会人员和会议室。', { signal, delay: 60 }) });
+setTimeout(() => stopped.stop(), 200);
+createAIOutput($('#pv-failed'), { title: '建议下一步', sources, needsConsent: ready, generate: ({ signal }) => simulateStream(text, { signal, delay: 0, failAfter: 1 }) });
+
+showSuggestion($('#pv-stage-row'), { key: 'stage', label: '阶段', value: '商务谈判', reason: '依据：最近一次跟进已约定现场调研', onAccept: v => { $('#pv-stage').textContent = v; toast(`已把阶段改为「${v}」`, { action: { label: '撤销', run: () => { $('#pv-stage').textContent = '方案评估'; } } }); } });
+
+const changes = [{ target: '阶段', from: '方案评估', to: '商务谈判' }, { target: '新建任务', to: '发送设备接口清单模板 · 截止 2026-10-06' }];
+$('#pv-confirm-static').innerHTML = `<span class="wb-ai-mark">${icon('ai')}<span>AI 建议</span></span><h2 style="margin:8px 0 0;font-size:var(--wb-text-base)">确认 AI 提出的修改</h2><p style="margin:8px 0 0;color:var(--wb-muted)">最近一次跟进已约定现场调研。</p><ul class="wb-ai-changes">${changes.map(c => `<li><span>${escapeHtml(c.target)}</span><span>${c.from ? `${escapeHtml(c.from)} → ` : ''}<strong>${escapeHtml(c.to)}</strong></span></li>`).join('')}</ul><p style="margin:0 0 16px;color:var(--wb-muted)">共 2 项。确认后才会写入，写入后可以撤销。</p><div class="wb-dialog-foot"><button type="button" class="wb-btn">取消</button><button type="button" class="wb-btn primary">确认修改</button></div>`;
+$('#pv-confirm-open').addEventListener('click', e => openAIConfirm({ root, reason: '最近一次跟进已约定现场调研。', changes, returnFocus: e.currentTarget, onConfirm: () => toast('已按 AI 建议修改 2 项', { action: { label: '撤销', run: () => {} } }) }));
+
+let live = null;
+$('#pv-live-start').addEventListener('click', () => {
+  live?.remove();
+  live = createAIOutput($('#pv-live'), { title: '记录摘要', sources, needsConsent: ready, adoptLabel: '存为评论', generate: ({ signal }) => simulateStream(text, { signal, delay: 120 }), onAdopt: () => toast('已存为评论（示例不保存）') });
+});
+</script>
+</body>
+</html>

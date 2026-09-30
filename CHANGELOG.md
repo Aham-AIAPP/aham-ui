@@ -8,7 +8,7 @@
 
 ## [7.2.0] - 2026-09-30
 
-> **网页工作台扩展**：面向 ToB 管理软件，颜色、字体、圆角、状态写法沿用 Aham，布局与交互照 Circle（Linear 风格的开源实现）。新增规范 WORKBENCH §9–13、20 个工作台组合契约、3 个状态预览页、5 个页面示例，参考实现 `workbench.css` + `workbench.js`（零依赖）。示例只用虚构数据。
+> **网页工作台扩展**：面向 ToB 管理软件，颜色、字体、圆角、状态写法沿用 Aham，布局与交互照 Circle（Linear 风格的开源实现）。新增规范 WORKBENCH §9–14、23 个工作台组合契约、4 个状态预览页、5 个页面示例，参考实现 `workbench.css` + `workbench.js`（零依赖）。示例只用虚构数据。
 
 ### 新增
 - 工作台外框（7.2 P1）：导航展开 240px / 收起 52px，内容卡在白色层、宽屏离边 8px；1–2 条 40px 页眉横条，条内控件 28px；侧面板 240 / 400px 两档，一次只开一个。行为在新增的 `workbench.js`（⌘B 切换、窄屏浮层、Esc 关闭）。新增示例 `examples/workbench-shell.html`。
@@ -21,6 +21,7 @@
 - 设置页（7.2 P5）：左侧分组设置导航、720px 居中内容、横线分隔的设置行、单项即时生效与提示条确认、破坏性操作放最后并确认。规范 WORKBENCH §13、契约 `settings-page`、示例 `examples/settings.html`。
 - 全景页 `index.html` 重做，共 12 个区块，新增「间距、圆角与层次」一节。色板、文本样式、间距、图标、契约清单、读取顺序、版本号和数量由新增的 `scripts/build-panorama.mjs` 从包内文件生成，`--check` 进 CI；网页工作台区块用框内样例直接运行 5 个页面示例和 3 个状态预览页；浅色 / 深色 / 跟随系统三档主题，窄屏可用。
 - 7.2 规划 `docs/workbench-7.2-plan.md`：列表页、侧面板、命令面板与快捷键，参考 Circle 的布局与交互。
+- AI 协作（WORKBENCH §14）：入口放 ⌘K「AI」组和就地按钮；生成内容带标记和依据，可停止、重试；字段建议一次一条；AI 改数据前必须确认并可撤销；首次使用前征得同意，默认关闭。新增 `createAIOutput` / `showSuggestion` / `openAIConfirm` / `setAIEnabled`、契约 `ai-output` / `ai-suggestion` / `ai-confirm`、预览页 `preview/workbench-ai.html`、图标 `ai` 与 `stop`（Lucide）；示例文字在本地模拟，不连接模型。
 - 取舍规则与工具感（WORKBENCH §1.1）：Aham 与 Linear 冲突时，颜色、字体、形状听 Aham；布局、交互、信息密度与键盘听 Linear。写明五条工具感做法。
 - Linear 式范式进入通用层：按钮提示带快捷键（`initTooltips`，§12.7）；Shift + ↑↓ / Shift + 点击范围勾选（`initListKeys` 的 `onRange`）；⌘K 覆盖页面上的全部操作，列表示例补齐显示、预览、导航、主题、删除。
 - 单键快捷键可整体关闭（`setSingleKeyShortcuts`，WCAG 2.1.4），设置页「常规」分区加开关。
@@ -49,6 +50,12 @@
 - 页眉 28px 图标按钮与小按钮用透明外扩把点击区补到 32px（DESIGN §2.0）。
 - `colors_and_type.css` 深色模式误用浅色的浅底色，缺少语义浅底与焦点色；头注释「由 token 生成」与事实不符，已改。
 - 全景页首屏「所有数值只有一份」与事实不符，已改；设计性格标签去掉蓝字；铁规改为从 DESIGN §0 与 AGENTS 生成。
+- 15 个基础示例页的「全景」链接指向 v7.0 已删除的 `docs.html`，改为全景页 `index.html`；DESIGN 两处提到从未存在的 `examples/media.html`，改为全景页「基础组件 · 2.9」。
+- SKILL 把 `css.json` 写成数值来源、README 把三份兼容文件都写成「生成」，与事实不符，已改；组件预览里一处 5px 圆角改为 `radius.sm`。
+- README「网页工作台」一节移回「开始使用」之后，恢复家族模板的章节顺序；CHANGELOG 补 7.2.0 / 7.1.0 / 7.0.2 版本链接。
+### 移除
+- token `workbench.breadcrumbHeight`（7.1 的兼容别名，7.1 未发布，无人引用）。
+- 无引用的 `.wb-body` 样式、无人读取的 `--wb-context` / `--wb-bp-mobile` 变量、单据密度的 `standard` 选择器（旧草稿在读取时已换成 `detail`）。
 
 ## [7.1.0] - 2026-09-30
 
@@ -141,7 +148,10 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.0.1...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.2.0...HEAD
+[7.2.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.0
+[7.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.1.0
+[7.0.2]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.0.2
 [7.0.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.0.1
 [7.0.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.0.0
 [6.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.1.0

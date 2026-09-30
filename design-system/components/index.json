@@ -221,6 +221,24 @@
       "name": "Settings Page",
       "confidence": "high",
       "variantCount": 4
+    },
+    {
+      "slug": "ai-output",
+      "name": "AI Output",
+      "confidence": "high",
+      "variantCount": 5
+    },
+    {
+      "slug": "ai-suggestion",
+      "name": "AI Suggestion",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "ai-confirm",
+      "name": "AI Confirm",
+      "confidence": "high",
+      "variantCount": 2
     }
   ]
 }

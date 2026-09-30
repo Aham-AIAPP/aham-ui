@@ -67,10 +67,10 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 
 ## 工作台入口（7.2）
 做 ToB 管理界面（列表、详情、单据、设置）时用网页工作台，按这个顺序读：
-1. `WORKBENCH.md`：规则。§2 外框与页眉，§4–6 单据页，§9–10 列表与筛选，§11 列表键盘与详情，§12 快速操作，§13 设置页。
+1. `WORKBENCH.md`：规则。§2 外框与页眉，§4–6 单据页，§9–10 列表与筛选，§11 列表键盘与详情，§12 快速操作，§13 设置页，§14 AI 协作。
 2. `tokens.json` 的 `workbench` 组：全部尺寸，不自创值。
 3. `components/index.json` 里的工作台契约：结构、状态、键盘、可访问性、禁止事项，多数写明 DOM 结构。
-4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`。
+4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`、`initTheme`、`initTooltips`、`setSingleKeyShortcuts`、`createAIOutput`、`showSuggestion`、`openAIConfirm`、`setAIEnabled`。
 5. `preview/workbench-*.html` 看组件状态，`examples/*.html` 看页面组合。
 
 硬性要求：
@@ -78,5 +78,6 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 - 快捷键只用 `components/shortcuts.json` 的保留键，并用 `registerShortcut` 登记；界面不显示未登记的按键。
 - 浮层不级联，一次只开一个模态；Esc 每次只关最上面一层。
 - 单个字母的快捷键要能在设置里关闭（`setSingleKeyShortcuts`）。
+- AI 生成的内容要标记并列出依据；AI 改数据前必须弹窗确认，默认不开启 AI（WORKBENCH §14）。
 - 取舍规则：颜色、字体、形状听 Aham；布局、交互、密度、键盘听 Linear（WORKBENCH §1.1）。
 - 原网页内容、macOS、Office 规范继续适用。

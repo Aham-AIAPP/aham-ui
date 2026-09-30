@@ -154,7 +154,8 @@ export function lint() {
       const [, selector, body] = m;
       if (/(^|[\s,.>])(table|td|th)\b|-table\b/.test(selector) && !/::?(before|after)/.test(selector) && /border-(left|right|inline-start|inline-end)\s*:\s*(?!0|none)/.test(body)) errors.push(`${file}: vertical table rule in "${selector.trim().slice(0, 80)}"`);
       for (const r of body.matchAll(/border-radius\s*:\s*([^;]+)/g)) for (const part of r[1].replace(/var\([^)]*\)/g, '').trim().split(/\s+/).filter(Boolean)) {
-        if (/^\d/.test(part) && !['0', '0px', '50%'].includes(part) && !Object.entries(tokens.radius).some(([k, v]) => !k.startsWith('$') && v.$value === part)) warnings.push(`${file}: radius ${part} off the scale in "${selector.trim().slice(0, 60)}"`);
+        // ≤2px corners on hairlines and shape markers (speaker squares / diamonds, the drag insertion line) are not radius tiers.
+        if (/^\d/.test(part) && !['0', '0px', '50%'].includes(part) && !(parseFloat(part) <= 2 && part.endsWith('px')) && !Object.entries(tokens.radius).some(([k, v]) => !k.startsWith('$') && v.$value === part)) warnings.push(`${file}: radius ${part} off the scale in "${selector.trim().slice(0, 60)}"`);
       }
     }
   }

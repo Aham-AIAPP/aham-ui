@@ -19,7 +19,7 @@ _or_ production code, depending on the need.
 ## Quick map
 
 - `README.md` — brand context, content fundamentals, visual foundations (read first)
-- `css.json` — structured token understanding source
+- `css.json` — compatibility mirror kept for older tooling; read `tokens.json` for values
 - `colors_and_type.css` — compatibility runtime for the component previews only; product pages use `aham-ui.css` (base) or `workbench.css` (workbench). Reading order: `library-consumption.json`
 - resolved component sources — use `components/{slug}.json` first for intent, variants and do-not-invent rules; `preview/component-{slug}.html` is the visual reference
 - `preview/` — small HTML cards illustrating the foundations and components
@@ -43,4 +43,5 @@ For ToB admin UIs (lists, record detail, documents, settings) use WORKBENCH.md w
 - Detail (§11): ↑↓ current row, Space preview, Enter open, x select; one header row with position and prev/next, 720px centred main, 240px label + value properties, activity feed with a ⌘/Ctrl+Enter composer.
 - Quick actions (§12): ⌘K palette with record context and in-place sub-lists; one shortcut registry limited to components/shortcuts.json; context menu without cascading submenus; cell pickers with toast undo; quick-create dialog with 继续新建.
 - Settings (§13): grouped settings nav, 720px centred content, line-separated rows that apply immediately.
+- AI (§14): entries in the ⌘K "AI" group and in place; generated blocks on the secondary surface with an ai-icon marker, sources, stop / retry and one primary action; one field suggestion at a time; a confirmation dialog before any AI change is written; consent off by default. No AI colour, no floating chat bubble.
 Read order: WORKBENCH.md → tokens.json (workbench) → components/*.json → workbench.css / workbench.js → preview/workbench-*.html → examples/*.html.

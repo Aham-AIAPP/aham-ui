@@ -202,3 +202,11 @@ Circle 里有几处半成品，不照抄：31 个快捷键提示中只有 ⌘K�
 5. 字体：去掉 Google 远程加载。仓库里还没有随包的 Inter / JetBrains Mono 字体文件；下载需要确认，未做。
 6. 验收：44 条测试；设计校验 447 项 0 错误、6 条圆角警告（1–5px 的小标记）；9 个页面 × 三档宽度 × 深浅色 54 组无溢出；21 项交互用真实鼠标键盘事件在无界面 Chrome 里通过。
 
+## 16. AI 协作与最后一轮审计记录
+
+1. AI 协作写成 WORKBENCH §14：入口放 ⌘K「AI」组和就地按钮；生成区块沿用评论块写法，不给 AI 单独配色；可停止、重试；字段建议一次一条，采纳走普通修改路径；AI 改数据前必须确认；首次使用前征得同意，默认关闭。
+2. 通用层新增 `createAIOutput`、`showSuggestion`、`openAIConfirm`、`aiEnabled` / `setAIEnabled`，都不调用模型；产品传入文字流。示例文字由 `examples/ai-sample.mjs` 在本地模拟。
+3. 新增契约 `ai-output`、`ai-suggestion`、`ai-confirm`（工作台契约 20 → 23），预览页 `preview/workbench-ai.html`，图标 `ai`、`stop`（取自本机 aham-voice 项目依赖里的 lucide-react 1.16.0，ISC）；设置页加「AI 助手」开关。
+4. 最后一轮审计：修正 16 处指向已删除 `docs.html` 的链接、DESIGN 里不存在的 `examples/media.html`、SKILL 与 README 对兼容文件的错误说明、README 章节顺序；移除无引用的 token、样式、变量和密度别名；校验脚本对 ≤2px 的细线与形状标记不再报圆角警告。
+5. 验收：45 条测试；设计校验 0 错误 0 警告；10 个页面 × 三档宽度 × 深浅色 60 组无溢出、无脚本错误；AI 交互 17 项用真实输入通过；文档与页面的相对链接 0 处失效。
+

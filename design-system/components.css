@@ -628,7 +628,7 @@
       font-size: 12px;
     }
 .segmented-control.sm .segment.is-selected {
-      border-radius: 5px;
+      border-radius: var(--radius-sm);
     }
 
 /* component-slider.html */

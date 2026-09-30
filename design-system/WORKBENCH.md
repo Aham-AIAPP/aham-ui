@@ -124,7 +124,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，基础层和工作台都不从第三方服务器下载字体；安装 Inter / JetBrains Mono，或由产品自托管（SIL OFL），即可统一字形。
 
-组合契约 20 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
+组合契约 23 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节），AI 协作 3 个（`ai-output`、`ai-suggestion`、`ai-confirm`，见第 14 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
 
 外框行为在 `workbench.js`（原生 ES 模块，无依赖）：`initShell(root)` 负责导航开关，`initPanels(root)` 负责侧面板开关（按钮 `[data-panel-toggle="面板 id"]`），`openPopover(trigger, panel)` 负责弹层，`initSearch(root)` 负责页眉搜索，`createCommand` / `initFilter` / `initDisplay` 见第 10 节。所有浮层登记在同一个层栈里，Esc 每次只关最上面一层。
 
@@ -258,7 +258,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 - ⌘K / Ctrl+K 打开或关闭。模态，宽 `overlayWidth` 640px，距视口顶部 `paletteTop` 22vh；搜索框高 48px，选项行高 40px，列表最高 384px，超出滚动。
 - 有当前记录时，顶部显示上下文标签（编码 + 名称），命令作用于它；在空搜索框按退格或点标签上的 ✕ 移除上下文。
-- 命令按组排列，组名用次级文字色：当前记录 → 操作 → 跳转 → 帮助。有快捷键的命令在右侧显示按键提示。
+- 命令按组排列，组名用次级文字色：当前记录 → AI → 操作 → 界面 → 跳转 → 帮助。有快捷键的命令在右侧显示按键提示。
 - 带「…」的命令进入子列表（如「修改阶段…」），子列表在面板内原地替换；Esc 或在空搜索框按退格返回上一级，根列表按 Esc 关闭。
 - 执行命令后面板关闭，焦点回到打开前的位置，结果用提示条确认。
 
@@ -340,4 +340,49 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 - 恢复默认、删除工作区等破坏性操作放在最后一个分区，按钮用红色文字，点击后弹确认框（DESIGN §8.6）。
 - 开关 `.wb-switch`：28 × 16px，打开时墨色底；键盘聚焦显示蓝色焦点环。
 - 「常规」分区放「单键快捷键」开关，默认打开；关闭后调用 `setSingleKeyShortcuts(false)`（§12.2）。
+- 「AI 助手」分区放「使用 AI 助手」开关，默认关闭，写明会发送什么（§14.6）。
 
+## 14. AI 协作（7.2）
+
+AI 在工作台里负责起草、总结和建议，由人决定是否采纳。性格上延续 Aham 的「对话式」，数据上遵守 DESIGN §1.11 的隐私原则；形式照 Linear 的做法：就地出现、可以撤销、键盘可达。状态见 [preview/workbench-ai.html](preview/workbench-ai.html)，组合见 [examples/record-detail.html](examples/record-detail.html)。
+
+### 14.1 入口
+
+- ⌘K 命令面板里放「AI」一组，排在「当前记录」之后：生成摘要、起草跟进记录、建议下一步。有当前记录时作用于它。
+- 就地入口：详情页标题下方的「生成摘要」，评论框底部的「AI 起草」，属性栏里的字段建议。
+- 不加悬浮聊天气泡，不占页面角落，也不给 AI 单独的按钮颜色。
+
+### 14.2 标记与依据
+
+- AI 生成的内容带标记：`ai` 图标 + 状态文字，次级文字色。
+- 生成区块用次级底色，不加边框和阴影，与评论块同一写法；不用紫色、渐变和发光。
+- 结果下方列出依据：用到了哪些记录和动态，最多 3 条。说不出依据时写「未引用具体记录」。
+- 采纳后的内容保留来源说明，例如评论头部显示「AI 起草，林悦 确认后发送」。
+
+### 14.3 生成中、完成、停止、失败
+
+- 生成中：正文逐段出现，末尾不加闪烁光标；标题行右侧是「停止」按钮，Esc 也能停止。区块 `aria-busy="true"`。
+- 完成：由 `role="status"` 播报一次。底部只有一个主按钮（采纳类，文字按用途写，如「存为评论」「放入评论框」），其余是文字按钮：编辑、重新生成、丢弃。
+- 已停止：保留已生成的部分，可以采纳或重新生成。
+- 失败：写明原因和「重试」，已有输入不受影响。服务不可用时，页面上的手动操作照常可用。
+- 起草类结果不直接发送，先放进输入框，由人修改后再发送。
+
+### 14.4 字段建议
+
+- 建议放在对应字段下方：「建议：商务谈判」+ 一句依据 + 「采纳」「忽略」两个文字按钮。
+- 一页一次只显示一条；建议不自动填入字段。
+- 采纳走和手动修改相同的路径（§12.4）：立即生效，提示条确认并提供撤销。忽略后本页不再提示同一个值。
+
+### 14.5 修改数据前确认
+
+- AI 提出要改记录（改阶段、分配负责人、新建任务）时，先打开确认弹窗，逐项列出：对象或字段、原值 → 新值，以及共几项。
+- 用户确认后才写入；写入后用提示条确认并提供撤销。取消在左、确认在右，确认是主按钮。
+- AI 不能直接删除记录。
+
+### 14.6 数据与隐私
+
+- 首次使用前说明会把哪些内容发给哪项服务；由用户开启，默认关闭，开启后可在设置里关闭。工作区管理员可以整体关闭。
+- 只发送当前任务需要的内容（当前记录的名称、属性、最近动态），不发送整个列表。
+- 生成结果在采纳前只存在于当前页面，不自动写入记录。
+
+参考实现：`workbench.js` 的 `createAIOutput`、`showSuggestion`、`openAIConfirm`、`aiEnabled` / `setAIEnabled`；契约 `ai-output`、`ai-suggestion`、`ai-confirm`。示例文字由 `examples/ai-sample.mjs` 在本地模拟，没有连接任何模型服务。

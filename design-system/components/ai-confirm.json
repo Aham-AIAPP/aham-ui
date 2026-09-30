@@ -1,0 +1,69 @@
+{
+  "slug": "ai-confirm",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-ai.html",
+  "reference": "examples/record-detail.html",
+  "intent": "AI 提出要改数据时的确认弹窗：改什么、从什么改为什么、共几项",
+  "specification": "WORKBENCH.md §14.5",
+  "api": "openAIConfirm({ root, title?, reason?, changes: [{ target, from?, to }], onConfirm, returnFocus? }) → { close }",
+  "variantDimensions": [
+    {
+      "axis": "count",
+      "values": [
+        "single",
+        "multiple"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "dialog",
+      "marker",
+      "title",
+      "reason",
+      "changes",
+      "note",
+      "cancel",
+      "confirm"
+    ],
+    "required": [
+      "dialog",
+      "title",
+      "changes",
+      "cancel",
+      "confirm"
+    ]
+  },
+  "markup": {
+    "dialog": "<dialog class=\"wb-dialog wb-ai-confirm\" aria-labelledby=\"t\"><form method=\"dialog\"><span class=\"wb-ai-mark\">…AI 建议</span><h2 id=\"t\">确认 AI 提出的修改</h2><ul class=\"wb-ai-changes\"><li><span>阶段</span><span>方案评估 → <strong>商务谈判</strong></span></li></ul><p class=\"wb-ai-note\">共 1 项。确认后才会写入，写入后可以撤销。</p><div class=\"wb-dialog-foot\"><button class=\"wb-btn\" value=\"cancel\">取消</button><button class=\"wb-btn primary\" value=\"confirm\">确认修改</button></div></form></dialog>"
+  },
+  "rules": [
+    "AI 改任何记录前都先打开确认弹窗",
+    "逐项列出：对象或字段、原值 → 新值；新建类只写新值",
+    "取消在左、确认在右，确认是主按钮",
+    "写入后用提示条确认并提供撤销",
+    "AI 不能直接删除记录"
+  ],
+  "states": [
+    "open",
+    "confirmed",
+    "cancelled"
+  ],
+  "keyboard": [
+    "Esc 取消",
+    "Enter 确认（焦点在确认按钮）"
+  ],
+  "accessibility": [
+    "模态 dialog，aria-labelledby 指向标题",
+    "关闭后焦点回到打开前的位置"
+  ],
+  "doNotInvent": [
+    "AI 修改后再事后通知",
+    "把多项修改合成一句话不列明细",
+    "AI 触发的删除"
+  ]
+}

@@ -1,12 +1,15 @@
 // Settings sample: single-value settings apply immediately and confirm with a toast; reset asks first.
-import {initShell, toast, pushLayer, setSingleKeyShortcuts} from '../workbench.js';
+import {initShell, toast, pushLayer, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled} from '../workbench.js';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
 const KEY = 'aham-ui:settings-demo:v1';
-const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, send: '⌘ / Ctrl + Enter', open: '进入详情页', theme: 'light', density: 'standard', assign: true, digest: false };
+const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, send: '⌘ / Ctrl + Enter', open: '进入详情页', theme: 'light', density: 'standard', ai: false, assign: true, digest: false };
 let prefs = { ...DEFAULTS };
 try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY)) }; } catch { /* keep defaults */ }
+// Single-key shortcuts and AI consent are kept by workbench.js; show its current choice.
+prefs.singleKey = singleKeyShortcuts();
+prefs.ai = aiEnabled();
 const media = matchMedia('(prefers-color-scheme: dark)');
 
 // A ?theme= parameter (the panorama page passes its theme to embedded samples) wins until the viewer picks one here.
@@ -22,6 +25,7 @@ function paint() {
   $$('[data-density-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.densityChoice === prefs.density)));
   applyTheme();
   setSingleKeyShortcuts(prefs.singleKey);
+  setAIEnabled(prefs.ai);
 }
 // Apply, persist, confirm. If saving fails, the previous value comes back and the toast says why (WORKBENCH §13).
 function commit(label, apply, done = `已保存：${label}`) {

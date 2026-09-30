@@ -60,6 +60,11 @@
       "purpose": "命令面板、右键菜单、单元格修改、提示条、新建弹窗、保留快捷键"
     },
     {
+      "file": "preview/workbench-ai.html",
+      "priority": 7,
+      "purpose": "AI 协作的各种状态：需要开启、生成中、完成、已停止、失败、字段建议、修改确认（本地模拟文字）"
+    },
+    {
       "file": "examples/crm-quotation.html",
       "priority": 8,
       "purpose": "可运行的虚构单据示例"

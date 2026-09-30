@@ -1,0 +1,85 @@
+{
+  "slug": "ai-output",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-ai.html",
+  "reference": "examples/record-detail.html",
+  "intent": "AI 生成的摘要、草稿或建议说明：标记、逐段输出、依据、一个主操作；人决定是否采纳",
+  "specification": "WORKBENCH.md §14.2–14.3",
+  "api": "createAIOutput(host, { title, sources?, consent?, needsConsent?, generate({ signal }), adoptLabel?, onAdopt, onEdit?, onDiscard? }) → { run, stop, remove, text, element }；aiEnabled() / setAIEnabled(on)",
+  "variantDimensions": [
+    {
+      "axis": "state",
+      "values": [
+        "consent",
+        "generating",
+        "done",
+        "stopped",
+        "failed"
+      ]
+    },
+    {
+      "axis": "kind",
+      "values": [
+        "summary",
+        "draft",
+        "next-step"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "block",
+      "marker",
+      "title",
+      "stop",
+      "body",
+      "sources",
+      "actions",
+      "status"
+    ],
+    "required": [
+      "block",
+      "marker",
+      "body",
+      "actions"
+    ]
+  },
+  "markup": {
+    "block": "<section class=\"wb-ai\" data-state=\"done\" aria-busy=\"false\" aria-label=\"AI：记录摘要\"><header class=\"wb-ai-head\"><span class=\"wb-ai-mark\"><svg aria-hidden=\"true\"><use href=\"icons/aham-icons.svg#i-ai\"/></svg><span>AI 生成</span></span><span class=\"wb-ai-title\">记录摘要</span></header><div class=\"wb-ai-body\"><p>…</p></div><p class=\"wb-ai-sources\">依据：<span>CUS-2026-0001 的属性</span></p><div class=\"wb-ai-actions\"><button class=\"wb-btn sm primary\">存为评论</button><button class=\"wb-btn sm ghost\">重新生成</button><button class=\"wb-btn sm ghost\">丢弃</button></div></section>"
+  },
+  "rules": [
+    "次级底色、无边框、无阴影，与评论块同一写法；不用紫色、渐变、发光，也不给 AI 单独配色",
+    "标记 = ai 图标 + 状态文字（需要开启 / 生成中 / AI 生成 / 已停止 / 生成失败），次级文字色",
+    "列出依据（最多 3 条）；没有依据时写「未引用具体记录」",
+    "生成中可停止（按钮或 Esc），停止后保留已生成的部分",
+    "完成后只有一个主操作（采纳类），其余为文字按钮；起草类结果放进输入框，由人修改后发送",
+    "失败写明原因并可重试，不丢失已有输入",
+    "首次使用先说明会发送什么、发给谁；开启后可在设置里关闭"
+  ],
+  "states": [
+    "consent",
+    "generating",
+    "done",
+    "stopped",
+    "failed"
+  ],
+  "keyboard": [
+    "Esc 停止生成",
+    "操作按钮可 Tab 到达"
+  ],
+  "accessibility": [
+    "生成中 aria-busy=\"true\"",
+    "完成或停止时由 role=\"status\" 播报一次",
+    "停止按钮有可访问名"
+  ],
+  "doNotInvent": [
+    "悬浮的聊天气泡或角落里的 AI 按钮",
+    "AI 专用配色、渐变、发光或闪烁光标",
+    "不经采纳直接写入记录",
+    "隐藏依据或把 AI 文本当成事实展示"
+  ]
+}

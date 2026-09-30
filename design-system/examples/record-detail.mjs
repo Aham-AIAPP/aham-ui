@@ -1,6 +1,7 @@
 // Record detail sample: composes the design-system detail patterns with fictional demo data.
-import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../workbench.js';
+import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled} from '../workbench.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './customer-list-model.mjs';
+import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s);
@@ -28,6 +29,7 @@ function renderMain() {
   $('#record-main').innerHTML = `
     <h1 class="wb-detail-title">${esc(record.name)}</h1>
     <div class="wb-detail-meta"><span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span></div>
+    <div id="ai-slot"><button type="button" class="wb-btn sm ghost" data-action="ai-summary">${icon('ai')}<span>生成摘要</span></button></div>
     <div class="wb-detail-body"><p>这是一段虚构的记录说明，用来演示详情页的正文区。正文放在居中的阅读宽度里，长段落按 1.75 行高排版。</p><p>属性放在右侧属性栏，正文只写需要阅读的内容：背景、范围、约定事项。</p></div>
     <section class="wb-detail-section" aria-labelledby="related-title">
       <div class="wb-section-heading"><h2 id="related-title">关联记录<span>2</span></h2></div>
@@ -40,9 +42,10 @@ function renderMain() {
     <section class="wb-detail-section" aria-labelledby="activity-title">
       <div class="wb-section-heading"><h2 id="activity-title">动态</h2></div>
       <div class="wb-activity" id="activity" role="log" aria-live="polite"></div>
+      <div id="ai-draft-slot"></div>
       <form class="wb-composer" id="composer" aria-label="写评论">
         <textarea rows="2" aria-label="评论内容" placeholder="写评论…" maxlength="2000"></textarea>
-        <div class="wb-composer-foot"><span>⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="submit" class="wb-btn sm primary">发送</button></div>
+        <div class="wb-composer-foot"><span>⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
       </form>
     </section>`;
   renderActivity();
@@ -50,7 +53,7 @@ function renderMain() {
 function renderActivity() {
   $('#activity').innerHTML = activity.map(a => a.kind === 'event'
     ? `<div class="wb-activity-event"><span class="wb-activity-icon">${icon(a.icon)}</span><span><strong>${esc(a.who)}</strong> ${esc(a.text)}</span><span class="wb-activity-time">· ${esc(a.when)}</span></div>`
-    : `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">${esc(a.who.slice(0, 1))}</span><strong>${esc(a.who)}</strong><span>${esc(a.when)}</span></div><p>${esc(a.text)}</p></article>`).join('');
+    : `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">${esc(a.who.slice(0, 1))}</span><strong>${esc(a.who)}</strong><span>${esc(a.when)}</span>${a.ai ? `<span class="wb-ai-mark">${icon('ai')}<span>${esc(a.ai)}</span></span>` : ''}</div>${a.text.split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join('')}</article>`).join('');
 }
 function renderMeta() {
   $('.wb-detail-meta').innerHTML = `<span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
@@ -106,6 +109,10 @@ const palette = initPalette({
     ...(ctx ? [{ heading: '当前记录', items: [
       ...['stage', 'owner', 'industry'].map(key => ({ id: key, label: key === 'owner' ? '分配给…' : `修改${labels[key]}…`, icon: key === 'owner' ? 'user' : 'success', keys: { stage: 's', owner: 'a' }[key], children: () => options[key].map(o => ({ id: o, label: o, current: o === record[key], run: () => { if (o !== record[key]) applyChange(key, o, record[key]); } })) })),
       { id: 'comment', label: '写评论', icon: 'edit', run: () => $('#composer textarea').focus() },
+    ] }, { heading: 'AI', items: [
+      { id: 'ai-summary', label: '生成摘要', icon: 'ai', run: aiSummary },
+      { id: 'ai-draft', label: '起草跟进记录', icon: 'ai', run: aiDraft },
+      { id: 'ai-next', label: '建议下一步…', icon: 'ai', run: aiNextStep },
     ] }] : []),
     { heading: '跳转', items: [
       { id: 'prev', label: '上一条', icon: 'chevron-up', keys: 'k', run: () => go(-1) },
@@ -123,6 +130,72 @@ registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', r
 registerShortcut({ keys: 'mod+enter', label: '发送评论（在评论框内）', group: '详情', external: true });
 registerShortcut({ keys: 'escape', label: '关闭最上层的浮层', group: '通用', external: true });
 initComposer($('#composer'), {
-  onSubmit: text => { activity.push({ kind: 'comment', who: ME, text, when: '刚刚' }); renderActivity(); return true; },
+  onSubmit: text => {
+    const form = $('#composer');
+    activity.push({ kind: 'comment', who: ME, text, when: '刚刚', ai: form.dataset.ai ? `${form.dataset.ai}，${ME} 确认后发送` : null });
+    delete form.dataset.ai;
+    renderActivity();
+    return true;
+  },
 });
+$('#composer textarea').addEventListener('input', e => { if (!e.target.value.trim()) delete $('#composer').dataset.ai; });
+
+// ── AI assistance (WORKBENCH §14). Texts come from ai-sample.mjs; nothing leaves the page. ────────────────────────
+const aiBlocks = {};
+function aiBlock(slot, options) {
+  aiBlocks[slot]?.remove();
+  aiBlocks[slot] = createAIOutput($(`#${slot}`), options);
+}
+const sources = () => [{ label: `${record.code} 的属性` }, { label: `${record.lastContact} 的跟进评论` }];
+function toComposer(text, label) {
+  const area = $('#composer textarea');
+  area.value = text;
+  $('#composer').dataset.ai = label;
+  area.focus();
+}
+function aiSummary() {
+  aiBlock('ai-slot', {
+    title: '记录摘要', sources: sources(), adoptLabel: '存为评论',
+    generate: ({ signal }) => simulateStream(summaryText(record), { signal }),
+    onAdopt: text => {
+      activity.push({ kind: 'comment', who: ME, text, when: '刚刚', ai: `AI 摘要，${ME} 采纳` });
+      renderActivity();
+      toast('已存为评论', { action: { label: '撤销', run: () => { activity.pop(); renderActivity(); } } });
+    },
+    onEdit: text => toComposer(text, 'AI 摘要'),
+  });
+}
+function aiDraft() {
+  aiBlock('ai-draft-slot', {
+    title: '起草跟进记录', sources: sources(), adoptLabel: '放入评论框',
+    generate: ({ signal }) => simulateStream(draftText(record), { signal }),
+    onAdopt: text => { toComposer(text, 'AI 起草'); toast('已放入评论框，修改后再发送'); },
+  });
+}
+function aiNextStep() {
+  const plan = nextStepPlan(record, STAGES);
+  aiBlock('ai-slot', {
+    title: '建议下一步', sources: sources(), adoptLabel: '查看修改',
+    generate: ({ signal }) => simulateStream(plan.text, { signal }),
+    onAdopt: () => openAIConfirm({ root, reason: plan.reason, changes: plan.changes, returnFocus: $('[data-action="ai-summary"]'), onConfirm: () => applyPlan(plan) }),
+  });
+}
+function applyPlan(plan) {
+  const before = record.stage, stage = plan.changes.find(c => c.key === 'stage'), task = plan.changes.find(c => c.key === 'task');
+  applyChange('stage', stage.to, before, { undoable: false });
+  activity.push({ kind: 'event', icon: 'check', who: ME, text: `按 AI 建议新建任务「${task.to}」`, when: '刚刚' });
+  renderActivity();
+  toast(`已按 AI 建议修改 ${plan.changes.length} 项`, { action: { label: '撤销', run: () => { activity.pop(); applyChange('stage', before, stage.to, { undoable: false }); } } });
+}
+function suggestStage() {
+  const to = nextStage(STAGES, record.stage);
+  if (!aiEnabled() || to === record.stage) return;
+  showSuggestion($('[data-prop="stage"]').closest('.wb-prop'), { key: 'stage', label: '阶段', value: to, reason: '依据：最近一次跟进已约定现场调研', onAccept: v => applyChange('stage', v, record.stage) });
+}
+root.addEventListener('click', e => {
+  const action = e.target.closest('[data-action]')?.dataset.action;
+  if (action === 'ai-summary') aiSummary();
+  else if (action === 'ai-draft') aiDraft();
+});
+suggestStage();
 initShell(root);
