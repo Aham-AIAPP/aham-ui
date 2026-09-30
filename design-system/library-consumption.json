@@ -1,124 +1,66 @@
 {
-  "version": 1,
+  "version": 2,
   "brand": "Aham",
   "brandSlug": "aham",
+  "systemVersion": "7.1.0",
   "readingOrder": [
     {
-      "file": "SKILL.md",
+      "file": "tokens.json",
       "priority": 1,
-      "purpose": "Skill entry point — read first for brand essentials and visual identity at a glance"
+      "purpose": "唯一数值事实源"
     },
     {
-      "file": "README.md",
+      "file": "DESIGN.md",
       "priority": 2,
-      "purpose": "Comprehensive brand reference with content fundamentals, visual foundations, and component patterns"
+      "purpose": "规则与介质选择"
     },
     {
-      "file": "css.json",
+      "file": "WORKBENCH.md",
       "priority": 3,
-      "purpose": "Structured token understanding — programmatic consumption of all design tokens (colors, type, spacing, radius, shadow, layout)"
-    },
-    {
-      "file": "colors_and_type.css",
-      "priority": 3,
-      "purpose": "Drop-in runtime CSS variables — link in HTML <head> for all token values; do not read for token understanding when css.json exists"
+      "purpose": "网页工作台和高密度单据规则"
     },
     {
       "file": "components/index.json",
       "priority": 4,
-      "purpose": "Component index — discover available components (button, input, card, dialog, table, nav) and their slugs"
+      "purpose": "索引；components/{slug}.json 是意图和行为契约"
     },
     {
-      "file": "components.css",
-      "priority": 4,
-      "purpose": "Aggregated component CSS — ready-to-use class definitions for all 6 components extracted from preview pages"
-    },
-    {
-      "file": "preview/component-button.html",
+      "file": "AGENTS.md",
       "priority": 5,
-      "purpose": "Button component reference — visual preview with DOM/CSS, primary/secondary/ghost/danger variants, sm/md/lg sizes"
+      "purpose": "消费检查清单"
     },
     {
-      "file": "preview/component-input.html",
-      "priority": 5,
-      "purpose": "Input component reference — visual preview with DOM/CSS, text/textarea/select/affix variants"
-    },
-    {
-      "file": "preview/component-card.html",
-      "priority": 5,
-      "purpose": "Card component reference — visual preview with DOM/CSS, default/interactive/selected states"
-    },
-    {
-      "file": "preview/component-dialog.html",
-      "priority": 5,
-      "purpose": "Dialog component reference — visual preview with DOM/CSS, sm/md sizes, form fields"
-    },
-    {
-      "file": "preview/component-table.html",
-      "priority": 5,
-      "purpose": "Table component reference — visual preview with DOM/CSS, sortable columns, selection, status dots"
-    },
-    {
-      "file": "preview/component-nav.html",
-      "priority": 5,
-      "purpose": "Navigation component reference — visual preview with DOM/CSS, sidebar + tabs variants"
-    },
-    {
-      "file": "components/button.json",
-      "priority": 5,
-      "purpose": "Button component contract — intent, variant dimensions, state coverage"
-    },
-    {
-      "file": "components/input.json",
-      "priority": 5,
-      "purpose": "Input component contract — intent, variant dimensions, state coverage"
-    },
-    {
-      "file": "components/card.json",
-      "priority": 5,
-      "purpose": "Card component contract — intent, variant dimensions, state coverage"
-    },
-    {
-      "file": "components/dialog.json",
-      "priority": 5,
-      "purpose": "Dialog component contract — intent, variant dimensions, state coverage"
-    },
-    {
-      "file": "components/table.json",
-      "priority": 5,
-      "purpose": "Table component contract — intent, variant dimensions, state coverage"
-    },
-    {
-      "file": "components/nav.json",
-      "priority": 5,
-      "purpose": "Navigation component contract — intent, variant dimensions, state coverage"
-    },
-    {
-      "file": "preview/component-icon.html",
-      "priority": 5,
-      "purpose": "Icon component reference — Lucide (ISC) sprite, sizes 16/20/24, status dual-channel, 51-icon set"
-    },
-    {
-      "file": "components/icon.json",
-      "priority": 5,
-      "purpose": "Icon component contract — Lucide set, sizes, currentColor, track sources (web=Lucide, macOS=SF Symbols)"
-    },
-    {
-      "file": "tokens.json",
+      "file": "aham-ui.css",
       "priority": 6,
-      "purpose": "Supplementary design tokens specification — user-maintained context"
+      "purpose": "既有参考实现"
+    },
+    {
+      "file": "workbench.css",
+      "priority": 7,
+      "purpose": "显式选择工作台时加载；不覆盖全局组件"
+    },
+    {
+      "file": "examples/crm-quotation.html",
+      "priority": 8,
+      "purpose": "可运行的虚构单据示例"
     }
   ],
   "componentResolution": {
     "priority": [
-      "preview/component-{slug}.html",
-      "components/{slug}.json"
+      "components/{slug}.json",
+      "preview/component-{slug}.html"
     ],
-    "previewFirst": true,
+    "previewFirst": false,
     "contractForIntent": true
   },
   "tokenSource": {
-    "understanding": "css.json",
-    "runtime": "colors_and_type.css"
-  }
+    "understanding": "tokens.json",
+    "workbenchRuntime": "workbench-tokens.css",
+    "legacyRuntime": "colors_and_type.css"
+  },
+  "legacy": {
+    "css.json": "兼容镜像，不是规范源；未纳入新的生成链。",
+    "colors_and_type.css": "既有组件别名；工作台使用独立生成文件。"
+  },
+  "conflictPolicy": "tokens > DESIGN / WORKBENCH > contracts > runtime > examples；发现冲突修复下游，不反推规范。"
 }

@@ -101,6 +101,30 @@
       "name": "Icon",
       "confidence": "high",
       "variantCount": 51
+    },
+    {
+      "slug": "workbench",
+      "name": "Workbench",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "document-form",
+      "name": "Document Form",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "editable-table",
+      "name": "Editable Table",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "context-panel",
+      "name": "Context Panel",
+      "confidence": "high",
+      "variantCount": 2
     }
   ]
 }

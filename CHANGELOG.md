@@ -1,5 +1,12 @@
 # Changelog 更新日志
 
+## 7.1.0 — 2026-09-30
+
+- 新增 C 风格 web-workbench 子模式：全宽壳、三列单据、32px 紧凑明细 / 48px 双行详情、响应式摘要。
+- 新增四个组合模式契约、WORKBENCH 规范、迁移规划和可运行 CRM 报价示例。
+- 增加 Token 生成与漂移校验、组件 CSS 提取器、金额和草稿恢复测试及 CI。
+- 修正消费顺序、表格 28/32px 冲突、状态 pill 描述和 dialog 全局按钮覆盖。旧页面默认布局保持不变，工作台显式启用。
+
 本项目所有重要变更记录于此。
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本 SemVer](https://semver.org/lang/zh-CN/)。
 单一事实源在 `tokens.json`，下游（DESIGN.md / aham-ui.css / Office）全部派生。

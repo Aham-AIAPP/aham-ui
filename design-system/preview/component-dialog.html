@@ -29,13 +29,13 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 .dlg-bd { padding: var(--space-3) var(--space-4); font-size: var(--aham-typography-fontSize-base); line-height: var(--aham-typography-lineHeight-normal); color: var(--color-ink-secondary); }
 .dlg-bd>:last-child { margin-bottom: 0; }
 .dlg-ft { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); }
-.btn { display: inline-flex; align-items: center; justify-content: center; height: var(--layout-btn-height); padding: 0 var(--space-4); font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); font-family: var(--font-sans); border-radius: var(--radius-sm); border: none; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; flex-shrink: 0; min-width: var(--layout-btn-height); }
-.btn-cancel { background: var(--color-bg-panel); color: var(--color-ink-primary); }
-.btn-cancel:hover { background: var(--color-bg-selected); }
-.btn-primary { background: var(--color-accent); color: var(--color-ink-on-accent); }
-.btn-primary:hover { background: var(--color-accent-hover); }
-.btn-danger { background: var(--color-danger); color: #FFFFFF; }
-.btn-danger:hover { filter: brightness(1.08); }
+.dlg .btn { display: inline-flex; align-items: center; justify-content: center; height: var(--layout-btn-height); padding: 0 var(--space-4); font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); font-family: var(--font-sans); border-radius: var(--radius-md); border: none; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; flex-shrink: 0; min-width: var(--layout-btn-height); }
+.dlg .btn-cancel { background: var(--color-bg-panel); color: var(--color-ink-primary); }
+.dlg .btn-cancel:hover { background: var(--color-bg-selected); }
+.dlg .btn-primary { background: var(--color-accent); color: var(--color-ink-on-accent); }
+.dlg .btn-primary:hover { background: var(--color-accent-hover); }
+.dlg .btn-danger { background: var(--color-danger); color: #FFFFFF; }
+.dlg .btn-danger:hover { filter: brightness(1.08); }
 .dlg-fld { display: flex; flex-direction: column; gap: var(--space-1); }
 .dlg-fld+.dlg-fld { margin-top: var(--space-3); }
 .dlg-lbl { font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); color: var(--color-ink-primary); }

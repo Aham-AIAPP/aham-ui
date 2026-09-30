@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · C 高密度 CRM 单据</title><link rel="stylesheet" href="../workbench.css"><style>body{margin:0}</style></head>
+<body>
+<div id="aham-dense-quote" class="aham-workbench" data-theme="light" aria-label="C 风格高密度销售报价单" data-density="compact">
+  <nav class="dq-rail" aria-label="工作空间导航">
+    <span class="dq-brand" aria-label="Aham CRM">A</span>
+    <button class="dq-icon" aria-label="展开导航" aria-expanded="false" data-action="nav"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg><span>收起导航</span></button>
+    <div class="dq-rail-group"><button class="dq-icon" aria-label="客户" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-users"/></svg><span>客户</span></button><button class="dq-icon" aria-label="商机" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-folder"/></svg><span>商机</span></button><button class="dq-icon chosen" aria-label="销售报价单" aria-current="page"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><span>销售报价</span></button><button class="dq-icon" aria-label="合同" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-copy"/></svg><span>合同</span></button></div>
+    <div class="dq-rail-foot"><span class="dq-avatar">林</span></div>
+  </nav>
+  <div class="dq-workspace">
+    <header class="dq-breadcrumb"><div><span>销售工作空间</span><span>/</span><span>报价管理</span><span>/</span><strong>QT-20260930-018</strong></div><span class="dq-demo">演示数据</span></header>
+    <header class="dq-title"><div class="dq-title-left"><h1>销售报价单</h1><span class="dq-status"><b></b><span id="dq-state">草稿</span></span><span class="dq-version">V1.2</span></div><div class="dq-actions"><span class="dq-save-state" id="dq-save-state">未修改</span><button class="dq-button" data-action="save">保存</button><button class="dq-button primary" data-action="submit">模拟审批<svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-arrow-right"/></svg></button></div></header>
+    <div class="dq-layout">
+      <main class="dq-document">
+        <section class="dq-info" aria-label="报价单基本信息">
+          <div class="dq-section-title"><h2>基本信息</h2><button class="dq-link" data-action="edit" id="dq-edit">编辑信息</button></div>
+          <div class="dq-fields">
+            <label><span>客户名称</span><input value="远川精密制造有限公司" aria-label="客户名称" readonly required maxlength="200"></label>
+            <label><span>关联商机</span><input value="MES 一期建设项目" aria-label="关联商机" readonly required maxlength="200"></label>
+            <label><span>客户联系人</span><input value="沈工 · 信息部" aria-label="客户联系人" readonly required maxlength="200"></label>
+            <label><span>报价日期</span><input type="date" value="2026-09-30" aria-label="报价日期" readonly required maxlength="200"></label>
+            <label><span>有效期至</span><input type="date" value="2026-10-30" aria-label="有效期至" readonly required maxlength="200"></label>
+            <label><span>负责人</span><input value="林悦 / 华东销售组" aria-label="负责人" readonly required maxlength="200"></label>
+            <label><span>结算币种</span><input value="人民币 CNY" aria-label="结算币种" readonly required maxlength="200"></label>
+            <label><span>价格口径</span><input value="含税价" aria-label="价格口径" readonly required maxlength="200"></label>
+            <label><span>报价类型</span><input value="软件许可 + 实施服务" aria-label="报价类型" readonly required maxlength="200"></label>
+            <label><span>交付方式</span><input value="本地部署" aria-label="交付方式" readonly required maxlength="200"></label>
+            <label><span>实施地点</span><input value="苏州 · 一期生产基地" aria-label="实施地点" readonly required maxlength="200"></label>
+            <label><span>项目周期</span><input value="合同生效后 90 天" aria-label="项目周期" readonly required maxlength="200"></label>
+          </div>
+        </section>
+        <section class="dq-lines" aria-label="报价明细">
+          <div class="dq-line-heading"><div class="dq-tabs" aria-label="单据内容"><button class="active" data-tab="lines" aria-pressed="true">报价明细 <span>12</span></button><button data-tab="terms" aria-pressed="false">商务条款</button><button data-tab="files" aria-pressed="false">附件 <span>2</span></button></div><div class="dq-density" aria-label="内容密度"><button data-density="compact" aria-pressed="true">紧凑</button><button data-density="standard" aria-pressed="false">详情</button></div></div>
+          <div id="dq-lines-panel">
+            <div class="dq-table-toolbar"><div><span id="dq-count">12 项</span><span class="dq-separator">·</span><span>金额单位：元（CNY）</span></div><label class="dq-find"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-search"/></svg><input placeholder="查找明细…" aria-label="查找报价明细"></label></div>
+            <div class="dq-table-scroll" tabindex="0" role="region" aria-label="报价明细表格，可横向滚动"><table class="dq-table"><colgroup><col style="width:30px"><col><col style="width:76px"><col style="width:40px"><col style="width:90px"><col style="width:62px"><col style="width:104px"></colgroup><thead><tr><th scope="col" aria-label="序号">#</th><th scope="col">产品 / 服务</th><th scope="col" class="number">数量</th><th scope="col">单位</th><th scope="col" class="number">含税单价</th><th scope="col" class="number">折扣 %</th><th scope="col" class="number">含税金额</th></tr></thead><tbody id="dq-rows"></tbody><tfoot><tr><td colspan="6">明细合计</td><td class="number" id="dq-table-total"></td></tr></tfoot></table></div>
+            <div class="dq-table-hint"><span id="dq-input-help">数量 0–999；折扣 0–100%，支持一位小数。合计始终包含全部明细。</span><span id="dq-selection">软件许可 7 项 · 专业服务 5 项</span></div>
+          </div>
+          <div id="dq-terms-panel" hidden><div class="dq-terms-full"><h3>交付与验收</h3><p>以双方确认的一期功能清单为交付范围，按阶段组织验收并记录问题处理结果。</p><h3>付款安排</h3><p>合同生效后支付 40%；上线试运行后支付 40%；终验通过后支付 20%。</p><h3>服务边界</h3><p>硬件、第三方软件许可和客户现场网络改造不在本单报价范围内。新增需求另行评估。</p><h3>报价有效期</h3><p>报价有效期见基本信息。此处条款仅为界面演示内容；有效日期以基本信息为准。</p></div></div>
+          <div id="dq-files-panel" hidden><div class="dq-file"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><div><strong>一期功能范围清单.xlsx</strong><span>林悦 · 09-30 10:20 · 128 KB</span></div><span>范围依据</span></div><div class="dq-file"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><div><strong>现场调研纪要.pdf</strong><span>林悦 · 09-27 16:30 · 2.4 MB</span></div><span>调研资料</span></div></div>
+        </section>
+        <section class="dq-bottom-info"><div><h2>商务条款摘要</h2><dl><dt>付款方式</dt><dd>40% 预付款 / 40% 上线 / 20% 终验</dd><dt>维保起算</dt><dd>终验通过之日起 12 个月</dd><dt>范围说明</dt><dd>不含硬件、第三方许可与新增需求</dd></dl></div><div><h2>内部备注</h2><textarea aria-label="内部备注" rows="3" maxlength="2000">一期范围已与客户初步沟通；设备接口以现场确认清单为准。报价送出前需完成内部审批。</textarea><span class="dq-private">仅团队可见</span></div></section>
+        <div id="dq-feedback" role="status" aria-live="polite"></div>
+      </main>
+      <aside class="dq-context" aria-label="金额汇总与审批记录">
+        <section class="dq-summary"><h2>报价汇总</h2><div class="dq-total-label">价税合计 / CNY</div><div class="dq-total" id="dq-total">780,800.00</div><dl><dt>软件许可</dt><dd id="dq-software"></dd><dt>专业服务</dt><dd id="dq-service"></dd><dt>折前金额</dt><dd id="dq-original"></dd><dt>优惠金额</dt><dd id="dq-discount"></dd></dl><div class="dq-summary-foot"><span class="dq-status"><b></b>含税口径</span><span>随明细计算</span></div></section>
+        <section class="dq-payment"><h2>收款计划</h2><div><span>预付款 <small>40%</small></span><strong id="dq-pay1"></strong></div><div><span>上线款 <small>40%</small></span><strong id="dq-pay2"></strong></div><div><span>验收款 <small>20%</small></span><strong id="dq-pay3"></strong></div></section>
+        <section class="dq-approval"><div class="dq-section-title"><h2>审批流程</h2><span>顺序审批</span></div><ol><li class="done"><span class="dq-step-dot"></span><div><strong>林悦 · 制单</strong><small>09-30 10:42</small></div></li><li id="dq-current"><span class="dq-step-dot"></span><div><strong>销售负责人</strong><small id="dq-approval-state">待提交</small></div></li><li><span class="dq-step-dot"></span><div><strong>商务负责人</strong><small>待上一节点完成</small></div></li></ol></section>
+        <section class="dq-history"><h2>最近变更</h2><p><strong>林悦</strong> 更新服务工作量</p><span>今天 10:42 · V1.2</span><p><strong>林悦</strong> 创建报价单</p><span>昨天 16:20 · V1.0</span></section>
+      </aside>
+    </div>
+    <footer class="dq-footer"><span>Aham UI 7.1 · C 高密度单据</span><button class="dq-button" data-action="theme">深色</button><span>所有客户、价格与条款均为虚构演示 · 草稿仅保存在当前浏览器</span></footer>
+  </div>
+</div>
+
+<script type="module" src="./crm-quotation.mjs"></script>
+</body></html>

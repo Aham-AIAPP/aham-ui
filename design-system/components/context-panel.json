@@ -1,0 +1,51 @@
+{
+  "slug": "context-panel",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "intent": "金额、收款计划、审批与活动摘要",
+  "variantDimensions": [
+    {
+      "axis": "mode",
+      "values": [
+        "side",
+        "stacked"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "summary",
+      "payment",
+      "approval",
+      "activity"
+    ],
+    "required": [
+      "summary",
+      "payment"
+    ]
+  },
+  "specification": "WORKBENCH.md",
+  "reference": "examples/crm-quotation.html",
+  "implementation": "workbench.css",
+  "states": [
+    "default",
+    "focus-visible",
+    "readonly",
+    "invalid",
+    "empty",
+    "saving",
+    "error"
+  ],
+  "accessibility": [
+    "所有输入有标签；反馈文本可被读屏读取",
+    "触摸目标至少 44px；键盘焦点可见",
+    "不靠色彩表达状态；不把原生表格声明为未实现键盘导航的 ARIA grid"
+  ],
+  "doNotInvent": [
+    "彩色状态胶囊",
+    "蓝色整行选中",
+    "卡片阴影",
+    "通过缩小字号到 12px 以下提高密度"
+  ]
+}

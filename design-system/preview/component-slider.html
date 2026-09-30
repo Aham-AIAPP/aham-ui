@@ -6,10 +6,7 @@
   <title>Slider · Aham UI</title>
   <link rel="stylesheet" href="../colors_and_type.css">
   <style>
-    /* ============================================================
-       Preview Page Layout
-       ============================================================ */
-    body {
+body {
       margin: 0;
       background: var(--color-bg-app);
       font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
@@ -18,30 +15,31 @@
       justify-content: center;
       padding: var(--space-6, 24px);
     }
-
-    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
-    .header { padding-bottom: var(--space-2, 8px); }
-    .header h2 { margin: 0; font-family: var(--font-display, 'Inter Display', sans-serif); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
-    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
-    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
-    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
-    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
-    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
-
-    /* ============================================================
-       Slider Component
-       ============================================================ */
-    .slider-row {
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display, 'Inter Display', sans-serif); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+.state-badge {
+      display: inline-block;
+      font-size: var(--aham-typography-fontSize-xs, 12px);
+      font-weight: 500;
+      color: var(--color-ink-tertiary, #9B9B9B);
+      margin-bottom: var(--aham-spacing-4, 16px);
+    }
+/* @component-css-start */
+.slider-row {
       position: relative;
       padding-top: 28px;
       margin-bottom: var(--aham-spacing-5, 24px);
     }
-
-    .slider-row:last-child {
+.slider-row:last-child {
       margin-bottom: 0;
     }
-
-    .slider-value {
+.slider-value {
       position: absolute;
       top: 2px;
       left: 0;
@@ -53,15 +51,12 @@
       white-space: nowrap;
       pointer-events: none;
     }
-
-    .slider {
+.slider {
       position: relative;
       height: 26px;
       cursor: pointer;
     }
-
-    /* Track background */
-    .slider-track {
+.slider-track {
       position: absolute;
       top: 50%;
       left: 0;
@@ -72,9 +67,7 @@
       transform: translateY(-50%);
       pointer-events: none;
     }
-
-    /* Track fill (accent blue before knob) */
-    .slider-fill {
+.slider-fill {
       position: absolute;
       top: 50%;
       left: 0;
@@ -84,9 +77,7 @@
       transform: translateY(-50%);
       pointer-events: none;
     }
-
-    /* Knob */
-    .slider-knob {
+.slider-knob {
       position: absolute;
       top: 50%;
       width: 16px;
@@ -99,47 +90,26 @@
       box-shadow: none;
       transition: background var(--aham-motion-duration-fast, 0.12s) var(--aham-motion-easing-standard, cubic-bezier(.2,0,0,1));
     }
-
-    /* ============================================================
-       Active State
-       ============================================================ */
-    .slider-row.active .slider-knob {
+.slider-row.active .slider-knob {
       background: var(--color-surface-panel, #F3F3F3);
     }
-
-    .slider-row.active .slider-fill {
+.slider-row.active .slider-fill {
       background: var(--color-accent, #336EE8);
     }
-
-    /* ============================================================
-       Disabled State
-       ============================================================ */
-    .slider-row.disabled {
+.slider-row.disabled {
       opacity: var(--aham-opacity-disabled, 0.4);
       cursor: not-allowed;
       pointer-events: none;
     }
-
-    .slider-row.disabled .slider-fill {
+.slider-row.disabled .slider-fill {
       background: var(--color-surface-line, #E7E7E7);
     }
-
-    .slider-row.disabled .slider-knob {
+.slider-row.disabled .slider-knob {
       background: var(--color-surface-line, #E7E7E7);
       border-color: var(--color-ink-quaternary, #C4C4C4);
     }
-
-    /* ============================================================
-       Divider
-       ============================================================ */
-    .state-badge {
-      display: inline-block;
-      font-size: var(--aham-typography-fontSize-xs, 12px);
-      font-weight: 500;
-      color: var(--color-ink-tertiary, #9B9B9B);
-      margin-bottom: var(--aham-spacing-4, 16px);
-    }
-  </style>
+/* @component-css-end */
+</style>
 </head>
 <body>
 <div class="specimen">

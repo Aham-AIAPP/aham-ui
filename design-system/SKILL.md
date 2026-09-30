@@ -28,10 +28,13 @@ _or_ production code, depending on the need.
 ## Essentials at a glance
 
 - Brand primary `#336EE8`. Cool, technical, restrained — no warm accents, no default gradients. Only for logo / primary actions / send / selection accent.
-- Radius at **4 / 6 / 8 / 12** (xs / sm / md / lg) — deliberate, never softer. Pill (`999px`) only for status chips and badges.
+- Radius at **4 / 6 / 8 / 12** (xs / sm / md / lg) — deliberate, never softer. Pill (`999px`) only for neutral filter chips and toggle tracks; never for status.
 - Density first: **36px** control height, **32px** button height, **4px** base spacing unit. Table rows at 36px, sidebar at 264px width.
 - Type: **Inter** for body and small text; **Inter Display** for headings >=20px; **JetBrains Mono** for code and numeric data. Fallback: Microsoft YaHei for Chinese contexts, then system-ui.
 - Shadow: **flat at rest** — no shadow on cards, containers, or inputs. Shadow only on floating overlays: dropdown (`0 2px 8px rgba(20,20,20,0.05)`), popover (`0 3px 12px rgba(20,20,20,0.06)`), modal (`0 12px 36px rgba(20,20,20,0.10)`).
 - Voice: bilingual (CN-first), professional, neutral. No emoji in product UI. Status communicated through 6px dot + text, never color alone.
 - Selection is **flat gray** (`#E7E7E7`), never blue. One primary action per group. Cards have no border, no shadow at rest.
 - States use **6px dot + label text** — never pill badges, colored icons, or traffic-light indicators for status. Disabled opacity at 0.4.
+
+## Web workbench (v7.1)
+CRM / ERP document views use WORKBENCH.md and workbench.css. Content websites retain the centered layout. Read tokens.json before any legacy mirror. Four composition contracts and examples/crm-quotation.html define density, editing, summary, responsive layout and accessibility.

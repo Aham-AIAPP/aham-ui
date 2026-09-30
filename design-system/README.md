@@ -75,7 +75,7 @@ Aham applies radius sparingly and deliberately. There are seven stop values:
 - **12px** (`--radius-lg`) -- cards, dialog panels
 - **16px** (`--radius-xl`) -- larger panels where visual softness is warranted
 - **20px** (`--radius-2xl`) -- oversized surfaces
-- **999px** (`--radius-pill`) -- pill shape for status chips and toggle / segmented tracks only; never for buttons or inputs
+- **999px** (`--radius-pill`) -- pill shape for neutral filter chips and toggle / segmented tracks only; never for buttons or inputs
 
 The concentric-radius rule applies: child radius equals parent radius minus the spacing gap. This keeps nested surfaces visually coherent without designers having to calculate values by hand.
 
@@ -109,7 +109,7 @@ The concrete icon set is **Lucide (ISC)** — linear, monochrome, round cap+join
 | Input | `preview/component-input.html` | `components/input.json` | 4 types (text/textarea/select/search), 5 states. Height 36px, border 1px --ui-border, radius md (8px). Focus ring 3px accent at 20% opacity. | Always outlined (never filled/contained). Label above, error below. Placeholder uses ink-tertiary -- it is a hint, not a label. |
 | Card | `preview/component-card.html` | `components/card.json` | Anatomy: header + body + footer. Width 280px, radius lg (12px). 3 types (default/interactive/selected). | The defining Aham card pattern: no border, no shadow, flat white. Selected state is flat gray, never blue. |
 | Dialog | `preview/component-dialog.html` | `components/dialog.json` | 3 types (confirm/form/alert), 3 widths (380px / 480px / 640px). Overlay rgba(20,20,20,0.28). Cancel left, confirm right. Return binds to confirm. | The button-order rule is strict and non-negotiable: cancel leads, confirm trails. Destructive buttons never get blue or Return binding. |
-| Table | `preview/component-table.html` | `components/table.json` | Horizontal rules only, no vertical lines, no zebra stripes. Headers: 13px/500, ink-secondary. Data: 14px/400, ink-primary. Numeric right-aligned, mono. 3 densities (44px/36px/28px). | Status is always a 6px dot + text. Never a pill, never a colored block, never a stoplight pattern. |
+| Table | `preview/component-table.html` | `components/table.json` | Horizontal rules only, no vertical lines, no zebra stripes. Headers: 13px/500, ink-secondary. Data: 14px/400, ink-primary. Numeric right-aligned, mono. 3 densities (44px/36px/32px). | Status is always a 6px dot + text. Never a pill, never a colored block, never a stoplight pattern. |
 | Navigation | `preview/component-nav.html` | `components/nav.json` | 3 patterns: sidebar (264px), rail (60px), tabs. Active = flat gray, not blue. Tab underline = 2px accent blue (the one blue exception in nav). | Sidebar active state is monochrome gray -- the blue accent appears only in the tab underline. Navigation is infrastructure, not decoration. |
 | Checkbox | `preview/component-checkbox.html` | `components/checkbox.json` | 4 states (unchecked, checked, mixed, disabled). 16px box, 1.5px border. Compact form selection. Checked = ink-primary fill with white checkmark. Mixed = ink-primary minus line. | The checked fill uses ink-primary, never blue. This is the defining restraint: even selected state stays monochrome. |
 | Radio Button | `preview/component-radio-button.html` | `components/radio-button.json` | 3 states (unselected, selected, disabled). 16px outer ring, 6px inner dot. Circular selection indicator. Selected = ink-primary dot. | The selected indicator is a solid ink-primary dot, never blue. The outer ring stays border-color even when selected. |
@@ -148,3 +148,6 @@ The concrete icon set is **Lucide (ISC)** — linear, monochrome, round cap+join
 5. **Dark theme** color values are algorithmic inversions of the light theme, validated against the design system specification. They have not been tested against the full component set in a dark-mode rendering pass. Subtle contrast adjustments may be needed for tertiary ink on dark panel backgrounds.
 6. **Single source of truth is `tokens.json`.** `colors_and_type.css`, `css.json`, and `components.css` are generated mirrors for runtime and programmatic use. If a value ever disagrees, `tokens.json` wins — regenerate the mirrors from it, not the other way around.
 7. **Inter Display** is loaded as a separate font file from Google Fonts with optical sizing. Browsers that do not support the `opsz` axis will render Inter Display at its default optical size, which may appear slightly heavier than intended at small sizes or slightly lighter at display sizes.
+
+## v7.1 workbench profile
+See [WORKBENCH.md](WORKBENCH.md) and [CRM quotation](examples/crm-quotation.html). The 17 primitive previews remain; four composition contracts are added. `tokens.json` is authoritative. Load `workbench.css` explicitly; its variables are generated from tokens. Legacy `css.json` is a compatibility mirror, not a canonical input.

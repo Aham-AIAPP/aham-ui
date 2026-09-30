@@ -1,0 +1,27 @@
+/* Breakpoints are substituted from canonical tokens; CSS variables do not work in media conditions. */
+@media (max-width: {{workbench.formBreakpoint}}) {
+ .aham-workbench .dq-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width: {{workbench.contextBreakpoint}}) {
+ .aham-workbench .dq-layout {grid-template-columns:1fr}
+ .aham-workbench .dq-context {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--dq-s5)}
+}
+@media (max-width: {{workbench.mobileBreakpoint}}) {
+ .aham-workbench,.aham-workbench.expanded {display:block}
+ .aham-workbench .dq-rail {flex-direction:row;justify-content:space-between;padding:var(--dq-s2);border-bottom:1px solid var(--dq-line)}
+ .aham-workbench .dq-rail-group {display:none}
+ .aham-workbench .dq-rail-foot {margin:0;padding:0}
+ .aham-workbench .dq-fields,.aham-workbench .dq-context,.aham-workbench .dq-bottom-info {grid-template-columns:1fr}
+ .aham-workbench .dq-title,.aham-workbench .dq-line-heading,.aham-workbench .dq-footer {flex-wrap:wrap}
+ .aham-workbench .dq-breadcrumb {height:auto;min-height:var(--dq-breadcrumb)}
+ .aham-workbench .dq-breadcrumb>div {flex-wrap:wrap}
+ .aham-workbench .dq-demo {display:none}
+ .aham-workbench .dq-tabs {gap:var(--dq-s3)}
+ .aham-workbench button,.aham-workbench input {min-height:var(--dq-touch)}
+ .aham-workbench input,.aham-workbench textarea {font-size:var(--dq-s4)}
+ .aham-workbench .dq-table {min-width:calc(var(--dq-table-min) + var(--dq-s8))}
+}
+@media (pointer:coarse) {
+ .aham-workbench button,.aham-workbench input {min-height:var(--dq-touch);min-width:var(--dq-touch)}
+ .aham-workbench input,.aham-workbench textarea {font-size:var(--dq-s4)}
+}

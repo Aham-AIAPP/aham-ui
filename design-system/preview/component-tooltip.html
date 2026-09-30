@@ -6,33 +6,46 @@
   <title>Tooltip — Aham UI</title>
   <link rel="stylesheet" href="../colors_and_type.css">
   <style>
-    /* ================================================
-       Tooltip — Preview Styles
-       ================================================ */
-
-    /* ---- 演示容器 ---- */
-    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
-    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
-    .header { padding-bottom: var(--space-2, 8px); }
-    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
-    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
-    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
-    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
-    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
-    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
-    .demo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 64px 48px; }
-    .demo-cell { display: flex; flex-direction: column; align-items: center; gap: 16px; }
-    .demo-cell-label { font-family: var(--font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-tertiary); }
-
-    /* ---- 目标元素容器 ---- */
-    .target-wrapper {
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+.demo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 64px 48px; }
+.demo-cell { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.demo-cell-label { font-family: var(--font-sans); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-tertiary); }
+.usage-note {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 48px;
+      padding: 12px 16px;
+      background: var(--ui-panel);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+.usage-note::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ink-tertiary);
+      flex-shrink: 0;
+    }
+/* @component-css-start */
+.target-wrapper {
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
     }
-
-    .target {
+.target {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -49,13 +62,10 @@
       user-select: none;
       transition: background 0.15s ease;
     }
-
-    .target-wrapper:hover .target {
+.target-wrapper:hover .target {
       background: var(--ui-border);
     }
-
-    /* ---- Tooltip 基础 ---- */
-    .tooltip {
+.tooltip {
       position: absolute;
       padding: 6px 12px;
       background: #262626;
@@ -72,28 +82,21 @@
       transition: opacity 0.2s ease;
       z-index: 10;
     }
-
-    .target-wrapper:hover .tooltip {
+.target-wrapper:hover .tooltip {
       opacity: 1;
     }
-
-    /* ---- 箭头(4px 三角) ---- */
-    .tooltip::after {
+.tooltip::after {
       content: '';
       position: absolute;
       width: 0;
       height: 0;
     }
-
-    /* ===== Position variants ===== */
-
-    /* 上 */
-    [data-pos="top"] .tooltip {
+[data-pos="top"] .tooltip {
       bottom: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
     }
-    [data-pos="top"] .tooltip::after {
+[data-pos="top"] .tooltip::after {
       top: 100%;
       left: 50%;
       transform: translateX(-50%);
@@ -101,14 +104,12 @@
       border-right: 4px solid transparent;
       border-top: 4px solid #262626;
     }
-
-    /* 下 */
-    [data-pos="bottom"] .tooltip {
+[data-pos="bottom"] .tooltip {
       top: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
     }
-    [data-pos="bottom"] .tooltip::after {
+[data-pos="bottom"] .tooltip::after {
       bottom: 100%;
       left: 50%;
       transform: translateX(-50%);
@@ -116,14 +117,12 @@
       border-right: 4px solid transparent;
       border-bottom: 4px solid #262626;
     }
-
-    /* 左 */
-    [data-pos="left"] .tooltip {
+[data-pos="left"] .tooltip {
       right: calc(100% + 8px);
       top: 50%;
       transform: translateY(-50%);
     }
-    [data-pos="left"] .tooltip::after {
+[data-pos="left"] .tooltip::after {
       left: 100%;
       top: 50%;
       transform: translateY(-50%);
@@ -131,14 +130,12 @@
       border-bottom: 4px solid transparent;
       border-left: 4px solid #262626;
     }
-
-    /* 右 */
-    [data-pos="right"] .tooltip {
+[data-pos="right"] .tooltip {
       left: calc(100% + 8px);
       top: 50%;
       transform: translateY(-50%);
     }
-    [data-pos="right"] .tooltip::after {
+[data-pos="right"] .tooltip::after {
       right: 100%;
       top: 50%;
       transform: translateY(-50%);
@@ -146,29 +143,8 @@
       border-bottom: 4px solid transparent;
       border-right: 4px solid #262626;
     }
-
-    /* ---- 说明标注 ---- */
-    .usage-note {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 48px;
-      padding: 12px 16px;
-      background: var(--ui-panel);
-      border-radius: var(--radius-md);
-      font-size: 12px;
-      color: var(--ink-secondary);
-      line-height: 1.5;
-    }
-    .usage-note::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--ink-tertiary);
-      flex-shrink: 0;
-    }
-  </style>
+/* @component-css-end */
+</style>
 </head>
 <body>
 <div class="specimen">

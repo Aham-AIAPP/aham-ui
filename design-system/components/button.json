@@ -3,11 +3,40 @@
   "schemaVersion": 2,
   "sourceKind": "structured-spec",
   "confidence": "medium",
-  "semanticTypeCandidates": ["button", "action", "cta"],
+  "semanticTypeCandidates": [
+    "button",
+    "action",
+    "cta"
+  ],
   "variantDimensions": [
-    { "axis": "variant", "values": ["primary", "secondary", "ghost", "danger"] },
-    { "axis": "size", "values": ["sm", "md", "lg"] },
-    { "axis": "state", "values": ["default", "hover", "press", "disabled"] }
+    {
+      "axis": "variant",
+      "values": [
+        "primary",
+        "secondary",
+        "ghost",
+        "danger"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "sm",
+        "md",
+        "lg"
+      ]
+    },
+    {
+      "axis": "state",
+      "values": [
+        "default",
+        "hover",
+        "press",
+        "disabled",
+        "focus-visible",
+        "loading"
+      ]
+    }
   ],
   "representativeVariants": [
     "primary-md-default",
@@ -16,8 +45,14 @@
     "danger-md-default"
   ],
   "anatomy": {
-    "parts": ["label", "icon-leading", "icon-trailing"],
-    "required": ["label"]
+    "parts": [
+      "label",
+      "icon-leading",
+      "icon-trailing"
+    ],
+    "required": [
+      "label"
+    ]
   },
   "structurePatterns": [
     "All variants share same padding and radius",
@@ -38,5 +73,10 @@
     "Rounded-full/pill buttons — use md radius (8px)",
     "Gradient or shadow on buttons — Aham is flat"
   ],
-  "unknowns": ["Exact loading state behavior", "Icon-only button sizing"]
+  "unknowns": [],
+  "behavior": {
+    "loading": "保留标签与宽度，aria-busy=true；阻止重复操作；完成后播报结果，失败可重试。",
+    "iconOnly": "必须有可访问名；尺寸随控件档位，触摸目标至少 44px。",
+    "focus": "键盘焦点清晰可见，不用颜色作为唯一反馈。"
+  }
 }

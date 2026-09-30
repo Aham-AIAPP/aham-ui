@@ -6,12 +6,27 @@
   <title>Menu — Aham UI Preview</title>
   <link rel="stylesheet" href="../colors_and_type.css">
   <style>
-    /* ============================================================
-       Menu 组件样式 — Dropdown & Context
-       ============================================================ */
-
-    /* ---- Menu Panel ---- */
-    .menu {
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+.menu-demo-area { display: flex; gap: 80px; flex-wrap: wrap; align-items: flex-start; }
+.menu-demo-group { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+.menu-demo-group.is-center { align-items: center; }
+.menu-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.menu-legend-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-tertiary); }
+.menu-legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+.menu-legend-swatch.is-hover   { background: rgba(20,20,20,0.04); }
+.menu-legend-swatch.is-danger  { background: #9E3D31; }
+.menu-legend-swatch.is-focus   { background: rgba(51,110,232,0.20); }
+.menu-legend-swatch.is-sep     { background: var(--ui-border); }
+/* @component-css-start */
+.menu {
       display: inline-flex;
       flex-direction: column;
       min-width: 180px;
@@ -19,19 +34,13 @@
       background: #FFFFFF;
       box-shadow: 0 3px 12px rgba(20,20,20,0.06);
     }
-
-    /* Dropdown: top 8px, bottom 12px */
-    .menu.is-dropdown {
+.menu.is-dropdown {
       border-radius: 8px 8px 12px 12px;
     }
-
-    /* Context: all corners 12px */
-    .menu.is-context {
+.menu.is-context {
       border-radius: 12px;
     }
-
-    /* ---- Menu Item ---- */
-    .menu-item {
+.menu-item {
       display: flex;
       align-items: center;
       height: 28px;
@@ -44,21 +53,17 @@
       cursor: default;
       user-select: none;
       transition: background 0.1s;
-      /* 保证 focus-visible 可见 */
+
       position: relative;
     }
-
-    .menu-item:hover {
+.menu-item:hover {
       background: rgba(20,20,20,0.04);
     }
-
-    .menu-item:focus-visible {
+.menu-item:focus-visible {
       outline: none;
       box-shadow: 0 0 0 3px rgba(51,110,232,0.20);
     }
-
-    /* ---- 图标区 (20px) ---- */
-    .menu-item-icon {
+.menu-item-icon {
       width: 20px;
       height: 20px;
       display: flex;
@@ -68,8 +73,7 @@
       margin-right: 8px;
       color: var(--ink-tertiary);
     }
-
-    .menu-item-icon svg {
+.menu-item-icon svg {
       width: 16px;
       height: 16px;
       fill: none;
@@ -78,66 +82,48 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-
-    /* ---- 标签 ---- */
-    .menu-item-label {
+.menu-item-label {
       flex: 1;
       white-space: nowrap;
     }
-
-    /* ---- 快捷键 ---- */
-    .menu-item-shortcut {
+.menu-item-shortcut {
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--ink-tertiary);
       margin-left: 24px;
       white-space: nowrap;
     }
-
-    /* ---- Disabled ---- */
-    .menu-item.is-disabled {
+.menu-item.is-disabled {
       color: var(--ink-disabled);
     }
-
-    .menu-item.is-disabled .menu-item-icon {
+.menu-item.is-disabled .menu-item-icon {
       color: var(--ink-disabled);
     }
-
-    .menu-item.is-disabled .menu-item-shortcut {
+.menu-item.is-disabled .menu-item-shortcut {
       color: var(--ink-disabled);
     }
-
-    .menu-item.is-disabled:hover {
+.menu-item.is-disabled:hover {
       background: transparent;
     }
-
-    /* ---- Danger ---- */
-    .menu-item.is-danger {
+.menu-item.is-danger {
       color: var(--ink-primary);
     }
-
-    .menu-item.is-danger .menu-item-icon {
+.menu-item.is-danger .menu-item-icon {
       color: var(--ink-tertiary);
     }
-
-    .menu-item.is-danger:hover {
+.menu-item.is-danger:hover {
       color: #9E3D31;
       background: rgba(20,20,20,0.04);
     }
-
-    .menu-item.is-danger:hover .menu-item-icon {
+.menu-item.is-danger:hover .menu-item-icon {
       color: #9E3D31;
     }
-
-    /* ---- Separator ---- */
-    .menu-separator {
+.menu-separator {
       height: 1px;
       background: var(--ui-border);
       margin: 4px 8px;
     }
-
-    /* ---- Trigger 示意 ---- */
-    .menu-trigger {
+.menu-trigger {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -153,28 +139,8 @@
       user-select: none;
       white-space: nowrap;
     }
-
-    /* ============ 演示布局 ============ */
-    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
-    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
-    .header { padding-bottom: var(--space-2, 8px); }
-    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
-    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
-    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
-    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
-    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
-    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
-    .menu-demo-area { display: flex; gap: 80px; flex-wrap: wrap; align-items: flex-start; }
-    .menu-demo-group { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-    .menu-demo-group.is-center { align-items: center; }
-    .menu-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
-    .menu-legend-item { display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); font-size: 12px; color: var(--ink-tertiary); }
-    .menu-legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-    .menu-legend-swatch.is-hover   { background: rgba(20,20,20,0.04); }
-    .menu-legend-swatch.is-danger  { background: #9E3D31; }
-    .menu-legend-swatch.is-focus   { background: rgba(51,110,232,0.20); }
-    .menu-legend-swatch.is-sep     { background: var(--ui-border); }
-  </style>
+/* @component-css-end */
+</style>
 </head>
 <body>
 <div class="specimen">

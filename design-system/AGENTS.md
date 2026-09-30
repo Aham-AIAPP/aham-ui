@@ -16,7 +16,7 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 
 ## 做界面前先选"轨"(v6.0 关键)
 **Aham 分四轨,布局心智不同——先声明你在做哪一轨,再套 §8 规则:**
-- **网页轨**:`.track-web`,页面壳 `max-width` + `margin:auto` **居中**,12 列栅格,rem 断点(单一事实源);再分桌面(顶栏)/移动(底栏 tab);吸底 CTA 合法。
+- **网页轨**:先选 content（`.track-web` 居中收口）或 workbench（`.aham-workbench` 全宽工作台）。CRM 列表、单据和详情优先 workbench，先读 `WORKBENCH.md`。使用同一组 rem 断点；吸底 CTA 合法。
 - **应用轨(macOS)**:`.track-app`,内容**左对齐铺满**、多余宽度展开 pane,dp 断点;**底部不放关键控件**;仅登录/向导/空态居中。
 - **Office 轨**:Word 流式 / Excel 网格 / PPT 画布,见 `aham-ui-office.md`。
 - **邮件轨**:table + 600px + 内联样式。
@@ -35,7 +35,7 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 - 状态用 **6px 点+文字**,不要 pill/图标/色块/红黄绿灯。
 - 表格**只横线**,无竖线/整行底色;数字右对齐 mono。
 - 卡片**无边框无阴影**;选中=**扁平灰**,不是蓝。
-- 蓝 `#336EE8` **只**在 logo/主操作/发送/选中。
+- 蓝 `#336EE8` **只**在 logo/主操作/发送/焦点环/活动页签下划线。
 - 一组**一个** primary;单一无衬线;内容区 `•`+文字。
 - 颜色只来自 token 调色板;字体只用允许的几族;圆角只用档位。
 - **不靠颜色单独传达**:每个状态/数据系列除颜色外必有图标/文字/形状(单蓝体系关键);纯图标按钮必有可访问名(aria-label);图表配文字/数据表替代。
@@ -59,3 +59,6 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 | `aham-ui-office.md` | Office 落地 |
 
 **拿不准就回到 `tokens.json` 和 `DESIGN.md`,不要猜。你的工作是执行这套规范,不是设计。**
+
+## v7.1 工作台入口
+`WORKBENCH.md` → `components/workbench.json` 等四个模式契约 → `workbench.css` → `examples/crm-quotation.html`。工作台使用 full 宽度档，不套 page-max。原网页内容、macOS、Office 规范继续适用。

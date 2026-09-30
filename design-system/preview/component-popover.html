@@ -6,16 +6,27 @@
   <title>Popover — Aham UI Preview</title>
   <link rel="stylesheet" href="../colors_and_type.css">
   <style>
-    /* ---- Popover 组件样式 ---- */
-    .popover-wrapper {
+body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
+.specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
+.header { padding-bottom: var(--space-2, 8px); }
+.header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
+.stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
+.story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
+.story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
+.rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
+.divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
+.popover-demo-area { display: flex; gap: 64px; flex-wrap: wrap; align-items: flex-start; }
+.popover-demo-group { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.popover-label { font-family: var(--font-sans); font-size: 12px; color: var(--ink-tertiary); text-align: center; }
+.popover-spacer { height: 40px; }
+/* @component-css-start */
+.popover-wrapper {
       display: inline-flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
     }
-
-    /* 触发器示意 */
-    .popover-trigger {
+.popover-trigger {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -31,9 +42,7 @@
       user-select: none;
       white-space: nowrap;
     }
-
-    /* Popover Panel */
-    .popover {
+.popover {
       position: relative;
       display: inline-flex;
       flex-direction: column;
@@ -44,100 +53,79 @@
       border-radius: 12px;
       box-shadow: 0 3px 12px rgba(20,20,20,0.06);
     }
-
-    /* Arrow: 8px triangle using border trick */
-    .popover-arrow,
+.popover-arrow,
     .popover-arrow::before {
       position: absolute;
       width: 8px;
       height: 8px;
       background: inherit;
     }
-
-    .popover-arrow {
+.popover-arrow {
       visibility: hidden;
     }
-
-    .popover-arrow::before {
+.popover-arrow::before {
       visibility: visible;
       content: '';
       transform: rotate(45deg);
     }
-
-    /* Arrow placements */
-    .popover[data-placement="bottom"] .popover-arrow {
+.popover[data-placement="bottom"] .popover-arrow {
       top: -4px;
       left: 50%;
       margin-left: -4px;
     }
-
-    .popover[data-placement="top"] .popover-arrow {
+.popover[data-placement="top"] .popover-arrow {
       bottom: -4px;
       left: 50%;
       margin-left: -4px;
     }
-
-    /* Popover content items */
-    .popover-content {
+.popover-content {
       display: flex;
       flex-direction: column;
       gap: 2px;
     }
-
-    /* 信息面板内容 */
-    .popover-info {
+.popover-info {
       display: flex;
       flex-direction: column;
       gap: 6px;
       padding: 4px;
     }
-
-    .popover-info-row {
+.popover-info-row {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
-    .popover-info-dot {
+.popover-info-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       flex-shrink: 0;
     }
-
-    .popover-info-dot.is-green  { background: var(--accent-green); }
-    .popover-info-dot.is-gray   { background: var(--ink-tertiary); }
-
-    .popover-info-label {
+.popover-info-dot.is-green  { background: var(--accent-green); }
+.popover-info-dot.is-gray   { background: var(--ink-tertiary); }
+.popover-info-label {
       font-family: var(--font-sans);
       font-size: 13px;
       font-weight: 500;
       color: var(--ink-secondary);
       min-width: 52px;
     }
-
-    .popover-info-value {
+.popover-info-value {
       font-family: var(--font-mono);
       font-size: 13px;
       color: var(--ink-primary);
     }
-
-    .popover-info-desc {
+.popover-info-desc {
       font-family: var(--font-sans);
       font-size: 13px;
       color: var(--ink-secondary);
       line-height: 1.5;
     }
-
-    /* 分隔线 */
-    .popover-divider {
+.popover-divider {
       height: 1px;
       background: var(--ui-border);
       margin: 4px 0;
     }
-
-    /* 上下文菜单项 */
-    .popover-item {
+.popover-item {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -150,21 +138,17 @@
       user-select: none;
       transition: background 0.1s;
     }
-
-    .popover-item:hover {
+.popover-item:hover {
       background: var(--ui-panel);
     }
-
-    .popover-item.is-disabled {
+.popover-item.is-disabled {
       color: var(--ink-disabled);
       cursor: default;
     }
-
-    .popover-item.is-disabled:hover {
+.popover-item.is-disabled:hover {
       background: transparent;
     }
-
-    .popover-item-icon {
+.popover-item-icon {
       width: 16px;
       height: 16px;
       display: flex;
@@ -173,8 +157,7 @@
       flex-shrink: 0;
       color: var(--ink-tertiary);
     }
-
-    .popover-item-icon svg {
+.popover-item-icon svg {
       width: 16px;
       height: 16px;
       fill: none;
@@ -183,46 +166,37 @@
       stroke-linecap: round;
       stroke-linejoin: round;
     }
-
-    .popover-item-label {
+.popover-item-label {
       flex: 1;
     }
-
-    .popover-item-shortcut {
+.popover-item-shortcut {
       font-family: var(--font-mono);
       font-size: 11px;
       color: var(--ink-tertiary);
     }
-
-    .popover-item-hint {
+.popover-item-hint {
       font-family: var(--font-sans);
       font-size: 12px;
       color: var(--ink-tertiary);
     }
-
-    /* 设置内容片段 */
-    .popover-settings {
+.popover-settings {
       display: flex;
       flex-direction: column;
       gap: 4px;
       padding: 4px;
     }
-
-    .popover-setting-row {
+.popover-setting-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 4px 0;
     }
-
-    .popover-setting-label {
+.popover-setting-label {
       font-family: var(--font-sans);
       font-size: 13px;
       color: var(--ink-primary);
     }
-
-    /* 简单 toggle 示意 */
-    .popover-toggle {
+.popover-toggle {
       width: 28px;
       height: 16px;
       border-radius: 8px;
@@ -231,12 +205,10 @@
       cursor: default;
       flex-shrink: 0;
     }
-
-    .popover-toggle.is-on {
+.popover-toggle.is-on {
       background: var(--ink-primary);
     }
-
-    .popover-toggle::after {
+.popover-toggle::after {
       content: '';
       position: absolute;
       top: 2px;
@@ -247,26 +219,11 @@
       background: #FFFFFF;
       transition: transform 0.15s;
     }
-
-    .popover-toggle.is-on::after {
+.popover-toggle.is-on::after {
       transform: translateX(12px);
     }
-
-    /* ---- 页面布局 ---- */
-    body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans); color: var(--color-ink-primary); display: flex; justify-content: center; padding: var(--space-6, 24px); }
-    .specimen { width: 100%; max-width: 960px; display: flex; flex-direction: column; gap: var(--space-6, 24px); }
-    .header { padding-bottom: var(--space-2, 8px); }
-    .header h2 { margin: 0; font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg, 18px); font-weight: var(--aham-typography-fontWeight-semibold, 600); color: var(--color-ink-primary); }
-    .stage { display: flex; flex-direction: column; gap: var(--space-5, 20px); }
-    .story { display: flex; flex-direction: column; gap: var(--space-3, 12px); }
-    .story-label { font-size: var(--aham-typography-fontSize-xs, 12px); font-weight: var(--aham-typography-fontWeight-medium, 500); color: var(--color-ink-tertiary); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-1, 4px) 0; }
-    .rail { display: flex; gap: var(--space-3, 12px); flex-wrap: wrap; align-items: flex-start; }
-    .divider { border: none; border-top: 1px solid var(--color-border, #E5E7EB); margin: var(--space-1, 4px) 0; }
-    .popover-demo-area { display: flex; gap: 64px; flex-wrap: wrap; align-items: flex-start; }
-    .popover-demo-group { display: flex; flex-direction: column; align-items: center; gap: 24px; }
-    .popover-label { font-family: var(--font-sans); font-size: 12px; color: var(--ink-tertiary); text-align: center; }
-    .popover-spacer { height: 40px; }
-  </style>
+/* @component-css-end */
+</style>
 </head>
 <body>
 <div class="specimen">

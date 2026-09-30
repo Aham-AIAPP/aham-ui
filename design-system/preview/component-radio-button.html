@@ -6,7 +6,6 @@
 <title>Radio Button — Aham UI</title>
 <link rel="stylesheet" href="../colors_and_type.css">
 <style>
-/* ── Reset & Base ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--color-bg-app);color:var(--color-ink-primary);font-family:var(--font-sans);font-size:var(--aham-typography-fontSize-base);line-height:1.55;display:flex;justify-content:center;padding:var(--space-6,24px);}
 .specimen{width:100%;max-width:960px;display:flex;flex-direction:column;gap:var(--space-6,24px);}
@@ -19,31 +18,25 @@ body{background:var(--color-bg-app);color:var(--color-ink-primary);font-family:v
 .divider{border:none;border-top:1px solid var(--color-border,#E5E7EB);margin:var(--space-1,4px) 0;}
 .variant-card{display:flex;flex-direction:column;gap:var(--space-3);background:var(--color-bg-panel);border-radius:var(--radius-md);padding:var(--space-4);min-width:180px;}
 .variant-card .state-label{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);font-weight:500;font-family:var(--font-mono);}
-/* ── Radio Button ── */
+.theme-hint{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);margin-top:var(--space-5)}
+/* @component-css-start */
 .radio{display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer;position:relative}
 .radio input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}
 .radio-ring{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--color-border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color var(--duration-fast) var(--ease-standard),box-shadow var(--duration-fast) var(--ease-standard);background:transparent}
 .radio-dot{width:6px;height:6px;border-radius:50%;background:transparent;transition:background var(--duration-fast) var(--ease-standard)}
 .radio-label{font-size:var(--aham-typography-fontSize-base);color:var(--color-ink-primary);user-select:none}
-/* ── Unselected ── */
-/* default — ring uses --color-border, dot transparent */
-/* ── Selected ── */
 .radio input:checked+.radio-ring .radio-dot{background:var(--color-ink-primary)}
 .radio input:checked+.radio-ring{border-color:var(--color-border)}
-/* ── Focus ── */
 .radio input:focus-visible+.radio-ring{box-shadow:var(--shadow-focus-ring);outline:none}
-/* ── Disabled ── */
 .radio input:disabled+.radio-ring{border-color:var(--color-ink-quaternary)}
 .radio input:disabled:checked+.radio-ring .radio-dot{background:var(--color-ink-quaternary)}
 .radio input:disabled~.radio-label{color:var(--color-ink-quaternary)}
 .radio input:disabled~*{cursor:not-allowed}
 .radio:has(input:disabled){cursor:not-allowed}
-/* ── Group ── */
 .radio-group{display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-4);background:var(--color-bg-panel);border-radius:var(--radius-md);max-width:320px}
 .radio-group .group-label{font-size:var(--aham-typography-fontSize-sm);font-weight:500;color:var(--color-ink-secondary);margin-bottom:var(--space-1)}
 .radio-group .radio-label{font-size:var(--aham-typography-fontSize-base)}
-/* ── Dark mode preview hint ── */
-.theme-hint{font-size:var(--aham-typography-fontSize-xs);color:var(--color-ink-tertiary);margin-top:var(--space-5)}
+/* @component-css-end */
 </style>
 </head>
 <body>
