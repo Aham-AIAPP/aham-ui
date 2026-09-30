@@ -2,7 +2,7 @@
   "version": 2,
   "brand": "Aham",
   "brandSlug": "aham",
-  "systemVersion": "7.3.0",
+  "systemVersion": "7.4.0",
   "readingOrder": [
     {
       "file": "tokens.json",

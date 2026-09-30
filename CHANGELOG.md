@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [7.4.0] - 2026-09-30
+
+> **文件与版本**：工作台新增文件上传、文件预览、树形明细、版本对比四种组合（WORKBENCH §15）；补写风险表达、主按钮位置和暗色取值；修正文件之间的 25 处矛盾。
+
 ### 新增
 - 四种工作台组合，规则写在 WORKBENCH §15，DESIGN 第 2 层新增 2.10：
   - 文件上传 `file-upload`：拖放文件或文件夹，另有选择按钮；逐个文件检查、显示进度、失败可重试。
@@ -17,11 +21,6 @@
 - 状态预览页 `preview/workbench-files.html`，登记进 `library-consumption.json`。上传进度和识别结果是本页模拟的。
 - `components/shortcuts.json` 保留键增加 ←、→（树形明细）和 +、−、0、PageUp、PageDown（文件预览）。WORKBENCH §12.2 同步。
 - 测试增加 4 条：新契约与预览页的结构检查，以及文件检查、按层汇总、版本差异三组纯函数。
-
-### 修正（随新组合发现）
-- `.wb-table-scroll` 加 `position:relative`。表格单元格里的隐藏文字原先会撑出页面，在 390px 宽时产生横向滚动。
-
-### 补写（规范没写清的地方）
 - WORKBENCH §1.2 风险与警示：状态点保持灰色，真实风险用 `.wb-risk` 的语义色文字加说明。表格单元格只染数值，另配隐藏文字。
 - 工作台新增变量 `--wb-warning`（`color.semantic.warning`），供 `.wb-risk.warning` 使用。
 - WORKBENCH §2.1 写明主按钮的位置：单据页放标题区，列表、详情、设置放第 1 条横条最右端，第 2 条不放主按钮。
@@ -33,7 +32,9 @@
 ### 变更
 - 工作台暗色的 `--wb-blue` 由 `#7BA3F0` 改为 `#5C8BED`，与 token `focusRing` 和基础层一致。焦点描边、当前页签下划线和列表焦点行边线随之变化。
 
-### 修正（文件之间的矛盾，按 tokens → WORKBENCH / DESIGN → 契约 → 运行时 → 示例的顺序裁决）
+### 修复
+修正文件之间的 25 处矛盾。裁决顺序为 tokens → WORKBENCH / DESIGN → 契约 → 运行时 → 示例。
+
 - `aham-ui.css` 的 `[data-density="compact"]` 行高由 28px 改为 32px，与 tokens 一致。
 - 开关打开统一为墨色：`toggle.json` 和开关预览页原来写蓝色。
 - `button.json` 改为现行写法：主按钮 `#164EC3`，次级白底加线，危险红字。按钮预览页随之改。
@@ -62,6 +63,7 @@
 - 设置示例删去「发送评论：Enter」选项。评论框按 WORKBENCH §11.5 固定为 ⌘ / Ctrl + Enter 发送。
 - 确认弹窗标题去掉问句：客户列表、设置页、弹窗预览页和 dashboard 示例。DESIGN §1.9 写明这条规则。
 - 基础层 `.tree-item` 高度由 30px 改为 32px，回到 4px 网格。
+- `.wb-table-scroll` 加 `position:relative`。表格单元格里的隐藏文字原先会撑出页面，在 390px 宽时产生横向滚动。
 
 ## [7.3.0] - 2026-09-30
 
@@ -242,7 +244,8 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.3.0...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.4.0...HEAD
+[7.4.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.4.0
 [7.3.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.3.0
 [7.2.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.1
 [7.2.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.0

@@ -102,7 +102,7 @@ node --test tests/*.test.mjs
 
 ## 更新记录
 
-当前版本 v7.3.0（2026-09-30）。
+当前版本 v7.4.0（2026-09-30）。
 
 [Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md)（Keep a Changelog · SemVer） · [CONTRIBUTING](CONTRIBUTING.md) · [MIT](LICENSE)
 
