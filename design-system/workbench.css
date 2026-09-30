@@ -51,12 +51,13 @@
 :where(.aham-workbench) :is(.wb-meta,.wb-crumbs-meta){color:var(--wb-muted)}
 :where(.aham-workbench) .wb-mono{font-family:var(--wb-mono)}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
-:where(.aham-workbench) .wb-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-panel);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
+:where(.aham-workbench) .wb-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
-:where(.aham-workbench) .wb-btn.ghost{background:transparent;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-btn:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-btn.ghost{background:transparent;box-shadow:none;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-btn.ghost:hover{background:var(--wb-panel);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.ghost[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
-:where(.aham-workbench) .wb-btn.primary{background:var(--wb-action);color:var(--wb-on)}
+:where(.aham-workbench) .wb-btn.primary{background:var(--wb-action);box-shadow:none;color:var(--wb-on)}
 :where(.aham-workbench) .wb-btn.primary:hover{background:var(--wb-action-hover)}
 :where(.aham-workbench) button:disabled{opacity:.4;cursor:not-allowed}
 /* Scroll areas: header rows stay put, the body scrolls. Side panels scroll on their own. */
@@ -134,10 +135,8 @@
 /* Utilities */
 :where(.aham-workbench).wb-bare{display:block;height:auto;overflow:visible;background:var(--wb-bg)}
 :where(.aham-workbench) .wb-sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
-:where(.aham-workbench) .wb-btn.outline{background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line)}
-:where(.aham-workbench) .wb-btn.outline:hover{background:var(--wb-hover)}
+/* .outline is kept for 7.2.0 markup; it now looks the same as the default secondary button. */
 :where(.aham-workbench) .wb-btn.icon-only{padding:0;width:var(--wb-header-control)}
-:where(.aham-workbench) .wb-btn.sm:not(.ghost):not(.outline):not(.primary):not(.danger):hover{background:var(--wb-selected)}
 :where(.aham-workbench) .wb-btn{position:relative}
 :where(.aham-workbench) .wb-dot{position:absolute;top:var(--wb-s1);right:var(--wb-s1);width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-ink)}
 :where(.aham-workbench) .wb-input{height:var(--wb-header-control);min-width:0;padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-hover)}

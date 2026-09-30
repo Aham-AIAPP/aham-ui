@@ -71,7 +71,7 @@
 @media (prefers-contrast: more) {
  .aham-workbench {--wb-line:{{color.contrastMore.control-border}};--wb-muted:{{color.contrastMore.ink-secondary}}}
  .aham-workbench[data-theme="dark"] {--wb-line:{{color.dark.contrastMore.control-border}};--wb-muted:{{color.dark.ink.secondary}}}
- .aham-workbench :is(.wb-input,.wb-select,.wb-search,.wb-btn:not(.primary,.outline,.ghost)) {box-shadow:inset 0 0 0 1px var(--wb-line)}
+ .aham-workbench :is(.wb-input,.wb-select,.wb-search) {box-shadow:inset 0 0 0 1px var(--wb-line)}
  .aham-workbench :focus-visible {outline-width:3px}
 }
 @media (prefers-contrast: more) and (prefers-color-scheme: dark) {

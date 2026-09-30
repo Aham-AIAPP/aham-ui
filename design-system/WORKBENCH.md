@@ -22,6 +22,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 - 颜色、字体、形状与图形语言以 Aham 为准：单一蓝色色相、灰底选中、6px 状态点、无静态阴影、红色只用在文字上。
 - 布局、交互、信息密度与键盘操作以 Linear / Circle 为准：40px 页眉横条、筛选与显示选项、命令菜单、列表键盘、就地修改。
 - Linear 的标志性控件保留原形：筛选条件用胶囊标签（DESIGN §8.5 例外），⌘K 命令面板居中偏上。
+- 按钮的底色和描边属于图形语言：次级按钮在两层一律是白底 + 1px 分隔线描边（基础层 `.btn--secondary`），不用 Circle 的灰底按钮。灰底放在次级底色的面板上几乎看不见。
 
 工具感的五条做法：
 
@@ -126,6 +127,18 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 组合契约 23 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节），AI 协作 3 个（`ai-output`、`ai-suggestion`、`ai-confirm`，见第 14 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
 
+两层组件对照（同一概念在两层长得一样；工作台只是尺寸更紧凑）：
+
+| 概念 | 基础层 `aham-ui.css` | 工作台 `workbench.css` | 共同写法 |
+|---|---|---|---|
+| 主按钮 | `.btn--primary` | `.wb-btn.primary` | 底色 `#164EC3`，白字 |
+| 次级按钮 | `.btn--secondary` | `.wb-btn`（`.outline` 为兼容写法） | 白底 + 1px 分隔线描边 |
+| 文字按钮 | `.btn--ghost` | `.wb-btn.ghost` | 无底无边，悬停次级底色 |
+| 危险按钮 | `.btn--danger` | `.wb-btn.danger` / `.ghost.danger` | 红字，不用红底 |
+| 分段控件 | `.seg` | `.wb-seg` | 选中扁平灰 + 字重 500，无阴影 |
+| 标签 | `.tag`（6px 圆角） | `.wb-chip`（筛选条件，胶囊） | 胶囊只用于筛选条件（DESIGN §8.5） |
+| 焦点 | 2px 实线蓝色描边 | 同左 | token `focusRing` |
+
 外框行为在 `workbench.js`（原生 ES 模块，无依赖）：`initShell(root)` 负责导航开关，`initPanels(root)` 负责侧面板开关（按钮 `[data-panel-toggle="面板 id"]`），`openPopover(trigger, panel)` 负责弹层，`initSearch(root)` 负责页眉搜索，`createCommand` / `initFilter` / `initDisplay` 见第 10 节。所有浮层登记在同一个层栈里，Esc 每次只关最上面一层。
 
 基础组件聚合仍为兼容资产；本次恢复了 17 个预览的提取边界并去除页面脚手架污染，但不声称所有历史预览都已完成可访问性和 Token 改造。
@@ -152,15 +165,15 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 | 按钮 | 样式 | 状态变化 |
 |---|---|---|
-| 筛选 | 描边按钮：白底 + 1px 分隔线色描边，图标 + 文字 | 有条件后缩为只剩图标，可访问名写明条件数 |
+| 筛选 | 次级按钮：白底 + 1px 分隔线色描边，图标 + 文字 | 有条件后缩为只剩图标，可访问名写明条件数 |
 | 面板开关 | 只有图标的按钮，带可访问名 | 面板打开时灰底（`aria-pressed="true"`） |
-| 显示 | 填充按钮：次级底色，图标 + 文字 | 设置与默认不同时右上角加 6px 墨色圆点，并附隐藏文字「已调整」 |
+| 显示 | 次级按钮，图标 + 文字 | 设置与默认不同时右上角加 6px 墨色圆点，并附隐藏文字「已调整」 |
 
 ### 9.3 筛选
 
 - 点「筛选」打开命令菜单（§10）：顶部搜索框，下面是字段列表，每个字段有图标，高亮行右侧显示箭头。选中字段后，同一个弹层切换为该字段的取值编辑，不嵌套弹层。
 - 在字段列表里输入选项值，会直接列出「字段 › 值」，并显示条数，勾选即生效（快速筛选）。中文单字即有意义，输入 1 个字就开始匹配。
-- 条件生效后，页眉下方出现筛选行：行首是只有图标的「添加筛选」描边按钮，然后是条件标签，行尾是「清除」。没有条件时整行不出现。
+- 条件生效后，页眉下方出现筛选行：行首是只有图标的「添加筛选」按钮，然后是条件标签，行尾是「清除」。没有条件时整行不出现。
 - 条件标签高 28px，中性胶囊（Circle 原形，DESIGN §8.5 写明例外），四段之间用 1px 分隔线：字段（图标 + 名称，字重 500）/ 条件（次级文字色，可点击修改）/ 值（可点击修改）/ 移除（28px 方形按钮）。
 - 值的显示：选项只选 1 个时显示该值，选多个时显示「N 个字段名」，悬停显示全部；数字和日期显示值和单位；未填完显示「…」。
 - 各类型的条件：文本（包含、不包含），选项（是、不是、是其中之一、不是其中任何一个），数字（不少于、不多于、介于），日期（晚于、早于、介于）。选项的条件随值的个数自动切换单复数，正反向不变。
