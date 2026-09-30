@@ -1,0 +1,89 @@
+{
+  "slug": "tree-table",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-files.html",
+  "reference": "preview/workbench-files.html",
+  "specification": "WORKBENCH.md §15.3",
+  "intent": "树形明细表（BOM、总成装配）：层级缩进、展开折叠、按层汇总，行级键盘操作",
+  "api": "initTreeTable(table, { onToggle, onMove }) → { refresh, expandAll, collapseAll, current, focus }；treeTotals(rows, value) → Map",
+  "variantDimensions": [
+    {
+      "axis": "depth",
+      "values": [
+        "2-levels",
+        "3-5-levels"
+      ]
+    },
+    {
+      "axis": "state",
+      "values": [
+        "expanded",
+        "collapsed"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "toolbar",
+      "expand-all",
+      "collapse-all",
+      "table",
+      "name-cell",
+      "toggle",
+      "spacer",
+      "level-indent",
+      "subtotal",
+      "total-row",
+      "risk"
+    ],
+    "required": [
+      "table",
+      "name-cell",
+      "toggle",
+      "total-row"
+    ]
+  },
+  "markup": {
+    "row": "<tr data-id=\"1.3\" data-level=\"2\"><td class=\"wb-tree-name\" style=\"--wb-level:2\"><span><button type=\"button\" class=\"wb-tree-toggle\" aria-expanded=\"true\" aria-label=\"紧固件组，第 2 层，含 2 项\" tabindex=\"-1\">[chevron-down]</button><span class=\"wb-cell-title\">紧固件组</span></span></td><td class=\"wb-mono\">KIT-0088</td><td class=\"number\">1</td><td class=\"number\">—</td><td class=\"number\">2.52</td></tr>",
+    "leaf": "<tr data-id=\"1.3.1\" data-level=\"3\"><td class=\"wb-tree-name\" style=\"--wb-level:3\"><span><span class=\"wb-tree-spacer\" aria-hidden=\"true\"></span><span class=\"wb-cell-title\">六角螺栓 M8×20</span><span class=\"wb-sr-only\">，第 3 层</span></span></td>…</tr>"
+  },
+  "rules": [
+    "名称列在最前，每深一层缩进 16px（spacing.4）；父行有 20px 展开按钮，叶子行留同宽空位对齐",
+    "父行的金额是子行之和，由 treeTotals 与明细同源计算，不单独存一份可编辑的合计；金额用整数分",
+    "父行金额字重 500，叶子行 400；表尾合计等于顶层行之和",
+    "折叠后父行仍显示小计；「全部展开」「全部折叠」放在表格上方",
+    "层级超过 5 层时提供「只看这一层」进入下一级视图，不无限缩进（DESIGN §2.4）",
+    "其余沿用明细表规则：只有横线，数字右对齐等宽，表头与数据行同高（§5、§9.1）",
+    "用量连乘、损耗率等业务规则由产品定义，Aham 只定展示和汇总的方式"
+  ],
+  "states": [
+    "default",
+    "collapsed",
+    "focus-visible",
+    "empty",
+    "risk"
+  ],
+  "keyboard": [
+    "只有当前行在 Tab 顺序里",
+    "↑↓ 在可见行之间移动，Home / End 到首尾",
+    "→ 展开父行，已展开时移到第一个子行",
+    "← 折叠父行，已折叠或是叶子时移到上一层父行",
+    "Enter 展开或折叠当前父行"
+  ],
+  "accessibility": [
+    "原生 table，不声明为 ARIA treegrid，因为单元格不能逐格移动",
+    "展开按钮带 aria-expanded，可访问名写明名称、层级和子项数；叶子行用隐藏文字写明层级",
+    "折叠时焦点所在的行被隐藏，焦点回到最近的可见父行"
+  ],
+  "doNotInvent": [
+    "用整行底色或彩色竖条区分层级",
+    "在明细表里画竖线或树形连接线",
+    "父行合计可以手工改",
+    "自动展开全部层级且不给折叠入口",
+    "把树形明细声明为 ARIA treegrid 却不实现逐格导航"
+  ]
+}

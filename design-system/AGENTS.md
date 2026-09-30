@@ -67,10 +67,10 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 
 ## 工作台入口（7.2）
 做 ToB 管理界面（列表、详情、单据、设置）时用网页工作台，按这个顺序读：
-1. `WORKBENCH.md`：规则。§2 外框与页眉，§4–6 单据页，§9–10 列表与筛选，§11 列表键盘与详情，§12 快速操作，§13 设置页，§14 AI 协作。
+1. `WORKBENCH.md`：规则。§2 外框与页眉，§4–6 单据页，§9–10 列表与筛选，§11 列表键盘与详情，§12 快速操作，§13 设置页，§14 AI 协作，§15 文件、树形明细与版本对比。
 2. `tokens.json` 的 `workbench` 组：全部尺寸，不自创值。
 3. `components/index.json` 里的工作台契约：结构、状态、键盘、可访问性、禁止事项，多数写明 DOM 结构。
-4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`、`initTheme`、`initTooltips`、`setSingleKeyShortcuts`、`createAIOutput`、`showSuggestion`、`openAIConfirm`、`setAIEnabled`。
+4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`、`initTheme`、`initTooltips`、`setSingleKeyShortcuts`、`createAIOutput`、`showSuggestion`、`openAIConfirm`、`setAIEnabled`、`initDropZone`、`initViewer`、`initTreeTable`，以及纯函数 `checkFile`、`treeTotals`、`diffRecords`。
 5. `preview/workbench-*.html` 看组件状态，`examples/*.html` 看页面组合。
 
 硬性要求：

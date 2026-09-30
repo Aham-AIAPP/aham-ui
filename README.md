@@ -17,8 +17,8 @@ Aham UI 把取值和规则放进一个仓库。取值全在 `tokens.json`，规�
 ## 定位
 
 - **一处取值**：颜色、字号、间距、圆角和控件尺寸只写在 `tokens.json`，共 302 个。`aham-ui.css`、`colors_and_type.css`、`workbench-tokens.css` 三份 CSS 的变量与它一致，由 `scripts/lint-design.mjs` 和构建脚本逐项核对。
-- **规则成文**：`DESIGN.md` 从设计原则写到页面布局，共 0–8 章。`WORKBENCH.md` 是 ToB 管理界面的规范，共 14 节。
-- **组件带契约**：40 份 JSON 契约写明结构、变体和禁用写法。需要新组件时，要先在 `DESIGN.md` 第 2 层写明原则、结构、变体、约束和自查项。
+- **规则成文**：`DESIGN.md` 从设计原则写到页面布局，共 0–8 章。`WORKBENCH.md` 是 ToB 管理界面的规范，共 15 节。
+- **组件带契约**：44 份 JSON 契约写明结构、变体和禁用写法。需要新组件时，要先在 `DESIGN.md` 第 2 层写明原则、结构、变体、约束和自查项。
 - **外观**：冷灰三层底色，只用一个蓝色 `#336EE8`，静置无阴影，状态用 6px 圆点加文字。
 - **字体**：沿用 Linear 的字体栈。无衬线用 Inter Variable，随包附带；等宽用 Berkeley Mono，没有购买授权时显示为 JetBrains Mono。
 
@@ -30,11 +30,11 @@ Aham UI 把取值和规则放进一个仓库。取值全在 `tokens.json`，规�
 |---|---|
 | `design-system/tokens.json` | 全部取值：亮暗两套颜色、11 种文本样式、间距、圆角、控件与工作台尺寸 |
 | `design-system/DESIGN.md` | 基础规范：原则、基础、组件、组合、模式、介质、输入、系统支撑、页面布局 |
-| `design-system/WORKBENCH.md` | 网页工作台规范：外框、列表与筛选、命令面板、列表键盘与详情、设置页、AI 协作、单据页 |
-| `design-system/components/` | 40 份组件契约：基础组件 17 份，工作台组合 23 份 |
+| `design-system/WORKBENCH.md` | 网页工作台规范：外框、列表与筛选、命令面板、列表键盘与详情、设置页、AI 协作、单据页、文件与版本 |
+| `design-system/components/` | 44 份组件契约：基础组件 17 份，工作台组合 27 份 |
 | `design-system/aham-ui.css`、`aham-ui.js` | 基础层运行时，用于内容页 |
 | `design-system/workbench.css`、`workbench.js` | 工作台运行时，ES 模块，无第三方依赖 |
-| `design-system/preview/` | 23 个预览页：基础组件 17 个、版式 2 个、工作台状态 4 个 |
+| `design-system/preview/` | 24 个预览页：基础组件 17 个、版式 2 个、工作台状态 5 个 |
 | `design-system/examples/` | 20 个示例页，含列表、记录详情、单据、设置 |
 | `design-system/icons/` | Lucide 图标 53 个（ISC） |
 | `design-system/fonts/` | Inter Variable 4.1 正体、斜体与授权文本（SIL OFL） |
@@ -92,8 +92,8 @@ node --test tests/*.test.mjs
 
 面向 ToB 管理软件。颜色、形状、字号和字重按 Aham 的规范，字体栈、布局和交互按 Linear 的做法。
 
-- 规范：[WORKBENCH.md](design-system/WORKBENCH.md) §1–14
-- 状态预览：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html) · [AI 协作](design-system/preview/workbench-ai.html)
+- 规范：[WORKBENCH.md](design-system/WORKBENCH.md) §1–15
+- 状态预览：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html) · [AI 协作](design-system/preview/workbench-ai.html) · [文件与版本](design-system/preview/workbench-files.html)
 - 页面示例：[外框](design-system/examples/workbench-shell.html) · [列表](design-system/examples/customer-list.html) · [记录详情](design-system/examples/record-detail.html) · [单据](design-system/examples/crm-quotation.html) · [设置](design-system/examples/settings.html)
 - 示例只用虚构数据。产品上线时，权限、审批、审计、并发和服务端保存要由产品自行接入。
 - 改了 tokens、图标、契约或读取顺序后，运行 `node scripts/build-panorama.mjs` 重写全景页里的数值和清单，其余部分手写。

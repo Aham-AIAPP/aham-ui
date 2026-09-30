@@ -156,7 +156,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，基础层和工作台都不从第三方服务器下载字体；安装 Inter / JetBrains Mono，或由产品自托管（SIL OFL），即可统一字形。
 
-组合契约 23 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节），AI 协作 3 个（`ai-output`、`ai-suggestion`、`ai-confirm`，见第 14 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
+组合契约 27 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节），AI 协作 3 个（`ai-output`、`ai-suggestion`、`ai-confirm`，见第 14 节），文件与版本 4 个（`file-upload`、`file-viewer`、`tree-table`、`version-compare`，见第 15 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
 
 两层组件对照（同一概念在两层长得一样；工作台只是尺寸更紧凑）：
 
@@ -329,9 +329,12 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 | Shift + F10 / 菜单键 | 当前行的操作菜单 | 列表当前行 |
 | J / K | 下一条 / 上一条 | 详情 |
 | ⌘ / Ctrl + Enter | 提交评论或新建 | 输入区 |
+| → / ← | 展开 / 折叠当前层，或移到子行 / 父行 | 树形明细当前行 |
+| + / − / 0 | 放大 / 缩小 / 适合页面 | 文件预览查看区 |
+| PageUp / PageDown | 上一页 / 下一页 | 文件预览查看区 |
 
 - 单字母快捷键只在焦点不在输入框、且输入法没有组字时生效；带 ⌘ / Ctrl 的快捷键在输入框里也生效。
-- 单字母快捷键可以在设置里整体关闭（WCAG 2.1.4），用 `setSingleKeyShortcuts(false)`，选择记在本机。关闭后，带 ⌘ / Ctrl 的快捷键，以及当前行获得焦点时的方向键、空格、Enter、X 仍然可用。
+- 单字母快捷键可以在设置里整体关闭（WCAG 2.1.4），用 `setSingleKeyShortcuts(false)`，选择记在本机。关闭后，带 ⌘ / Ctrl 的快捷键，以及当前行获得焦点时的方向键、空格、Enter、X 仍然可用。文件预览的 + / − / 0 只在查看区获得焦点时生效，属于控件内部按键，同样不受这个开关影响。
 - 表中按键是保留键，产品不得改作他用。新增快捷键先登记，再出现在界面提示里。
 - 界面上的按键提示用 20px 高的 `kbd` 标签，⌘ / ⇧ / ⌥ 在 macOS 显示为符号，其他系统显示为 Ctrl / Shift / Alt。
 
@@ -431,3 +434,53 @@ AI 在工作台里负责起草、总结和建议，由人决定是否采纳。�
 - 生成结果在采纳前只存在于当前页面，不自动写入记录。
 
 参考实现：`workbench.js` 的 `createAIOutput`、`showSuggestion`、`openAIConfirm`、`aiEnabled` / `setAIEnabled`；契约 `ai-output`、`ai-suggestion`、`ai-confirm`。示例文字由 `examples/ai-sample.mjs` 在本地模拟，没有连接任何模型服务。
+
+## 15. 文件、树形明细与版本对比（7.4）
+
+报价、订单、工程变更这类单据常要附图纸、列多层物料、比较前后版本。本节补上四种组合，颜色、字体和状态写法仍按 Aham。状态见 [preview/workbench-files.html](preview/workbench-files.html)。
+
+### 15.1 文件上传
+
+- 拖放区 `.wb-drop` 写明接受的扩展名和单个文件的大小上限。拖入时换成次级底色、描边加深，不用蓝色。
+- 拖放区里放「选择文件」按钮，需要整个文件夹时再放「选择文件夹」。键盘和读屏用户经由这两个按钮完成上传。
+- 每个文件单独一行（`.wb-file`）：图标、文件名、大小或相对路径、状态、行内操作。行高 36px，只有横线。
+- 先在本机检查类型、大小和空文件。未通过的文件写明原因，可以移除，不影响同批其他文件。
+- 上传中显示百分比和 4px 墨色进度条，可以取消。失败写明原因，「重试」只重传这一个文件。
+- 文件夹按相对路径列出其中的文件。压缩包按一个文件上传，由服务端解压后再按文件列出。
+- 「已上传」和识别进度是两个维度，识别结果写在同一行，不混成一个状态（§4）。
+- 整批结果用 `role="status"` 播报一次。单个文件的失败写在该行，不用提示条。
+
+### 15.2 文件预览
+
+- Aham 不渲染 PDF 或 CAD。产品把渲染好的页面（图片、canvas 或 SVG）放进 `.wb-viewer-canvas`，翻页时换内容并调用 `load()`。
+- 工具栏 `.wb-viewer-bar` 高 40px：左侧是上一页、页码输入、总页数、下一页，右侧是缩小、百分比、放大、「适合页面」「100%」。
+- 打开时适合页面，缩放档位 25%–400%。放大后超出查看区时可以拖动平移，也可以用方向键滚动。
+- 查看区获得焦点后，+ / − 缩放，0 适合页面，PageUp / PageDown 翻页；⌘ / Ctrl + 滚轮也能缩放。
+- 与识别字段对照时用 `.wb-viewer-split`：查看区在左，字段栏在右，宽 `panelWide` 400px。1024px 及以下改为上下排列。
+- 字段栏每行是按钮：标签、识别值、来源页。点击或聚焦一行，查看区翻到来源页，用 2px 墨色框标出位置。
+- 识别不确定的字段用 `.wb-risk.warning` 写明原因（§1.2），由人对照原图确认，不自动改值。
+- 页面保持原稿底色，暗色主题下不反色。需要全屏时用 DESIGN §8.9 的 `.preview--full`。
+
+### 15.3 树形明细
+
+- 用原生 `table`，行上写 `data-id` 和 `data-level`。名称列在最前，每深一层缩进 16px。
+- 父行有 20px 的展开按钮（`.wb-tree-toggle`，带 `aria-expanded`），叶子行留同宽空位对齐。表格上方放「全部展开」「全部折叠」。
+- 父行的金额是子行之和，用 `treeTotals` 与明细同源计算，不另存一份可编辑的合计。金额用整数分。
+- 父行金额字重 500，叶子行 400。折叠后父行仍显示小计，表尾合计等于顶层行之和。
+- 键盘沿用列表的行级操作（§11.1）：只有当前行在 Tab 顺序里。↑↓ 移动，→ 展开或移到子行，← 折叠或移到父行，Enter 展开或折叠。
+- 表格不声明为 ARIA treegrid，因为单元格不能逐格移动。层级写在展开按钮的可访问名里，叶子行用隐藏文字写明。
+- 层级超过 5 层时提供「只看这一层」进入下一级视图，不无限缩进（DESIGN §2.4）。
+- 用量连乘、损耗率等业务规则由产品定义。价格过期这类风险按 §1.2 写：单元格只染数值，表格上方写明原因。
+
+### 15.4 版本对比
+
+- 版本选择写成「从 旧版本 到 新版本」，旁边放交换按钮。选项显示版本号、日期和状态，默认比较当前版本与上一版。
+- 摘要写成「V2 → V3：新增 1 · 删除 2 · 改动 5」，用 `role="status"` 播报。旁边用分段按钮筛选变化类型。
+- 按分类分节，例如表头、明细、条款。每节一张表，列为变化、对象、字段、旧值、新值。没有变化的分类不显示。
+- 变化类型写成文字加等宽符号：+ 新增、− 删除、~ 改动。不用红绿色，也不给整行上色。
+- 旧值用次级文字色加删除线，并配隐藏文字「原值」；新值字重 500。数值右对齐、等宽。
+- 新增行的旧值、删除行的新值写「—」。一个对象改了几个字段，就逐字段各占一行。
+- 差异用 `diffRecords` 按主键和字段计算。金额比较整数分，不比较格式化后的文字。
+- 两个版本相同时写「选了同一个版本」；筛选后没有结果时，给出切回「全部」的入口。
+
+参考实现：`workbench.js` 的 `initDropZone`、`checkFile`、`formatBytes`、`initViewer`、`initTreeTable`、`treeTotals`、`diffRecords`；契约 `file-upload`、`file-viewer`、`tree-table`、`version-compare`。上传、识别和渲染都要由产品接入，预览页里的进度和识别结果是模拟的。

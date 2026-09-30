@@ -1,0 +1,94 @@
+{
+  "slug": "file-viewer",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-files.html",
+  "reference": "preview/workbench-files.html",
+  "specification": "WORKBENCH.md §15.2",
+  "intent": "文件预览：查看 PDF、图片和 CAD 图纸的渲染页，缩放、平移、翻页，并与识别字段并排对照",
+  "api": "initViewer(root, { pages, page, width, height, onPage, onZoom }) → { load, setPage, setZoom, fit, show(rect), hide, page, zoom }",
+  "variantDimensions": [
+    {
+      "axis": "layout",
+      "values": [
+        "viewer-only",
+        "split-with-fields"
+      ]
+    },
+    {
+      "axis": "source",
+      "values": [
+        "pdf",
+        "image",
+        "cad-render"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "toolbar",
+      "prev",
+      "page-input",
+      "page-count",
+      "next",
+      "zoom-out",
+      "zoom-value",
+      "zoom-in",
+      "fit",
+      "actual-size",
+      "stage",
+      "canvas",
+      "mark",
+      "fields-panel",
+      "field-row"
+    ],
+    "required": [
+      "toolbar",
+      "stage",
+      "canvas"
+    ]
+  },
+  "markup": {
+    "viewer": "<div class=\"wb-viewer\"><div class=\"wb-viewer-bar\"><div><button class=\"wb-icon-btn\" data-viewer=\"prev\" aria-label=\"上一页\">…</button><input class=\"wb-input\" type=\"number\" data-viewer=\"page\" aria-label=\"页码\"><span>/ <span data-viewer=\"pages\"></span></span><button class=\"wb-icon-btn\" data-viewer=\"next\" aria-label=\"下一页\">…</button></div><div><button class=\"wb-icon-btn\" data-viewer=\"zoom-out\" aria-label=\"缩小\">…</button><span data-viewer=\"zoom\"></span><button class=\"wb-icon-btn\" data-viewer=\"zoom-in\" aria-label=\"放大\">…</button><button class=\"wb-btn sm ghost\" data-viewer=\"fit\">适合页面</button></div></div><div class=\"wb-viewer-stage\" tabindex=\"0\" aria-label=\"图纸 名称，按加号或减号缩放\"><div class=\"wb-viewer-canvas\" data-width=\"800\" data-height=\"566\">[产品渲染的 img / canvas / svg]</div></div></div>",
+    "split": "<div class=\"wb-viewer-split\"><div class=\"wb-viewer\">…</div><section class=\"wb-recognized\"><button type=\"button\" class=\"wb-recognized-row\"><span>材料</span><span>SPCC 冷轧钢板</span><span>第 1 页</span></button></section></div>"
+  },
+  "rules": [
+    "Aham 不渲染 PDF 或 CAD：产品把渲染好的页面放进画布，翻页时换内容并调用 load()",
+    "打开时适合页面；缩放档位 25%–400%，工具栏显示当前百分比，另有「适合页面」和「100%」",
+    "放大后超出查看区时可以拖动平移，光标显示抓手；方向键滚动",
+    "多页文件显示「页码 / 总页数」，可输入页码跳转；单页文件隐藏翻页控件",
+    "与识别字段并排时，查看区在左、字段栏在右，字段栏宽 panelWide 400px；1024px 及以下改为上下排列",
+    "点击或聚焦一个字段，查看区翻到来源页并用 2px 墨色框标出来源位置；来源框不用蓝色",
+    "识别不确定的字段用 .wb-risk.warning 写明原因，由人对照原图确认，不自动改值",
+    "页面保持原稿底色，暗色主题下不反色"
+  ],
+  "states": [
+    "loading",
+    "ready",
+    "zoomed",
+    "panning",
+    "error",
+    "unsupported"
+  ],
+  "keyboard": [
+    "查看区获得焦点后：+ 或 = 放大，- 缩小，0 适合页面",
+    "PageUp / PageDown 翻页，方向键滚动",
+    "⌘ / Ctrl + 滚轮缩放；不改浏览器自身的 ⌘ / Ctrl + 加减号",
+    "字段行是按钮，Tab 到达，Enter 或聚焦即在图上标出来源"
+  ],
+  "accessibility": [
+    "查看区 tabindex=\"0\"，可访问名写明文件名和缩放按键",
+    "纯图标按钮都有 aria-label；缩放百分比用 aria-live 播报",
+    "来源框只是视觉辅助，字段行的文字里写明来源页码"
+  ],
+  "doNotInvent": [
+    "在前端自己解析 DWG / STEP",
+    "打开时强制 100% 让图纸溢出",
+    "蓝色或彩色的来源高亮、半透明彩色遮罩",
+    "把识别结果直接写回字段而不经人确认",
+    "嵌套的全屏浮层；需要全屏时用 DESIGN §8.9 的 .preview--full"
+  ]
+}

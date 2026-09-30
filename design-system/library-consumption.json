@@ -65,6 +65,11 @@
       "purpose": "AI 协作的各种状态：需要开启、生成中、完成、已停止、失败、字段建议、修改确认（本地模拟文字）"
     },
     {
+      "file": "preview/workbench-files.html",
+      "priority": 7,
+      "purpose": "文件上传、文件预览、树形明细、版本对比的各种状态（由 workbench.js 实际渲染，上传与识别为本地模拟）"
+    },
+    {
       "file": "examples/crm-quotation.html",
       "priority": 8,
       "purpose": "可运行的虚构单据示例"

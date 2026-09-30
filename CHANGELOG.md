@@ -6,6 +6,21 @@
 
 ## [Unreleased]
 
+### 新增
+- 四种工作台组合，规则写在 WORKBENCH §15，DESIGN 第 2 层新增 2.10：
+  - 文件上传 `file-upload`：拖放文件或文件夹，另有选择按钮；逐个文件检查、显示进度、失败可重试。
+  - 文件预览 `file-viewer`：缩放、平移、翻页；与识别字段并排，点字段在图上框出来源。
+  - 树形明细 `tree-table`：层级缩进、展开折叠、行级键盘，父行金额由子行求和。
+  - 版本对比 `version-compare`：选两个版本，按分类列出新增、删除和改动，旧值和新值并排。
+- `workbench.js` 新增 `initDropZone`、`initViewer`、`initTreeTable`，以及纯函数 `checkFile`、`formatBytes`、`treeTotals`、`diffRecords`。
+- `workbench.css` 新增 `.wb-drop`、`.wb-file`、`.wb-progress`、`.wb-viewer*`、`.wb-recognized*`、`.wb-tree-*`、`.wb-diff-*`、`.wb-compare-pick`，取值只用工作台变量。
+- 状态预览页 `preview/workbench-files.html`，登记进 `library-consumption.json`。上传进度和识别结果是本页模拟的。
+- `components/shortcuts.json` 保留键增加 ←、→（树形明细）和 +、−、0、PageUp、PageDown（文件预览）。WORKBENCH §12.2 同步。
+- 测试增加 4 条：新契约与预览页的结构检查，以及文件检查、按层汇总、版本差异三组纯函数。
+
+### 修正（随新组合发现）
+- `.wb-table-scroll` 加 `position:relative`。表格单元格里的隐藏文字原先会撑出页面，在 390px 宽时产生横向滚动。
+
 ### 补写（规范没写清的地方）
 - WORKBENCH §1.2 风险与警示：状态点保持灰色，真实风险用 `.wb-risk` 的语义色文字加说明。表格单元格只染数值，另配隐藏文字。
 - 工作台新增变量 `--wb-warning`（`color.semantic.warning`），供 `.wb-risk.warning` 使用。

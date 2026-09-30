@@ -180,7 +180,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 **命中区(更正)**:Apple **唯一公开**的命中区数字是 **44×44pt**(明确涵盖指针);macOS 实际控件约 22–24pt。"28pt 指针最小值"是第三方约定、**非 Apple 官方**。Aham 自定取值,但保留原则——**围绕小目标(图标按钮)加 padding 形成命中区**,桌面 ≥32(含 padding)、触屏 Large=44。
 
-### 2.1–2.9 组件(按 9 组,各守铁规)
+### 2.1–2.10 组件(按 10 组,各守铁规)
 - **2.1 动作 Actions**(全变体):
   - 按钮 `.btn`:层级 `--primary/secondary/ghost/danger` × 尺寸 `--sm/(md 默认)/--lg`;状态 hover/active/focus/disabled/**`.is-loading`**;变体 **全宽 `--block` / toggle `--toggle[aria-pressed]` / 链接 `--link`** / 图标+文字(gap) / 纯图标 `.icon-btn`。**一组一 primary;宽度自适应。**
   - 按钮组 `.btn-group`:相邻合并描边。
@@ -246,6 +246,17 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
   - **认证/居中页壳 `.auth-shell` + `.brand-mark`**:居中页(登录/向导),`__brand`(品牌标,`.brand-mark` = **唯一蓝点缀**的 logo 方块)+ `__card`(宽 `--auth-max` 420)。补 §8 应用轨"仅登录/向导/空态居中"。
   - **表单分组 `.form-section` / `__title`**:`.field` 的上层分组容器(分组标题 + 一组字段),分组间顶部细线。
   - **lint 自查(第 7 章)**:① `.speaker-marker` 等多类别**必有形状/文字通道,不只颜色**;② `.player` 波形蓝只在已播放段、时间 mono;③ `.prose` 表格无竖线、无衬线强调、行宽 ≤65ch;④ `.avatar` 不得使用品牌色/语义色;⑤ `.composer` 一组一 primary;⑥ 九件颜色/尺寸/圆角只引既有 token(头像尺寸用 `avatar.*`),无裸值;⑦ `.auth-shell` 蓝仅出现在 `.brand-mark`/主按钮。
+
+- **2.10 文件与版本(网页工作台组合,v7.4)**:CSS 在 `workbench.css`,行为在 `workbench.js`,完整规则见 `WORKBENCH.md` §15,状态见 `preview/workbench-files.html`。
+  - **原则**:文件、层级和版本都是业务数据,沿用表格的写法:只有横线、数字右对齐等宽、选中用灰。颜色只在真实风险上出现(WORKBENCH §1.2)。渲染 PDF、CAD 和上传文件由产品接入,Aham 只定外框、交互和汇总方式。
+  - **结构**:
+    - 文件上传 = 拖放区 `.wb-drop` + 文件行 `.wb-file`(名称、大小、状态、行内操作)。
+    - 文件预览 = 工具栏 `.wb-viewer-bar` + 查看区 `.wb-viewer-stage` + 画布 `.wb-viewer-canvas`;对照时并排字段栏 `.wb-recognized`。
+    - 树形明细 = 原生表格 `.wb-tree-table` + 展开按钮 `.wb-tree-toggle`,按层缩进。
+    - 版本对比 = 版本选择 `.wb-compare-pick` + 摘要 + 按分类分节的差异表(`.wb-diff-kind` / `.wb-diff-old` / `.wb-diff-new`)。
+  - **变体**:上传分文件、文件夹、压缩包;预览分单独查看和与字段并排;树形明细分展开和折叠;版本对比按变化类型筛选。
+  - **约束**:拖放必须配选择按钮;拖入高亮用灰不用蓝;进度条用墨色;来源框用 2px 墨色描边;父行金额只能由子行求和;变化类型写文字加符号,不用红绿色;表格不声明为 ARIA grid 或 treegrid。
+  - **lint 自查(第 7 章)**:① 上传区有「选择文件」按钮;② 失败和未通过检查写明原因并可重试或移除;③ 查看区可聚焦且有可访问名;④ 父行合计与子行之和一致;⑤ 旧值除删除线外有隐藏文字;⑥ 这四种组合里没有蓝色高亮、彩色底色和竖线。
 
 **暗色**:所有组件引用语义 token,暗色下值切换,组件零改动自动适配(已验证)。
 
