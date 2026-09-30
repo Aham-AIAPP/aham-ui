@@ -1,4 +1,5 @@
 import {defaults,totals,lineCents,money,restoreDraft} from './quotation-model.mjs';
+import {initShell} from '../workbench.js';
 const root=document.querySelector('.aham-workbench'),q=s=>root.querySelector(s),all=s=>[...root.querySelectorAll(s)];
 const key='aham-ui:quotation-demo:v1';
 let items=defaults(),dirty=false,status='draft';
@@ -49,13 +50,12 @@ root.addEventListener('click',e=>{
  if(b.dataset.density){root.dataset.density=b.dataset.density;density();dirty=true;q('#dq-save-state').textContent='视图设置未保存';return;}
  if(b.dataset.tab){selectTab(b.dataset.tab);return;}
  switch(b.dataset.action){
-  case 'nav':{const open=root.classList.toggle('expanded');b.setAttribute('aria-expanded',String(open));b.setAttribute('aria-label',open?'收起导航':'展开导航');break;}
   case 'placeholder':feedback('此示例聚焦销售报价单，其他业务入口仅展示导航结构。');break;
   case 'edit':{const edit=fields[0].readOnly;if(!edit&&!validate())return;fields.forEach(i=>i.readOnly=!edit);b.textContent=edit?'完成编辑':'编辑信息';if(edit)fields[0].focus();break;}
   case 'save':save();break;
   case 'submit':save('review');break;
-  case 'theme':root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';b.textContent=root.dataset.theme==='dark'?'浅色':'深色';break;
+  case 'theme':{const dark=root.dataset.theme!=='dark';root.dataset.theme=dark?'dark':'light';b.setAttribute('aria-pressed',String(dark));b.querySelector('use').setAttribute('href',`../icons/aham-icons.svg#i-${dark?'sun':'moon'}`);break;}
  }
 });
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
-renderTotals();renderStatus();density();
+initShell(root);renderTotals();renderStatus();density();

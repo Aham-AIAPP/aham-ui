@@ -16,14 +16,29 @@
   --wb-row: 32px;
   --wb-row-detail: 48px;
   --wb-rail: 52px;
-  --wb-nav: 148px;
+  --wb-nav: 240px;
   --wb-context: 240px;
   --wb-table-min: 680px;
   --wb-label: 72px;
   --wb-dot: 6px;
   --wb-field: 28px;
   --wb-body: 12px;
-  --wb-breadcrumb: 40px;
+  --wb-header-row: 40px;
+  --wb-header-control: 28px;
+  --wb-nav-item: 32px;
+  --wb-panel-narrow: 240px;
+  --wb-panel-wide: 400px;
+  --wb-gutter: 8px;
+  --wb-shell-radius: 12px;
+  --wb-row-list: 36px;
+  --wb-scrim: rgba(20,20,20,0.28);
+  --wb-shadow-float: 0 12px 36px rgba(20,20,20,0.10);
+  --wb-z-nav: 400;
+  --wb-z-scrim: 300;
+  --wb-bp-context: 64rem;
+  --wb-bp-mobile: 40rem;
+  --wb-fast: 0.12s;
+  --wb-ease: cubic-bezier(.2,0,0,1);
   --wb-radius: 8px;
   --wb-radius-sm: 4px;
   --wb-title: 20px;
@@ -67,19 +82,31 @@
 @media (max-width: 80rem) {
  .aham-workbench .wb-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* ≤ context breakpoint: full-bleed card, one scroll column, summary after the document, nav opens as an overlay. */
 @media (max-width: 64rem) {
- .aham-workbench .wb-layout {grid-template-columns:1fr}
+ .aham-workbench .wb-main {margin:0;border-radius:0}
+ .aham-workbench .wb-layout {display:block;overflow:auto}
+ .aham-workbench .wb-layout>.wb-document {overflow:visible}
+ .aham-workbench .wb-panel {width:auto;overflow:visible;border-inline-start:0}
  .aham-workbench .wb-context {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s5)}
+ .aham-workbench.expanded {grid-template-columns:var(--wb-rail) minmax(0,1fr)}
+ .aham-workbench.expanded .wb-rail {position:fixed;inset-block:0;inset-inline-start:0;z-index:var(--wb-z-nav);width:var(--wb-nav);box-shadow:var(--wb-shadow-float)}
+ .aham-workbench .wb-panel[data-size=wide] {position:fixed;inset-block:0;inset-inline-end:0;z-index:var(--wb-z-nav);width:min(var(--wb-panel-wide),100vw);overflow:auto;box-shadow:var(--wb-shadow-float)}
 }
+/* ≤ mobile breakpoint: normal page flow; the rail is hidden until the header toggle opens it. */
 @media (max-width: 40rem) {
- .aham-workbench,.aham-workbench.expanded {display:block}
- .aham-workbench .wb-rail {flex-direction:row;justify-content:space-between;padding:var(--wb-s2);border-bottom:1px solid var(--wb-line)}
- .aham-workbench .wb-nav-group {display:none}
- .aham-workbench .wb-nav-foot {margin:0;padding:0}
+ .aham-workbench,.aham-workbench.expanded {display:block;height:auto;min-height:100vh;overflow:visible;background:var(--wb-bg)}
+ .aham-workbench .wb-rail {display:none}
+ .aham-workbench.expanded .wb-rail {display:flex}
+ .aham-workbench .wb-main {overflow:visible}
+ .aham-workbench .wb-layout {overflow:visible}
  .aham-workbench .wb-fields,.aham-workbench .wb-context,.aham-workbench .wb-doc-notes {grid-template-columns:1fr}
- .aham-workbench .wb-page-head,.aham-workbench .wb-tabs-bar,.aham-workbench .wb-footer {flex-wrap:wrap}
- .aham-workbench .wb-crumbs {height:auto;min-height:var(--wb-breadcrumb)}
- .aham-workbench .wb-crumbs>div {flex-wrap:wrap}
+ .aham-workbench .wb-page-head,.aham-workbench .wb-tabs-bar {flex-wrap:wrap}
+ .aham-workbench .wb-header-row {height:auto;min-height:var(--wb-header-row);flex-wrap:wrap;padding-block:var(--wb-s1)}
+ .aham-workbench .wb-header-lead {flex-wrap:wrap}
+ .aham-workbench .wb-crumbs {flex:1 1 calc(100% - var(--wb-touch) - var(--wb-s2));flex-wrap:wrap;white-space:normal}
+ .aham-workbench .wb-crumbs>* {white-space:nowrap}
+ .aham-workbench .wb-seg.sm {height:auto}
  .aham-workbench .wb-crumbs-meta {display:none}
  .aham-workbench .wb-tabs {gap:var(--wb-s3)}
  .aham-workbench button,.aham-workbench input {min-height:var(--wb-touch)}
@@ -88,5 +115,6 @@
 }
 @media (pointer:coarse) {
  .aham-workbench button,.aham-workbench input {min-height:var(--wb-touch);min-width:var(--wb-touch)}
+ .aham-workbench .wb-seg.sm {height:auto}
  .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-s4)}
 }

@@ -37,4 +37,4 @@ _or_ production code, depending on the need.
 - States use **6px dot + label text** — never pill badges, colored icons, or traffic-light indicators for status. Disabled opacity at 0.4.
 
 ## Web workbench (v7.1)
-CRM / ERP document views use WORKBENCH.md and workbench.css. Content websites retain the centered layout. Read tokens.json before any legacy mirror. Four composition contracts and examples/crm-quotation.html define density, editing, summary, responsive layout and accessibility.
+CRM / ERP document views use WORKBENCH.md and workbench.css. Content websites retain the centered layout. Read tokens.json before any legacy mirror. Four composition contracts and examples/crm-quotation.html define density, editing, summary, responsive layout and accessibility. Shell (7.2): 52px icon rail / 240px nav on the panel tier, white content card, one or two 40px header rows with 28px controls, side panels at 240px or 400px; behaviour in workbench.js, sample in examples/workbench-shell.html.

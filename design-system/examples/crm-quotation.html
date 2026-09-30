@@ -3,14 +3,18 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · C 高密度 CRM 单据</title><link rel="stylesheet" href="../workbench.css"><link rel="stylesheet" href="./crm-quotation.css"><style>body{margin:0}</style></head>
 <body>
 <div id="aham-dense-quote" class="aham-workbench" data-theme="light" aria-label="C 风格高密度销售报价单" data-density="compact">
-  <nav class="wb-rail" aria-label="工作空间导航">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
     <span class="wb-brand" aria-label="Aham CRM">A</span>
-    <button class="wb-nav-item" aria-label="展开导航" aria-expanded="false" data-action="nav"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg><span>收起导航</span></button>
     <div class="wb-nav-group"><button class="wb-nav-item" aria-label="客户" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-users"/></svg><span>客户</span></button><button class="wb-nav-item" aria-label="商机" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-folder"/></svg><span>商机</span></button><button class="wb-nav-item" aria-label="销售报价单" aria-current="page"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><span>销售报价</span></button><button class="wb-nav-item" aria-label="合同" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-copy"/></svg><span>合同</span></button></div>
     <div class="wb-nav-foot"><span class="wb-avatar">林</span></div>
   </nav>
   <div class="wb-main">
-    <header class="wb-crumbs"><div><span>销售工作空间</span><span>/</span><span>报价管理</span><span>/</span><strong>QT-20260930-018</strong></div><span class="wb-crumbs-meta">演示数据</span></header>
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" title="展开 / 收起导航（⌘B · Ctrl+B）"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>销售工作空间</span><span>/</span><span>报价管理</span><span>/</span><strong aria-current="page">QT-20260930-018</strong></nav></div>
+        <div class="wb-header-trail"><span class="wb-crumbs-meta">演示数据</span><button class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-moon"/></svg></button></div>
+      </div>
+    </header>
     <header class="wb-page-head"><div class="wb-page-head-lead"><h1>销售报价单</h1><span class="wb-status"><b></b><span id="dq-state">草稿</span></span><span class="wb-meta wb-mono">V1.2</span></div><div class="wb-page-head-trail"><span class="wb-meta" id="dq-save-state">未修改</span><button class="wb-btn" data-action="save">保存</button><button class="wb-btn primary" data-action="submit">模拟审批<svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-arrow-right"/></svg></button></div></header>
     <div class="wb-layout">
       <main class="wb-document">
@@ -43,15 +47,15 @@
         </section>
         <section class="wb-doc-notes"><div><h2>商务条款摘要</h2><dl><dt>付款方式</dt><dd>40% 预付款 / 40% 上线 / 20% 终验</dd><dt>维保起算</dt><dd>终验通过之日起 12 个月</dd><dt>范围说明</dt><dd>不含硬件、第三方许可与新增需求</dd></dl></div><div><h2>内部备注</h2><textarea aria-label="内部备注" rows="3" maxlength="2000">一期范围已与客户初步沟通；设备接口以现场确认清单为准。报价送出前需完成内部审批。</textarea><span class="dq-private">仅团队可见</span></div></section>
         <div id="dq-feedback" class="wb-feedback" role="status" aria-live="polite"></div>
+        <p class="wb-note">所有客户、价格与条款均为虚构演示 · 草稿仅保存在当前浏览器</p>
       </main>
-      <aside class="wb-context" aria-label="金额汇总与审批记录">
+      <aside class="wb-context wb-panel" tabindex="0" aria-label="金额汇总与审批记录">
         <section class="wb-summary"><h2>报价汇总</h2><div class="wb-total-label">价税合计 / CNY</div><div class="wb-total" id="dq-total">780,800.00</div><dl><dt>软件许可</dt><dd id="dq-software"></dd><dt>专业服务</dt><dd id="dq-service"></dd><dt>折前金额</dt><dd id="dq-original"></dd><dt>优惠金额</dt><dd id="dq-discount"></dd></dl><div class="wb-summary-foot"><span class="wb-status"><b></b>含税口径</span><span>随明细计算</span></div></section>
         <section class="wb-payment"><h2>收款计划</h2><div><span>预付款 <small>40%</small></span><strong id="dq-pay1"></strong></div><div><span>上线款 <small>40%</small></span><strong id="dq-pay2"></strong></div><div><span>验收款 <small>20%</small></span><strong id="dq-pay3"></strong></div></section>
         <section class="wb-approval"><div class="wb-section-head"><h2>审批流程</h2><span>顺序审批</span></div><ol><li class="done"><span class="wb-step-dot"></span><div><strong>林悦 · 制单</strong><small>09-30 10:42</small></div></li><li id="dq-current"><span class="wb-step-dot"></span><div><strong>销售负责人</strong><small id="dq-approval-state">待提交</small></div></li><li><span class="wb-step-dot"></span><div><strong>商务负责人</strong><small>待上一节点完成</small></div></li></ol></section>
         <section class="wb-history"><h2>最近变更</h2><p><strong>林悦</strong> 更新服务工作量</p><span>今天 10:42 · V1.2</span><p><strong>林悦</strong> 创建报价单</p><span>昨天 16:20 · V1.0</span></section>
       </aside>
     </div>
-    <footer class="wb-footer"><span>Aham UI 7.1 · C 高密度单据</span><button class="wb-btn" data-action="theme">深色</button><span>所有客户、价格与条款均为虚构演示 · 草稿仅保存在当前浏览器</span></footer>
   </div>
 </div>
 

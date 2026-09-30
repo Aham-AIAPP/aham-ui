@@ -1,0 +1,4 @@
+/* Shell example only. List rows use the list height (decision 3: 36px); P2 moves list styles into workbench.css. */
+:where(.aham-workbench) .shell-list .wb-table td{height:var(--wb-row-list)}
+:where(.aham-workbench) .shell-peek{padding:var(--wb-s4);display:grid;gap:var(--wb-s3);align-content:start}
+:where(.aham-workbench) .shell-peek h2{font-size:var(--wb-title);font-weight:500}

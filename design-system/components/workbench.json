@@ -16,18 +16,22 @@
   "anatomy": {
     "parts": [
       "rail",
-      "breadcrumb",
+      "header-row",
       "page-header",
       "document",
-      "context-panel"
+      "panel"
     ],
     "required": [
       "rail",
-      "breadcrumb"
-    ]
+      "header-row"
+    ],
+    "notes": "header-row 每页 1–2 条；page-header 只在单据页出现；panel 分 narrow 240 / wide 400，一次只开一个"
   },
   "specification": "WORKBENCH.md",
-  "reference": "examples/crm-quotation.html",
+  "reference": [
+    "examples/crm-quotation.html",
+    "examples/workbench-shell.html"
+  ],
   "implementation": "workbench.css",
   "states": [
     "default",
@@ -47,6 +51,14 @@
     "彩色状态胶囊",
     "蓝色整行选中",
     "卡片阴影",
-    "通过缩小字号到 12px 以下提高密度"
+    "通过缩小字号到 12px 以下提高密度",
+    "页面级大标题区（工作台列表页用页眉横条）",
+    "内容卡边框或静态阴影"
+  ],
+  "behavior": "workbench.js",
+  "keyboard": [
+    "⌘B / Ctrl+B 切换导航（输入法组字时不响应）",
+    "窄屏导航浮层：Esc 关闭，焦点回到导航按钮",
+    "无可聚焦内容的滚动区可 Tab 聚焦"
   ]
 }

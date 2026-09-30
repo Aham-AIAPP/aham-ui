@@ -40,9 +40,19 @@
       "purpose": "显式选择工作台时加载；不覆盖全局组件"
     },
     {
+      "file": "workbench.js",
+      "priority": 7,
+      "purpose": "工作台外框行为：导航开关（⌘B）、窄屏浮层、侧面板开关；原生 ES 模块"
+    },
+    {
       "file": "examples/crm-quotation.html",
       "priority": 8,
       "purpose": "可运行的虚构单据示例"
+    },
+    {
+      "file": "examples/workbench-shell.html",
+      "priority": 8,
+      "purpose": "外框与两条页眉横条、宽侧面板的示例"
     }
   ],
   "componentResolution": {

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 工作台外框</title><link rel="stylesheet" href="../workbench.css"><link rel="stylesheet" href="./workbench-shell.css"><style>body{margin:0}</style></head>
+<body>
+<div class="aham-workbench" data-theme="light" aria-label="工作台外框示例">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <span class="wb-brand" aria-label="Aham CRM">A</span>
+    <div class="wb-nav-group"><button class="wb-nav-item" aria-label="客户" aria-current="page"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-users"/></svg><span>客户</span></button><button class="wb-nav-item" aria-label="商机" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-folder"/></svg><span>商机</span></button><button class="wb-nav-item" aria-label="销售报价" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><span>销售报价</span></button><button class="wb-nav-item" aria-label="合同" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-copy"/></svg><span>合同</span></button></div>
+    <div class="wb-nav-foot"><span class="wb-avatar">林</span></div>
+  </nav>
+  <div class="wb-main">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" title="展开 / 收起导航（⌘B · Ctrl+B）"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>销售工作空间</span><span>/</span><span aria-current="page">客户</span></nav><div class="wb-seg sm" role="group" aria-label="视图"><button aria-pressed="true" data-view>全部客户</button><button aria-pressed="false" data-view>我负责的</button><button aria-pressed="false" data-view>本周新增</button></div></div>
+        <div class="wb-header-trail"><button class="wb-icon-btn" data-action="placeholder" aria-label="搜索"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-search"/></svg></button><button class="wb-icon-btn" data-action="placeholder" aria-label="通知"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-bell"/></svg></button><button class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-moon"/></svg></button></div>
+      </div>
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><span class="wb-count">128 位客户 · 示例显示 12 位</span></div>
+        <div class="wb-header-trail"><button class="wb-btn sm ghost" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-filter"/></svg>筛选</button><button class="wb-btn sm ghost" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-settings"/></svg>显示</button><button class="wb-btn sm ghost" data-panel-toggle="customer-peek" aria-pressed="true" aria-controls="customer-peek"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-eye"/></svg>预览</button></div>
+      </div>
+    </header>
+    <div class="wb-layout">
+      <main class="wb-document shell-list">
+        <div class="wb-table-scroll" tabindex="0" role="region" aria-label="客户列表，可横向滚动">
+          <table class="wb-table"><colgroup><col><col style="width:96px"><col style="width:80px"><col style="width:96px"><col style="width:96px"><col style="width:112px"></colgroup>
+            <thead><tr><th scope="col">客户名称</th><th scope="col">行业</th><th scope="col">负责人</th><th scope="col">阶段</th><th scope="col">最近跟进</th><th scope="col" class="number">年度金额</th></tr></thead>
+            <tbody>
+              <tr><td>远川精密制造有限公司</td><td>装备制造</td><td>林悦</td><td><span class="wb-status"><b></b>方案评估</span></td><td class="wb-mono">09-30</td><td class="number">780,800.00</td></tr>
+              <tr><td>临江包装材料股份有限公司</td><td>包装</td><td>周航</td><td><span class="wb-status"><b></b>需求调研</span></td><td class="wb-mono">09-29</td><td class="number">326,000.00</td></tr>
+              <tr><td>北岸汽车零部件有限公司</td><td>汽车零部件</td><td>林悦</td><td><span class="wb-status"><b></b>商务谈判</span></td><td class="wb-mono">09-29</td><td class="number">1,240,000.00</td></tr>
+              <tr><td>青禾食品科技有限公司</td><td>食品</td><td>许宁</td><td><span class="wb-status"><b></b>初次接触</span></td><td class="wb-mono">09-28</td><td class="number">—</td></tr>
+              <tr><td>东麓电子元件有限公司</td><td>电子</td><td>周航</td><td><span class="wb-status"><b></b>方案评估</span></td><td class="wb-mono">09-27</td><td class="number">560,500.00</td></tr>
+              <tr><td>南桥医疗器械有限公司</td><td>医疗器械</td><td>许宁</td><td><span class="wb-status"><b></b>已签约</span></td><td class="wb-mono">09-26</td><td class="number">918,000.00</td></tr>
+              <tr><td>西塘纺织集团有限公司</td><td>纺织</td><td>林悦</td><td><span class="wb-status"><b></b>需求调研</span></td><td class="wb-mono">09-25</td><td class="number">210,000.00</td></tr>
+              <tr><td>云岭新材料有限公司</td><td>新材料</td><td>周航</td><td><span class="wb-status"><b></b>商务谈判</span></td><td class="wb-mono">09-24</td><td class="number">1,050,000.00</td></tr>
+              <tr><td>白石模具有限公司</td><td>模具</td><td>许宁</td><td><span class="wb-status"><b></b>初次接触</span></td><td class="wb-mono">09-23</td><td class="number">—</td></tr>
+              <tr><td>松原化工有限公司</td><td>化工</td><td>林悦</td><td><span class="wb-status"><b></b>方案评估</span></td><td class="wb-mono">09-22</td><td class="number">432,000.00</td></tr>
+              <tr><td>长汀机电设备有限公司</td><td>机电</td><td>周航</td><td><span class="wb-status"><b></b>已签约</span></td><td class="wb-mono">09-20</td><td class="number">675,200.00</td></tr>
+              <tr><td>海宁家居制品有限公司</td><td>家居</td><td>许宁</td><td><span class="wb-status"><b></b>需求调研</span></td><td class="wb-mono">09-19</td><td class="number">188,000.00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="wb-note" id="shell-feedback" role="status" aria-live="polite">所有客户与金额均为虚构示例。筛选、显示选项和搜索在 P2 实现，预览面板的交互在 P3 实现。</p>
+      </main>
+      <aside class="wb-panel" id="customer-peek" data-size="wide" tabindex="0" aria-label="客户预览">
+        <section class="shell-peek">
+          <h2>远川精密制造有限公司</h2>
+          <span class="wb-status"><b></b>方案评估</span>
+          <dl><dt>负责人</dt><dd>林悦 / 华东销售组</dd><dt>行业</dt><dd>装备制造</dd><dt>关联商机</dt><dd>MES 一期建设项目</dd><dt>最近报价</dt><dd class="wb-mono">QT-20260930-018</dd><dt>年度金额</dt><dd class="wb-mono">780,800.00</dd></dl>
+          <p class="wb-note">宽面板 400px，用于预览和分析；窄面板 240px，用于属性和摘要。一次只开一个。</p>
+        </section>
+      </aside>
+    </div>
+  </div>
+</div>
+<script type="module" src="./workbench-shell.mjs"></script>
+</body></html>
