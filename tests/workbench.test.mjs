@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords} from '../design-system/workbench.js';
+import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords,keyStep} from '../design-system/workbench.js';
 
 const fields = [
   { key: 'name', label: '名称', type: 'text' },
@@ -91,4 +91,14 @@ test('version diff: added, removed and changed fields by key, in version order',
   assert.deepEqual(d.changed.map(c => [c.id, c.fields]), [['p1', [{ field: 'qty', from: 1000, to: 1200 }]]]);
   assert.equal(d.unchanged, 1);
   assert.deepEqual(diffRecords([{ id: 1, a: [1] }], [{ id: 1, a: [1] }]).changed, [], 'structural equality');
+});
+
+test('key steps use the same names as the reserved table in shortcuts.json', async () => {
+  const {readFile} = await import('node:fs/promises');
+  const reserved = Object.keys(JSON.parse(await readFile(new URL('../design-system/components/shortcuts.json', import.meta.url), 'utf8')).reserved);
+  const ev = (key, mods = {}) => ({ key, metaKey: false, ctrlKey: false, altKey: false, shiftKey: false, ...mods });
+  const steps = [keyStep(ev('ArrowUp')), keyStep(ev('ArrowDown')), keyStep(ev('ArrowLeft')), keyStep(ev('ArrowRight')),
+    keyStep(ev('ArrowDown', { shiftKey: true })), keyStep(ev('Escape')), keyStep(ev(' ')), keyStep(ev('k', { ctrlKey: true }))];
+  assert.deepEqual(steps, ['up', 'down', 'left', 'right', 'shift+down', 'escape', 'space', 'mod+k']);
+  for (const s of steps) assert.ok(reserved.includes(s), `${s} is in the reserved table`);
 });

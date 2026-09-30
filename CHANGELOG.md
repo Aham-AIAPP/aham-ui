@@ -36,6 +36,7 @@
 修正文件之间的 25 处矛盾。裁决顺序为 tokens → WORKBENCH / DESIGN → 契约 → 运行时 → 示例。
 
 - `aham-ui.css` 的 `[data-density="compact"]` 行高由 28px 改为 32px，与 tokens 一致。
+- 快捷键的方向键名与保留表一致：`workbench.js` 把 `ArrowDown` 等规范为 `down`、`up`、`left`、`right`，原来登记 `down` 的快捷键按不响应。新增导出 `keyStep`，测试核对它给出的键名都在 `shortcuts.json` 的保留表里。
 - 开关打开统一为墨色：`toggle.json` 和开关预览页原来写蓝色。
 - `button.json` 改为现行写法：主按钮 `#164EC3`，次级白底加线，危险红字。按钮预览页随之改。
 - 进度条和滑块的填充统一为墨色，改的是契约和预览页；`aham-ui.css` 原本就是墨色。

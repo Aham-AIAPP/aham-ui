@@ -770,15 +770,18 @@ export function registerShortcut(def) {
 export const listShortcuts = () => shortcuts.filter(s => s.label && (singleKeys || !characterOnly(s.keys)) && (s.external || s.when())).map(({ keys, label, group }) => ({ keys, label, group }));
 const editable = el => el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 let pending = null, pendingTimer = 0;
-function stepOf(e) {
+// Arrow keys report 'ArrowDown' etc.; the registry and shortcuts.json name them 'down', 'up', 'left', 'right'.
+const KEY_ALIAS = { arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right', esc: 'escape' };
+export function keyStep(e) {
   // Shift+/ reports '?' on most layouts but '/' with shiftKey from some input sources; treat both as '?'.
-  const k = e.key === ' ' ? 'space' : e.key === '/' && e.shiftKey ? '?' : e.key.toLowerCase();
+  const raw = e.key === ' ' ? 'space' : e.key === '/' && e.shiftKey ? '?' : e.key.toLowerCase();
+  const k = KEY_ALIAS[raw] ?? raw;
   const mods = [(e.metaKey || e.ctrlKey) && 'mod', e.altKey && 'alt', e.shiftKey && e.key.length !== 1 && 'shift'].filter(Boolean);
   return [...mods, k === '?' ? '?' : k].join('+');
 }
 if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   if (e.isComposing || e.defaultPrevented || e.repeat) return;
-  const step = stepOf(e), typing = editable(e.target);
+  const step = keyStep(e), typing = editable(e.target);
   const seq = pending ? `${pending} ${step}` : step;
   const live = shortcuts.filter(s => !s.external && (singleKeys || !characterOnly(s.keys)));
   const hit = live.find(s => s.keys === seq && s.when(e)) || (pending ? live.find(s => s.keys === step && s.when(e)) : null);
