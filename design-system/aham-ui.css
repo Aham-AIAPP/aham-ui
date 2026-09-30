@@ -1,5 +1,5 @@
 /* =============================================================================
-   Aham UI — v7.2 基础层(组件 + 文本样式 + 暗色);变量值与 tokens.json 一致,由 scripts/lint-design.mjs 校验
+   Aham UI — v7.3 基础层(组件 + 文本样式 + 暗色);变量值与 tokens.json 一致,由 scripts/lint-design.mjs 校验
    北极星：Claude desktop 气质——极简、克制、留白、内容优先。默认是"不加"。
    字体照 Linear：Inter Variable(西文)+雅黑/黑体(中文) 一套无衬线 + Berkeley Mono / JetBrains Mono(数字、代码)。不用衬线。
    纯 CSS 组件库——不依赖 React，任意 HTML 直接用 class 拼原型。

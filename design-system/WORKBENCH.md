@@ -1,6 +1,6 @@
 # Aham UI · 网页工作台与高密度单据
 
-版本 7.2.1。正式扩展 [DESIGN.md](DESIGN.md) §8，数值唯一来源为 [tokens.json](tokens.json)。C 风格是 Aham 的业务工作台模式：保留视觉身份，吸收 Circle / Linear 的空间组织与操作效率。它不是另一套皮肤。
+版本 7.3.0。正式扩展 [DESIGN.md](DESIGN.md) §8，数值唯一来源为 [tokens.json](tokens.json)。C 风格是 Aham 的业务工作台模式：保留视觉身份，吸收 Circle / Linear 的空间组织与操作效率。它不是另一套皮肤。
 
 ## 1. 适用范围与身份边界
 

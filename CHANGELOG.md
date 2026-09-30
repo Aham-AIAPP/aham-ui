@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+## [7.3.0] - 2026-09-30
+
+> **字体改用 Linear 的字体栈**：无衬线 Inter Variable（随包附带 4.1），等宽 Berkeley Mono（未授权时 JetBrains Mono），开启 Linear 的 `cv01` / `ss03`；字号和字重仍用 Aham 的档位。
+
 ### 新增
 - `design-system/fonts/` 附带 Inter Variable 4.1 的正体和斜体（取自 rsms/inter 的 v4.1 标签，与 Linear 自托管的版本相同）及 SIL OFL 授权文本。`fonts/inter.css` 声明字体，`aham-ui.css`、`workbench.css`、`colors_and_type.css` 在文件开头引入它。
 
@@ -181,7 +185,8 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.2.1...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.3.0...HEAD
+[7.3.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.3.0
 [7.2.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.1
 [7.2.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.0
 [7.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.1.0
