@@ -28,7 +28,7 @@ The system operates on a deliberately narrow palette rooted in cool paper and re
 
 The ink scale runs from `#262626` (primary text, the darkest reading surface) through `#6E6E6E` (secondary, labels, metadata) to `#9B9B9B` (tertiary, placeholders, disabled hints) with a quaternary `#C4C4C4` reserved for the faintest decorative use only.
 
-The accent is a single cool blue, `#336EE8`. It appears in exactly four places: the logo mark, the primary button, the send/confirm action, and the focus ring. On hover it lightens to `#5C8BED`; on press it deepens to `#164EC3`. There is a companion tint family (`#C8D3EA` as a border tint, `#EDF0F7` as a surface tint) for subtle accent-backed areas, but these are secondary and never dominate a view. There is no accent scale beyond these stops -- blue does not graduate. It is a point, not a spectrum.
+The accent is a single cool blue, `#336EE8`. It appears only on the logo mark, the primary action, the send/confirm action, the focus ring, the current-tab underline and text links. Selection is flat gray, never blue. The primary button fill uses the press stop `#164EC3` (white text 7.21:1) and lightens to `#336EE8` on hover, in light and dark themes alike. There is a companion tint family (`#C8D3EA` as a border tint, `#EDF0F7` as a surface tint) for subtle accent-backed areas, but these are secondary and never dominate a view. There is no accent scale beyond these stops -- blue does not graduate. It is a point, not a spectrum.
 
 Semantic colors are deliberately desaturated to sit within the cool, restrained palette rather than screaming for attention. Success is a muted sage `#5A7A60` on a barely-there tint background. Warning is a subdued ochre `#8A7333`. Danger is a dusty red `#9E3D31`. None of these colors appears as a solid fill on a large surface -- they tint, they don't flood.
 
@@ -87,7 +87,7 @@ Aham is flat at rest. There is no resting shadow on cards, panels, buttons, or i
 2. **Popover** (`0 3px 12px rgba(20,20,20,0.06)`) -- tooltips, hover cards, non-modal overlays. Slightly more presence than a dropdown but still subordinate.
 3. **Modal** (`0 12px 36px rgba(20,20,20,0.10)`) -- the single elevation that draws real attention. Reserved for dialogs, alerts, and any overlay that blocks interaction with the page behind it. Even at its maximum, the shadow is gray and diffuse, never black or harsh.
 
-The focus ring (`0 0 0 3px rgba(51,110,232,0.20)`) is technically a shadow but lives in its own category: it is the only place where the accent blue bleeds into the shadow system, and it is the only "shadow" that appears at rest (when an element is focused).
+Keyboard focus is a 2px solid accent outline with a 2px offset (4.63:1 on white). Text inputs additionally show a soft 3px tint halo (`0 0 0 3px rgba(51,110,232,0.20)`) around their blue border; the halo alone is never the focus indicator.
 
 ### Borders
 
@@ -128,7 +128,7 @@ The concrete icon set is **Lucide (ISC)** — linear, monochrome, round cap+join
 - `README.md` -- this file, the comprehensive brand narrative
 - `tokens.json` -- **single source of truth** for all token values (light + dark, text styles, layout, sizes, icon); everything else derives from it
 - `DESIGN.md` -- the full eight-layer specification (principles → foundations → components → composition → patterns → media → inputs → support → page layout)
-- `colors_and_type.css` -- drop-in runtime CSS custom properties, generated from tokens.json
+- `colors_and_type.css` -- compatibility CSS custom properties for the component previews; values mirror tokens.json and are checked by `scripts/lint-design.mjs`
 - `components.css` -- aggregated component CSS (includes `.icon`)
 - `css.json` -- structured JSON token representation for programmatic consumption
 - `components/` -- component contracts (`{slug}.json`): anatomy, variant dimensions, patterns, usage hints, exclusions (17 = 16 core + icon)
@@ -142,7 +142,7 @@ The concrete icon set is **Lucide (ISC)** — linear, monochrome, round cap+join
 ## CAVEATS / KNOWN SUBSTITUTIONS
 
 1. **Microsoft YaHei / SimHei** are the CJK fallback faces in the `font-family` stack for Inter and Inter Display. These are system fonts on Windows; on macOS the stack falls through to the system-ui CJK face (PingFang SC). On Linux, the stack degrades to the system sans-serif default for CJK. The CJK rendering will differ from the Latin rendering in weight and x-height -- this is a known limitation of cross-platform web typography and not a design decision.
-2. **JetBrains Mono** requires a Google Fonts CDN import. In fully offline environments, the monospace stack falls back to `SF Mono, Menlo, monospace`. Tabular number alignment is preserved by the browser's monospace fallback, but the character design will differ visibly from JetBrains Mono.
+2. **Fonts are not fetched from third-party servers** (DESIGN §1.11, local-first). Without a local or self-hosted Inter / JetBrains Mono (SIL OFL), the stacks fall back to system faces; the monospace stack falls back to `SF Mono, Menlo, monospace`. Tabular number alignment is preserved by the browser's monospace fallback, but the character design will differ visibly from JetBrains Mono.
 3. **No brand copy examples from source material** -- the content fundamentals section derives its voice and tone guidance from the stated design philosophy (极简、克制、留白优先、内容优先) and observed component label patterns, not from a brand copy deck or UI string audit. Specific copy examples should be validated against the product's actual UI strings when available.
 4. **Component variants** listed in component contracts represent the known, specified set. Additional states (loading spinners within buttons, password visibility toggles, character counts on inputs) are marked as `unknowns` in their respective contracts. These should not be invented without explicit design approval.
 5. **Dark theme** color values are algorithmic inversions of the light theme, validated against the design system specification. They have not been tested against the full component set in a dark-mode rendering pass. Subtle contrast adjustments may be needed for tertiary ink on dark panel backgrounds.

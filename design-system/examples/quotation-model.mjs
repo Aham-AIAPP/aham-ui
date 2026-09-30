@@ -23,11 +23,11 @@ export function totals(rows){
 }
 export function restoreDraft(raw){
  const s=JSON.parse(raw);
- if(s?.schema!==1||!['compact','standard'].includes(s.density)||!['draft','review'].includes(s.status)||!Array.isArray(s.rows)||s.rows.length!==12||!Array.isArray(s.fields)||s.fields.length!==12||s.fields.some(v=>typeof v!=='string'||v.length>200||!v.trim())||typeof s.note!=='string'||s.note.length>2000)throw new Error('Unsupported draft');
+ if(s?.schema!==1||!['compact','detail','standard'].includes(s.density)||!['draft','review'].includes(s.status)||!Array.isArray(s.rows)||s.rows.length!==12||!Array.isArray(s.fields)||s.fields.length!==12||s.fields.some(v=>typeof v!=='string'||v.length>200||!v.trim())||typeof s.note!=='string'||s.note.length>2000)throw new Error('Unsupported draft');
  const rows=defaults();
  s.rows.forEach((r,i)=>{if(r?.id!==i)throw new Error('Invalid row identity');rows[i].qty=r.qty;rows[i].discountTenths=r.discountTenths;if(!validRow(rows[i]))throw new Error('Invalid draft row');});
  const validDate=v=>/^\d{4}-\d{2}-\d{2}$/.test(v)&&Number.isFinite(Date.parse(v))&&new Date(v).toISOString().slice(0,10)===v;
  if(!validDate(s.fields[3])||!validDate(s.fields[4])||s.fields[4]<s.fields[3])throw new Error('Invalid date range');
- return {...s,rows};
+ return {...s,density:s.density==='standard'?'detail':s.density,rows};
 }
 export const money=cents=>(cents/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});

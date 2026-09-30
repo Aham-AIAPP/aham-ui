@@ -38,7 +38,7 @@
  .aham-workbench .wb-crumbs-meta {display:none}
  .aham-workbench .wb-tabs {gap:var(--wb-s3)}
  .aham-workbench button,.aham-workbench input:not([type=checkbox],[type=radio]) {min-height:var(--wb-touch)}
- .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-s4)}
+ .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-touch-input)}
  .aham-workbench .wb-table {min-width:calc(var(--wb-table-min) + var(--wb-s8))}
  .aham-workbench .wb-layout.is-list {display:block;overflow:visible}
  .aham-workbench .wb-detail {overflow:visible}
@@ -65,5 +65,19 @@
  .aham-workbench .wb-seg.sm {height:auto}
  .aham-workbench .wb-chip {height:var(--wb-touch)}
  .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
- .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-s4)}
+ .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-touch-input)}
+}
+/* Increase contrast (DESIGN §1.8): control boundaries and dividers reach 3:1, secondary text darkens, inputs get an outline. */
+@media (prefers-contrast: more) {
+ .aham-workbench {--wb-line:{{color.contrastMore.control-border}};--wb-muted:{{color.contrastMore.ink-secondary}}}
+ .aham-workbench[data-theme="dark"] {--wb-line:{{color.dark.contrastMore.control-border}};--wb-muted:{{color.dark.ink.secondary}}}
+ .aham-workbench :is(.wb-input,.wb-select,.wb-search,.wb-btn:not(.primary,.outline,.ghost)) {box-shadow:inset 0 0 0 1px var(--wb-line)}
+ .aham-workbench :focus-visible {outline-width:3px}
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+ .aham-workbench:not([data-theme="light"]) {--wb-line:{{color.dark.contrastMore.control-border}};--wb-muted:{{color.dark.ink.secondary}}}
+}
+/* Reduce motion (DESIGN §1.7): state changes switch without transitions. */
+@media (prefers-reduced-motion: reduce) {
+ .aham-workbench *,.aham-workbench *::before,.aham-workbench *::after {transition-duration:0s!important;animation-duration:0s!important}
 }

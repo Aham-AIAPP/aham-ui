@@ -84,8 +84,9 @@ body { margin: 0; }
 </main>
 </div>
 <script type="module">
-import {icon, createCommand, initListKeys, initPropertyPickers, initComposer, escapeHtml} from '../workbench.js';
+import {icon, createCommand, initListKeys, initPropertyPickers, initComposer, escapeHtml, initTheme} from '../workbench.js';
 const root = document.querySelector('.aham-workbench');
+initTheme(root);
 root.querySelectorAll('[data-i]').forEach(el => { el.innerHTML = icon(el.dataset.i); });
 
 const say = text => { document.querySelector('#pv-keys').textContent = text; };

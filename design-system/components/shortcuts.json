@@ -9,7 +9,7 @@
   "intent": "统一快捷键表：登记后才能出现在界面提示和帮助列表里",
   "specification": "WORKBENCH.md §12.2",
   "reference": "examples/customer-list.html",
-  "api": "registerShortcut({ keys, label, group, when?, run?, external? }) / listShortcuts() / formatKeys(keys)",
+  "api": "registerShortcut({ keys, label, group, when?, run?, external? }) / listShortcuts() / formatKeys(keys) / setSingleKeyShortcuts(on) / singleKeyShortcuts() / initTooltips(root)",
   "variantDimensions": [
     {
       "axis": "scope",
@@ -45,6 +45,8 @@
     "space": "预览当前行",
     "enter": "打开当前行",
     "x": "勾选当前行",
+    "shift+up": "向上扩展勾选范围",
+    "shift+down": "向下扩展勾选范围",
     "s": "修改状态类主属性",
     "a": "修改负责人",
     "shift+f10": "当前行的操作菜单",
@@ -56,7 +58,9 @@
     "单字母快捷键只在焦点不在输入框、输入法未组字时生效；mod 组合键在输入框里也生效",
     "保留键不得改作他用；新增快捷键先登记再显示提示",
     "帮助列表按组显示已登记的按键，由 ? 打开",
-    "macOS 显示 ⌘ ⇧ ⌥，其他系统显示 Ctrl Shift Alt"
+    "macOS 显示 ⌘ ⇧ ⌥，其他系统显示 Ctrl Shift Alt",
+    "单字母快捷键可以在设置里整体关闭（WCAG 2.1.4），setSingleKeyShortcuts(false)，选择记在本机；关闭后帮助列表和按钮提示不再显示这些键",
+    "按钮提示（§12.7）：data-tooltip 写名称，data-keys 写已登记的按键；悬停 500ms 或键盘聚焦时出现，任意按键、移开、滚动、点击时消失"
   ],
   "states": [
     "idle",
@@ -71,6 +75,8 @@
   "doNotInvent": [
     "界面上显示没登记的快捷键",
     "在输入框里拦截单字母键",
-    "把保留键挪作他用"
+    "把保留键挪作他用",
+    "没有关闭开关的全局单字母快捷键",
+    "用 title 属性代替按钮提示"
   ]
 }

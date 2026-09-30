@@ -13,12 +13,5 @@ root.addEventListener('click', e => {
   }
   switch (b.dataset.action) {
     case 'placeholder': feedback.textContent = '此示例只演示外框与页眉，该入口在后续阶段实现。'; break;
-    case 'theme': {
-      const dark = root.dataset.theme !== 'dark';
-      root.dataset.theme = dark ? 'dark' : 'light';
-      b.setAttribute('aria-pressed', String(dark));
-      b.querySelector('use').setAttribute('href', `../icons/aham-icons.svg#i-${dark ? 'sun' : 'moon'}`);
-      break;
-    }
   }
 });

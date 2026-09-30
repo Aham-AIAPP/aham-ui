@@ -32,20 +32,24 @@ const ratio = r => `${r >= 10 ? r.toFixed(1) : r.toFixed(2)} : 1`;
 // Labels and group notes come from the previous panorama page; values always come from tokens.json.
 const COLOR_GROUPS = [
   { title: '表面 Surface', note: '深度的唯一来源——层差，无暖调。', path: 'color.surface', dark: 'color.dark.surface', items: [['tier1-white', '内容 / 卡片', 'tier1-bg'], ['tier2-panel', '面板 / 侧栏', 'tier2-panel'], ['tier3-line', '线 / 选中', 'tier3-line']] },
-  { title: '强调蓝 Accent', note: '唯一色相，点缀用：logo、主操作、选中、链接。', path: 'color.accent', dark: 'color.dark.accent', text: ['default'], items: [['default', '默认', 'default'], ['hover', '悬停', 'hover'], ['press', '按下', 'press'], ['tint-surface', '浅底'], ['tint-border', '浅描边']] },
+  { title: '强调蓝 Accent', note: '唯一色相：logo、主操作、发送、焦点环、当前页签下划线、文字链接；选中用灰。', path: 'color.accent', dark: 'color.dark.accent', text: ['default'], items: [['default', '默认', 'default'], ['hover', '悬停', 'hover'], ['press', '按下', 'press'], ['tint-surface', '浅底', 'tint-surface'], ['tint-border', '浅描边', 'tint-border']] },
+  { title: '主按钮 Action', note: '主按钮底色用按下档，亮暗一致，白字对比度见右。', path: 'color.alias', dark: 'color.alias', action: true, items: [['action-bg', '主按钮底', 'action-bg'], ['action-bg-hover', '主按钮悬停', 'action-bg-hover']] },
   { title: '文字 Ink', note: '对齐 Apple label 的四级递减，取值 Aham。', path: 'color.ink', dark: 'color.dark.ink', text: ['primary', 'secondary', 'tertiary', 'quaternary'], items: [['primary', '主 / 正文', 'primary'], ['secondary', '次要', 'secondary'], ['tertiary', '三级 / 占位', 'tertiary'], ['quaternary', '四级 / 分隔', 'quaternary'], ['on-accent', '蓝底文字', 'on-accent']] },
-  { title: '语义 Semantic', note: '极弱，只用于真实风险；禁红黄绿灯。', path: 'color.semantic', dark: 'color.dark.semantic', text: ['success', 'warning', 'danger'], items: [['success', '成功', 'success'], ['success-bg', '成功底'], ['warning', '警示', 'warning'], ['warning-bg', '警示底'], ['danger', '危险', 'danger'], ['danger-bg', '危险底']] },
+  { title: '语义 Semantic', note: '极弱，只用于真实风险；禁红黄绿灯。通知正文用墨色，语义色只在底色和描边上。', path: 'color.semantic', dark: 'color.dark.semantic', text: ['success', 'warning', 'danger'], items: [['success', '成功', 'success'], ['success-bg', '成功底', 'success-bg'], ['warning', '警示', 'warning'], ['warning-bg', '警示底', 'warning-bg'], ['danger', '危险', 'danger'], ['danger-bg', '危险底', 'danger-bg']] },
+  { title: '高对比度 Contrast more', note: '系统开启「增强对比度」时替换分隔线、次级文字与控件边界。', path: 'color.contrastMore', dark: 'color.dark.contrastMore', text: ['ink-secondary', 'ink-tertiary'], boundary: ['control-border'], items: [['control-border', '控件边界', 'control-border'], ['line', '分隔线'], ['table-line', '表格横线'], ['ink-secondary', '次级文字'], ['ink-tertiary', '三级文字']] },
 ];
 
 function colors() {
   const bg = resolve('color.surface.tier1-white'), darkBg = resolve('color.dark.surface.tier1-bg');
-  const accent = resolve('color.accent.default'), darkAccent = resolve('color.dark.accent.default');
+  const action = resolve('color.alias.action-bg'), onAccent = resolve('color.ink.on-accent');
   const card = g => {
     const rows = g.items.map(([key, label, darkKey]) => {
       const light = resolve(`${g.path}.${key}`), dark = darkKey ? resolve(`${g.dark}.${darkKey}`) : null;
       let cr = '';
       if (g.text?.includes(key)) cr = `对白底 ${ratio(contrast(light, bg))}${dark ? ` · 深色 ${ratio(contrast(dark, darkBg))}` : ''}`;
-      if (key === 'on-accent') cr = `对蓝底 ${ratio(contrast(light, accent))}${dark ? ` · 深色 ${ratio(contrast(dark, darkAccent))}` : ''}`;
+      if (g.boundary?.includes(key)) cr = `控件边界对白底 ${ratio(contrast(light, bg))}${dark ? ` · 深色 ${ratio(contrast(dark, darkBg))}` : ''}`;
+      if (g.action) cr = `白字 ${ratio(contrast(onAccent, light))}`;
+      if (key === 'on-accent') cr = `对主按钮底 ${ratio(contrast(light, action))}`;
       return `<li class="pano-swatch"><span class="pano-chips"><span style="background:${light}" title="浅色 ${light}"></span>${dark ? `<span style="background:${dark}" title="深色 ${dark}"></span>` : ''}</span><span class="pano-swatch-text"><strong>${esc(label)}</strong><code>${g.path}.${key}</code><span class="mono">${light}${dark ? ` · 深色 ${dark}` : ' · 深色未定义'}</span>${cr ? `<span>${cr}</span>` : ''}</span></li>`;
     }).join('');
     return `<article class="pano-card"><header class="pano-card-head"><h3>${g.title}</h3><p>${esc(g.note)}</p></header><ul class="pano-swatches">${rows}</ul></article>`;
@@ -139,6 +143,19 @@ function files() {
   return `<div class="pano-scroll" tabindex="0" role="region" aria-label="读取顺序表，可横向滚动"><table class="doc-table"><thead><tr><th class="num">顺序</th><th>文件</th><th>用途</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
+// DESIGN.md keeps half-width , ; after Chinese text; the page shows full-width punctuation there.
+const cjkPunct = t => t.replace(/([\u3000-\u9fff）」`*])\s*,/g, '$1，').replace(/([\u3000-\u9fff）」a-zA-Z0-9`*])\s*;/g, '$1；');
+const inline = t => esc(cjkPunct(t)).replace(/\*\*([^*]+)\*\*/g, '$1').replace(/`([^`]+)`/g, '<code>$1</code>');
+function rules() {
+  const bullets = (text, start, stop) => { const from = text.indexOf(start); if (from < 0) throw new Error(`missing "${start}"`); const body = text.slice(from + start.length); const end = stop ? body.indexOf(stop) : -1; return (end < 0 ? body : body.slice(0, end)).split('\n').filter(l => l.startsWith('- ')).map(l => l.slice(2).trim()); };
+  const base = bullets(read(`${ds}DESIGN.md`), '**铁规总览**', '\n---');
+  const wb = bullets(read(`${ds}AGENTS.md`), '硬性要求：', '\n## ');
+  let n = 0;
+  const item = text => { const i = text.search(/[,，;；]/); const title = i < 0 ? text : text.slice(0, i); const rest = i < 0 ? '' : text.slice(i + 1); return `<li><span class="n">${String(++n).padStart(2, '0')}</span><strong>${inline(title.replace(/。$/, ''))}</strong>${rest ? `<p>${inline(rest)}</p>` : ''}</li>`; };
+  return `<article class="pano-card"><header class="pano-card-head"><h3>全部产品</h3><p><a href="${ds}DESIGN.md"><code>DESIGN.md</code></a> §0</p></header><ol class="pano-rules">${base.map(item).join('')}</ol></article>
+<article class="pano-card"><header class="pano-card-head"><h3>网页工作台附加规则</h3><p><a href="${ds}AGENTS.md"><code>AGENTS.md</code></a> · 工作台入口（7.2）</p></header><ol class="pano-rules">${wb.map(item).join('')}</ol></article>`;
+}
+
 function structure() {
   const heads = (file, re) => read(file).split('\n').map(l => l.match(re)?.[1]).filter(Boolean);
   const list = (title, file, items) => `<article class="pano-card"><header class="pano-card-head"><h3>${title}</h3><p><a href="${file}"><code>${file.replace(ds, '')}</code></a></p></header><ol class="pano-toc">${items.map(t => `<li>${esc(t)}</li>`).join('')}</ol></article>`;
@@ -172,7 +189,7 @@ function stats(html) {
 
 const version = () => `v${tokens.$meta.version}`;
 
-const REGIONS = { sprite, version, stats, reading, colors, type, space, icons, 'base-contracts': baseContracts, 'base-examples': baseExamples, 'wb-tokens': wbTokens, 'wb-contracts': wbContracts, 'wb-pages': wbPages, structure, release, files };
+const REGIONS = { sprite, version, stats, reading, colors, type, space, icons, 'base-contracts': baseContracts, 'base-examples': baseExamples, 'wb-tokens': wbTokens, 'wb-contracts': wbContracts, 'wb-pages': wbPages, rules, structure, release, files };
 
 export function build(html) {
   for (const [name, fn] of Object.entries(REGIONS)) {

@@ -125,14 +125,4 @@ registerShortcut({ keys: 'escape', label: '关闭最上层的浮层', group: '�
 initComposer($('#composer'), {
   onSubmit: text => { activity.push({ kind: 'comment', who: ME, text, when: '刚刚' }); renderActivity(); return true; },
 });
-root.addEventListener('click', e => {
-  const b = e.target.closest('button');
-  if (!b) return;
-  if (b.dataset.action === 'theme') {
-    const dark = root.dataset.theme !== 'dark';
-    root.dataset.theme = dark ? 'dark' : 'light';
-    b.setAttribute('aria-pressed', String(dark));
-    b.innerHTML = icon(dark ? 'sun' : 'moon');
-  }
-});
 initShell(root);

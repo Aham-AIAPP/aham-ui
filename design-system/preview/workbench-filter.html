@@ -57,8 +57,9 @@ body { margin: 0; }
 </main>
 </div>
 <script type="module">
-import {createCommand, initFilter, initDisplay, icon} from '../workbench.js';
+import {createCommand, initFilter, initDisplay, icon, initTheme} from '../workbench.js';
 const root = document.querySelector('.aham-workbench');
+initTheme(root);
 // Icons for the static buttons above
 root.querySelectorAll('.wb-btn.outline').forEach(b => { b.innerHTML = b.classList.contains('icon-only') ? icon('filter') : `${icon('filter')}<span>筛选</span>`; });
 root.querySelectorAll('.wb-icon-btn[aria-label="预览面板"]').forEach(b => { b.innerHTML = icon('eye'); });

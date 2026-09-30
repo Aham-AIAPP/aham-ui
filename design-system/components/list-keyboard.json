@@ -9,7 +9,7 @@
   "intent": "Linear 式列表键盘：当前行在 Tab 顺序里，方向键移动，空格预览，Enter 打开，x 勾选",
   "specification": "WORKBENCH.md §11.1–11.2",
   "reference": "examples/customer-list.html",
-  "api": "initListKeys({ table, onPreview, onOpen, onToggle, onMove }) → { refresh, current, focus }",
+  "api": "initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRange }) → { refresh, current, focus }",
   "variantDimensions": [
     {
       "axis": "preview",
@@ -34,7 +34,8 @@
     "键只在行本身有焦点时生效，行内控件保留自己的键",
     "空格预览时焦点留在列表，移动当前行时预览跟着切换",
     "Esc 或再按空格关闭预览，焦点回到当前行",
-    "焦点行浅灰底 + 蓝色细边线，正在预览的行浅灰底"
+    "焦点行浅灰底 + 蓝色细边线，正在预览的行浅灰底",
+    "Shift + ↑↓ 从当前行扩展勾选范围，Shift + 点击勾选框把新状态应用到两次点击之间的所有行；onRange(ids, on) 接收范围"
   ],
   "keyboard": [
     "↑ ↓ 移动当前行",
@@ -42,6 +43,7 @@
     "空格 打开 / 关闭预览",
     "Enter 打开详情",
     "x 勾选 / 取消勾选",
+    "Shift + ↑ ↓ 扩展勾选范围",
     "Esc 关闭预览"
   ],
   "states": [

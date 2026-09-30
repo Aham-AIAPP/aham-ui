@@ -23,6 +23,25 @@ if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
 
 const contextBreakpoint = root => matchMedia(`(max-width: ${getComputedStyle(root).getPropertyValue('--wb-bp-context').trim() || '64rem'})`);
 
+// ── Theme ────────────────────────────────────────────────────────────────────
+// ?theme=light|dark in the page URL sets the starting theme (the panorama page passes its own theme to embedded samples).
+// A [data-action="theme"] button inside root toggles light / dark and keeps its pressed state and icon in sync.
+export function initTheme(root = document.querySelector('.aham-workbench')) {
+  if (!root) return null;
+  const button = root.querySelector('[data-action="theme"]');
+  function set(theme) {
+    root.dataset.theme = theme;
+    if (!button) return;
+    const dark = theme === 'dark';
+    button.setAttribute('aria-pressed', String(dark));
+    button.innerHTML = icon(dark ? 'sun' : 'moon');
+  }
+  const asked = new URLSearchParams(location.search).get('theme');
+  if (asked === 'light' || asked === 'dark') set(asked);
+  button?.addEventListener('click', () => set(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+  return { set, get: () => root.dataset.theme, fromUrl: asked === 'light' || asked === 'dark' ? asked : null };
+}
+
 // ── Navigation ───────────────────────────────────────────────────────────────
 // Wide screens: nav pushes content and the choice is remembered.
 // ≤ --wb-bp-context: nav opens as an overlay; the content behind is inert; Esc, scrim or choosing an item closes it.
@@ -30,6 +49,7 @@ const NAV_STORE = 'aham-ui:workbench:nav';
 
 export function initShell(root = document.querySelector('.aham-workbench')) {
   if (!root) return null;
+  const theme = initTheme(root);
   const toggle = root.querySelector('[data-action="nav"]');
   const rail = root.querySelector('.wb-rail');
   const main = root.querySelector('.wb-main');
@@ -73,7 +93,8 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
   narrow.addEventListener('change', () => set(narrow.matches ? false : remembered(), { persist: false }));
 
   set(narrow.matches ? false : remembered(), { persist: false });
-  return { set, isOpen };
+  initTooltips(root);
+  return { set, isOpen, theme };
 }
 
 // ── Side panels ──────────────────────────────────────────────────────────────
@@ -607,14 +628,20 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
 // ↑↓ / Home / End move it, Space toggles the preview, Enter opens the record, x toggles its selection.
 // Keys act only when the row itself has focus, so checkboxes, links and inputs inside the row keep their own keys.
 // Call refresh() after every re-render. The table is not declared an ARIA grid (cells are not individually navigable).
-export function initListKeys({ table, onPreview, onOpen, onToggle, onMove }) {
-  let current = null;
+export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRange }) {
+  let current = null, anchor = null;
   const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
   const idOf = tr => tr?.dataset.id ?? null;
   function refresh() {
     const list = rows();
     if (!list.some(tr => idOf(tr) === current)) current = idOf(list[0]);
     list.forEach(tr => { tr.tabIndex = idOf(tr) === current ? 0 : -1; });
+  }
+  // Ids of the rows from a to b inclusive, in list order.
+  function between(a, b) {
+    const list = rows(), i = list.findIndex(tr => idOf(tr) === a), j = list.findIndex(tr => idOf(tr) === b);
+    if (i < 0 || j < 0) return [b];
+    return list.slice(Math.min(i, j), Math.max(i, j) + 1).map(idOf);
   }
   function focusRow(tr) {
     if (!tr) return;
@@ -629,14 +656,32 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove }) {
     if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const list = rows(), i = list.indexOf(tr);
     switch (e.key) {
-      case 'ArrowDown': e.preventDefault(); focusRow(list[Math.min(i + 1, list.length - 1)]); break;
-      case 'ArrowUp': e.preventDefault(); focusRow(list[Math.max(i - 1, 0)]); break;
+      case 'ArrowDown': case 'ArrowUp': {
+        e.preventDefault();
+        const next = list[e.key === 'ArrowDown' ? Math.min(i + 1, list.length - 1) : Math.max(i - 1, 0)];
+        if (e.shiftKey && onRange) {
+          anchor ??= idOf(tr);
+          focusRow(next);
+          onRange(between(anchor, idOf(next)), true);
+        } else {
+          anchor = null;
+          focusRow(next);
+        }
+        break;
+      }
       case 'Home': e.preventDefault(); focusRow(list[0]); break;
       case 'End': e.preventDefault(); focusRow(list[list.length - 1]); break;
       case ' ': e.preventDefault(); onPreview?.(idOf(tr)); break;
       case 'Enter': e.preventDefault(); onOpen?.(idOf(tr)); break;
-      case 'x': case 'X': e.preventDefault(); onToggle?.(idOf(tr)); break;
+      case 'x': case 'X': e.preventDefault(); anchor = idOf(tr); onToggle?.(idOf(tr)); break;
     }
+  });
+  // Shift + click on a row checkbox applies its new state to every row since the last checked one.
+  table.addEventListener('click', e => {
+    const box = e.target.closest?.('input[type=checkbox]'), tr = box?.closest('tr[data-id]');
+    if (!tr) return;
+    if (e.shiftKey && onRange && anchor && anchor !== idOf(tr)) onRange(between(anchor, idOf(tr)), box.checked);
+    anchor = idOf(tr);
   });
   table.addEventListener('focusin', e => {
     const tr = e.target.closest?.('tr[data-id]');
@@ -702,6 +747,15 @@ export function initComposer(form, { onSubmit }) {
 // Single-key shortcuts never fire while typing in a field or while an IME is composing; mod+ shortcuts do.
 // external: true lists a key handled elsewhere (list keys, Esc) in the help without dispatching it here.
 const shortcuts = [];
+// Single-character shortcuts (no ⌘ / Ctrl / Alt) can be switched off (WCAG 2.1.4); the choice is kept in this browser.
+const SINGLE_KEY_STORE = 'aham-ui:workbench:single-key';
+let singleKeys = typeof document === 'undefined' || (() => { try { return localStorage.getItem(SINGLE_KEY_STORE) !== 'off'; } catch { return true; } })();
+const characterOnly = keys => keys.split(' ').every(step => !step.includes('+') && [...step].length === 1);
+export function setSingleKeyShortcuts(on) {
+  singleKeys = Boolean(on);
+  try { localStorage.setItem(SINGLE_KEY_STORE, singleKeys ? 'on' : 'off'); } catch { /* storage blocked: this page only */ }
+}
+export const singleKeyShortcuts = () => singleKeys;
 const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
 const KEY_LABEL = { mod: isMac ? '⌘' : 'Ctrl', shift: isMac ? '⇧' : 'Shift', alt: isMac ? '⌥' : 'Alt', enter: 'Enter', escape: 'Esc', space: '空格', up: '↑', down: '↓', home: 'Home', end: 'End', f10: 'F10', '/': '/', '?': '?' };
 export function formatKeys(keys) {
@@ -713,7 +767,7 @@ export function registerShortcut(def) {
   shortcuts.push(entry);
   return () => { const i = shortcuts.indexOf(entry); if (i >= 0) shortcuts.splice(i, 1); };
 }
-export const listShortcuts = () => shortcuts.filter(s => s.label && (s.external || s.when())).map(({ keys, label, group }) => ({ keys, label, group }));
+export const listShortcuts = () => shortcuts.filter(s => s.label && (singleKeys || !characterOnly(s.keys)) && (s.external || s.when())).map(({ keys, label, group }) => ({ keys, label, group }));
 const editable = el => el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 let pending = null, pendingTimer = 0;
 function stepOf(e) {
@@ -726,7 +780,7 @@ if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   if (e.isComposing || e.defaultPrevented || e.repeat) return;
   const step = stepOf(e), typing = editable(e.target);
   const seq = pending ? `${pending} ${step}` : step;
-  const live = shortcuts.filter(s => !s.external);
+  const live = shortcuts.filter(s => !s.external && (singleKeys || !characterOnly(s.keys)));
   const hit = live.find(s => s.keys === seq && s.when(e)) || (pending ? live.find(s => s.keys === step && s.when(e)) : null);
   const modded = step.startsWith('mod+');
   if (hit && (!typing || modded)) { e.preventDefault(); pending = null; hit.run(e); return; }
@@ -738,6 +792,48 @@ if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   }
   pending = null;
 });
+
+// ── Tooltips ─────────────────────────────────────────────────────────────────
+// [data-tooltip="名称"] plus optional data-keys="mod+b" shows the name and its shortcut after a short hover, or at once
+// on keyboard focus. One at a time; hidden on leave, blur, any key press (Esc included), scroll or click. Coarse pointers get none.
+// The tip is aria-hidden: buttons keep their aria-label, and data-keys is mirrored into aria-keyshortcuts.
+const TOOLTIP_DELAY = 500;
+export function initTooltips(root = document.querySelector('.aham-workbench')) {
+  if (!root || root.querySelector(':scope > .wb-tooltip')) return null;
+  const tip = document.createElement('div');
+  tip.className = 'wb-tooltip';
+  tip.setAttribute('aria-hidden', 'true');
+  tip.hidden = true;
+  root.append(tip);
+  root.querySelectorAll('[data-tooltip][data-keys]').forEach(el => el.setAttribute('aria-keyshortcuts', ariaKeys(el.dataset.keys)));
+  const coarse = matchMedia('(pointer: coarse)');
+  let timer = 0, owner = null;
+  function show(el) {
+    owner = el;
+    const keys = el.dataset.keys && (singleKeys || !characterOnly(el.dataset.keys)) ? el.dataset.keys : '';
+    tip.innerHTML = `<span>${escapeHtml(el.dataset.tooltip)}</span>${keys ? `<span class="wb-kbd-group">${formatKeys(keys).map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>` : ''}`;
+    tip.hidden = false;
+    const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect(), gap = 4;
+    const top = r.bottom + gap + t.height > innerHeight - gap ? r.top - gap - t.height : r.bottom + gap;
+    const left = Math.max(gap, Math.min(r.left + r.width / 2 - t.width / 2, innerWidth - t.width - gap));
+    tip.style.top = `${top}px`;
+    tip.style.left = `${left}px`;
+  }
+  function hide() { clearTimeout(timer); owner = null; tip.hidden = true; }
+  root.addEventListener('pointerover', e => {
+    const el = e.target.closest?.('[data-tooltip]');
+    if (!el || el === owner || coarse.matches || e.pointerType === 'touch') return;
+    clearTimeout(timer);
+    timer = setTimeout(() => show(el), owner ? 0 : TOOLTIP_DELAY);
+  });
+  root.addEventListener('pointerout', e => { const el = e.target.closest?.('[data-tooltip]'); if (el && !el.contains(e.relatedTarget)) hide(); });
+  root.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tooltip]'); if (el?.matches(':focus-visible')) show(el); });
+  root.addEventListener('focusout', hide);
+  root.addEventListener('pointerdown', hide);
+  document.addEventListener('keydown', () => { if (owner) hide(); });
+  addEventListener('scroll', hide, true);
+  return { hide };
+}
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 // Transient confirmation after an action, bottom-right (bottom on phones). At most 3 stay; each leaves after 4s,

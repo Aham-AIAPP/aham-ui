@@ -1,11 +1,12 @@
 /* =============================================================================
-   Aham UI — v6.1 (在 v6.0 页面布局体系上,新增第 9 节「媒体与对话」9 组件;取值全用 Aham)
+   Aham UI — v7.2 基础层(组件 + 文本样式 + 暗色);变量值与 tokens.json 一致,由 scripts/lint-design.mjs 校验
    北极星：Claude desktop 气质——极简、克制、留白、内容优先。默认是"不加"。
    字体重设计：砍掉衬线混排，统一 Inter(西文)+雅黑/黑体(中文) 一套无衬线 + JetBrains Mono(数字)。
    纯 CSS 组件库——不依赖 React，任意 HTML 直接用 class 拼原型。
    ============================================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Fonts are not fetched from third-party servers (DESIGN §1.11 local-first). Install Inter / JetBrains Mono,
+   or self-host them (SIL OFL) in the product; otherwise the token fallbacks render. */
 
 :root {
   /* Surfaces — three tiers only */
@@ -18,6 +19,9 @@
   /* Semantic — muted, genuine-risk only */
   --success:#5A7A60; --success-bg:#F0F2F0; --warning:#8A7333; --warning-bg:#F4F1E9;
   --danger:#9E3D31; --danger-bg:#F4ECEA;
+  --success-border:#CFE0D2; --warning-border:#E6DCC2; --danger-border:#E3C9C5;
+  /* Primary action — one step deeper than the brand blue so white text stays readable (7.21:1), same in dark */
+  --action-bg:#164EC3; --action-bg-hover:#336EE8;
   /* Aliases */
   --bg-app:var(--white); --bg-panel:var(--panel); --bg-hover:var(--panel);
   --bg-selected:var(--line); --border:var(--line); --border-faint:var(--line);
@@ -51,7 +55,7 @@
   /* Border width */
   --bw-1:1px; --bw-2:1.5px;
   /* Focus ring（焦点环：色已在 --focus-ring，下面是宽度/偏移） */
-  --focus-ring-w:3px; --focus-ring-offset:2px;
+  --focus-ring-w:2px; --focus-ring-offset:2px;
   /* Icon sizes（图标尺寸阶梯，线性单色） */
   --icon-sm:16px; --icon-md:20px; --icon-lg:24px;
   /* Interaction fills（中性交互底，hover/active；不带色相） */
@@ -89,9 +93,9 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
   padding:0 var(--ctrl-px-md);border:1px solid transparent;border-radius:var(--r-md);background:transparent;
   font:var(--w-medium) var(--text-base)/1 var(--font-sans);color:var(--ink);cursor:pointer;
   white-space:nowrap;transition:background .12s,border-color .12s,color .12s;}
-.btn--primary{background:var(--accent);color:var(--on-accent);}
-.btn--primary:hover{background:var(--accent-hover);}
-.btn--primary:active{background:var(--accent-press);}
+.btn--primary{background:var(--action-bg);color:var(--on-accent);}
+.btn--primary:hover{background:var(--action-bg-hover);}
+.btn--primary:active{background:var(--action-bg);}
 .btn--secondary{background:var(--white);border-color:var(--line);color:var(--ink);}
 .btn--secondary:hover{background:var(--panel);}
 .btn--ghost{background:transparent;color:var(--ink-2);}
@@ -100,7 +104,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 .btn--danger:hover{background:var(--danger-bg);}
 .btn--sm{height:var(--ctrl-h-sm);padding:0 var(--ctrl-px-sm);font-size:var(--text-sm);}
 .btn--lg{height:var(--ctrl-h-lg);padding:0 var(--ctrl-px-lg);}
-.btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring);}
+.btn:focus-visible{outline:var(--focus-ring-w) solid var(--accent);outline-offset:var(--focus-ring-offset);}
 .btn:disabled{opacity:.45;cursor:not-allowed;}
 .icon-btn{display:inline-flex;align-items:center;justify-content:center;width:var(--btn-h);height:var(--btn-h);
   border:none;border-radius:var(--r-md);background:transparent;color:var(--ink-2);cursor:pointer;transition:background .12s;}
@@ -229,7 +233,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 
 /* ---- 焦点环（可访问性，所有可聚焦元素） ---- */
 .focusable:focus-visible,.btn:focus-visible,.input:focus-visible,.select:focus-visible,
-.nav-item:focus-visible,.tab:focus-visible{outline:var(--focus-ring-w) solid var(--focus-ring);outline-offset:var(--focus-ring-offset);}
+.nav-item:focus-visible,.tab:focus-visible{outline:var(--focus-ring-w) solid var(--accent);outline-offset:var(--focus-ring-offset);}
 
 /* ---- 反馈：Alert / 行内通知 ---- */
 .alert{display:flex;gap:var(--s3);padding:var(--s3) var(--s4);border-radius:var(--r-md);
@@ -283,10 +287,10 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 .pager button:hover{background:var(--fill-hover);color:var(--ink);}
 .pager button[aria-current]{background:var(--line);color:var(--ink);font-weight:var(--w-medium);}
 
-/* ---- 导航：Segmented control（选中 = 白片浮起，不是蓝） ---- */
+/* ---- 导航：Segmented control（选中 = 扁平灰 + 字重 500，不加阴影，不用蓝） ---- */
 .seg{display:inline-flex;background:var(--panel);border-radius:var(--r-md);padding:3px;gap:2px;}
 .seg button{border:none;background:transparent;border-radius:var(--r-sm);padding:5px 14px;font-size:var(--text-sm);color:var(--ink-2);cursor:pointer;font-family:inherit;}
-.seg button[aria-selected="true"]{background:var(--white);color:var(--ink);box-shadow:var(--sh-md);font-weight:var(--w-medium);}
+.seg button[aria-selected="true"]{background:var(--line);color:var(--ink);font-weight:var(--w-medium);}
 
 /* ---- 导航：Steps / 步骤（数字 + 细线连接） ---- */
 .steps{display:flex;align-items:center;gap:var(--s2);font-size:var(--text-sm);}
@@ -432,6 +436,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
     --accent-tint:#23304A; --accent-tint-border:#33486E;
     --success:#8FB096; --success-bg:#23291F; --warning:#C2A855; --warning-bg:#2A2616;
     --danger:#D08070; --danger-bg:#2A1E1A;
+  --success-border:var(--success-bg); --warning-border:var(--warning-bg); --danger-border:var(--danger-bg);
     --fill-hover:rgba(255,255,255,.05); --fill-active:rgba(255,255,255,.10);
     --overlay:rgba(0,0,0,.5);
   }
@@ -443,6 +448,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
   --accent-tint:#23304A; --accent-tint-border:#33486E;
   --success:#8FB096; --success-bg:#23291F; --warning:#C2A855; --warning-bg:#2A2616;
   --danger:#D08070; --danger-bg:#2A1E1A;
+  --success-border:var(--success-bg); --warning-border:var(--warning-bg); --danger-border:var(--danger-bg);
   --fill-hover:rgba(255,255,255,.05); --fill-active:rgba(255,255,255,.10);
   --overlay:rgba(0,0,0,.5);
 }
@@ -813,9 +819,10 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 /* 页面内联通知/错误:置内容区顶部或就近,错误三重指示(框+图标+文字) */
 .notice{display:flex;align-items:flex-start;gap:var(--s2);padding:var(--s3) var(--s4);border-radius:var(--r-md);
   font-size:var(--text-base);border:1px solid var(--line);background:var(--panel);color:var(--ink-2);}
-.notice--error{border-color:#E3C9C5;background:var(--danger-bg);color:var(--danger);}
-.notice--success{border-color:#CFE0D2;background:var(--success-bg);color:var(--success);}
-.notice--warning{border-color:#E6DCC2;background:var(--warning-bg);color:var(--warning);}
+/* Notice text stays ink (semantic text on its tint is only 4.06–4.25:1 for success / warning); the tint and border carry the meaning. */
+.notice--error{border-color:var(--danger-border);background:var(--danger-bg);color:var(--ink);}
+.notice--success{border-color:var(--success-border);background:var(--success-bg);color:var(--ink);}
+.notice--warning{border-color:var(--warning-border);background:var(--warning-bg);color:var(--ink);}
 /* 骨架白名单:容器/数据类才用(.skeleton 已定义);占位尺寸 = 最终尺寸,防 CLS */
 
 /* —— 滚动 / 吸顶:sticky 页眉给主体内容偏移,避免遮挡 —— */
@@ -873,7 +880,7 @@ body{margin:0;background:var(--bg-app);color:var(--ink);
 /* ① 媒体播放器 .player */
 .player{display:flex;align-items:center;gap:var(--s3);width:100%;}
 .player__wave{position:relative;flex:1;min-width:0;height:40px;cursor:pointer;display:block;border-radius:var(--r-sm);}
-.player__wave:focus-visible{outline:none;box-shadow:0 0 0 3px var(--focus-ring);}
+.player__wave:focus-visible{outline:var(--focus-ring-w) solid var(--accent);outline-offset:var(--focus-ring-offset);}
 .player__wave svg{display:block;width:100%;height:100%;}
 .player__wave .b{fill:var(--ink-4);} .player__wave .b--on{fill:var(--accent);}
 .player__wave .ph{stroke:var(--accent);stroke-width:1.5;}

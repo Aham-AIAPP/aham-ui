@@ -1,12 +1,11 @@
 /* ========================================================================
    Aham UI — Colors & Type
-   Source: structured-spec (tokens.json v7.0.2)
-   Generated from the canonical token source. Do not edit by hand.
+   Compatibility runtime for the component previews (preview/component-*.html).
+   Values mirror tokens.json and are checked by scripts/lint-design.mjs; edit tokens.json first.
    ======================================================================== */
 
-/* ── Font Imports ──────────────────────────────────────────────────── */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=Inter+Display:opsz,wght@20..44,600&family=JetBrains+Mono:ital,wght@0,400;0,500&display=swap');
+/* ── Fonts ─────────────────────────────────────────────────────────── */
+/* Not fetched from third-party servers (DESIGN §1.11). Install or self-host Inter / JetBrains Mono. */
 
 /* ══════════════════════════════════════════════════════════════════════
    LIGHT MODE (default)
@@ -156,8 +155,8 @@
   --border-thick:            1.5px;
 
   /* ─── focus ring ───────────────────────────────────────────────── */
-  --focus-ring-color:        rgba(51,110,232,.20);
-  --focus-ring-width:        3px;
+  --focus-ring-color:        #336EE8;
+  --focus-ring-width:        2px;
   --focus-ring-offset:       2px;
 
   /* ─── icon ─────────────────────────────────────────────────────── */
@@ -324,16 +323,20 @@
   --aham-accent-hover:       #7BA3F0;
   --aham-accent-press:       #336EE8;
   /* tint-border & tint-surface stay unchanged in dark */
-  --aham-accent-tint-border: #C8D3EA;
-  --aham-accent-tint-surface: #EDF0F7;
+  --aham-accent-tint-border: #33486E;
+  --aham-accent-tint-surface: #23304A;
 
   /* ─── semantic ─────────────────────────────────────────────────── */
   --aham-success:            #8FB096;
   --aham-warning:            #C2A855;
   --aham-danger:             #D08070;
+  --aham-success-bg:         #23291F;
+  --aham-warning-bg:         #2A2616;
+  --aham-danger-bg:          #2A1E1A;
+  --focus-ring-color:        #5C8BED;
 
   /* ─── fill (neutral interaction) ───────────────────────────────── */
-  --aham-fill-hover:         rgba(255,255,255,.06);
+  --aham-fill-hover:         rgba(255,255,255,.05);
   --aham-fill-active:        rgba(255,255,255,.10);
 
   /* ─── alias (portable semantic) ────────────────────────────────── */

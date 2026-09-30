@@ -54,7 +54,6 @@ root.addEventListener('click',e=>{
   case 'edit':{const edit=fields[0].readOnly;if(!edit&&!validate())return;fields.forEach(i=>i.readOnly=!edit);b.textContent=edit?'完成编辑':'编辑信息';if(edit)fields[0].focus();break;}
   case 'save':save();break;
   case 'submit':save('review');break;
-  case 'theme':{const dark=root.dataset.theme!=='dark';root.dataset.theme=dark?'dark':'light';b.setAttribute('aria-pressed',String(dark));b.querySelector('use').setAttribute('href',`../icons/aham-icons.svg#i-${dark?'sun':'moon'}`);break;}
  }
 });
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});

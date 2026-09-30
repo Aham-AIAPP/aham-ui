@@ -61,7 +61,7 @@
 
 最简单：**把本仓库地址 `https://github.com/Aham-AIAPP/aham-ui` 发给 Claude，让它按 `design-system/` 消费**；或下载后把 `design-system/` 目录交给你的 AI。
 
-**AI 消费顺序**：`SKILL.md`（品牌要点）→ `tokens.json`（值）→ `DESIGN.md`（八层规则）→ `components/` + `preview/`（契约与预览）→ `colors_and_type.css` / `components.css`（运行时）→ `examples/` + `ui_kits/`（成品）→ `aham-ui-office.md`（Office）。
+**AI 读取顺序**以 `design-system/library-consumption.json` 为准：`tokens.json`（值）→ `DESIGN.md`（八层规则）→ `WORKBENCH.md`（做管理界面时）→ `components/` 契约 → `AGENTS.md` 自查 → 运行时（基础层 `aham-ui.css`，工作台 `workbench.css` + `workbench.js`）→ `examples/`（成品）→ `aham-ui-office.md`（Office）。`colors_and_type.css` / `components.css` 只服务组件预览页。
 
 > 想换成你自己的品牌？复制 `tokens.json`，改色值 / 字号 / 间距——下游 CSS、组件、Office 全部派生，**不改规则本身**。
 
@@ -100,7 +100,7 @@
 - 组件状态：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html)
 - 页面示例：[外框](design-system/examples/workbench-shell.html) · [列表](design-system/examples/customer-list.html) · [记录详情](design-system/examples/record-detail.html) · [单据](design-system/examples/crm-quotation.html) · [设置](design-system/examples/settings.html)
 - 参考实现：`design-system/workbench.css` + `design-system/workbench.js`，零依赖，任何前端都可直接引用。
-- 验证：`node scripts/build-workbench.mjs --check`、`node scripts/extract-components-css.mjs --check`、`node scripts/build-panorama.mjs --check`、`node --test tests/*.test.mjs`。
+- 验证：`node scripts/build-workbench.mjs --check`、`node scripts/extract-components-css.mjs --check`、`node scripts/build-panorama.mjs --check`、`node scripts/lint-design.mjs`（tokens 与两层 CSS 一致、色值白名单、对比度、表格竖线、远程字体）、`node --test tests/*.test.mjs`。
 - 全景页 `index.html`：改了 tokens、图标、契约或读取顺序后，执行 `node scripts/build-panorama.mjs` 重写页面里的数值和清单；其余部分手写。
 - 本地预览：仓库根目录执行 `python3 -m http.server 8765 --bind 127.0.0.1`，打开 `http://127.0.0.1:8765/`，全景页的「网页工作台」区块列出全部入口。
 

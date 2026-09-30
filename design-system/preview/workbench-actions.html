@@ -67,6 +67,14 @@ body { margin: 0; }
   </section>
 
   <section class="pv-story">
+    <div class="pv-label">按钮提示 · 名称 + 已登记的快捷键，悬停 500ms 或键盘聚焦时出现</div>
+    <div class="pv-row">
+      <div class="wb-tooltip pv-static" id="pv-tip-static"></div>
+      <div><button type="button" class="wb-icon-btn" id="pv-tip-btn" aria-label="展开 / 收起导航" data-tooltip="展开 / 收起导航" data-keys="mod+b"></button><span class="pv-cap">悬停或用 Tab 聚焦这个按钮</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
     <div class="pv-label">新建弹窗 · 可打开</div>
     <div><button type="button" class="wb-btn sm primary" id="pv-create">新建</button> <span class="wb-meta">试试：空标题创建、打开「继续新建」、有内容时按 Esc</span></div>
   </section>
@@ -78,8 +86,12 @@ body { margin: 0; }
 </main>
 </div>
 <script type="module">
-import {icon, createCommand, initPalette, openPicker, toast, openCreateDialog, formatKeys, escapeHtml} from '../workbench.js';
+import {icon, createCommand, initPalette, openPicker, toast, openCreateDialog, formatKeys, escapeHtml, initTheme, initTooltips} from '../workbench.js';
 const root = document.querySelector('.aham-workbench');
+initTheme(root);
+initTooltips(root);
+root.querySelector('#pv-tip-static').innerHTML = `<span>展开 / 收起导航</span><span class="wb-kbd-group">${formatKeys('mod+b').map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>`;
+root.querySelector('#pv-tip-btn').innerHTML = icon('menu');
 root.querySelectorAll('[data-i]').forEach(el => { el.innerHTML = icon(el.dataset.i); });
 document.querySelector('#pv-mod-k').textContent = formatKeys('mod+k')[0];
 

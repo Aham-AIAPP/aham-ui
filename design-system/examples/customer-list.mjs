@@ -205,6 +205,7 @@ const listKeys = initListKeys({
   onPreview: id => preview(Number(id)),
   onOpen: id => openRecord(Number(id)),
   onToggle: id => { const n = Number(id); selected.has(n) ? selected.delete(n) : selected.add(n); render(); },
+  onRange: (ids, on) => { ids.forEach(id => (on ? selected.add(Number(id)) : selected.delete(Number(id)))); render(); },
   onMove: id => { if (panels.current() === PEEK) { previewId = Number(id); renderPreview(); markPreviewing(); } },
 });
 
@@ -246,13 +247,6 @@ root.addEventListener('click', e => {
     case 'export': feedback(`已模拟导出 ${selected.size} 条记录，未生成文件。`); break;
     case 'delete': confirmDelete(); break;
     case 'placeholder': feedback('示例只演示列表页，其他入口只展示导航结构。'); break;
-    case 'theme': {
-      const dark = root.dataset.theme !== 'dark';
-      root.dataset.theme = dark ? 'dark' : 'light';
-      b.setAttribute('aria-pressed', String(dark));
-      b.innerHTML = icon(dark ? 'sun' : 'moon');
-      break;
-    }
   }
 });
 
@@ -315,12 +309,19 @@ const palette = initPalette({
       { id: 'owner', label: '分配给…', icon: 'user', keys: 'a', children: c => OWNERS.map(o => ({ id: o, label: o, icon: 'user', current: o === recordOf(c.id).owner, run: () => { const r = recordOf(c.id); if (o !== r.owner) setField(c.id, 'owner', o, r.owner); } })) },
       { id: 'open', label: '打开详情', icon: 'external', run: c => openRecord(c.id) },
       { id: 'copy', label: '复制编码', icon: 'copy', run: c => copy(recordOf(c.id).code) },
+      { id: 'delete', label: '删除', icon: 'trash', danger: true, run: c => confirmDelete([c.id]) },
     ] }] : []),
     { heading: '操作', items: [
       { id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: openCreate },
       { id: 'filter', label: '筛选…', icon: 'filter', run: () => filter.open() },
       { id: 'view', label: '切换视图…', icon: 'eye', children: () => Object.entries(VIEWS).map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => { state.view = k; narrowResult(); render(); } })) },
       { id: 'clear', label: '清除筛选', icon: 'close', run: () => { state.filters = []; filter.set([]); narrowResult(); render(); } },
+      { id: 'display', label: '显示选项…', icon: 'settings', run: () => $('#display-trigger').click() },
+      { id: 'peek', label: panels.current() === PEEK ? '关闭预览面板' : '打开预览面板', icon: 'eye', run: () => $('[data-panel-toggle="customer-peek"]').click() },
+    ] },
+    { heading: '界面', items: [
+      { id: 'nav', label: '展开 / 收起导航', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
+      { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
     ] },
     { heading: '跳转', items: [
       { id: 'go-quote', label: '销售报价单', icon: 'file', run: () => { location.href = 'crm-quotation.html'; } },
@@ -336,7 +337,7 @@ registerShortcut({ keys: 's', label: '修改当前行的阶段', group: '列表'
 registerShortcut({ keys: 'a', label: '修改当前行的负责人', group: '列表', when: onRow, run: () => editCell(currentRow(), 'owner') });
 registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
 // Keys handled directly by the list and the layer stack, listed here so the help shows them.
-[['up', '上一行'], ['down', '下一行'], ['space', '预览当前行'], ['enter', '打开当前行'], ['x', '勾选当前行'], ['shift+f10', '当前行的操作菜单'], ['escape', '关闭最上层的浮层']].forEach(([keys, label]) => registerShortcut({ keys, label, group: keys === 'escape' ? '通用' : '列表', external: true }));
+[['up', '上一行'], ['down', '下一行'], ['shift+down', '扩展勾选范围'], ['space', '预览当前行'], ['enter', '打开当前行'], ['x', '勾选当前行'], ['shift+f10', '当前行的操作菜单'], ['escape', '关闭最上层的浮层']].forEach(([keys, label]) => registerShortcut({ keys, label, group: keys === 'escape' ? '通用' : '列表', external: true }));
 
 initShell(root);
 const panels = initPanels(root);

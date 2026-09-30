@@ -32,7 +32,7 @@
     {
       "file": "aham-ui.css",
       "priority": 6,
-      "purpose": "既有参考实现"
+      "purpose": "基础层运行时：组件、文本样式类、暗色；变量值由 scripts/lint-design.mjs 对照 tokens.json 校验"
     },
     {
       "file": "workbench.css",
@@ -42,7 +42,7 @@
     {
       "file": "workbench.js",
       "priority": 7,
-      "purpose": "工作台外框行为：导航开关（⌘B）、窄屏浮层、侧面板开关；原生 ES 模块"
+      "purpose": "工作台行为：外框、弹层、命令菜单、筛选、列表键盘、命令面板、快捷键、按钮提示、主题参数；原生 ES 模块，零依赖"
     },
     {
       "file": "preview/workbench-filter.html",

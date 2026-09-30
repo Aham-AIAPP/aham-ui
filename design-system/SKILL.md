@@ -20,21 +20,21 @@ _or_ production code, depending on the need.
 
 - `README.md` — brand context, content fundamentals, visual foundations (read first)
 - `css.json` — structured token understanding source
-- `colors_and_type.css` — drop-in runtime CSS variables; link it, do not read it to understand tokens when css.json exists
-- resolved component sources — use `preview/component-{slug}.html` first, `components/{slug}.json` for intent/variants
+- `colors_and_type.css` — compatibility runtime for the component previews only; product pages use `aham-ui.css` (base) or `workbench.css` (workbench). Reading order: `library-consumption.json`
+- resolved component sources — use `components/{slug}.json` first for intent, variants and do-not-invent rules; `preview/component-{slug}.html` is the visual reference
 - `preview/` — small HTML cards illustrating the foundations and components
 - `library-consumption.json` — recommended downstream read order
 
 ## Essentials at a glance
 
-- Brand primary `#336EE8`. Cool, technical, restrained — no warm accents, no default gradients. Only for logo / primary actions / send / selection accent.
+- Brand primary `#336EE8`. Cool, technical, restrained — no warm accents, no default gradients. Only for logo / primary action / send / focus ring / current-tab underline / text links. The primary button fill uses the deeper `#164EC3` (white text 7.21:1). Selection is flat gray, never blue.
 - Radius at **4 / 6 / 8 / 12** (xs / sm / md / lg) — deliberate, never softer. Pill (`999px`) only for neutral filter chips and toggle tracks; never for status.
 - Density first: **36px** control height, **32px** button height, **4px** base spacing unit. Table rows at 36px, sidebar at 264px width.
 - Type: **Inter** for body and small text; **Inter Display** for headings >=20px; **JetBrains Mono** for code and numeric data. Fallback: Microsoft YaHei for Chinese contexts, then system-ui.
 - Shadow: **flat at rest** — no shadow on cards, containers, or inputs. Shadow only on floating overlays: dropdown (`0 2px 8px rgba(20,20,20,0.05)`), popover (`0 3px 12px rgba(20,20,20,0.06)`), modal (`0 12px 36px rgba(20,20,20,0.10)`).
 - Voice: bilingual (CN-first), professional, neutral. No emoji in product UI. Status communicated through 6px dot + text, never color alone.
 - Selection is **flat gray** (`#E7E7E7`), never blue. One primary action per group. Cards have no border, no shadow at rest.
-- States use **6px dot + label text** — never pill badges, colored icons, or traffic-light indicators for status. Disabled opacity at 0.4.
+- States use **6px dot + label text** — a status icon may be added only together with the label; never pill badges or traffic-light indicators for status. Disabled opacity at 0.4.
 
 ## Web workbench (7.2)
 For ToB admin UIs (lists, record detail, documents, settings) use WORKBENCH.md with workbench.css and workbench.js; content websites keep the centred layout. Aham supplies colours, type, radius and status syntax; layout and interaction follow Circle / Linear.

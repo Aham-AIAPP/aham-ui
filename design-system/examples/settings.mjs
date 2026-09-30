@@ -1,23 +1,27 @@
 // Settings sample: single-value settings apply immediately and confirm with a toast; reset asks first.
-import {initShell, toast, pushLayer} from '../workbench.js';
+import {initShell, toast, pushLayer, setSingleKeyShortcuts} from '../workbench.js';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
 const KEY = 'aham-ui:settings-demo:v1';
-const DEFAULTS = { home: '客户列表', week: '星期一', send: '⌘ / Ctrl + Enter', open: '进入详情页', theme: 'light', density: 'standard', assign: true, digest: false };
+const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, send: '⌘ / Ctrl + Enter', open: '进入详情页', theme: 'light', density: 'standard', assign: true, digest: false };
 let prefs = { ...DEFAULTS };
 try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY)) }; } catch { /* keep defaults */ }
 const media = matchMedia('(prefers-color-scheme: dark)');
 
+// A ?theme= parameter (the panorama page passes its theme to embedded samples) wins until the viewer picks one here.
+let forcedTheme = null;
+const themeChoice = () => forcedTheme ?? prefs.theme;
 function applyTheme() {
-  const dark = prefs.theme === 'dark' || (prefs.theme === 'system' && media.matches);
+  const t = themeChoice(), dark = t === 'dark' || (t === 'system' && media.matches);
   root.dataset.theme = dark ? 'dark' : 'light';
 }
 function paint() {
   $$('[data-setting]').forEach(el => { if (el.type === 'checkbox') el.checked = Boolean(prefs[el.dataset.setting]); else el.value = prefs[el.dataset.setting]; });
-  $$('[data-theme-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeChoice === prefs.theme)));
+  $$('[data-theme-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeChoice === themeChoice())));
   $$('[data-density-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.densityChoice === prefs.density)));
   applyTheme();
+  setSingleKeyShortcuts(prefs.singleKey);
 }
 // Apply, persist, confirm. If saving fails, the previous value comes back and the toast says why (WORKBENCH §13).
 function commit(label, apply, done = `已保存：${label}`) {
@@ -35,7 +39,7 @@ root.addEventListener('change', e => {
 root.addEventListener('click', e => {
   const b = e.target.closest('button, a');
   if (!b) return;
-  if (b.dataset.themeChoice) commit('外观', () => { prefs.theme = b.dataset.themeChoice; });
+  if (b.dataset.themeChoice) commit('外观', () => { forcedTheme = null; prefs.theme = b.dataset.themeChoice; });
   else if (b.dataset.densityChoice) commit('列表行高', () => { prefs.density = b.dataset.densityChoice; });
   else if (b.dataset.action === 'placeholder') { e.preventDefault(); toast('示例只做了偏好设置这一页'); }
   else if (b.dataset.action === 'reset') {
@@ -51,5 +55,5 @@ root.addEventListener('click', e => {
   }
 });
 media.addEventListener('change', () => { if (prefs.theme === 'system') applyTheme(); });
-initShell(root);
+forcedTheme = initShell(root)?.theme?.fromUrl ?? null;
 paint();

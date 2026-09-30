@@ -20,7 +20,7 @@
   },
   "structurePatterns": [
     "Container = panel background (#F3F3F3), radius md (8px)",
-    "Selected segment = white background — NOT blue fill",
+    "Selected segment = flat gray (tier3 line) with ink text and weight 500, no shadow — NOT blue fill",
     "Selected text = ink-primary, unselected = ink-secondary",
     "Segments separated by 2px gap (no visible divider lines)",
     "Height = 32px (--layout-btn-height) for md, 28px for sm",
@@ -32,7 +32,7 @@
     "Active segment is WHITE card, not blue"
   ],
   "doNotInvent": [
-    "Blue selected segment — selected = white, not blue",
+    "Blue selected segment or a floating white chip with shadow — selected = flat gray, no shadow",
     "Divider lines between segments — use gap instead",
     "Square corners on container — use md radius"
   ],

@@ -11,4 +11,5 @@ jobs:
       - run: node scripts/build-workbench.mjs --check
       - run: node scripts/extract-components-css.mjs --check
       - run: node scripts/build-panorama.mjs --check
+      - run: node scripts/lint-design.mjs
       - run: node --test tests/*.test.mjs
