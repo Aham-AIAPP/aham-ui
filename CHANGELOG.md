@@ -19,7 +19,7 @@
 - 列表键盘、预览与记录详情（7.2 P3）：当前行 ↑↓ 移动、空格预览、Enter 打开、x 勾选；详情页一条页眉带位置与上一条 / 下一条，720px 居中主内容，240px「标签 + 值」属性栏，动态流与 ⌘ / Ctrl + Enter 评论框。新增 `initListKeys` / `initPropertyPickers` / `initComposer`、契约 `list-keyboard` / `record-detail` / `properties-panel` / `activity-feed`、规范 WORKBENCH §11、预览页 `preview/workbench-detail.html`、示例 `examples/record-detail.html`。
 - 快速操作（7.2 P4）：⌘K 命令面板（上下文标签、分组、子列表原地替换）、统一快捷键表与 ? 帮助、行右键菜单（Shift + F10，下级原地替换）、单元格就地改属性、右下角提示条（带撤销）、新建弹窗（继续新建、⌘ Enter、原地放弃确认）。新增 `initPalette` / `registerShortcut` / `initContextMenu` / `openPicker` / `toast` / `openCreateDialog`、6 个契约、规范 WORKBENCH §12、预览页 `preview/workbench-actions.html`；保留快捷键写入 `components/shortcuts.json`。
 - 设置页（7.2 P5）：左侧分组设置导航、720px 居中内容、横线分隔的设置行、单项即时生效与提示条确认、破坏性操作放最后并确认。规范 WORKBENCH §13、契约 `settings-page`、示例 `examples/settings.html`。
-- 全景页 `index.html` 新增「网页工作台」区块，列出全部预览页与示例；区块编号按顺序重排（原有两处重复编号）。
+- 全景页 `index.html` 重做，共 12 个区块，新增「间距、圆角与层次」一节。色板、文本样式、间距、图标、契约清单、读取顺序、版本号和数量由新增的 `scripts/build-panorama.mjs` 从包内文件生成，`--check` 进 CI；网页工作台区块用框内样例直接运行 5 个页面示例和 3 个状态预览页；浅色 / 深色 / 跟随系统三档主题，窄屏可用。
 - 7.2 规划 `docs/workbench-7.2-plan.md`：列表页、侧面板、命令面板与快捷键，参考 Circle 的布局与交互。
 ### 变更
 - 报价单迁入新外框：导航按钮移到页眉，主题开关改为图标按钮，页脚删除；表头不再折行。
@@ -30,7 +30,7 @@
 - 写明两套外框尺寸的分工：`layout` 组用于应用轨与 content 网页，`workbench` 组用于工作台。
 - `.gitignore` 的 `Icon?` 在 macOS 上误匹配 `icons/`，导致 `design-system/icons/` 从未进入 git；已加 `!icons/` 放回。
 - 新增 3 条回归测试：通用层不含页面专用类、示例引用的图标存在、DESIGN.md 行高与小节编号一致。
-- 全景页 `index.html` 顶栏版本徽章由硬编码 `v6.1` 改为**读取 `tokens.json` 动态显示**（离线兜底当前版本），并去掉 banner 示范里过时的具体版本文案——不再随发版过时。
+- 全景页不再内嵌两份过期的 `aham-ui.css`（v6.1、v7.0 各一份），改为直接引用 `design-system/aham-ui.css` 与 `workbench.css`；去掉依赖外部运行时的模板写法（原主题开关在仓库里不能用）和指向不存在文件的脚本（载入报 404）；首屏数量改为生成值，原「约 75 个组件」与「约 65 个控件」两处互相矛盾。
 
 ## [7.1.0] - 2026-09-30
 

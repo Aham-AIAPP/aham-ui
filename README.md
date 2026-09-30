@@ -100,7 +100,8 @@
 - 组件状态：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html)
 - 页面示例：[外框](design-system/examples/workbench-shell.html) · [列表](design-system/examples/customer-list.html) · [记录详情](design-system/examples/record-detail.html) · [单据](design-system/examples/crm-quotation.html) · [设置](design-system/examples/settings.html)
 - 参考实现：`design-system/workbench.css` + `design-system/workbench.js`，零依赖，任何前端都可直接引用。
-- 验证：`node scripts/build-workbench.mjs --check`、`node scripts/extract-components-css.mjs --check`、`node --test tests/*.test.mjs`。
+- 验证：`node scripts/build-workbench.mjs --check`、`node scripts/extract-components-css.mjs --check`、`node scripts/build-panorama.mjs --check`、`node --test tests/*.test.mjs`。
+- 全景页 `index.html`：改了 tokens、图标、契约或读取顺序后，执行 `node scripts/build-panorama.mjs` 重写页面里的数值和清单；其余部分手写。
 - 本地预览：仓库根目录执行 `python3 -m http.server 8765 --bind 127.0.0.1`，打开 `http://127.0.0.1:8765/`，全景页的「网页工作台」区块列出全部入口。
 
 示例只用虚构数据。权限、审批、审计、并发和服务端保存须由产品接入；现有 `aham-ui.css` 与 `css.json` 是兼容资产。
