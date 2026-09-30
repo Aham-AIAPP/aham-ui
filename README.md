@@ -33,7 +33,7 @@
 
 - **单一事实源（取值）** — `design-system/tokens.json`：颜色（亮 + 暗）、文本样式、间距、圆角、尺寸、图标。改这里 = 改全局。
 - **完整规范（规则）** — `design-system/DESIGN.md` **八层**：原则 / 基础 / 控件与组件 / 组合规则 / 模式 / 介质落地 / 输入 / 系统支撑 / **页面布局体系（分网页·应用·Office·邮件四轨）**。v7.0.2 补全**长文排版细则**（CJK 行高 1.75、段间距、垂直韵律）与**密集布局**（信息密集表格、仪表盘模块、表单布局）——对照 11 家大厂调研，补 14 个缺口。
-- **组件库（构件）** — **17 个基础组件 + 4 个工作台模式**带机读契约 `components/*.json`；基础组件就地预览 `preview/*.html`；`components.css` / `colors_and_type.css` 即取即用；`ui_kits/dashboard/` 是成品示范。
+- **组件库（构件）** — **17 个基础组件 + 20 个工作台组合契约**带机读契约 `components/*.json`；基础组件就地预览 `preview/*.html`；`components.css` / `colors_and_type.css` 即取即用；`ui_kits/dashboard/` 是成品示范。
 - **图标** — [Lucide](https://lucide.dev)（ISC）**51 个语义图标**，线性单色、跟随文字色，状态图标必配文字。
 - **Office 落地** — `aham-ui-office.md`：Word / Excel / PPT 的 HEX + 字体映射。
 - **一键换品牌** — 改 `tokens.json`（色值 / 字体 / 字号）即换皮，下游 CSS / 组件 / Office 全部派生，不动代码。
@@ -92,13 +92,15 @@
 
 <p><img src="assets/wechat-qr.png" width="640" alt="关注 Aham 公众号 / 加作者微信"></p>
 
-## v7.1 · C 风格业务工作台
+## v7.2 · 网页工作台
 
-保留 Aham 的 Inter / JetBrains、单蓝与灰阶、无阴影和状态点，增加全宽工作台与高密度单据。
+面向 ToB 管理软件：颜色、字体、圆角、状态写法沿用 Aham，布局与交互照 [Circle](https://github.com/ln-dev7/circle)（Linear 风格的开源实现）。
 
-- [正式规范](design-system/WORKBENCH.md) · [实施与迁移规划](docs/workbench-plan.md)
-- [CRM 报价示例](design-system/examples/crm-quotation.html)：12 行明细、数量与折扣编辑、精确金额、摘要、密度切换与本机草稿。
+- 规范：[WORKBENCH.md](design-system/WORKBENCH.md)（外框、列表与筛选、列表键盘与详情、命令面板与快捷键、设置页、单据页）· [7.2 规划与记录](docs/workbench-7.2-plan.md)
+- 组件状态：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html)
+- 页面示例：[外框](design-system/examples/workbench-shell.html) · [列表](design-system/examples/customer-list.html) · [记录详情](design-system/examples/record-detail.html) · [单据](design-system/examples/crm-quotation.html) · [设置](design-system/examples/settings.html)
+- 参考实现：`design-system/workbench.css` + `design-system/workbench.js`，零依赖，任何前端都可直接引用。
 - 验证：`node scripts/build-workbench.mjs --check`、`node scripts/extract-components-css.mjs --check`、`node --test tests/*.test.mjs`。
-- 本地预览：仓库根目录执行 `python3 -m http.server 8765 --bind 127.0.0.1`，打开 `/design-system/examples/crm-quotation.html`。
+- 本地预览：仓库根目录执行 `python3 -m http.server 8765 --bind 127.0.0.1`，打开 `http://127.0.0.1:8765/`，全景页的「网页工作台」区块列出全部入口。
 
-新增模式是参考实现；审批、权限、审计、并发和服务端数据须由产品接入。现有 CSS 和 `css.json` 是兼容资产，不宣称已全部纳入生成链。
+示例只用虚构数据。权限、审批、审计、并发和服务端保存须由产品接入；现有 `aham-ui.css` 与 `css.json` 是兼容资产。

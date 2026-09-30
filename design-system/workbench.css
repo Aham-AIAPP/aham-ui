@@ -327,6 +327,31 @@
 :where(.aham-workbench) .wb-cell-picker{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:var(--wb-header-control);margin-inline-start:calc(-1 * var(--wb-s1));padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;white-space:nowrap}
 :where(.aham-workbench) .wb-cell-picker:hover{background:var(--wb-selected)}
 
+/* Settings (7.2 P5): Circle's settings kit — shell, section, rows — with Aham's line-separated rows instead of bordered cards. */
+:where(.aham-workbench) .wb-settings-layout{flex:1;min-height:0;display:grid;grid-template-columns:var(--wb-panel-narrow) minmax(0,1fr)}
+:where(.aham-workbench) .wb-settings-nav{min-height:0;overflow-y:auto;padding:var(--wb-s4) var(--wb-s2);border-inline-end:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-settings-nav h2{padding:var(--wb-s3) var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-body);font-weight:500}
+:where(.aham-workbench) .wb-settings-nav ul{display:grid;gap:2px;margin:0;padding:0;list-style:none}
+:where(.aham-workbench) .wb-settings-nav a{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-nav-item);padding:0 var(--wb-s2);border-radius:var(--wb-radius);color:var(--wb-muted);text-decoration:none}
+:where(.aham-workbench) .wb-settings-nav a:hover{background:var(--wb-hover);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-settings-nav a[aria-current=page]{background:var(--wb-selected);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-settings-scroll{min-height:0;overflow-y:auto}
+:where(.aham-workbench) .wb-settings{max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6) var(--wb-s5) var(--wb-s8)}
+:where(.aham-workbench) .wb-settings>h1{font-size:var(--wb-detail-title);font-weight:500}
+:where(.aham-workbench) .wb-settings>p{margin-block-start:var(--wb-s1);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-settings-section{margin-block-start:var(--wb-s6)}
+:where(.aham-workbench) .wb-settings-section>header{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--wb-s4);margin-block-end:var(--wb-s3)}
+:where(.aham-workbench) .wb-settings-section h2{font-size:var(--wb-text-base);font-weight:500}
+:where(.aham-workbench) .wb-settings-section header p{margin-block-start:2px;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-settings-rows{border-top:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-setting>div:first-child{min-width:0}
+:where(.aham-workbench) .wb-setting-title{font-size:var(--wb-text-sm);font-weight:500}
+:where(.aham-workbench) .wb-setting-desc{margin-block-start:2px;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-setting-control{display:flex;flex:none;align-items:center;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-setting-control .wb-select{min-width:160px}
+:where(.aham-workbench) .wb-settings-section.is-danger h2{color:var(--wb-danger)}
+
 /* Form-type popover sections (display options) */
 :where(.aham-workbench) .wb-pop-title{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-pop-section{display:grid;gap:var(--wb-s2);padding:var(--wb-s3)}

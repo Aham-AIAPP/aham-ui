@@ -60,5 +60,16 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 
 **拿不准就回到 `tokens.json` 和 `DESIGN.md`,不要猜。你的工作是执行这套规范,不是设计。**
 
-## v7.1 工作台入口
-`WORKBENCH.md` → `components/workbench.json` 等四个模式契约 → `workbench.css` + `workbench.js` → `examples/crm-quotation.html`、`examples/workbench-shell.html`、`examples/customer-list.html`。列表页读 WORKBENCH §9–10 和 `list-view` / `filter-bar` / `display-options` / `bulk-bar` / `command-menu` 五个契约，状态看 `preview/workbench-filter.html`。筛选、显示选项、属性选择直接用 `workbench.js` 的 `initFilter` / `initDisplay` / `createCommand`，不要另写一套。列表键盘、预览和记录详情读 WORKBENCH §11 与 `list-keyboard` / `record-detail` / `properties-panel` / `activity-feed` 契约，状态看 `preview/workbench-detail.html`，行为用 `initListKeys` / `initPropertyPickers` / `initComposer`。命令面板、快捷键、右键菜单、单元格就地修改、提示条、新建弹窗读 WORKBENCH §12 与对应 6 个契约，状态看 `preview/workbench-actions.html`；快捷键只用 `components/shortcuts.json` 的保留键，并通过 `registerShortcut` 登记，界面上不显示未登记的按键。工作台列表页不用 `.page-header` 大标题，改用 40px 页眉横条（WORKBENCH §2.1）。工作台使用 full 宽度档，不套 page-max。原网页内容、macOS、Office 规范继续适用。
+## 工作台入口（7.2）
+做 ToB 管理界面（列表、详情、单据、设置）时用网页工作台，按这个顺序读：
+1. `WORKBENCH.md`：规则。§2 外框与页眉，§4–6 单据页，§9–10 列表与筛选，§11 列表键盘与详情，§12 快速操作，§13 设置页。
+2. `tokens.json` 的 `workbench` 组：全部尺寸，不自创值。
+3. `components/index.json` 里的工作台契约：结构、状态、键盘、可访问性、禁止事项，多数写明 DOM 结构。
+4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`。
+5. `preview/workbench-*.html` 看组件状态，`examples/*.html` 看页面组合。
+
+硬性要求：
+- 列表页不用 `.page-header` 大标题，改用 40px 页眉横条；工作台用 full 宽度，不套 page-max。
+- 快捷键只用 `components/shortcuts.json` 的保留键，并用 `registerShortcut` 登记；界面不显示未登记的按键。
+- 浮层不级联，一次只开一个模态；Esc 每次只关最上面一层。
+- 原网页内容、macOS、Office 规范继续适用。

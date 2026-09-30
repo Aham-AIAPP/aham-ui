@@ -78,6 +78,11 @@
       "file": "examples/record-detail.html",
       "priority": 8,
       "purpose": "记录详情页示例：位置与上下条、属性栏、动态流"
+    },
+    {
+      "file": "examples/settings.html",
+      "priority": 8,
+      "purpose": "设置页示例：分组导航、横线分隔的设置行、即时生效"
     }
   ],
   "componentResolution": {

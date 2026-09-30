@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 设置</title><link rel="stylesheet" href="../workbench.css"><style>body{margin:0}</style></head>
+<body>
+<div class="aham-workbench" data-theme="light" aria-label="设置页示例">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <span class="wb-brand" aria-label="Aham CRM">A</span>
+    <div class="wb-nav-group"><a class="wb-nav-item" href="customer-list.html" aria-label="客户"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-users"/></svg><span>客户</span></a><a class="wb-nav-item" href="crm-quotation.html" aria-label="销售报价"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><span>销售报价</span></a></div>
+    <div class="wb-nav-foot"><a class="wb-nav-item" href="settings.html" aria-label="设置" aria-current="page"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-settings"/></svg><span>设置</span></a></div>
+  </nav>
+  <div class="wb-main">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" title="展开 / 收起导航（⌘B · Ctrl+B）"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>设置</span><span>/</span><span aria-current="page">偏好设置</span></nav></div>
+        <div class="wb-header-trail"><span class="wb-meta">修改即时生效</span></div>
+      </div>
+    </header>
+    <div class="wb-settings-layout">
+      <nav class="wb-settings-nav" aria-label="设置分类">
+        <h2>个人</h2>
+        <ul><li><a href="settings.html" aria-current="page">偏好设置</a></li><li><a href="#" data-action="placeholder">通知</a></li><li><a href="#" data-action="placeholder">账户与安全</a></li></ul>
+        <h2>工作区</h2>
+        <ul><li><a href="#" data-action="placeholder">成员与角色</a></li><li><a href="#" data-action="placeholder">字段与标签</a></li><li><a href="#" data-action="placeholder">审批流程</a></li></ul>
+        <h2>集成</h2>
+        <ul><li><a href="#" data-action="placeholder">外部系统</a></li><li><a href="#" data-action="placeholder">接口密钥</a></li></ul>
+      </nav>
+      <div class="wb-settings-scroll" tabindex="0" role="region" aria-label="偏好设置内容">
+        <main class="wb-settings">
+          <h1>偏好设置</h1>
+          <p>这些设置只影响你自己，修改后立即生效并保存在当前浏览器（示例）。</p>
+
+          <section class="wb-settings-section" aria-labelledby="s-general">
+            <header><div><h2 id="s-general">常规</h2><p>打开应用时的默认行为。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-home">默认首页</div><div class="wb-setting-desc">登录后先打开的页面</div></div><div class="wb-setting-control"><select class="wb-select" data-setting="home" aria-labelledby="l-home"><option>客户列表</option><option>我负责的</option><option>最近访问</option></select></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-week">每周第一天</div><div class="wb-setting-desc">用于日期选择和按周统计</div></div><div class="wb-setting-control"><select class="wb-select" data-setting="week" aria-labelledby="l-week"><option>星期一</option><option>星期日</option></select></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-send">发送评论</div><div class="wb-setting-desc">评论框里用哪个按键提交</div></div><div class="wb-setting-control"><select class="wb-select" data-setting="send" aria-labelledby="l-send"><option>⌘ / Ctrl + Enter</option><option>Enter</option></select></div></div>
+            </div>
+          </section>
+
+          <section class="wb-settings-section" aria-labelledby="s-ui">
+            <header><div><h2 id="s-ui">界面与主题</h2><p>外观、列表疏密与打开记录的方式。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title">外观</div><div class="wb-setting-desc">跟随系统时，按系统的浅色 / 深色切换</div></div><div class="wb-setting-control"><div class="wb-seg sm" role="group" aria-label="外观"><button type="button" data-theme-choice="light" aria-pressed="true">浅色</button><button type="button" data-theme-choice="dark" aria-pressed="false">深色</button><button type="button" data-theme-choice="system" aria-pressed="false">跟随系统</button></div></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title">列表行高</div><div class="wb-setting-desc">新打开的列表默认用这个行高，列表里的「显示」可以单独调整</div></div><div class="wb-setting-control"><div class="wb-seg sm" role="group" aria-label="列表行高"><button type="button" data-density-choice="standard" aria-pressed="true">标准 36</button><button type="button" data-density-choice="compact" aria-pressed="false">紧凑 32</button></div></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-open">打开记录</div><div class="wb-setting-desc">点击列表里的名称时</div></div><div class="wb-setting-control"><select class="wb-select" data-setting="open" aria-labelledby="l-open"><option>进入详情页</option><option>在预览面板打开</option></select></div></div>
+            </div>
+          </section>
+
+          <section class="wb-settings-section" aria-labelledby="s-notify">
+            <header><div><h2 id="s-notify">通知</h2><p>哪些变化需要提醒你。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-assign">分配给我时</div><div class="wb-setting-desc">记录的负责人改成你</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" data-setting="assign" checked aria-labelledby="l-assign"><span aria-hidden="true"></span></label></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-digest">每日摘要邮件</div><div class="wb-setting-desc">每天 8:30 汇总前一天的变化</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" data-setting="digest" aria-labelledby="l-digest"><span aria-hidden="true"></span></label></div></div>
+            </div>
+          </section>
+
+          <section class="wb-settings-section is-danger" aria-labelledby="s-danger">
+            <header><div><h2 id="s-danger">重置</h2><p>恢复为系统默认，不影响其他人。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title">重置全部偏好</div><div class="wb-setting-desc">以上所有设置恢复默认值</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm ghost danger" data-action="reset">重置</button></div></div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+  <dialog class="wb-dialog" id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-desc">
+    <form method="dialog">
+      <h2 id="reset-title">重置全部偏好？</h2>
+      <p id="reset-desc">外观、默认首页、通知等设置会恢复默认值。</p>
+      <div class="wb-dialog-foot"><button class="wb-btn" value="cancel" autofocus>取消</button><button class="wb-btn danger" value="confirm">重置</button></div>
+    </form>
+  </dialog>
+</div>
+<script type="module" src="./settings.mjs"></script>
+</body></html>

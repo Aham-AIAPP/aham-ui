@@ -1,0 +1,80 @@
+{
+  "slug": "settings-page",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "examples/settings.html",
+  "reference": "examples/settings.html",
+  "specification": "WORKBENCH.md §13",
+  "intent": "设置页：左侧分组导航，右侧居中的分区与设置行，单项修改即时生效",
+  "variantDimensions": [
+    {
+      "axis": "control",
+      "values": [
+        "switch",
+        "select",
+        "segmented",
+        "button"
+      ]
+    },
+    {
+      "axis": "section",
+      "values": [
+        "default",
+        "danger"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "header-row",
+      "settings-nav",
+      "nav-group",
+      "settings-content",
+      "title",
+      "section",
+      "row",
+      "row-title",
+      "row-description",
+      "control"
+    ],
+    "required": [
+      "settings-nav",
+      "section",
+      "row"
+    ]
+  },
+  "markup": {
+    "row": "<div class=\"wb-setting\"><div><div class=\"wb-setting-title\" id=\"l-digest\">每日摘要邮件</div><div class=\"wb-setting-desc\">每天 8:30 汇总前一天的变化</div></div><div class=\"wb-setting-control\"><label class=\"wb-switch\"><input type=\"checkbox\" aria-labelledby=\"l-digest\"><span aria-hidden=\"true\"></span></label></div></div>",
+    "layout": "<div class=\"wb-settings-layout\"><nav class=\"wb-settings-nav\">…</nav><div class=\"wb-settings-scroll\"><main class=\"wb-settings\">…</main></div></div>"
+  },
+  "rules": [
+    "设置导航 240px 放在内容区左列，分组排列，当前页灰底；1024px 及以下移到顶部横向滚动",
+    "内容最宽 720px 居中；页标题 24px；分区间距 32px",
+    "设置行用横线分隔，不加卡片边框；左标题 + 说明，右控件；最小高 64px",
+    "单项修改即时生效并用提示条确认；失败恢复原值",
+    "整体校验或影响他人的配置用整页表单与保存按钮",
+    "破坏性操作放最后一个分区，红色文字按钮 + 确认框"
+  ],
+  "states": [
+    "default",
+    "saving",
+    "saved",
+    "error"
+  ],
+  "keyboard": [
+    "设置导航是链接列表，Tab 移动",
+    "控件原生可键盘操作；开关聚焦显示焦点环"
+  ],
+  "accessibility": [
+    "每个控件通过 aria-labelledby 关联行标题",
+    "内容滚动区有可访问名并可聚焦"
+  ],
+  "doNotInvent": [
+    "带边框阴影的设置卡片",
+    "每个设置旁边一个保存按钮",
+    "把设置导航塞进全局导航栏"
+  ]
+}

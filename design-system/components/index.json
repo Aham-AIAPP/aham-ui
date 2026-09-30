@@ -215,6 +215,12 @@
       "name": "Create Dialog",
       "confidence": "high",
       "variantCount": 2
+    },
+    {
+      "slug": "settings-page",
+      "name": "Settings Page",
+      "confidence": "high",
+      "variantCount": 4
     }
   ]
 }

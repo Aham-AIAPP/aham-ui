@@ -1,6 +1,6 @@
 # Aham UI · 网页工作台与高密度单据
 
-版本 7.1.0。正式扩展 [DESIGN.md](DESIGN.md) §8，数值唯一来源为 [tokens.json](tokens.json)。C 风格是 Aham 的业务工作台模式：保留视觉身份，吸收 Circle / Linear 的空间组织与操作效率。它不是另一套皮肤。
+版本 7.2.0。正式扩展 [DESIGN.md](DESIGN.md) §8，数值唯一来源为 [tokens.json](tokens.json)。C 风格是 Aham 的业务工作台模式：保留视觉身份，吸收 Circle / Linear 的空间组织与操作效率。它不是另一套皮肤。
 
 ## 1. 适用范围与身份边界
 
@@ -107,7 +107,7 @@
 
 类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，本例不下载字体；安装 Inter / JetBrains 或由产品合法自托管即可统一字形。
 
-组合契约 19 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html) 和 [记录详情](examples/record-detail.html)。
+组合契约 20 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
 
 外框行为在 `workbench.js`（原生 ES 模块，无依赖）：`initShell(root)` 负责导航开关，`initPanels(root)` 负责侧面板开关（按钮 `[data-panel-toggle="面板 id"]`），`openPopover(trigger, panel)` 负责弹层，`initSearch(root)` 负责页眉搜索，`createCommand` / `initFilter` / `initDisplay` 见第 10 节。所有浮层登记在同一个层栈里，Esc 每次只关最上面一层。
 
@@ -299,4 +299,17 @@
 - 复杂单据（有明细表、金额）不用快速新建，进入整页单据（第 4 节）。
 
 参考实现：`workbench.js` 的 `initPalette`、`registerShortcut` / `listShortcuts` / `formatKeys`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`。
+
+## 13. 设置页（7.2）
+
+结构照 Circle 的设置套件（外框 / 分区 / 行），分组方式改为 Aham 的横线分隔。组合见 [examples/settings.html](examples/settings.html)。
+
+- 页面由页眉横条（面包屑「设置 / 当前页」）、左侧 240px 设置导航、右侧设置内容组成。Circle 把设置导航放进全局侧栏；Aham 的导航栏只放业务模块，设置导航放在内容区左列。1024px 及以下，设置导航移到顶部并横向滚动。
+- 设置导航按组排列（个人 / 工作区 / 集成），组名次级文字色、字重 500；当前页灰底墨字（`aria-current="page"`）。
+- 设置内容居中，最宽 `detailWidth` 720px：页标题 24px 字重 500，下方一行说明；分区之间 32px。
+- 分区标题 14px 字重 500，下方一行说明；需要时右侧放分区级操作。
+- 分区里的设置行用上下横线分隔，不加卡片边框：左侧是标题（13px 字重 500）和说明（次级文字色），右侧是控件（开关、选择、分段按钮或按钮）。行最小高 64px。
+- 单项设置修改后立即生效，用提示条确认；保存失败时恢复原值并提示原因。需要整体校验或会影响他人的配置（审批流程、权限、字段）用整页表单和明确的保存按钮（第 4 节）。
+- 恢复默认、删除工作区等破坏性操作放在最后一个分区，按钮用红色文字，点击后弹确认框（DESIGN §8.6）。
+- 开关 `.wb-switch`：28 × 16px，打开时墨色底；键盘聚焦显示蓝色焦点环。
 
