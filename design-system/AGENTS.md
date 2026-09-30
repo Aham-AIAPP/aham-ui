@@ -61,4 +61,4 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 **拿不准就回到 `tokens.json` 和 `DESIGN.md`,不要猜。你的工作是执行这套规范,不是设计。**
 
 ## v7.1 工作台入口
-`WORKBENCH.md` → `components/workbench.json` 等四个模式契约 → `workbench.css` + `workbench.js` → `examples/crm-quotation.html`、`examples/workbench-shell.html`。工作台列表页不用 `.page-header` 大标题，改用 40px 页眉横条（WORKBENCH §2.1）。工作台使用 full 宽度档，不套 page-max。原网页内容、macOS、Office 规范继续适用。
+`WORKBENCH.md` → `components/workbench.json` 等四个模式契约 → `workbench.css` + `workbench.js` → `examples/crm-quotation.html`、`examples/workbench-shell.html`、`examples/customer-list.html`。列表页读 WORKBENCH §9–10 和 `list-view` / `filter-bar` / `display-options` / `bulk-bar` / `command-menu` 五个契约，状态看 `preview/workbench-filter.html`。筛选、显示选项、属性选择直接用 `workbench.js` 的 `initFilter` / `initDisplay` / `createCommand`，不要另写一套。工作台列表页不用 `.page-header` 大标题，改用 40px 页眉横条（WORKBENCH §2.1）。工作台使用 full 宽度档，不套 page-max。原网页内容、macOS、Office 规范继续适用。

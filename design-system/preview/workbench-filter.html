@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workbench Filter — Aham UI Preview</title>
+  <link rel="stylesheet" href="../workbench.css">
+  <style>
+body { margin: 0; }
+/* Preview scaffold only; component styles come from workbench.css. */
+.pv { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; display: grid; gap: 32px; }
+.pv h1 { font-size: 20px; font-weight: 500; }
+.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
+.pv-story { display: grid; gap: 12px; }
+.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
+.pv-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.pv-frame { border-radius: 8px; box-shadow: 0 0 0 1px var(--wb-line); overflow: hidden; background: var(--wb-bg); }
+.pv-frame .wb-header-row:last-child { border-bottom: 0; }
+.pv-cap { display: block; margin-top: 8px; color: var(--wb-muted); font-size: 12px; }
+.pv .wb-popover.pv-static { position: static; max-height: none; }
+  </style>
+</head>
+<body>
+<div class="aham-workbench wb-bare" data-theme="light">
+<main class="pv">
+  <header>
+    <h1>工作台筛选 · 状态预览</h1>
+  </header>
+  <p>结构与交互照 Circle / Linear：页眉第 2 条放「筛选」「面板开关」「显示」，有条件后在页眉下方出现筛选行。颜色、字体、圆角取 Aham。下面的命令菜单与筛选行由 <code>workbench.js</code> 实际渲染，和产品里的输出一致。规则见 WORKBENCH §9.2、§10。</p>
+
+  <section class="pv-story">
+    <div class="pv-label">页眉第 2 条 · 选项按钮</div>
+    <div class="pv-row">
+      <div><div class="pv-frame"><div class="wb-header-row" style="width:420px"><span class="wb-count">共 128 条</span><div class="wb-header-trail"><button type="button" class="wb-btn sm outline">筛选</button><button type="button" class="wb-icon-btn" aria-pressed="false" aria-label="预览面板"></button><button type="button" class="wb-btn sm">显示</button></div></div></div><span class="pv-cap">默认：筛选为描边按钮，显示为填充按钮，面板开关只有图标</span></div>
+      <div><div class="pv-frame"><div class="wb-header-row" style="width:420px"><span class="wb-count">29 / 128 条</span><div class="wb-header-trail"><button type="button" class="wb-btn sm outline icon-only" aria-label="添加筛选，已有 2 个条件"></button><button type="button" class="wb-icon-btn" aria-pressed="true" aria-label="预览面板"></button><button type="button" class="wb-btn sm">显示</button></div></div></div><span class="pv-cap">有条件：筛选缩为图标；面板打开时开关为灰底；显示调整过带圆点</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">筛选行 · 四种字段类型与未完成条件</div>
+    <div class="pv-frame"><div class="wb-filter-bar" id="pv-bar"></div></div>
+    <span class="pv-cap">字段 / 条件 / 值 / 移除。多选超过 1 个时值显示「N 个字段名」，悬停看全部；值未填完显示「…」。点击条件或值可以修改。</span>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">命令菜单 · 选字段、快速筛选、选值、改条件、无结果</div>
+    <div class="pv-row" id="pv-menus"></div>
+    <span class="pv-cap">焦点始终在搜索框；↑↓ 移动高亮，Enter 选择，Esc 关闭；在选值菜单里对空搜索框按退格返回字段列表。</span>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">显示选项与数值条件 · 可点击打开</div>
+    <div class="pv-frame"><div class="wb-header-row"><span class="wb-count">点击右侧按钮查看弹层</span><div class="wb-header-trail"><button type="button" class="wb-btn sm outline" id="pv-filter">筛选</button><button type="button" class="wb-btn sm" id="pv-display">显示</button></div></div><div class="wb-filter-bar" id="pv-bar-live" hidden></div></div>
+  </section>
+</main>
+</div>
+<script type="module">
+import {createCommand, initFilter, initDisplay, icon} from '../workbench.js';
+const root = document.querySelector('.aham-workbench');
+// Icons for the static buttons above
+root.querySelectorAll('.wb-btn.outline').forEach(b => { b.innerHTML = b.classList.contains('icon-only') ? icon('filter') : `${icon('filter')}<span>筛选</span>`; });
+root.querySelectorAll('.wb-icon-btn[aria-label="预览面板"]').forEach(b => { b.innerHTML = icon('eye'); });
+root.querySelectorAll('.pv-frame .wb-btn.sm:not(.outline)').forEach((b, i) => { b.innerHTML = `${icon('settings')}<span>显示</span>${i === 1 ? '<span class="wb-dot" aria-hidden="true"></span>' : ''}`; });
+
+const fields = [
+  { key: 'name', label: '名称', type: 'text', icon: 'file' },
+  { key: 'stage', label: '阶段', type: 'option', icon: 'success', options: ['初次接触', '需求调研', '方案评估', '商务谈判', '已签约'] },
+  { key: 'owner', label: '负责人', type: 'option', icon: 'user', options: ['林悦', '周航', '许宁'] },
+  { key: 'amount', label: '金额', type: 'number', unit: '元', parse: v => Number(v.replace(/,/g, '')), format: v => v.toLocaleString('zh-CN') },
+  { key: 'day', label: '最近跟进', type: 'date', icon: 'clock' },
+];
+initFilter({
+  root, trigger: document.createElement('button'), bar: document.querySelector('#pv-bar'), fields,
+  value: [
+    { field: 'stage', op: 'anyOf', values: ['方案评估', '商务谈判'] },
+    { field: 'owner', op: 'is', values: ['林悦'] },
+    { field: 'amount', op: 'between', values: [500000, 1200000] },
+    { field: 'day', op: 'after', values: ['2026-09-01'] },
+    { field: 'name', op: 'contains', values: [''] },
+  ],
+});
+
+const menus = document.querySelector('#pv-menus');
+const menu = (caption, opts, setup) => {
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<div class="wb-popover flush pv-static"><div></div></div><span class="pv-cap">${caption}</span>`;
+  menus.append(wrap);
+  const api = createCommand(wrap.querySelector('.wb-popover > div'), opts);
+  setup?.(api);
+};
+const fieldItems = fields.map(f => ({ id: f.key, label: f.label, icon: f.icon, arrow: true }));
+menu('选字段：第一项高亮，右侧箭头提示进入下一步', { label: '筛选字段', placeholder: '筛选…', items: fieldItems, onSelect() {} });
+menu('快速筛选：输入选项值，直接勾选「字段 › 值」', { label: '筛选字段', placeholder: '筛选…', items: q => [...fieldItems, ...(q ? fields.filter(f => f.type === 'option').flatMap(f => f.options.filter(o => o.includes(q)).map(o => ({ id: o, label: o, prefix: f.label, checked: o === '方案评估', count: { 方案评估: 29, 商务谈判: 21 }[o] ?? 7, always: true }))) : [])], onSelect() {} }, api => { api.input.value = '商'; api.render(); });
+menu('选值：已选的排在上方，勾选即生效', { label: '阶段的值', placeholder: '阶段…', items: [
+  { id: 'a', label: '方案评估', checked: true, count: 29, group: 'selected' },
+  { id: 'b', label: '商务谈判', checked: true, count: 21, group: 'selected' },
+  { id: 'c', label: '初次接触', checked: false, count: 24, group: 'rest' },
+  { id: 'd', label: '需求调研', checked: false, count: 22, group: 'rest' },
+  { id: 'e', label: '已签约', checked: false, count: 18, group: 'rest' },
+], onSelect() {} });
+menu('改条件：不超过 4 项时不显示搜索框', { label: '阶段的条件', search: false, items: [{ id: 'anyOf', label: '是其中之一', current: true }, { id: 'noneOf', label: '不是其中任何一个' }], onSelect() {} });
+menu('无结果', { label: '筛选字段', placeholder: '筛选…', items: fieldItems, onSelect() {} }, api => { api.input.value = '合同金额'; api.render(); });
+
+initFilter({ root, trigger: document.querySelector('#pv-filter'), bar: document.querySelector('#pv-bar-live'), fields, value: [{ field: 'amount', op: 'gte', values: [500000] }] });
+initDisplay({
+  root, trigger: document.querySelector('#pv-display'),
+  groups: [['stage', '阶段'], ['owner', '负责人']], sorts: [['day', '最近跟进'], ['amount', '金额'], ['name', '名称']],
+  columns: [{ key: 'stage', label: '阶段' }, { key: 'owner', label: '负责人' }, { key: 'amount', label: '金额' }, { key: 'day', label: '最近跟进' }],
+  value: { group: 'stage', sort: { field: 'day', dir: 'desc' }, density: 'compact', columns: [['stage', true], ['owner', true], ['amount', false], ['day', true]] },
+  defaults: { group: 'stage', sort: { field: 'day', dir: 'desc' }, density: 'standard', columns: [['stage', true], ['owner', true], ['amount', true], ['day', true]] },
+});
+</script>
+</body>
+</html>

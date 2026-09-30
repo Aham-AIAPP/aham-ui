@@ -1,0 +1,111 @@
+{
+  "slug": "filter-bar",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "intent": "Circle / Linear 式筛选：页眉「筛选」按钮 → 命令菜单选字段与取值；条件以四段式标签显示在页眉下方的筛选行，条件写进网址",
+  "specification": "WORKBENCH.md §9.2–9.3",
+  "preview": "preview/workbench-filter.html",
+  "reference": "examples/customer-list.html",
+  "api": "initFilter({ root, trigger, bar, fields, value, counts, onChange })",
+  "variantDimensions": [
+    {
+      "axis": "type",
+      "values": [
+        "text",
+        "option",
+        "number",
+        "date"
+      ]
+    },
+    {
+      "axis": "trigger",
+      "values": [
+        "labelled",
+        "icon-only"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "trigger",
+      "command-menu",
+      "value-editor",
+      "filter-row",
+      "add-button",
+      "chip",
+      "operator-menu",
+      "clear"
+    ],
+    "required": [
+      "trigger",
+      "chip"
+    ]
+  },
+  "operators": {
+    "text": [
+      "包含",
+      "不包含"
+    ],
+    "option": [
+      "是",
+      "不是",
+      "是其中之一",
+      "不是其中任何一个"
+    ],
+    "number": [
+      "不少于",
+      "不多于",
+      "介于"
+    ],
+    "date": [
+      "晚于",
+      "早于",
+      "介于"
+    ]
+  },
+  "fieldSchema": "{ key, label, type: text|option|number|date, icon?, options?, unit?, parse?(input)→value, format?(value)→text }",
+  "markup": {
+    "trigger": "<button class=\"wb-btn sm outline\">[filter 图标]<span>筛选</span></button>；有条件后加 .icon-only 并去掉文字",
+    "row": "<div class=\"wb-filter-bar\"><div class=\"wb-filter-chips\"><button class=\"wb-btn sm outline icon-only\" data-filter-add>…</button>[chips]</div><button class=\"wb-btn sm ghost\" data-filter-clear>[close 图标]<span>清除</span></button></div>",
+    "chip": "<div class=\"wb-chip\" role=\"group\" aria-label=\"阶段 是其中之一 方案评估、商务谈判\"><span class=\"wb-chip-field\">[图标]阶段</span><button class=\"wb-chip-op\">是其中之一</button><button class=\"wb-chip-value\"><span>2 个阶段</span></button><button class=\"wb-chip-remove\" aria-label=\"移除筛选：阶段\">[close]</button></div>"
+  },
+  "rules": [
+    "筛选行只在有条件时出现，位于页眉下方；行首添加按钮，行尾清除",
+    "字段列表里输入选项值即出现「字段 › 值」快速筛选项，1 个字开始匹配",
+    "选字段与取值在同一个弹层内切换，不嵌套弹层",
+    "选项勾选即生效，已选排上方并用分隔线隔开；文本、数字、日期边输入边生效",
+    "选项条件随值的个数切换单复数，正反向不变",
+    "输入无效时保留上一次有效条件并用文字说明；介于上下限填反时自动调换",
+    "每个字段最多一条条件",
+    "条件写进网址参数 f；无法识别、重复或取值非法的条件丢弃并提示条数"
+  ],
+  "states": [
+    "idle",
+    "open-fields",
+    "quick-search",
+    "open-values",
+    "incomplete",
+    "applied",
+    "invalid"
+  ],
+  "keyboard": [
+    "焦点在搜索框，↑↓ 移动高亮，Enter 选择",
+    "取值菜单里对空搜索框按退格返回字段列表",
+    "Esc 关闭弹层并把焦点还给触发按钮",
+    "移除条件后焦点移到下一个移除按钮，全部清除后回到筛选按钮"
+  ],
+  "accessibility": [
+    "条件标签 role=\"group\"，可访问名为完整条件",
+    "图标化的筛选按钮可访问名写明已有条件数",
+    "错误用文字说明，不只靠红框"
+  ],
+  "doNotInvent": [
+    "嵌套弹层",
+    "彩色条件标签或紫色勾选框",
+    "需要点「应用」才生效的选项筛选",
+    "把筛选条件存进本机代替网址"
+  ]
+}

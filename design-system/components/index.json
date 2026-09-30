@@ -125,6 +125,36 @@
       "name": "Context Panel",
       "confidence": "high",
       "variantCount": 2
+    },
+    {
+      "slug": "list-view",
+      "name": "List View",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "filter-bar",
+      "name": "Filter Bar",
+      "confidence": "high",
+      "variantCount": 4
+    },
+    {
+      "slug": "display-options",
+      "name": "Display Options",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "bulk-bar",
+      "name": "Bulk Bar",
+      "confidence": "high",
+      "variantCount": 3
+    },
+    {
+      "slug": "command-menu",
+      "name": "Command Menu",
+      "confidence": "high",
+      "variantCount": 2
     }
   ]
 }

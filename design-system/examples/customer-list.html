@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 客户列表</title><link rel="stylesheet" href="../workbench.css"><style>body{margin:0}</style></head>
+<body>
+<div class="aham-workbench" data-theme="light" aria-label="客户列表示例">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <span class="wb-brand" aria-label="Aham CRM">A</span>
+    <div class="wb-nav-group"><button class="wb-nav-item" aria-label="客户" aria-current="page"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-users"/></svg><span>客户</span></button><button class="wb-nav-item" aria-label="商机" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-folder"/></svg><span>商机</span></button><button class="wb-nav-item" aria-label="销售报价" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><span>销售报价</span></button><button class="wb-nav-item" aria-label="合同" data-action="placeholder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-copy"/></svg><span>合同</span></button></div>
+    <div class="wb-nav-foot"><span class="wb-avatar">林</span></div>
+  </nav>
+  <div class="wb-main">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" title="展开 / 收起导航（⌘B · Ctrl+B）"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>销售工作空间</span><span>/</span><span aria-current="page">客户</span></nav><div class="wb-seg sm" role="group" aria-label="视图"><button aria-pressed="true" data-view="all">全部客户</button><button aria-pressed="false" data-view="mine">我负责的</button><button aria-pressed="false" data-view="week">本周新增</button></div></div>
+        <div class="wb-header-trail"><button class="wb-icon-btn" data-action="search" aria-label="搜索客户名称或编码"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-search"/></svg></button><label class="wb-search" hidden><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-search"/></svg><input type="search" placeholder="客户名称或编码" aria-label="搜索客户名称或编码" maxlength="100"></label><button class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-moon"/></svg></button></div>
+      </div>
+      <div class="wb-header-row">
+        <div class="wb-header-lead" data-when="idle"><span class="wb-count" id="list-count"></span></div>
+        <div class="wb-header-trail" data-when="idle"><button type="button" class="wb-btn sm outline" id="filter-trigger">筛选</button><button type="button" class="wb-icon-btn" data-panel-toggle="customer-peek" aria-pressed="false" aria-controls="customer-peek" aria-label="预览面板" title="预览面板"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-eye"/></svg></button><button type="button" class="wb-btn sm" id="display-trigger">显示</button></div>
+        <div class="wb-header-lead" data-when="bulk" hidden><span class="wb-bulk-count" id="bulk-count"></span><button class="wb-btn sm ghost" data-action="select-matching" hidden></button><button class="wb-btn sm ghost" data-action="clear-selection">清除选择</button></div>
+        <div class="wb-header-trail" data-when="bulk" hidden><button type="button" class="wb-btn sm ghost" id="assign-trigger" aria-haspopup="dialog" aria-expanded="false" aria-controls="assign-pop"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-user"/></svg>分配负责人</button><button class="wb-btn sm ghost" data-action="export"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-download"/></svg>导出</button><button class="wb-btn sm ghost danger" data-action="delete"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-trash"/></svg>删除</button></div>
+      </div>
+    </header>
+    <div class="wb-layout is-list">
+      <section class="wb-list" id="customer-list" aria-label="客户列表" data-list-density="standard">
+        <div class="wb-filter-bar" id="filter-bar" role="group" aria-label="当前筛选条件" hidden></div>
+        <div class="wb-feedback" id="list-feedback" role="status" aria-live="polite"></div>
+        <div class="wb-list-scroll" tabindex="0" role="region" aria-label="客户列表，可横向滚动">
+          <table class="wb-table wb-list-table" id="customer-table"></table>
+          <div class="wb-empty" id="list-empty" hidden></div>
+          <p class="wb-note">所有客户、负责人与金额均为虚构示例。分配和删除只改当前页面里的数据，刷新后恢复。</p>
+        </div>
+        <footer class="wb-pager" id="pager" aria-label="翻页"></footer>
+      </section>
+      <aside class="wb-panel" id="customer-peek" data-size="wide" tabindex="0" aria-label="客户预览" hidden></aside>
+    </div>
+  </div>
+  <div class="wb-popover flush" id="assign-pop" role="dialog" aria-label="分配负责人" hidden><div></div></div>
+  <dialog class="wb-dialog" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-desc">
+    <form method="dialog">
+      <h2 id="delete-title"></h2>
+      <p id="delete-desc">删除后无法在本示例中恢复。真实产品还需要权限校验和审计记录。</p>
+      <div class="wb-dialog-foot"><button class="wb-btn" value="cancel" autofocus>取消</button><button class="wb-btn danger" value="confirm">删除</button></div>
+    </form>
+  </dialog>
+</div>
+<script type="module" src="./customer-list.mjs"></script>
+</body></html>

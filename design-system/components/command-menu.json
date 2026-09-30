@@ -1,0 +1,82 @@
+{
+  "slug": "command-menu",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "intent": "工作台通用选择器（cmdk 形式）：搜索框 + 可键盘移动高亮的列表，用于筛选、批量改属性、行内属性编辑和命令面板",
+  "specification": "WORKBENCH.md §10",
+  "preview": "preview/workbench-filter.html",
+  "reference": "examples/customer-list.html",
+  "api": "createCommand(host, { items, onSelect, onBack, placeholder, empty, search, label })",
+  "variantDimensions": [
+    {
+      "axis": "selection",
+      "values": [
+        "single",
+        "multi"
+      ]
+    },
+    {
+      "axis": "search",
+      "values": [
+        "with-search",
+        "list-only"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "search-input",
+      "listbox",
+      "option",
+      "check",
+      "icon",
+      "prefix",
+      "count",
+      "arrow",
+      "separator",
+      "empty"
+    ],
+    "required": [
+      "listbox",
+      "option"
+    ]
+  },
+  "itemSchema": "{ id, label, icon?, prefix?, count?, checked?, current?, arrow?, keywords?, group?, always? }",
+  "markup": {
+    "option": "<li role=\"option\" aria-checked=\"true\" data-active><span class=\"wb-command-check\">[check]</span>[图标]<span class=\"wb-command-label\"><span class=\"wb-command-prefix\">阶段</span>[chevron-right]<span>方案评估</span><sup class=\"wb-command-count\">29</sup></span></li>"
+  },
+  "rules": [
+    "搜索框高 36px，底部 1px 分隔线；选项不超过 4 个时可省略",
+    "选项行高 32px、13px 文字、可带 16px 图标；有图标的列表里无图标行留空位对齐",
+    "高亮行灰底，随方向键与鼠标移动",
+    "多选勾选框 14px：未选只在高亮行显示，已选墨色底白勾",
+    "条数用上标次级色，超过 99 显示 99+；当前项字重 500",
+    "浮层圆角 8px，1px 分隔线色描边加一层柔和阴影，一次只开一个"
+  ],
+  "states": [
+    "default",
+    "highlighted",
+    "checked",
+    "current",
+    "empty"
+  ],
+  "keyboard": [
+    "焦点始终在搜索框",
+    "↑↓ 循环移动高亮，Home / End 在搜索框为空时跳到首尾",
+    "Enter 选择高亮项",
+    "多步菜单中搜索框为空时按退格返回上一步",
+    "Esc 关闭（由层栈处理）"
+  ],
+  "accessibility": [
+    "搜索框 role=\"combobox\" + aria-activedescendant + aria-controls",
+    "列表 role=\"listbox\"，多选时 aria-multiselectable=\"true\"，行带 aria-checked"
+  ],
+  "doNotInvent": [
+    "蓝色或紫色选中态",
+    "把焦点移进列表逐行 Tab",
+    "级联弹出子菜单"
+  ]
+}

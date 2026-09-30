@@ -45,6 +45,11 @@
       "purpose": "工作台外框行为：导航开关（⌘B）、窄屏浮层、侧面板开关；原生 ES 模块"
     },
     {
+      "file": "preview/workbench-filter.html",
+      "priority": 7,
+      "purpose": "筛选、命令菜单、显示选项的各种状态（由 workbench.js 实际渲染）"
+    },
+    {
       "file": "examples/crm-quotation.html",
       "priority": 8,
       "purpose": "可运行的虚构单据示例"
@@ -53,6 +58,11 @@
       "file": "examples/workbench-shell.html",
       "priority": 8,
       "purpose": "外框与两条页眉横条、宽侧面板的示例"
+    },
+    {
+      "file": "examples/customer-list.html",
+      "priority": 8,
+      "purpose": "列表页示例：分组、筛选、显示选项、批量操作、翻页"
     }
   ],
   "componentResolution": {

@@ -1,0 +1,62 @@
+{
+  "slug": "bulk-bar",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "specification": "WORKBENCH.md §9",
+  "reference": "examples/customer-list.html",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "intent": "勾选多行后替换页眉第 2 条，提供批量操作",
+  "variantDimensions": [
+    {
+      "axis": "scope",
+      "values": [
+        "some",
+        "page",
+        "all-matching"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "count",
+      "select-all-matching",
+      "clear",
+      "actions",
+      "confirm-dialog"
+    ],
+    "required": [
+      "count",
+      "clear",
+      "actions"
+    ]
+  },
+  "rules": [
+    "有勾选时页眉第 2 条换成批量条，高度不变，不遮挡列表",
+    "本页全选后，若结果多于本页，提供「选择全部 N 条」",
+    "破坏性操作用红色文字按钮，点击后弹确认框：取消在左、删除在右，删除不设为默认，焦点落在取消",
+    "真实产品的批量操作需要服务端权限校验、审计记录和部分失败的逐条反馈"
+  ],
+  "states": [
+    "none",
+    "some",
+    "page",
+    "all-matching",
+    "working",
+    "partial-failure"
+  ],
+  "keyboard": [
+    "勾选框可 Tab 到达并用空格切换",
+    "确认框 Esc 等同取消，焦点回到删除按钮"
+  ],
+  "accessibility": [
+    "表头勾选框有「部分选中」状态（indeterminate）",
+    "操作结果通过 role=\"status\" 区域播报"
+  ],
+  "doNotInvent": [
+    "批量条浮在列表底部遮挡数据",
+    "无确认的批量删除",
+    "蓝色破坏性按钮"
+  ]
+}

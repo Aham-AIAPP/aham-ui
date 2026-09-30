@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 工作台外框</title><link rel="stylesheet" href="../workbench.css"><link rel="stylesheet" href="./workbench-shell.css"><style>body{margin:0}</style></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 工作台外框</title><link rel="stylesheet" href="../workbench.css"><style>body{margin:0}</style></head>
 <body>
 <div class="aham-workbench" data-theme="light" aria-label="工作台外框示例">
   <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
@@ -20,9 +20,9 @@
       </div>
     </header>
     <div class="wb-layout">
-      <main class="wb-document shell-list">
+      <main class="wb-document">
         <div class="wb-table-scroll" tabindex="0" role="region" aria-label="客户列表，可横向滚动">
-          <table class="wb-table"><colgroup><col><col style="width:96px"><col style="width:80px"><col style="width:96px"><col style="width:96px"><col style="width:112px"></colgroup>
+          <table class="wb-table wb-list-table"><colgroup><col><col style="width:96px"><col style="width:80px"><col style="width:96px"><col style="width:96px"><col style="width:112px"></colgroup>
             <thead><tr><th scope="col">客户名称</th><th scope="col">行业</th><th scope="col">负责人</th><th scope="col">阶段</th><th scope="col">最近跟进</th><th scope="col" class="number">年度金额</th></tr></thead>
             <tbody>
               <tr><td>远川精密制造有限公司</td><td>装备制造</td><td>林悦</td><td><span class="wb-status"><b></b>方案评估</span></td><td class="wb-mono">09-30</td><td class="number">780,800.00</td></tr>
@@ -43,7 +43,7 @@
         <p class="wb-note" id="shell-feedback" role="status" aria-live="polite">所有客户与金额均为虚构示例。筛选、显示选项和搜索在 P2 实现，预览面板的交互在 P3 实现。</p>
       </main>
       <aside class="wb-panel" id="customer-peek" data-size="wide" tabindex="0" aria-label="客户预览">
-        <section class="shell-peek">
+        <section class="wb-peek">
           <h2>远川精密制造有限公司</h2>
           <span class="wb-status"><b></b>方案评估</span>
           <dl><dt>负责人</dt><dd>林悦 / 华东销售组</dd><dt>行业</dt><dd>装备制造</dd><dt>关联商机</dt><dd>MES 一期建设项目</dd><dt>最近报价</dt><dd class="wb-mono">QT-20260930-018</dd><dt>年度金额</dt><dd class="wb-mono">780,800.00</dd></dl>

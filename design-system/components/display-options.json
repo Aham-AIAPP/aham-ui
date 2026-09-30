@@ -1,0 +1,66 @@
+{
+  "slug": "display-options",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "intent": "每位使用者自己的列表显示偏好：分组、排序、行高、显示属性",
+  "specification": "WORKBENCH.md §9.2、§9.4",
+  "preview": "preview/workbench-filter.html",
+  "reference": "examples/customer-list.html",
+  "api": "initDisplay({ root, trigger, groups, sorts, columns, value, defaults, onChange })",
+  "variantDimensions": [
+    {
+      "axis": "state",
+      "values": [
+        "default",
+        "adjusted"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "trigger",
+      "group",
+      "sort",
+      "direction",
+      "density",
+      "property-chips",
+      "reset"
+    ],
+    "required": [
+      "trigger",
+      "property-chips",
+      "reset"
+    ]
+  },
+  "markup": {
+    "trigger": "<button class=\"wb-btn sm\">[settings 图标]<span>显示</span><span class=\"wb-dot\" aria-hidden=\"true\"></span><span class=\"wb-sr-only\">（已调整）</span></button>",
+    "chip": "<button class=\"wb-toggle-chip\" aria-pressed=\"true\">负责人</button>"
+  },
+  "rules": [
+    "触发按钮是填充按钮；与默认不同时加 6px 墨色圆点和隐藏文字",
+    "弹层宽 320px：分组、排序 + 升降序按钮、行高，分隔线后是显示属性标签组，底部恢复默认",
+    "修改即时生效，保存在本机，不写进网址；读取时逐项校验",
+    "记录名称固定显示，不在属性标签里",
+    "每页条数放在翻页区"
+  ],
+  "states": [
+    "default",
+    "adjusted",
+    "storage-blocked"
+  ],
+  "keyboard": [
+    "Tab 在控件间移动，属性标签是 aria-pressed 按钮",
+    "Esc 关闭并还焦点给触发按钮"
+  ],
+  "accessibility": [
+    "升降序按钮的可访问名说明当前方向和切换后方向",
+    "本机存储失败时用文字提示本次调整只在当前页面有效"
+  ],
+  "doNotInvent": [
+    "橙色或彩色提示点",
+    "需要确认按钮才生效"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "slug": "list-view",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "specification": "WORKBENCH.md §9",
+  "reference": "examples/customer-list.html",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "intent": "工作台列表页：分组表格、吸顶表头、翻页与空结果",
+  "variantDimensions": [
+    {
+      "axis": "density",
+      "values": [
+        "standard",
+        "compact"
+      ]
+    },
+    {
+      "axis": "group",
+      "values": [
+        "none",
+        "by-field"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "header-row",
+      "filter-bar",
+      "feedback",
+      "list-scroll",
+      "table",
+      "group-head",
+      "empty",
+      "pager",
+      "panel"
+    ],
+    "required": [
+      "header-row",
+      "list-scroll",
+      "table",
+      "pager"
+    ]
+  },
+  "rules": [
+    "列表默认行高 36px（rowList），显示选项可切到 32px；触屏或 ≤640px 为 44px",
+    "分组时先按分组顺序排列、组内按排序字段排序，再分页；分组跨页时组头显示「本页 x / 共 y」",
+    "表头和分组标题在列表滚动区内吸顶；表头行高等于数据行高",
+    "条数放页眉第 2 条左侧，不放底部；翻页区只显示当前范围和翻页控件",
+    "筛选、搜索或视图变化时回到第 1 页并清空勾选",
+    "空结果说明当前条件，并给出清除筛选 / 清除搜索 / 查看全部三种恢复入口中适用的几个",
+    "列标题可点击排序，用 aria-sort 标记当前排序列"
+  ],
+  "states": [
+    "default",
+    "loading",
+    "empty",
+    "filtered",
+    "selected",
+    "collapsed-group",
+    "error"
+  ],
+  "keyboard": [
+    "Tab 依次经过页眉、筛选条、列表滚动区、表内控件和翻页",
+    "重绘后焦点回到等价控件（勾选框、分组、排序、翻页）"
+  ],
+  "accessibility": [
+    "原生 table，列头 scope；分组标题用 scope=\"rowgroup\"",
+    "勾选框有可访问名「选择 记录名」",
+    "没有实现方向键导航前不声明 ARIA grid",
+    "滚动区 tabindex=\"0\" 并有可访问名"
+  ],
+  "doNotInvent": [
+    "彩色状态胶囊或整行状态底色",
+    "蓝色选中行",
+    "底部结果计数",
+    "无限滚动替代翻页（数据量未知时）"
+  ]
+}

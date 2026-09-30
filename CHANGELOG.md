@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 ### 变更
+- 筛选改为 Circle / Linear 方式：「筛选」描边按钮（有条件后缩成图标）→ 命令菜单选字段、快速筛选选项值 → 页眉下方筛选行显示四段式条件标签，行首添加、行尾清除；选项勾选即生效，文本 / 数字 / 日期边输入边生效。「显示」改为填充按钮，调整过加墨色圆点；显示选项改为分组 / 排序 / 行高 + 属性标签。
+- 新增通用组件 `createCommand`（命令菜单）、`initFilter`、`initDisplay`，筛选语义 `FILTER_OPERATORS` / `matchesFilter` / 网址读写移入 `workbench.js`；新增契约 `command-menu`、状态预览页 `preview/workbench-filter.html`、规范 WORKBENCH §10。工作台浮层加 1px 描边、圆角 8px。
+- 工作台列表页（7.2 P2）：分组表格、吸顶表头与分组标题、四段式筛选条件（写进网址）、显示选项（存本机）、勾选后的批量条、翻页与空结果恢复入口。新增契约 `list-view` / `filter-bar` / `display-options` / `bulk-bar`、规范 WORKBENCH §9、示例 `examples/customer-list.html`。
+- `workbench.js` 新增层栈、弹层与页眉搜索；Esc 每次只关最上面一层。
 - 工作台外框（7.2 P1）：导航展开 240px / 收起 52px，内容卡在白色层、宽屏离边 8px；1–2 条 40px 页眉横条，条内控件 28px；侧面板 240 / 400px 两档，一次只开一个。行为在新增的 `workbench.js`（⌘B 切换、窄屏浮层、Esc 关闭）。新增示例 `examples/workbench-shell.html`。
 - 报价单迁入新外框：导航按钮移到页眉，主题开关改为图标按钮，页脚删除；表头不再折行。
 - 工作台通用类统一为 `wb-` 前缀、变量为 `--wb-`；报价单专用样式移到 `examples/crm-quotation.css`。报价示例外观不变（三种宽度、六种状态逐元素比对无差异）。
