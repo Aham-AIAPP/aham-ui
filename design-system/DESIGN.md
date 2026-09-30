@@ -456,6 +456,6 @@ C 风格保持 Aham 的颜色、按钮圆角和状态表达，字体栈与 Linea
 1. **取值不抄 Apple**:学框架/方法/比例,数值是 Aham(版权 + Inter≠SF + pt≠px)。Apple 数据为特定版本核对,随版本变,仅作参考。
 2. **暗色是提案**,需真机实测对比度(尤其暗色主按钮蓝底白字、Increase Contrast 下深字压深底)。
 3. **命中区更正**:Apple 唯一公开命中区数字是 44×44pt;"28pt 指针目标"是第三方约定**非 Apple 官方**。Aham 自定取值,保留"足够命中区 + padding"原则。
-4. **tracking 未入 token**:字体特定,SF 值不适用 Inter,留待 Inter 实测/opsz 轴。
+4. **tracking 未入 token**:字体特定,SF 值不适用 Inter,留待 Inter 实测/opsz 轴。`aham-ui.css` 里现有的字距写死值是临时值,等实测后进 token:`.text-display`、`.text-title`、`.metric .v` 为 -.02em,`.text-heading`、`.card__head .ttl`、`.auth-shell__brand` 为 -.01em;表格分组行 `.doc-table tr.group-row td` 为 .03em,等宽类型标 `.attachment__type` 为 .04em。新增样式不要再加写死的字距。
 5. **行为类规范需真实代码验证**:拖放完整交互、VoiceOver 实际朗读、焦点组键盘导航、Dynamic Type 实际缩放——规范给规则 + CSS 给视觉/媒体查询支持,**完整行为在阶段 6 于真实 React/Swift 落地验证**。
 6. **base 14px / 4 基网格是 Aham 自定**(桌面/数据密度;Apple 现行未官方规定 8pt 网格),非未对齐。

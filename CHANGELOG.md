@@ -6,6 +6,18 @@
 
 ## [Unreleased]
 
+### 补写（规范没写清的地方）
+- WORKBENCH §1.2 风险与警示：状态点保持灰色，真实风险用 `.wb-risk` 的语义色文字加说明。表格单元格只染数值，另配隐藏文字。
+- 工作台新增变量 `--wb-warning`（`color.semantic.warning`），供 `.wb-risk.warning` 使用。
+- WORKBENCH §2.1 写明主按钮的位置：单据页放标题区，列表、详情、设置放第 1 条横条最右端，第 2 条不放主按钮。
+- WORKBENCH §7.1 列出亮暗两种主题下主按钮、焦点、危险和警示文字的取值与对比度。
+- DESIGN 诚实声明第 4 条列出 `aham-ui.css` 里现有的写死字距，标为临时值。
+- AGENTS 的工作台硬性要求补两条：风险写法、主按钮位置。
+- `scripts/lint-design.mjs` 增加 4 组对比度：危险文字对次级底，暗色危险、警示文字对次级底，暗色焦点对次级底。
+
+### 变更
+- 工作台暗色的 `--wb-blue` 由 `#7BA3F0` 改为 `#5C8BED`，与 token `focusRing` 和基础层一致。焦点描边、当前页签下划线和列表焦点行边线随之变化。
+
 ### 修正（文件之间的矛盾，按 tokens → WORKBENCH / DESIGN → 契约 → 运行时 → 示例的顺序裁决）
 - `aham-ui.css` 的 `[data-density="compact"]` 行高由 28px 改为 32px，与 tokens 一致。
 - 开关打开统一为墨色：`toggle.json` 和开关预览页原来写蓝色。

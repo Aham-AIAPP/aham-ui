@@ -49,6 +49,14 @@
 :where(.aham-workbench) :is(h2,h3){font-size:var(--wb-body);font-weight:600}
 :where(.aham-workbench) .wb-status{display:inline-flex;align-items:center;gap:var(--wb-dot);color:var(--wb-ink);white-space:nowrap}
 :where(.aham-workbench) .wb-status b{width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-muted)}
+/* Risk (WORKBENCH §1.2): the status dot stays gray; a real risk is a separate line or value in the semantic text colour,
+   with an icon (outside table cells) and words that say what is wrong. Warning text reaches 4.5:1 only on the white tier,
+   so on panel surfaces the words turn ink and only the icon keeps the warning colour. */
+:where(.aham-workbench) .wb-risk{display:inline-flex;align-items:center;gap:var(--wb-s1);color:var(--wb-danger)}
+:where(.aham-workbench) .wb-risk.warning{color:var(--wb-warning)}
+:where(.aham-workbench) .wb-risk svg{width:var(--wb-s3);height:var(--wb-s3)}
+:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer) .wb-risk.warning{color:var(--wb-ink)}
+:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer) .wb-risk.warning svg{color:var(--wb-warning)}
 :where(.aham-workbench) :is(.wb-meta,.wb-crumbs-meta){color:var(--wb-muted)}
 :where(.aham-workbench) .wb-mono{font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
