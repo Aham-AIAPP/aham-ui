@@ -65,7 +65,7 @@ function type() {
     const px = size === 'inherit' ? '14px' : size;
     const sample = fam === 'mono' ? '0123456789 · ¥128,400.00' : 'Aham 设计系统';
     const spec = [size === 'inherit' ? '随所在样式' : size.replace('px', ''), lh, weight].filter(Boolean).join(' / ');
-    return `<li class="pano-type"><div class="pano-type-meta"><strong>${STYLE_NAME(key)}</strong><span class="mono">${esc(spec)}</span><code>textStyles.${key}</code></div><div class="pano-type-sample" style="font:${weight} ${px}/${lh || 1.4} ${FAMILY[fam] || FAMILY.sans}">${sample}</div><p>${esc(s.$description || '')}</p></li>`;
+    return `<li class="pano-type"><div class="pano-type-meta"><strong>${STYLE_NAME(key)}</strong><span class="mono">${esc(spec)}</span><code>textStyles.${key}</code></div><div class="pano-type-sample" style="font:${weight} ${px}/${lh || 1.4} ${FAMILY[fam] || FAMILY.sans}${fam === 'mono' ? '' : ';font-feature-settings:var(--font-features)'}">${sample}</div><p>${esc(s.$description || '')}</p></li>`;
   }).join('');
   return `<ul class="pano-types">${rows}</ul>`;
 }

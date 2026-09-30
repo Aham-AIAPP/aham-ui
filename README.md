@@ -67,7 +67,7 @@
 
 ## 网页工作台（v7.2）
 
-面向 ToB 管理软件：颜色、字体、圆角、状态写法沿用 Aham，布局与交互照 [Circle](https://github.com/ln-dev7/circle)（Linear 风格的开源实现）。
+面向 ToB 管理软件：颜色、圆角、状态写法沿用 Aham；字体栈照 Linear；布局与交互照 [Circle](https://github.com/ln-dev7/circle)（Linear 风格的开源实现）。
 
 - 规范：[WORKBENCH.md](design-system/WORKBENCH.md)（外框、列表与筛选、列表键盘与详情、命令面板与快捷键、设置页、AI 协作、单据页）· [7.2 规划与记录](docs/workbench-7.2-plan.md)
 - 组件状态：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html) · [AI 协作](design-system/preview/workbench-ai.html)

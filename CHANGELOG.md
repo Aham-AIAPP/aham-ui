@@ -6,6 +6,25 @@
 
 ## [Unreleased]
 
+### 新增
+- `design-system/fonts/` 附带 Inter Variable 4.1 的正体和斜体（取自 rsms/inter 的 v4.1 标签，与 Linear 自托管的版本相同）及 SIL OFL 授权文本。`fonts/inter.css` 声明字体，`aham-ui.css`、`workbench.css`、`colors_and_type.css` 在文件开头引入它。
+
+### 变更
+- **字体改用 Linear 的字体栈**，依据是 linear.app 样式表 `:root` 里的 `--font-regular` 和 `--font-monospace`（2026-09-30 核对）。无衬线 `Inter Variable` 在前，其后接 Linear 的系统字体回退，中文仍回退雅黑、黑体。等宽用 `Berkeley Mono`，未购买商业授权时由 `JetBrains Mono` 接替。
+- 同 Linear，全局开启 Inter 字形特性 `cv01`、`ss03`，等宽处重置为 `normal`。新 token 为 `typography.fontFeatureSettings`，CSS 变量为 `--font-features` / `--wb-font-features`。
+- `typography.fontFamily.sansDisplay` 改为 `sans` 的别名：Inter Variable 的光学尺寸轴按字号自动切换，不再单独用 Inter Display。
+- 字重保持 400 / 500 / 600，不跟 Linear 的 510 / 590，原因写在 DESIGN §1.3。
+- 取舍规则随之调整（DESIGN §8.16、WORKBENCH §1.1、AGENTS）：字体栈听 Linear，颜色、形状、字号和字重仍听 Aham。
+- `scripts/lint-design.mjs` 增加字体变量核对：`aham-ui.css`、`colors_and_type.css` 的 `--font-sans`、`--font-mono`、`--font-features` 须与 tokens 一致。
+
+### 移除
+- token `typography.opticalSizeThreshold`（20px 阈值随 Inter Display 一起取消）。
+- `colors_and_type.css`、`css.json` 里的 `--font-serif`，以及长文预览引用块的衬线字体；它们与 DESIGN §1.3.1「不引入衬线」冲突。
+- 重复的 `design-system/排版布局调研诊断.md`：7.2.1 已归档到 `docs/`，原文件漏删。
+
+### 修正
+- `design-system/README.md` 里「Inter Display 从 Google Fonts 加载」的说明已过时（7.2.0 起不再远程加载），改为自托管和授权说明。
+
 ## [7.2.1] - 2026-09-30
 
 > **次级按钮统一与仓库清理**：工作台次级按钮改为与基础层相同的白底描边，WORKBENCH 新增两层组件对照表；移除误提交的设计库镜像，归档调研诊断文档。

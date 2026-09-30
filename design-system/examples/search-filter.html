@@ -9,14 +9,14 @@
   /* 仅少量示范框架样式;颜色/间距/圆角一律用 var(--token) */
   body{background:var(--panel);}
   .demo-note{margin-block-start:var(--s5);padding-block-start:var(--s4);border-block-start:1px solid var(--line);}
-  .demo-note h2{font:var(--w-semibold) var(--text-sm)/1.3 var(--font-sans-display);color:var(--ink-2);margin:0 0 var(--s2);}
+  .demo-note h2{font:var(--w-semibold) var(--text-sm)/1.3 var(--font-sans-display);font-feature-settings:var(--font-features);color:var(--ink-2);margin:0 0 var(--s2);}
   .demo-note ul{margin:0;padding-inline-start:var(--s4);display:flex;flex-direction:column;gap:6px;}
   .demo-note li{font-size:var(--text-sm);color:var(--ink-2);line-height:1.5;}
   .demo-note li b{color:var(--ink);font-weight:var(--w-medium);}
 </style>
 </head>
 <body>
-<nav style="position:sticky;top:0;z-index:500;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;background:var(--white,#fff);border-bottom:1px solid var(--line,#E7E7E7);font:500 13px/1 'Inter','Microsoft YaHei',-apple-system,sans-serif;"><a href="index.html" style="color:var(--accent,#336EE8);text-decoration:none;">← 示范目录</a><span style="color:var(--ink-4,#C4C4C4);">/</span><a href="../../index.html" style="color:var(--ink-2,#6E6E6E);text-decoration:none;">Aham UI 全景</a></nav>
+<nav style="position:sticky;top:0;z-index:500;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;background:var(--white,#fff);border-bottom:1px solid var(--line,#E7E7E7);font:500 13px/1 var(--font-sans);font-feature-settings:var(--font-features);"><a href="index.html" style="color:var(--accent,#336EE8);text-decoration:none;">← 示范目录</a><span style="color:var(--ink-4,#C4C4C4);">/</span><a href="../../index.html" style="color:var(--ink-2,#6E6E6E);text-decoration:none;">Aham UI 全景</a></nav>
   <div class="container container--content">
     <div class="page-shell">
 

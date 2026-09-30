@@ -30,7 +30,7 @@ _or_ production code, depending on the need.
 - Brand primary `#336EE8`. Cool, technical, restrained — no warm accents, no default gradients. Only for logo / primary action / send / focus ring / current-tab underline / text links. The primary button fill uses the deeper `#164EC3` (white text 7.21:1). Selection is flat gray, never blue.
 - Radius at **4 / 6 / 8 / 12** (xs / sm / md / lg) — deliberate, never softer. Pill (`999px`) only for neutral filter chips and toggle tracks; never for status.
 - Density first: **36px** control height, **32px** button height, **4px** base spacing unit. Table rows at 36px, sidebar at 264px width.
-- Type: **Inter** for body and small text; **Inter Display** for headings >=20px; **JetBrains Mono** for code and numeric data. Fallback: Microsoft YaHei for Chinese contexts, then system-ui.
+- Type: Linear's stacks. **Inter Variable** for all text; its optical-size axis switches to display shapes by size, so there is no separate Inter Display. **Berkeley Mono** for code and numeric data (commercial licence; **JetBrains Mono** when unlicensed). Fallback: system sans, then Microsoft YaHei / SimHei for Chinese. Features `cv01` and `ss03` on; weights 400 / 500 / 600 only.
 - Shadow: **flat at rest** — no shadow on cards, containers, or inputs. Shadow only on floating overlays: dropdown (`0 2px 8px rgba(20,20,20,0.05)`), popover (`0 3px 12px rgba(20,20,20,0.06)`), modal (`0 12px 36px rgba(20,20,20,0.10)`).
 - Voice: bilingual (CN-first), professional, neutral. No emoji in product UI. Status communicated through 6px dot + text, never color alone.
 - Selection is **flat gray** (`#E7E7E7`), never blue. One primary action per group. Cards have no border, no shadow at rest.

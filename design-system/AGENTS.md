@@ -5,7 +5,7 @@
 Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果,不要自由发挥**。设计性格:极简、克制、留白、内容优先;冷色的纸、克制的金属感、对话式。
 
 ## 一条铁律
-**值只从 `tokens.json` 取,颜色只用调色板,字体只用两族(Inter/Inter Display + JetBrains),间距/圆角/控件尺寸只用既定档位——绝不自创值、自创组件、加装饰。**
+**值只从 `tokens.json` 取,颜色只用调色板,字体只用两族(无衬线 Inter Variable + 等宽 Berkeley Mono / JetBrains Mono),间距/圆角/控件尺寸只用既定档位——绝不自创值、自创组件、加装饰。**
 
 ## 消费顺序
 完整清单以 `library-consumption.json` 的 `readingOrder` 为准，README 与本页和它一致。
@@ -79,5 +79,5 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 - 浮层不级联，一次只开一个模态；Esc 每次只关最上面一层。
 - 单个字母的快捷键要能在设置里关闭（`setSingleKeyShortcuts`）。
 - AI 生成的内容要标记并列出依据；AI 改数据前必须弹窗确认，默认不开启 AI（WORKBENCH §14）。
-- 取舍规则：颜色、字体、形状听 Aham；布局、交互、密度、键盘听 Linear（WORKBENCH §1.1）。
+- 取舍规则：颜色、形状听 Aham；字体栈、布局、交互、密度、键盘听 Linear；字号和字重仍用 Aham 的档位（WORKBENCH §1.1）。
 - 原网页内容、macOS、Office 规范继续适用。

@@ -1,7 +1,8 @@
+@import url('./fonts/inter.css');
 @import url('./workbench-tokens.css');
 /* Opt-in profile. Existing .btn/.table/.track-web styles are untouched.
    Generic workbench classes use the wb- prefix; page-specific styles live next to each example. */
-:where(.aham-workbench){display:grid;grid-template-columns:var(--wb-rail) minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden;background:var(--wb-panel);color:var(--wb-ink);font:var(--wb-body)/1.55 var(--wb-font);text-align:start;color-scheme:light}
+:where(.aham-workbench){display:grid;grid-template-columns:var(--wb-rail) minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden;background:var(--wb-panel);color:var(--wb-ink);font:var(--wb-body)/1.55 var(--wb-font);font-feature-settings:var(--wb-font-features);text-align:start;color-scheme:light}
 :where(.aham-workbench) *{box-sizing:border-box}
 :where(.aham-workbench) [hidden]{display:none!important}
 :where(.aham-workbench) :is(h1,h2,h3,p){margin:0}
@@ -39,7 +40,7 @@
 :where(.aham-workbench) .wb-icon-btn:hover{background:var(--wb-panel);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-icon-btn[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s3);min-width:0;overflow:hidden;white-space:nowrap}
-:where(.aham-workbench) .wb-crumbs strong{font-weight:400;font-family:var(--wb-mono)}
+:where(.aham-workbench) .wb-crumbs strong{font-weight:400;font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink)}
 :where(.aham-workbench) .wb-count{color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-page-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s4);border-bottom:1px solid var(--wb-line)}
@@ -49,7 +50,7 @@
 :where(.aham-workbench) .wb-status{display:inline-flex;align-items:center;gap:var(--wb-dot);color:var(--wb-ink);white-space:nowrap}
 :where(.aham-workbench) .wb-status b{width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-muted)}
 :where(.aham-workbench) :is(.wb-meta,.wb-crumbs-meta){color:var(--wb-muted)}
-:where(.aham-workbench) .wb-mono{font-family:var(--wb-mono)}
+:where(.aham-workbench) .wb-mono{font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
 :where(.aham-workbench) .wb-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
@@ -96,11 +97,11 @@
 :where(.aham-workbench) .wb-table :is(th,td){padding:0 var(--wb-s2);border-bottom:1px solid var(--wb-line)}
 :where(.aham-workbench) .wb-table td{height:var(--wb-row);vertical-align:middle;white-space:nowrap}
 :where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-panel)}
-:where(.aham-workbench) .wb-table .number{text-align:end;font-family:var(--wb-mono);font-variant-numeric:tabular-nums}
-:where(.aham-workbench) .wb-table th.number{font-family:var(--wb-font)}
+:where(.aham-workbench) .wb-table .number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-table th.number{font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
 :where(.aham-workbench) .wb-cell-title{display:block;overflow:hidden;text-overflow:ellipsis}
-:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-family:var(--wb-mono)}
-:where(.aham-workbench) .wb-table input{display:block;text-align:end;font-family:var(--wb-mono);border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
+:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-table input{display:block;text-align:end;font-family:var(--wb-mono);font-feature-settings:normal;border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
 :where(.aham-workbench) .wb-table input::-webkit-inner-spin-button{appearance:none}
 :where(.aham-workbench) .wb-table input:hover{background:var(--wb-bg);border-color:var(--wb-line)}
 :where(.aham-workbench) .wb-table tfoot td{height:var(--wb-header-row);font-weight:500;border-bottom:0}
@@ -115,11 +116,11 @@
 :where(.aham-workbench) .wb-context>section:last-child{border:0;padding:0;margin:0}
 :where(.aham-workbench) .wb-total-label{color:var(--wb-muted);margin:var(--wb-s4) 0 var(--wb-s2)}
 :where(.aham-workbench) .wb-total{font:500 var(--wb-total)/1.4 var(--wb-mono);overflow-wrap:anywhere}
-:where(.aham-workbench) .wb-context dd{text-align:end;font-family:var(--wb-mono)}
+:where(.aham-workbench) .wb-context dd{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) :is(.wb-summary-foot,.wb-payment>div){display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);margin-block-start:var(--wb-s3)}
 :where(.aham-workbench) .wb-summary-foot{color:var(--wb-muted)}
 :where(.aham-workbench) small{font-size:inherit;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-payment strong{font-family:var(--wb-mono);font-weight:400}
+:where(.aham-workbench) .wb-payment strong{font-family:var(--wb-mono);font-feature-settings:normal;font-weight:400}
 :where(.aham-workbench) .wb-approval ol{list-style:none;margin:var(--wb-s3) 0 0;padding:0}
 :where(.aham-workbench) .wb-approval li{display:flex;gap:var(--wb-s3);padding-block-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-step-dot{width:var(--wb-dot);height:var(--wb-dot);border:1px solid var(--wb-muted);border-radius:50%;margin-block-start:var(--wb-s2);flex:none}

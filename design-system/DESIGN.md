@@ -31,7 +31,7 @@
 - 静置/hover **无阴影**,**仅浮层**有阴影。
 - 内容区用 `•`+文字;图标用于导航/工具栏/菜单/控件内部,正文段落与表格单元格不放图标。
 - 一组**只一个** primary。
-- 单一无衬线(Inter),**禁衬线**;数字 mono(JetBrains)。
+- 单一无衬线(Inter Variable,字体栈照 Linear),**禁衬线**;数字和代码用等宽(Berkeley Mono,未授权时 JetBrains Mono)。
 - 留白是首要分隔,先加间距,再考虑加线。
 
 ---
@@ -64,24 +64,24 @@ Aham = *aha moment*——把灵光一现做成能用的 AI 工具。身份锚点
 **深色细则(↔Apple Dark Mode)**:暗色**不是简单反相**;白底图片在暗色下稍压暗避免发光;自定色暗色下**单独取值**(非亮色直接变暗);对比阈值正文 ≥4.5:1、**小字/前景争取 7:1**;暗色须在 **Increase Contrast + Reduce Transparency 同时开启**下也测一遍(防深字压深底不可读)。
 
 ### 1.3 文本样式体系
-**字族**:无衬线 `Inter`(+雅黑/黑体);大字光学尺寸 `Inter Display`(≥20px);等宽 `JetBrains Mono`(数字/代码)。**单一无衬线,禁衬线。**
+**字族**(照 Linear 官网样式表的 `--font-regular` / `--font-monospace`,2026-09-30 核对):无衬线 `Inter Variable`,中文回退雅黑/黑体;等宽 `Berkeley Mono`(数字/代码),未购买商业授权时用 `JetBrains Mono`。完整字体栈见 token `typography.fontFamily`。**单一无衬线,禁衬线。**
 
 **11 语义样式**(字号 px / 行高 / 字重;取值 Aham,base 14):
 | 样式 | 字号 | 行高 | 字重 | 字族 |
 |---|---|---|---|---|
-| Display | 44 | 1.15 | 600 | Inter Display |
-| Title | 32 | 1.2 | 600 | Inter Display |
-| Heading | 24 | 1.25 | 600 | Inter Display |
-| Subheading | 20 | 1.3 | 600 | Inter Display |
-| Body-L | 17 | 1.5 | 400 | Inter |
-| **Body(默认)** | **14** | **1.55** | **400** | Inter |
-| Callout | 15 | 1.45 | 400 | Inter |
-| Subhead | 13 | 1.4 | 500 | Inter |
-| Footnote | 13 | 1.45 | 400 | Inter |
-| Caption | 12 | 1.4 | 400 | Inter |
-| Mono | 跟随 | — | 400 | JetBrains |
+| Display | 44 | 1.15 | 600 | 无衬线 |
+| Title | 32 | 1.2 | 600 | 无衬线 |
+| Heading | 24 | 1.25 | 600 | 无衬线 |
+| Subheading | 20 | 1.3 | 600 | 无衬线 |
+| Body-L | 17 | 1.5 | 400 | 无衬线 |
+| **Body(默认)** | **14** | **1.55** | **400** | 无衬线 |
+| Callout | 15 | 1.45 | 400 | 无衬线 |
+| Subhead | 13 | 1.4 | 500 | 无衬线 |
+| Footnote | 13 | 1.45 | 400 | 无衬线 |
+| Caption | 12 | 1.4 | 400 | 无衬线 |
+| Mono | 跟随 | — | 400 | 等宽 |
 
-CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:≥20px 用 Inter Display,<20px 用 Inter(↔Apple 20pt 阈值)。**字重**:标题 600、正文 400、强调 500/600,**不用 100–300 细重**(↔Apple"避免过细")。**方法**:主力档少、靠字重+大小写+位置分层(↔Apple 实践);tracking 学规律不抄值(Apple 真实是 U 形,但 SF 值不适用 Inter)。
+CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:Inter Variable 自带光学尺寸轴,浏览器按字号在正文字形和标题字形之间自动过渡。CSS `font-optical-sizing` 默认就是 `auto`,不再单独用 Inter Display。**字形特性**:同 Linear,全局开启 `cv01`(数字 1 的替代字形)和 `ss03`(圆形引号和逗号),token `typography.fontFeatureSettings`;等宽处重置为 `normal`。CSS 的 `font` 简写会把字形特性重置为 `normal`,用了 `font` 简写的无衬线规则要再写一次。**字重**:标题 600、正文 400、强调 500/600,**不用 100–300 细重**(↔Apple"避免过细")。Linear 用可变字重 510 / 590,Aham 不跟。微软雅黑只有 300 / 400 / 700 三档,按 CSS 字体匹配规则,510 会落到 700 粗体。**方法**:主力档少、靠字重+大小写+位置分层(↔Apple 实践);tracking 学规律不抄值(Apple 真实是 U 形,但 SF 值不适用 Inter)。
 
 **文字缩放响应 Dynamic Type(↔Apple)**:网页端字号直接取 token 的 px 值,放大依靠浏览器整页缩放(满足 WCAG 1.4.4);macOS 端跟随系统 Dynamic Type;系统/浏览器放大文字时**内容优先放大、chrome 次要**(如 Mail:正文放大、日期发件人保持小);每样式声明 最小/默认/最大 三档;**字号超阈值时容器从 inline 切 stacked**(防截断/重叠)。
 
@@ -100,7 +100,7 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:≥20px 用 Inter Disp
 
 **引用块**:字号 = 正文或略大(`17px`);左缘不缩进,用 `3px` 左边线 `--ink-3` + 浅底 `--panel` 区分;**不引入衬线字体**(守 §1.3 禁衬线铁律)。**做法**:`.prose blockquote { border-inline-start: 3px solid var(--ink-3); background: var(--panel); padding-inline: 16px; margin-block: 1em; }`。**为什么**:业界有以衬线字体区分引用的做法(IBM Carbon),但 Aham 单一无衬线,改用边线/底色/缩进达成同等对比。
 
-**代码块**:等宽 `JetBrains Mono`;字号 `13–14px`;行高 `1.5`(比正文略宽);块级上下留白 `1em`;**inline code 用浅底 `--panel` 不破坏行高**(`padding: 1px 4px` + `border-radius: 4px`,不加 `margin`、不改 `line-height`)。**做法**:`.prose pre { font-size: 13px; line-height: 1.5; margin-block: 1em; } .prose :not(pre) > code { background: var(--panel); padding: 1px 4px; }`。**为什么**:等宽字号略小于正文不抢视觉重心;行高略宽便于读长行;inline code 不破坏行高是排版基本功。
+**代码块**:等宽 `--font-mono`(Berkeley Mono,未授权时 JetBrains Mono);字号 `13–14px`;行高 `1.5`(比正文略宽);块级上下留白 `1em`;**inline code 用浅底 `--panel` 不破坏行高**(`padding: 1px 4px` + `border-radius: 4px`,不加 `margin`、不改 `line-height`)。**做法**:`.prose pre { font-size: 13px; line-height: 1.5; margin-block: 1em; } .prose :not(pre) > code { background: var(--panel); padding: 1px 4px; }`。**为什么**:等宽字号略小于正文不抢视觉重心;行高略宽便于读长行;inline code 不破坏行高是排版基本功。
 
 **图文 baseline 对齐**:图文混排优先 **baseline 对齐**,不居中。**做法**:图文同行用 `vertical-align: baseline`(默认),flex 容器用 `align-items: baseline`;**禁**用 `align-items: center` 处理图文同行(居中仅用于纯图标按钮等无文字基线场景)。**为什么**:有研究支撑(Twilio Paste)baseline 对齐比居中稳,居中在字号/字高变化时易错位。
 
@@ -155,7 +155,7 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:≥20px 用 Inter Disp
 布局用 **leading/trailing 逻辑属性**(非硬编码 left/right),文本 natural 对齐——低成本支持 RTL/CJK。**镜像**:表方向的箭头/导航/进度翻转。**不翻转清单**:音频/视频**播放控件与时间轴**、图表 x/y 轴、时钟、乐谱、不表方向的图标;**电话号码、数字、未本地化拉丁文/产品名始终 LTR**。
 
 ### 1.11 隐私(↔Apple Privacy)
-local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录音、文件访问),**先给价值再要授权**,授权文案清楚说明用途;**不为营销索取数据**。**字体不从第三方服务器加载**;要统一字形时由产品自托管 Inter / JetBrains Mono(SIL OFL),否则用 token 里的本地回退。
+local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录音、文件访问),**先给价值再要授权**,授权文案清楚说明用途;**不为营销索取数据**。**字体不从第三方服务器加载**;要统一字形时由产品自托管。Inter Variable 用 SIL OFL 1.1 授权,可随产品分发。本包在 `fonts/` 附带 Inter Variable 4.1 的正体、斜体和授权文本,三份运行时 CSS 通过 `fonts/inter.css` 引入;复制 CSS 时连同 `fonts/` 一起复制。Berkeley Mono 须购买 U.S. Graphics 商业授权,条款写明商业用途只限界面元素,且不适用于开源应用;未授权时用 JetBrains Mono(SIL OFL)。都不自托管时用 token 里的本地回退。
 
 ---
 
@@ -433,9 +433,9 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 网页轨细分 content 与 workbench。前文居中收口适用于 content；工作台全宽、内容左对齐，超宽时优先扩展数据区。完整规则见 [WORKBENCH.md](WORKBENCH.md)，属于本规范的正式扩展。
 
-C 风格保持 Aham 的颜色、字体、按钮圆角和状态表达，只增加业务工作台结构。紧凑行 32px；标准单行仍为 36px；两行详情模式 48px。触摸 / 窄屏控件至少 44px。数值来自 tokens.json；工作台正文 13px，单据紧凑模式 12px。
+C 风格保持 Aham 的颜色、按钮圆角和状态表达，字体栈与 Linear 相同（§1.3），只增加业务工作台结构。紧凑行 32px；标准单行仍为 36px；两行详情模式 48px。触摸 / 窄屏控件至少 44px。数值来自 tokens.json；工作台正文 13px，单据紧凑模式 12px。
 
-**取舍规则**：Aham 与 Linear 冲突时，颜色、字体、形状与图形语言以 Aham 为准；布局、交互、信息密度与键盘操作以 Linear / Circle 为准。Linear 的标志性控件（筛选条件标签、命令面板）保留原形，例外写在对应章节（WORKBENCH §1）。
+**取舍规则**：Aham 与 Linear 冲突时，颜色、形状与图形语言以 Aham 为准；字体用 Linear 的字体栈，字号和字重仍按 Aham 的档位；布局、交互、信息密度与键盘操作以 Linear / Circle 为准。Linear 的标志性控件（筛选条件标签、命令面板）保留原形，例外写在对应章节（WORKBENCH §1）。
 
 7.2 在此基础上补充列表页、详情页、快速操作、设置页与 AI 协作（WORKBENCH §9–14）。
 

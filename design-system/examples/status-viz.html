@@ -7,17 +7,17 @@
 <style>
   body{background:var(--panel);padding:28px;}
   .wrap{max-width:780px;margin:0 auto;}
-  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  h1{font:600 22px/1.25 var(--font-sans-display);font-feature-settings:var(--font-features);margin:0 0 4px;}
   .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
   .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:20px;margin-bottom:16px;}
-  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 16px;text-transform:uppercase;letter-spacing:.04em;}
+  .sec h2{font:600 13px/1 var(--font-sans);font-feature-settings:var(--font-features);color:var(--ink-2);margin:0 0 16px;text-transform:uppercase;letter-spacing:.04em;}
   .row{display:flex;gap:32px;flex-wrap:wrap;align-items:center;}
   .gx{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-  .cap{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);margin-bottom:8px;display:block;}
+  .cap{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);font-feature-settings:normal;margin-bottom:8px;display:block;}
 </style>
 </head>
 <body>
-<nav style="position:sticky;top:0;z-index:500;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;background:var(--white,#fff);border-bottom:1px solid var(--line,#E7E7E7);font:500 13px/1 'Inter','Microsoft YaHei',-apple-system,sans-serif;"><a href="index.html" style="color:var(--accent,#336EE8);text-decoration:none;">← 示范目录</a><span style="color:var(--ink-4,#C4C4C4);">/</span><a href="../../index.html" style="color:var(--ink-2,#6E6E6E);text-decoration:none;">Aham UI 全景</a></nav>
+<nav style="position:sticky;top:0;z-index:500;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;background:var(--white,#fff);border-bottom:1px solid var(--line,#E7E7E7);font:500 13px/1 var(--font-sans);font-feature-settings:var(--font-features);"><a href="index.html" style="color:var(--accent,#336EE8);text-decoration:none;">← 示范目录</a><span style="color:var(--ink-4,#C4C4C4);">/</span><a href="../../index.html" style="color:var(--ink-2,#6E6E6E);text-decoration:none;">Aham UI 全景</a></nav>
 <div class="wrap">
   <h1>状态 / 可视化 · 补全</h1>
   <p class="note">批 6:不确定/环形进度 + 仪表 + 图片容器 + 分享面板 + 编辑菜单 + 图表(面积/堆叠/散点/sparkline)。</p>
@@ -92,7 +92,7 @@
         <span class="cap">sparkline(迷你,无轴)</span>
         <div style="display:flex;align-items:center;gap:10px">
           <svg width="120" height="32" viewBox="0 0 120 32"><polyline points="0,24 20,18 40,22 60,10 80,14 100,6 120,12" fill="none" style="stroke:var(--ink-2)" stroke-width="1.5"/></svg>
-          <span style="font-family:var(--font-mono);font-size:14px;color:var(--ink)">1,744 <span style="color:var(--success);font-size:12px">↑8%</span></span>
+          <span style="font-family:var(--font-mono);font-feature-settings:normal;font-size:14px;color:var(--ink)">1,744 <span style="color:var(--success);font-size:12px">↑8%</span></span>
         </div>
       </div>
     </div>

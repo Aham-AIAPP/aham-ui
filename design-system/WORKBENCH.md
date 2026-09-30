@@ -7,7 +7,7 @@
 | 维度 | 必须保留的 Aham 规则 | 工作台扩展 |
 |---|---|---|
 | 颜色 | 中性三级底色；蓝色用于主操作、品牌、焦点、当前页签和文字链接 | 导航和行选中用灰底；主按钮底色用深一档蓝（与基础层相同）；危险操作用红色文字；不引入紫色或彩色阶段卡 |
-| 字体 | Inter / Inter Display，数字用 JetBrains Mono；缺失字体使用 token 中的本地回退 | 列表、详情、设置正文 13px；单据紧凑模式 12px；不全局缩小字号 |
+| 字体 | 字体栈照 Linear：Inter Variable，数字和代码用 Berkeley Mono（未授权时 JetBrains Mono）；缺失字体使用 token 中的本地回退 | 列表、详情、设置正文 13px；单据紧凑模式 12px；不全局缩小字号 |
 | 表面 | 无静态阴影；层级来自底色、间距和必要分隔 | 主单据连续白底，摘要使用次级底色，不堆嵌套卡片 |
 | 状态 | 6px 点 + 明确文字；不能只靠颜色 | 草稿、待审核、退回、已生效均用同一语法；风险另配解释 |
 | 布局 | content 网页仍居中，macOS / Office / 邮件仍分轨 | web-workbench 全宽，窄导航 + 内容 + 可折叠摘要 |
@@ -19,7 +19,8 @@
 
 Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明：
 
-- 颜色、字体、形状与图形语言以 Aham 为准：单一蓝色色相、灰底选中、6px 状态点、无静态阴影、红色只用在文字上。
+- 颜色、形状与图形语言以 Aham 为准：单一蓝色色相、灰底选中、6px 状态点、无静态阴影、红色只用在文字上。
+- 字体用 Linear 的字体栈：Inter Variable，等宽 Berkeley Mono（DESIGN §1.3）。字号和字重仍按 Aham 的档位。
 - 布局、交互、信息密度与键盘操作以 Linear / Circle 为准：40px 页眉横条、筛选与显示选项、命令菜单、列表键盘、就地修改。
 - Linear 的标志性控件保留原形：筛选条件用胶囊标签（DESIGN §8.5 例外），⌘K 命令面板居中偏上。
 - 按钮的底色和描边属于图形语言：次级按钮在两层一律是白底 + 1px 分隔线描边（基础层 `.btn--secondary`），不用 Circle 的灰底按钮。灰底放在次级底色的面板上几乎看不见。
@@ -149,7 +150,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 列表页用于记录台账，适用于任何业务对象（客户、订单、工单、物料等）。结构自上而下：页眉第 1 条（位置、视图切换、搜索）→ 页眉第 2 条（条数、筛选、面板开关、显示）→ 筛选行（有条件时才出现）→ 列表滚动区 → 翻页区。右侧可开 400px 预览面板。
 
-结构与交互照 Circle / Linear，颜色、字体、圆角、状态写法照 Aham。组件状态见 [preview/workbench-filter.html](preview/workbench-filter.html)，页面组合见 [examples/customer-list.html](examples/customer-list.html)。
+结构与交互照 Circle / Linear，颜色、圆角、状态写法照 Aham。组件状态见 [preview/workbench-filter.html](preview/workbench-filter.html)，页面组合见 [examples/customer-list.html](examples/customer-list.html)。
 
 ### 9.1 行与分组
 
@@ -265,7 +266,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 ## 12. 命令面板、快捷键、右键菜单与快速操作（7.2）
 
-页面上的全部操作都能在 ⌘K 命令面板里找到；高频操作另有快捷键、右键菜单或就地控件。各入口调用同一份操作定义。形式照 Circle / Linear，颜色与字体取 Aham。状态见 [preview/workbench-actions.html](preview/workbench-actions.html)。
+页面上的全部操作都能在 ⌘K 命令面板里找到；高频操作另有快捷键、右键菜单或就地控件。各入口调用同一份操作定义。形式照 Circle / Linear，颜色取 Aham。状态见 [preview/workbench-actions.html](preview/workbench-actions.html)。
 
 ### 12.1 命令面板
 

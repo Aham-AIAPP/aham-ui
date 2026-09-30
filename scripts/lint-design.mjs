@@ -1,4 +1,4 @@
-// Design lint for the runtime CSS (DESIGN §7). Errors: a CSS variable disagrees with tokens.json, a HEX colour is not in
+// Design lint for the runtime CSS (DESIGN §7). Errors: a CSS variable (colour, size, font stack) disagrees with tokens.json, a HEX colour is not in
 // the token palette, a common text / control pair misses its contrast minimum, a table rule draws vertical lines, or a
 // stylesheet loads fonts from a third-party server. Warnings: border radii outside the radius scale.
 // node scripts/lint-design.mjs → prints findings and exits 1 on errors. Tests import lint().
@@ -45,6 +45,7 @@ const AHAM_ROOT = {
   'text-xs': 'typography.fontSize.xs', 'text-sm': 'typography.fontSize.sm', 'text-base': 'typography.fontSize.base', 'text-md': 'typography.fontSize.md',
   'text-lg': 'typography.fontSize.lg', 'text-xl': 'typography.fontSize.xl', 'text-2xl': 'typography.fontSize.2xl', 'text-3xl': 'typography.fontSize.3xl', 'text-display': 'typography.fontSize.display',
   'w-regular': 'typography.fontWeight.regular', 'w-medium': 'typography.fontWeight.medium', 'w-semibold': 'typography.fontWeight.semibold', 'w-bold': 'typography.fontWeight.bold',
+  'font-sans': 'typography.fontFamily.sans', 'font-mono': 'typography.fontFamily.mono', 'font-features': 'typography.fontFeatureSettings',
   ...range('s', 'spacing', ['1', '2', '3', '4', '5', '6', '7', '8']),
   ...range('r-', 'radius', ['xs', 'sm', 'md', 'lg', 'xl', 'pill']),
   'sh-md': 'shadow.md', 'sh-pop': 'shadow.pop', 'sh-modal': 'shadow.modal',
@@ -81,6 +82,7 @@ const LEGACY_ROOT = {
   'duration-fast': 'motion.duration.fast', 'duration-base': 'motion.duration.base', 'duration-slow': 'motion.duration.slow',
   'focus-ring-width': 'focusRing.width', 'focus-ring-offset': 'focusRing.offset',
   ...range('icon-', 'iconSize', ['sm', 'md', 'lg']),
+  'font-sans': 'typography.fontFamily.sans', 'font-mono': 'typography.fontFamily.mono', 'font-features': 'typography.fontFeatureSettings',
 };
 const LEGACY_DARK = Object.fromEntries(Object.entries({
   'aham-surface-tier1': 'surface.tier1-bg', 'aham-surface-tier2': 'surface.tier2-panel', 'aham-surface-tier3': 'surface.tier3-line',

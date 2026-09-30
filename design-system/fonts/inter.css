@@ -1,0 +1,5 @@
+/* Inter Variable 4.1 (github.com/rsms/inter, tag v4.1, docs/font-files/), SIL Open Font License 1.1 — see LICENSE.txt.
+   Same faces Linear self-hosts. The family name matches tokens.json typography.fontFamily.sans.
+   aham-ui.css, workbench.css and colors_and_type.css import this file; keep fonts/ next to them when copying the package. */
+@font-face{font-family:'Inter Variable';font-style:normal;font-weight:100 900;font-display:swap;src:url('InterVariable.woff2') format('woff2');}
+@font-face{font-family:'Inter Variable';font-style:italic;font-weight:100 900;font-display:swap;src:url('InterVariable-Italic.woff2') format('woff2');}

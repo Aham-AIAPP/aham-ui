@@ -36,26 +36,35 @@ The dark theme (`[data-theme="dark"]`) inverts the surface stack to `#1C1C1C` / 
 
 ### Typography
 
-The system uses exactly three font families:
+The font stacks follow Linear (`--font-regular` and `--font-monospace` in the `:root` of linear.app's stylesheet, checked 2026-09-30). Two families:
 
-- **Inter** / **Inter Display** -- the primary workhorse for body text, labels, captions, and all interface copy. The two optical variants share a single `--font-sans` stack: `'Inter', 'Inter Display', -apple-system, BlinkMacSystemFont, system-ui, sans-serif`. Inter Display is optically tuned for sizes at and above 20px, giving Aham its crisp, architectural headline character. Weights at 400 (regular), 500 (medium), and 600 (semibold).
-- **JetBrains Mono** -- the monospace face for code, numeric data, tables, and any surface where alignment and scanability matter. Weights at 400 and 500. The stack falls back through `SF Mono, Menlo, monospace`. Tabular numbers are always rendered with this face.
+- **Inter Variable** -- all text: body, labels, captions, headings. Its optical-size axis moves from text to display shapes as the size grows (CSS `font-optical-sizing: auto` is the default), so there is no separate Inter Display. `--font-sans-display` is kept as an alias of `--font-sans`. Stack: `'Inter Variable', 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', 'Microsoft YaHei', 'SimHei', system-ui, sans-serif`. Weights 400, 500 and 600. Linear's variable weights 510 / 590 are not used: Microsoft YaHei ships only 300 / 400 / 700, and CSS font matching turns 510 into 700 for Chinese text.
+- **Berkeley Mono** -- code and numeric data. It is a commercial face from U.S. Graphics; when the product has no commercial licence, **JetBrains Mono** (SIL OFL) takes over. Stack: `'Berkeley Mono', 'JetBrains Mono', ui-monospace, 'SF Mono', 'Menlo', monospace`. Tabular numbers use this stack.
+
+Like Linear, the sans text turns on the Inter features `cv01` (alternate one) and `ss03` (round quotes and commas): `--font-features`, token `typography.fontFeatureSettings`. Mono text resets them to `normal`. The CSS `font` shorthand resets `font-feature-settings`, so a sans rule that uses the shorthand declares `--font-features` again.
+
+Inter Variable 4.1 ships in `fonts/` (`InterVariable.woff2`, `InterVariable-Italic.woff2`, the SIL OFL `LICENSE.txt`), taken from tag v4.1 of github.com/rsms/inter. `fonts/inter.css` declares the faces; `aham-ui.css`, `workbench.css` and `colors_and_type.css` import it, so keep `fonts/` next to them when copying the package:
+
+```css
+@font-face { font-family: 'Inter Variable'; font-style: normal; font-weight: 100 900; font-display: swap; src: url('InterVariable.woff2') format('woff2'); }
+@font-face { font-family: 'Inter Variable'; font-style: italic; font-weight: 100 900; font-display: swap; src: url('InterVariable-Italic.woff2') format('woff2'); }
+```
 
 The type scale is compact by modern web standards, expressed through 11 utility classes:
 
 | Style | Size / Line-height | Weight | Face |
 |---|---|---|---|
-| text-display | 44px / 1.15 | 600 | Inter Display |
-| text-title | 32px / 1.2 | 600 | Inter Display |
-| text-heading | 24px / 1.25 | 600 | Inter Display |
-| text-subheading | 20px / 1.3 | 600 | Inter Display |
-| text-body-l | 17px / 1.5 | 400 | Inter |
-| text-body | 14px / 1.55 | 400 | Inter (the workhorse · UI base) |
-| text-callout | 15px / 1.45 | 400 | Inter |
-| text-subhead | 13px / 1.4 | 500 | Inter |
-| text-footnote | 13px / 1.45 | 400 | Inter |
-| text-caption | 12px / 1.4 | 400 | Inter |
-| text-mono | inherits size | 400 | JetBrains Mono |
+| text-display | 44px / 1.15 | 600 | sans |
+| text-title | 32px / 1.2 | 600 | sans |
+| text-heading | 24px / 1.25 | 600 | sans |
+| text-subheading | 20px / 1.3 | 600 | sans |
+| text-body-l | 17px / 1.5 | 400 | sans |
+| text-body | 14px / 1.55 | 400 | sans (the workhorse · UI base) |
+| text-callout | 15px / 1.45 | 400 | sans |
+| text-subhead | 13px / 1.4 | 500 | sans |
+| text-footnote | 13px / 1.45 | 400 | sans |
+| text-caption | 12px / 1.4 | 400 | sans |
+| text-mono | inherits size | 400 | mono |
 
 Line-heights follow a deliberate curve: display and headline lines are tight (1.25--1.3) to preserve the architectural presence of large text; body lines relax to 1.5 for comfortable reading; caption and footnote settle at 1.4. There is no letter-spacing manipulation beyond specific uppercase labels (`text-label` uses `0.01em` letter-spacing) -- the typeface itself carries the rhythm.
 
@@ -134,6 +143,7 @@ The concrete icon set is **Lucide (ISC)** — linear, monochrome, round cap+join
 - `components/` -- component contracts (`{slug}.json`): anatomy, variant dimensions, patterns, usage hints, exclusions (17 = 16 core + icon)
 - `preview/` -- self-contained HTML preview cards (17: button, card, checkbox, dialog, input, menu, nav, popover, progress-indicator, radio-button, search-field, segmented-control, slider, table, toggle, tooltip, icon)
 - `icons/` -- Lucide (ISC) sprite `aham-icons.svg`, manifest `icons.json`, raw sources `lucide/`, ISC `LICENSE`
+- `fonts/` -- Inter Variable 4.1 (`InterVariable.woff2`, `InterVariable-Italic.woff2`), `inter.css` with the `@font-face` rules, SIL OFL `LICENSE.txt`
 - `aham-ui.css` / `aham-ui.js` -- fuller reference implementation + behavior
 - `aham-ui-office.md` -- Office (Word / Excel / PPT) landing: HEX + font mapping
 - `ui_kits/dashboard/` -- a worked dashboard assembled from the components
@@ -141,13 +151,13 @@ The concrete icon set is **Lucide (ISC)** — linear, monochrome, round cap+join
 
 ## CAVEATS / KNOWN SUBSTITUTIONS
 
-1. **Microsoft YaHei / SimHei** are the CJK fallback faces in the `font-family` stack for Inter and Inter Display. These are system fonts on Windows; on macOS the stack falls through to the system-ui CJK face (PingFang SC). On Linux, the stack degrades to the system sans-serif default for CJK. The CJK rendering will differ from the Latin rendering in weight and x-height -- this is a known limitation of cross-platform web typography and not a design decision.
-2. **Fonts are not fetched from third-party servers** (DESIGN §1.11, local-first). Without a local or self-hosted Inter / JetBrains Mono (SIL OFL), the stacks fall back to system faces; the monospace stack falls back to `SF Mono, Menlo, monospace`. Tabular number alignment is preserved by the browser's monospace fallback, but the character design will differ visibly from JetBrains Mono.
+1. **Microsoft YaHei / SimHei** are the CJK fallback faces at the end of the sans stack. These are system fonts on Windows; on macOS the stack falls through to the system-ui CJK face (PingFang SC). On Linux, the stack degrades to the system sans-serif default for CJK. The CJK rendering will differ from the Latin rendering in weight and x-height -- this is a known limitation of cross-platform web typography and not a design decision.
+2. **Fonts are not fetched from third-party servers** (DESIGN §1.11, local-first). Inter Variable comes from `fonts/`; if that folder is not deployed with the CSS, the sans stack falls back to the system face (SF on macOS, Segoe UI on Windows). Without Berkeley Mono or JetBrains Mono, the mono stack falls back to `ui-monospace, SF Mono, Menlo, monospace`; tabular alignment is kept, the glyphs differ.
 3. **No brand copy examples from source material** -- the content fundamentals section derives its voice and tone guidance from the stated design philosophy (极简、克制、留白优先、内容优先) and observed component label patterns, not from a brand copy deck or UI string audit. Specific copy examples should be validated against the product's actual UI strings when available.
 4. **Component variants** listed in component contracts represent the known, specified set. Additional states (loading spinners within buttons, password visibility toggles, character counts on inputs) are marked as `unknowns` in their respective contracts. These should not be invented without explicit design approval.
 5. **Dark theme** color values are algorithmic inversions of the light theme, validated against the design system specification. They have not been tested against the full component set in a dark-mode rendering pass. Subtle contrast adjustments may be needed for tertiary ink on dark panel backgrounds.
 6. **Single source of truth is `tokens.json`.** `components.css` is generated from the previews by `scripts/extract-components-css.mjs`; `colors_and_type.css` is hand-synced and checked by `scripts/lint-design.mjs`; `css.json` is a compatibility mirror. If a value ever disagrees, `tokens.json` wins — regenerate the mirrors from it, not the other way around.
-7. **Inter Display** is loaded as a separate font file from Google Fonts with optical sizing. Browsers that do not support the `opsz` axis will render Inter Display at its default optical size, which may appear slightly heavier than intended at small sizes or slightly lighter at display sizes.
+7. **Berkeley Mono licence.** U.S. Graphics restricts commercial use to UI elements and says its commercial licences are not compatible with open-source apps. This repository therefore ships no Berkeley Mono files; its previews render JetBrains Mono or the system mono.
 
 ## Workbench profile (7.2)
 See [WORKBENCH.md](WORKBENCH.md). Component states: [filter](preview/workbench-filter.html), [detail](preview/workbench-detail.html), [actions](preview/workbench-actions.html), [AI](preview/workbench-ai.html). Page samples: [shell](examples/workbench-shell.html), [list](examples/customer-list.html), [record detail](examples/record-detail.html), [document](examples/crm-quotation.html), [settings](examples/settings.html). The 17 primitive previews remain; the workbench adds 23 composition contracts in `components/`. `tokens.json` is authoritative; `workbench-tokens.css` is generated from it. Load `workbench.css` and import behaviour from `workbench.js` (zero dependencies). Legacy `css.json` is a compatibility mirror, not a canonical input.

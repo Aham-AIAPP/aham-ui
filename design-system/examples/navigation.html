@@ -7,16 +7,16 @@
 <style>
   body{background:var(--panel);padding:28px;}
   .wrap{max-width:760px;margin:0 auto;}
-  h1{font:600 22px/1.25 var(--font-sans-display);margin:0 0 4px;}
+  h1{font:600 22px/1.25 var(--font-sans-display);font-feature-settings:var(--font-features);margin:0 0 4px;}
   .note{color:var(--ink-2);font-size:13px;margin:0 0 24px;}
   .sec{background:var(--white);border-radius:12px;box-shadow:0 0 0 1px var(--line);padding:0;margin-bottom:16px;overflow:visible;}
   .sec.pad{padding:20px;}
-  .sec h2{font:600 13px/1 var(--font-sans);color:var(--ink-2);margin:0 0 14px;text-transform:uppercase;letter-spacing:.04em;}
-  .tag{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);display:block;margin-bottom:8px;}
+  .sec h2{font:600 13px/1 var(--font-sans);font-feature-settings:var(--font-features);color:var(--ink-2);margin:0 0 14px;text-transform:uppercase;letter-spacing:.04em;}
+  .tag{font-size:11px;color:var(--ink-3);font-family:var(--font-mono);font-feature-settings:normal;display:block;margin-bottom:8px;}
 </style>
 </head>
 <body>
-<nav style="position:sticky;top:0;z-index:500;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;background:var(--white,#fff);border-bottom:1px solid var(--line,#E7E7E7);font:500 13px/1 'Inter','Microsoft YaHei',-apple-system,sans-serif;"><a href="index.html" style="color:var(--accent,#336EE8);text-decoration:none;">← 示范目录</a><span style="color:var(--ink-4,#C4C4C4);">/</span><a href="../../index.html" style="color:var(--ink-2,#6E6E6E);text-decoration:none;">Aham UI 全景</a></nav>
+<nav style="position:sticky;top:0;z-index:500;display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;background:var(--white,#fff);border-bottom:1px solid var(--line,#E7E7E7);font:500 13px/1 var(--font-sans);font-feature-settings:var(--font-features);"><a href="index.html" style="color:var(--accent,#336EE8);text-decoration:none;">← 示范目录</a><span style="color:var(--ink-4,#C4C4C4);">/</span><a href="../../index.html" style="color:var(--ink-2,#6E6E6E);text-decoration:none;">Aham UI 全景</a></nav>
 <div class="wrap">
   <h1>导航类 · 补全</h1>
   <p class="note">批 3:三段式导航栏 + 侧栏分组折叠/徽标/图标 + 搜索清除/建议 + 令牌字段。</p>
