@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workbench Actions — Aham UI Preview</title>
+  <link rel="stylesheet" href="../workbench.css">
+  <style>
+body { margin: 0; }
+/* Preview scaffold only; component styles come from workbench.css. */
+.pv { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; display: grid; gap: 32px; }
+.pv h1 { font-size: 20px; font-weight: 500; }
+.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
+.pv-story { display: grid; gap: 12px; }
+.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
+.pv-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.pv-frame { border-radius: 8px; box-shadow: 0 0 0 1px var(--wb-line); overflow: hidden; background: var(--wb-bg); }
+.pv-cap { display: block; margin-top: 8px; color: var(--wb-muted); font-size: 12px; }
+.pv .pv-static { position: static; max-height: none; margin: 0; }
+.pv .wb-palette.pv-static { display: block; width: 560px; max-width: 100%; }
+.pv-toasts { display: grid; gap: 8px; width: 360px; max-width: 100%; }
+.pv-keys { width: 100%; }
+.pv-keys td:first-child { width: 180px; }
+  </style>
+</head>
+<body>
+<div class="aham-workbench wb-bare" data-theme="light">
+<main class="pv">
+  <header><h1>命令面板、快捷键、右键菜单与快速操作 · 状态预览</h1></header>
+  <p>结构与交互照 Circle / Linear，颜色、字体、圆角取 Aham。菜单与表格由 <code>workbench.js</code> 实际渲染；带「打开」的按钮会打开真实组件。规则见 WORKBENCH §12。</p>
+
+  <section class="pv-story">
+    <div class="pv-label">命令面板 · 根列表与子列表</div>
+    <div class="pv-row">
+      <div><div class="wb-palette pv-static" id="pv-palette-root"><div class="wb-palette-context"><span class="wb-palette-chip"><span class="wb-meta">CUS-2026-0033</span><span>远川汽车零部件有限公司</span><button type="button" tabindex="-1" aria-label="移除上下文" data-i="close"></button></span></div><div class="wb-palette-body"><div></div></div></div><span class="pv-cap">根列表：上下文标签、分组标题、快捷键提示、带「…」的命令有箭头</span></div>
+      <div><div class="wb-palette pv-static" id="pv-palette-sub" style="width:360px"><div class="wb-palette-body"><div></div></div></div><span class="pv-cap">子列表：原地替换，Esc 或空搜索框退格返回</span></div>
+    </div>
+    <div><button type="button" class="wb-btn sm" id="pv-open-palette">打开命令面板</button> <span class="wb-meta">也可以按 <kbd class="wb-kbd" id="pv-mod-k"></kbd></span></div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">右键菜单 · 分组、快捷键、破坏性操作在最后、下级原地替换</div>
+    <div class="pv-row">
+      <div><div class="wb-popover flush menu pv-static" id="pv-menu-root"><div></div></div><span class="pv-cap">根菜单</span></div>
+      <div><div class="wb-popover flush menu pv-static" id="pv-menu-sub"><div></div></div><span class="pv-cap">选「阶段」后：首项返回</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">表格内直接改属性 · 可点击</div>
+    <div class="pv-frame"><table class="wb-table wb-list-table" id="pv-table" style="min-width:0">
+      <colgroup><col><col style="width:120px"><col style="width:120px"></colgroup>
+      <thead><tr><th scope="col">名称</th><th scope="col">负责人</th><th scope="col">阶段</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <span class="pv-cap">点负责人或阶段：命令菜单停在当前值，选中即保存，右下角提示条可撤销</span>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">提示条 · 静态样式与实际触发</div>
+    <div class="pv-row">
+      <div class="pv-toasts"><div class="wb-toast"><span>已把阶段改为「方案评估」</span><button type="button" class="wb-btn sm ghost">撤销</button></div><div class="wb-toast"><span>已创建「青禾新能源有限公司」</span><button type="button" class="wb-btn sm ghost">打开</button></div><div class="wb-toast"><span>已复制 CUS-2026-0033</span></div></div>
+      <div><button type="button" class="wb-btn sm" id="pv-toast">触发一条提示</button></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">新建弹窗 · 可打开</div>
+    <div><button type="button" class="wb-btn sm primary" id="pv-create">新建</button> <span class="wb-meta">试试：空标题创建、打开「继续新建」、有内容时按 Esc</span></div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">保留快捷键 · 取自 components/shortcuts.json</div>
+    <div class="pv-frame"><table class="wb-table pv-keys" style="min-width:0"><thead><tr><th scope="col">按键</th><th scope="col">作用</th></tr></thead><tbody id="pv-keys"><tr><td colspan="2">通过本地服务打开本页可显示保留键表。</td></tr></tbody></table></div>
+  </section>
+</main>
+</div>
+<script type="module">
+import {icon, createCommand, initPalette, openPicker, toast, openCreateDialog, formatKeys, escapeHtml} from '../workbench.js';
+const root = document.querySelector('.aham-workbench');
+root.querySelectorAll('[data-i]').forEach(el => { el.innerHTML = icon(el.dataset.i); });
+document.querySelector('#pv-mod-k').textContent = formatKeys('mod+k')[0];
+
+const stages = ['初次接触', '需求调研', '方案评估', '商务谈判', '已签约'];
+const paletteGroups = () => [
+  { heading: '当前记录', items: [
+    { id: 'stage', label: '修改阶段…', icon: 'success', keys: 's', children: () => stages.map(s => ({ id: s, label: s, current: s === '方案评估', run: () => toast(`已把阶段改为「${s}」`) })) },
+    { id: 'owner', label: '分配给…', icon: 'user', keys: 'a', children: () => ['林悦', '周航', '许宁'].map(o => ({ id: o, label: o, icon: 'user', run: () => toast(`已分配给${o}`) })) },
+    { id: 'copy', label: '复制编码', icon: 'copy', run: () => toast('已复制 CUS-2026-0033') },
+  ] },
+  { heading: '操作', items: [{ id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: () => openCreate() }] },
+  { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?' }] },
+];
+const flat = groups => groups.flatMap((g, gi) => g.items.map(it => ({ ...it, group: gi, heading: g.heading, arrow: Boolean(it.children) })));
+createCommand(document.querySelector('#pv-palette-root .wb-palette-body > div'), { label: '命令', placeholder: '输入命令或搜索…', items: flat(paletteGroups()), onSelect() {} });
+createCommand(document.querySelector('#pv-palette-sub .wb-palette-body > div'), { label: '修改阶段', placeholder: '修改阶段…', items: stages.map(s => ({ id: s, label: s, group: 0, heading: '修改阶段', current: s === '方案评估' })), onSelect() {} });
+const palette = initPalette({ root, context: () => ({ code: 'CUS-2026-0033', label: '远川汽车零部件有限公司' }), groups: paletteGroups });
+document.querySelector('#pv-open-palette').addEventListener('click', () => palette.open());
+
+const menuItems = [
+  { id: 'stage', label: '阶段', icon: 'success', keys: 's', group: 0, arrow: true },
+  { id: 'owner', label: '负责人', icon: 'user', keys: 'a', group: 0, arrow: true },
+  { id: 'open', label: '打开', icon: 'external', keys: 'enter', group: 1 },
+  { id: 'peek', label: '预览', icon: 'eye', keys: 'space', group: 1 },
+  { id: 'select', label: '勾选', icon: 'check', keys: 'x', group: 1 },
+  { id: 'copy', label: '复制编码', icon: 'copy', group: 2 },
+  { id: 'delete', label: '删除', icon: 'trash', danger: true, group: 3 },
+];
+createCommand(document.querySelector('#pv-menu-root > div'), { role: 'menu', search: false, label: '操作', items: menuItems, onSelect() {} });
+createCommand(document.querySelector('#pv-menu-sub > div'), { role: 'menu', search: false, label: '阶段', items: [{ id: 'back', label: '返回 · 阶段', icon: 'chevron-left', group: -1 }, ...stages.map(s => ({ id: s, label: s, group: 0, current: s === '方案评估' }))], onSelect() {} });
+
+const rows = [{ id: 1, name: '远川精密制造有限公司', owner: '林悦', stage: '方案评估' }, { id: 2, name: '临江包装材料有限公司', owner: '周航', stage: '需求调研' }];
+const tbody = document.querySelector('#pv-table tbody');
+function paint() {
+  tbody.innerHTML = rows.map(r => `<tr><td>${escapeHtml(r.name)}</td><td><button type="button" class="wb-cell-picker" data-k="owner" data-id="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${escapeHtml(r.owner)}，点击修改">${escapeHtml(r.owner)}</button></td><td><button type="button" class="wb-cell-picker" data-k="stage" data-id="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="阶段：${escapeHtml(r.stage)}，点击修改"><span class="wb-status"><b></b>${escapeHtml(r.stage)}</span></button></td></tr>`).join('');
+}
+tbody.addEventListener('click', e => {
+  const b = e.target.closest('[data-k]');
+  if (!b) return;
+  const r = rows.find(x => x.id === Number(b.dataset.id)), k = b.dataset.k;
+  const label = k === 'owner' ? '负责人' : '阶段';
+  openPicker(b, { label, options: k === 'owner' ? ['林悦', '周航', '许宁'] : stages, current: r[k], icon: k === 'owner' ? 'user' : undefined, onSelect: (v, before) => {
+    r[k] = v; paint();
+    toast(`已把${label}改为「${v}」`, { action: { label: '撤销', run: () => { r[k] = before; paint(); } } });
+  } });
+});
+paint();
+
+document.querySelector('#pv-toast').addEventListener('click', () => toast('已复制 CUS-2026-0033'));
+function openCreate() {
+  openCreateDialog({ root, title: '新建记录', scope: '客户', fields: [{ key: 'stage', label: '阶段', options: stages, value: '初次接触' }, { key: 'owner', label: '负责人', options: ['林悦', '周航', '许宁'], icon: 'user' }], onSubmit: v => { toast(`已创建「${v.title}」`); return true; } });
+}
+document.querySelector('#pv-create').addEventListener('click', openCreate);
+
+fetch('../components/shortcuts.json').then(r => r.json()).then(c => {
+  document.querySelector('#pv-keys').innerHTML = Object.entries(c.reserved).map(([k, v]) => `<tr><td>${formatKeys(k).map(x => `<kbd class="wb-kbd">${escapeHtml(x)}</kbd>`).join(' ')}</td><td>${escapeHtml(v)}</td></tr>`).join('');
+}).catch(() => {});
+</script>
+</body>
+</html>

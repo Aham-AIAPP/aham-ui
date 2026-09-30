@@ -107,7 +107,7 @@
 
 类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，本例不下载字体；安装 Inter / JetBrains 或由产品合法自托管即可统一字形。
 
-组合契约 13 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html) 和 [记录详情](examples/record-detail.html)。
+组合契约 19 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html) 和 [记录详情](examples/record-detail.html)。
 
 外框行为在 `workbench.js`（原生 ES 模块，无依赖）：`initShell(root)` 负责导航开关，`initPanels(root)` 负责侧面板开关（按钮 `[data-panel-toggle="面板 id"]`），`openPopover(trigger, panel)` 负责弹层，`initSearch(root)` 负责页眉搜索，`createCommand` / `initFilter` / `initDisplay` 见第 10 节。所有浮层登记在同一个层栈里，Esc 每次只关最上面一层。
 
@@ -173,7 +173,7 @@
 
 ### 9.7 暂未覆盖
 
-行内编辑、右键菜单、命令面板在后续阶段补。列顺序调整、列宽拖拽、固定列、保存查询方案尚未定义。
+列顺序调整、列宽拖拽、固定列、保存查询方案尚未定义。行内编辑、右键菜单、命令面板见第 12 节。
 
 ## 10. 命令菜单与工作台浮层（7.2）
 
@@ -231,4 +231,72 @@
 - 动态区用 `role="log"`，新增内容会被读屏播报。
 
 参考实现：`workbench.js` 的 `initListKeys`、`initPanels(...).show(id, { layer, returnTo })`、`initPropertyPickers`、`initComposer`。
+
+## 12. 命令面板、快捷键、右键菜单与快速操作（7.2）
+
+同一个操作至少有两个入口：界面控件（单元格、属性栏、按钮）之外，还能从右键菜单、⌘K 命令面板或快捷键触发，四处调用同一份操作定义。形式照 Circle / Linear，颜色与字体取 Aham。状态见 [preview/workbench-actions.html](preview/workbench-actions.html)。
+
+### 12.1 命令面板
+
+- ⌘K / Ctrl+K 打开或关闭。模态，宽 `overlayWidth` 640px，距视口顶部 `paletteTop` 22vh；搜索框高 48px，选项行高 40px，列表最高 384px，超出滚动。
+- 有当前记录时，顶部显示上下文标签（编码 + 名称），命令作用于它；在空搜索框按退格或点标签上的 ✕ 移除上下文。
+- 命令按组排列，组名用次级文字色：当前记录 → 操作 → 跳转 → 帮助。有快捷键的命令在右侧显示按键提示。
+- 带「…」的命令进入子列表（如「修改阶段…」），子列表在面板内原地替换；Esc 或在空搜索框按退格返回上一级，根列表按 Esc 关闭。
+- 执行命令后面板关闭，焦点回到打开前的位置，结果用提示条确认。
+
+### 12.2 快捷键
+
+所有快捷键登记在同一张表（`registerShortcut`），帮助列表（按 ? 打开）只显示已登记的按键，不显示未实现的提示。
+
+| 按键 | 作用 | 范围 |
+|---|---|---|
+| ⌘ / Ctrl + K | 命令面板 | 全局 |
+| ⌘ / Ctrl + B | 展开 / 收起导航 | 全局 |
+| ? | 键盘快捷键 | 全局 |
+| Esc | 关闭最上层的浮层 | 全局 |
+| C | 新建当前页的对象 | 列表 |
+| / | 搜索 | 列表 |
+| ↑ ↓ Home End | 移动当前行 | 列表 |
+| 空格 | 预览当前行 | 列表 |
+| Enter | 打开当前行 | 列表 |
+| X | 勾选当前行 | 列表 |
+| S | 修改状态类主属性（阶段、状态） | 列表当前行、详情 |
+| A | 修改负责人 | 列表当前行、详情 |
+| Shift + F10 / 菜单键 | 当前行的操作菜单 | 列表当前行 |
+| J / K | 下一条 / 上一条 | 详情 |
+| ⌘ / Ctrl + Enter | 提交评论或新建 | 输入区 |
+
+- 单字母快捷键只在焦点不在输入框、且输入法没有组字时生效；带 ⌘ / Ctrl 的快捷键在输入框里也生效。
+- 表中按键是保留键，产品不得改作他用。新增快捷键先登记，再出现在界面提示里。
+- 界面上的按键提示用 20px 高的 `kbd` 标签，⌘ / ⇧ / ⌥ 在 macOS 显示为符号，其他系统显示为 Ctrl / Shift / Alt。
+
+### 12.3 右键菜单
+
+- 在行上右键，或当前行按 Shift + F10 / 菜单键打开；菜单宽 `menuWidth` 256px，出现在鼠标位置或当前行左侧。
+- 分组顺序：属性（阶段、负责人…）→ 打开类（打开、预览、勾选）→ 复制类 → 破坏性操作（删除，红色文字，放最后）。
+- 有下级选项的项右侧显示箭头，选中后在同一个菜单里换成下级列表，首项是「返回」；← 或退格返回。Aham 不允许级联弹出子菜单。
+- 读屏：菜单 `role="menu"`，项 `role="menuitem"`，有快捷键的项带 `aria-keyshortcuts`。
+
+### 12.4 表格内直接改属性
+
+- 状态类和负责人单元格是按钮：悬停灰底，点击在单元格下方打开命令菜单，高亮停在当前值，选中即保存。
+- 同样的修改也能从右键菜单、命令面板和快捷键 S / A 进入，四处共用同一个修改函数。
+- 修改后用提示条确认并提供「撤销」。真实产品以服务端结果为准，失败时恢复原值并提示原因。
+
+### 12.5 提示条
+
+- 位于右下角（640px 及以下在底部通栏），宽 `toastWidth` 360px，同时最多 3 条。每条 4 秒后消失，鼠标悬停或键盘聚焦时暂停计时。
+- 只用于确认已经完成的操作，可带一个操作按钮（撤销、打开）。需要用户修正的错误放在字段旁或行内提示，不用提示条。
+- `role="status"`，读屏会播报；不抢焦点。
+
+### 12.6 新建弹窗
+
+- C 或页眉右端的「新建」主按钮打开。模态，宽 640px，距视口顶部 `createTop` 30vh（Circle 的新建弹窗位置）。
+- 自上而下：范围标签与标题（如「客户 › 新建记录」）→ 无边框标题输入（20px，字重 500）→ 说明 → 属性标签按钮（点击打开命令菜单）→ 底栏「继续新建」开关、取消、创建（主按钮）。
+- ⌘ / Ctrl + Enter 创建。标题为空时在标题下方用文字提示并阻止创建。
+- 打开「继续新建」时，创建成功后清空标题和说明、保留属性，焦点回到标题，便于连续录入。
+- 有未保存内容时关闭（取消、Esc），在底栏原地换成「继续编辑 / 放弃 / 创建」，焦点落在「继续编辑」；不叠第二个弹窗（DESIGN §8.6「一次只一个模态」）。
+- 复杂单据（有明细表、金额）不用快速新建，进入整页单据（第 4 节）。
+
+参考实现：`workbench.js` 的 `initPalette`、`registerShortcut` / `listShortcuts` / `formatKeys`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`。
 

@@ -1,0 +1,67 @@
+{
+  "slug": "create-dialog",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-actions.html",
+  "intent": "快速新建：无边框标题、说明、属性标签、继续新建",
+  "specification": "WORKBENCH.md §12.6",
+  "reference": "examples/customer-list.html",
+  "api": "openCreateDialog({ root, title, scope, fields, onSubmit(values) → boolean, returnFocus? })",
+  "variantDimensions": [
+    {
+      "axis": "footer",
+      "values": [
+        "default",
+        "confirm-discard"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "scope",
+      "title-input",
+      "error",
+      "description",
+      "property-chips",
+      "create-more",
+      "cancel",
+      "create",
+      "discard-confirm"
+    ],
+    "required": [
+      "title-input",
+      "create"
+    ]
+  },
+  "rules": [
+    "C 或「新建」主按钮打开；模态，宽 640px，距顶 30vh",
+    "标题为空时在标题下方文字提示并阻止创建",
+    "⌘ / Ctrl + Enter 创建",
+    "继续新建：成功后清空标题与说明、保留属性、焦点回到标题",
+    "有未保存内容时关闭，底栏原地换成「继续编辑 / 放弃 / 创建」，焦点在「继续编辑」",
+    "有明细表和金额的单据走整页单据"
+  ],
+  "states": [
+    "empty",
+    "typing",
+    "invalid",
+    "creating",
+    "confirm-discard"
+  ],
+  "keyboard": [
+    "⌘ / Ctrl + Enter 创建",
+    "Esc 关闭或进入放弃确认"
+  ],
+  "accessibility": [
+    "原生 dialog showModal；标题输入 aria-describedby 指向错误文字",
+    "属性浮层放在弹窗内部，避免被 inert"
+  ],
+  "doNotInvent": [
+    "用提示条报标题必填",
+    "叠第二个确认弹窗",
+    "把复杂单据塞进快速新建"
+  ]
+}

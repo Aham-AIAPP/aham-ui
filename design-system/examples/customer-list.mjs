@@ -1,7 +1,7 @@
 // List page sample: wires the design-system components (workbench.js) to fictional demo data.
 // Everything reusable lives in workbench.js / workbench.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, createCommand, openPopover, closePopover, pushLayer, icon, escapeHtml as esc} from '../workbench.js';
-import {makeCustomers, FIELDS, field, OWNERS, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './customer-list-model.mjs';
+import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openPicker, registerShortcut, listShortcuts, toast, createCommand, openPopover, closePopover, pushLayer, icon, escapeHtml as esc} from '../workbench.js';
+import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './customer-list-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -33,6 +33,7 @@ function compute() {
 // Re-rendering replaces controls; put focus back on the equivalent control so keyboard users keep their place.
 const FOCUS_KEYS = ['id', 'select', 'selectPage', 'group', 'sort', 'page', 'view', 'pageSize'];
 function focusToken(el) {
+  if (el?.dataset?.cell) return `[data-cell="${el.dataset.cell}"][data-row="${el.dataset.row}"]`;
   const k = el?.dataset && root.contains(el) ? FOCUS_KEYS.find(key => key in el.dataset) : null;
   return k ? `[data-${k.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}="${CSS.escape(el.dataset[k])}"]` : null;
 }
@@ -54,7 +55,8 @@ function render(fallback) {
 }
 function cell(f, r) {
   switch (f.key) {
-    case 'stage': return `<td><span class="wb-status"><b></b>${esc(r.stage)}</span></td>`;
+    case 'stage': return `<td><button type="button" class="wb-cell-picker" data-cell="stage" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="阶段：${esc(r.stage)}，点击修改"><span class="wb-status"><b></b>${esc(r.stage)}</span></button></td>`;
+    case 'owner': return `<td><button type="button" class="wb-cell-picker" data-cell="owner" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${esc(r.owner)}，点击修改">${esc(r.owner)}</button></td>`;
     case 'amountCents': return `<td class="number">${money(r.amountCents)}</td>`;
     case 'code': return `<td class="wb-mono">${esc(r.code)}</td>`;
     case 'lastContact': case 'created': return `<td class="wb-mono" title="${r[f.key]}">${r[f.key].slice(5)}</td>`;
@@ -162,16 +164,17 @@ function openAssign() {
   });
   openPopover($('#assign-trigger'), assignPop, { align: 'end' });
 }
-function confirmDelete() {
-  const n = selected.size;
+function confirmDelete(ids = [...selected]) {
+  const n = ids.length, gone = new Set(ids);
   dialog.querySelector('#delete-title').textContent = `删除 ${n} 条记录？`;
   const release = pushLayer(() => dialog.close('cancel'));
   dialog.addEventListener('close', () => {
     release();
     if (dialog.returnValue !== 'confirm') return;
-    data = data.filter(r => !selected.has(r.id));
-    selected.clear();
-    feedback(`已删除 ${n} 条记录。示例只改当前页面的数据，刷新后恢复。`);
+    data = data.filter(r => !gone.has(r.id));
+    ids.forEach(id => selected.delete(id));
+    toast(`已删除 ${n} 条记录`);
+    feedback('示例只改当前页面的数据，刷新后恢复。');
     render();
     $('#filter-trigger').focus();
   }, { once: true });
@@ -232,6 +235,8 @@ root.addEventListener('click', e => {
   if (d.page) { state.page += d.page === 'next' ? 1 : -1; render(d.page === 'next' ? '[data-page="prev"]' : '[data-page="next"]'); $('.wb-list-scroll').scrollTop = 0; return; }
   if (d.open) { openRecord(Number(d.open)); return; }
   if (b.id === 'assign-trigger') { openAssign(); return; }
+  if (d.cell) { editCell(Number(d.row), d.cell, b); return; }
+  if (b.id === 'create-trigger') { openCreate(); return; }
   switch (d.action) {
     case 'clear-filters': state.filters = []; filter.set([]); narrowResult(); render(); $('#filter-trigger').focus(); break;
     case 'clear-search': state.q = ''; search?.close(); narrowResult(); render(); break;
@@ -250,6 +255,88 @@ root.addEventListener('click', e => {
     }
   }
 });
+
+// ── One action, four entrances: cell picker, context menu, ⌘K palette, shortcut ──
+const EDITABLE = { stage: { label: '阶段', options: STAGES }, owner: { label: '负责人', options: OWNERS, icon: 'user' } };
+const recordOf = id => data.find(r => r.id === id);
+function setField(id, key, value, before) {
+  data = data.map(r => (r.id === id ? { ...r, [key]: value } : r));
+  render();
+  toast(`已把${EDITABLE[key].label}改为「${value}」`, { action: { label: '撤销', run: () => { data = data.map(r => (r.id === id ? { ...r, [key]: before } : r)); render(); } } });
+}
+function cellButton(id, key) { return root.querySelector(`[data-cell="${key}"][data-row="${id}"]`); }
+function editCell(id, key, anchor) {
+  const r = recordOf(id), f = EDITABLE[key];
+  if (!r) return;
+  const target = anchor || cellButton(id, key) || root.querySelector(`#customer-table tr[data-id="${id}"]`);
+  const row = root.querySelector(`#customer-table tr[data-id="${id}"]`);
+  openPicker(target, { label: f.label, options: f.options, current: r[key], icon: f.icon, returnFocus: anchor ? null : row, onSelect: (v, before) => setField(id, key, v, before) });
+}
+const currentRow = () => { const tr = document.activeElement?.closest?.('#customer-table tr[data-id]'); return tr ? Number(tr.dataset.id) : null; };
+function copy(text) { navigator.clipboard?.writeText(text).then(() => toast(`已复制 ${text}`), () => toast('浏览器不允许写入剪贴板')); }
+function openCreate() {
+  const currentRowBefore = currentRow();
+  openCreateDialog({
+    root, title: '新建记录', scope: '客户', returnFocus: { focus: () => (currentRowBefore ? listKeys.focus(currentRowBefore) : $('#create-trigger').focus()) },
+    fields: [{ key: 'stage', label: '阶段', options: STAGES, value: '初次接触' }, { key: 'owner', label: '负责人', options: OWNERS, icon: 'user' }, { key: 'industry', label: '行业', options: INDUSTRIES }],
+    onSubmit: v => {
+      const id = Math.max(0, ...data.map(r => r.id)) + 1;
+      data = [{ id, code: `CUS-2026-${String(id).padStart(4, '0')}`, name: v.title, industry: v.industry || INDUSTRIES[0], owner: v.owner || OWNERS[0], stage: v.stage || STAGES[0], amountCents: null, lastContact: TODAY, created: TODAY }, ...data];
+      render();
+      toast(`已创建「${v.title}」`, { action: { label: '打开', run: () => openRecord(id) } });
+      return true;
+    },
+  });
+}
+initContextMenu({
+  root, target: $('#customer-table'),
+  items: row => {
+    const id = Number(row.dataset.id), r = recordOf(id);
+    const pick = key => EDITABLE[key].options.map(o => ({ id: o, label: o, icon: EDITABLE[key].icon, current: o === r[key], run: () => { if (o !== r[key]) setField(id, key, o, r[key]); } }));
+    return [
+      { id: 'stage', label: '阶段', icon: 'success', keys: 's', group: 0, children: () => pick('stage') },
+      { id: 'owner', label: '负责人', icon: 'user', keys: 'a', group: 0, children: () => pick('owner') },
+      { id: 'open', label: '打开', icon: 'external', keys: 'enter', group: 1, run: () => openRecord(id) },
+      { id: 'peek', label: '预览', icon: 'eye', keys: 'space', group: 1, run: () => preview(id) },
+      { id: 'select', label: selected.has(id) ? '取消勾选' : '勾选', icon: 'check', keys: 'x', group: 1, run: () => { selected.has(id) ? selected.delete(id) : selected.add(id); render(); } },
+      { id: 'copy', label: '复制编码', icon: 'copy', group: 2, run: () => copy(r.code) },
+      { id: 'delete', label: '删除', icon: 'trash', danger: true, group: 3, run: () => confirmDelete([id]) },
+    ];
+  },
+});
+const GROUP_ORDER = ['通用', '列表'];
+const shortcutItems = () => listShortcuts().sort((x, y) => GROUP_ORDER.indexOf(x.group) - GROUP_ORDER.indexOf(y.group)).map((s, i) => ({ id: `k${i}`, label: s.label, keys: s.keys, group: s.group, heading: s.group, keywords: [s.group] }));
+const palette = initPalette({
+  root,
+  context: () => { const id = currentRow() ?? (panels.current() === PEEK ? previewId : null); const r = id && recordOf(id); return r ? { id, code: r.code, label: r.name } : null; },
+  groups: ctx => [
+    ...(ctx ? [{ heading: '当前记录', items: [
+      { id: 'stage', label: '修改阶段…', icon: 'success', keys: 's', children: c => STAGES.map(o => ({ id: o, label: o, current: o === recordOf(c.id).stage, run: () => { const r = recordOf(c.id); if (o !== r.stage) setField(c.id, 'stage', o, r.stage); } })) },
+      { id: 'owner', label: '分配给…', icon: 'user', keys: 'a', children: c => OWNERS.map(o => ({ id: o, label: o, icon: 'user', current: o === recordOf(c.id).owner, run: () => { const r = recordOf(c.id); if (o !== r.owner) setField(c.id, 'owner', o, r.owner); } })) },
+      { id: 'open', label: '打开详情', icon: 'external', run: c => openRecord(c.id) },
+      { id: 'copy', label: '复制编码', icon: 'copy', run: c => copy(recordOf(c.id).code) },
+    ] }] : []),
+    { heading: '操作', items: [
+      { id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: openCreate },
+      { id: 'filter', label: '筛选…', icon: 'filter', run: () => filter.open() },
+      { id: 'view', label: '切换视图…', icon: 'eye', children: () => Object.entries(VIEWS).map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => { state.view = k; narrowResult(); render(); } })) },
+      { id: 'clear', label: '清除筛选', icon: 'close', run: () => { state.filters = []; filter.set([]); narrowResult(); render(); } },
+    ] },
+    { heading: '跳转', items: [
+      { id: 'go-quote', label: '销售报价单', icon: 'file', run: () => { location.href = 'crm-quotation.html'; } },
+      { id: 'go-shell', label: '工作台外框', icon: 'home', run: () => { location.href = 'workbench-shell.html'; } },
+    ] },
+    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
+  ],
+});
+const onRow = () => currentRow() !== null;
+registerShortcut({ keys: 'c', label: '新建记录', group: '列表', run: openCreate });
+registerShortcut({ keys: '/', label: '搜索', group: '列表', run: () => root.querySelector('[data-action="search"]')?.click() });
+registerShortcut({ keys: 's', label: '修改当前行的阶段', group: '列表', when: onRow, run: () => editCell(currentRow(), 'stage') });
+registerShortcut({ keys: 'a', label: '修改当前行的负责人', group: '列表', when: onRow, run: () => editCell(currentRow(), 'owner') });
+registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
+// Keys handled directly by the list and the layer stack, listed here so the help shows them.
+[['up', '上一行'], ['down', '下一行'], ['space', '预览当前行'], ['enter', '打开当前行'], ['x', '勾选当前行'], ['shift+f10', '当前行的操作菜单'], ['escape', '关闭最上层的浮层']].forEach(([keys, label]) => registerShortcut({ keys, label, group: keys === 'escape' ? '通用' : '列表', external: true }));
 
 initShell(root);
 const panels = initPanels(root);

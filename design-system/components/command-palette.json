@@ -1,0 +1,74 @@
+{
+  "slug": "command-palette",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-actions.html",
+  "intent": "⌘K 命令面板：带上下文的分组命令，子列表原地替换",
+  "specification": "WORKBENCH.md §12.1",
+  "reference": "examples/customer-list.html",
+  "api": "initPalette({ root, groups(ctx), context() }) → { open, close, openAt(label, items) }",
+  "variantDimensions": [
+    {
+      "axis": "context",
+      "values": [
+        "with-record",
+        "none"
+      ]
+    },
+    {
+      "axis": "level",
+      "values": [
+        "root",
+        "sub-list"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "context-chip",
+      "search-input",
+      "group-heading",
+      "item",
+      "key-hint",
+      "sub-list"
+    ],
+    "required": [
+      "search-input",
+      "item"
+    ]
+  },
+  "markup": {
+    "item": "<li role=\"option\" data-index=\"0\">[图标]<span class=\"wb-command-label\"><span>修改阶段…</span></span><span class=\"wb-kbd-group\"><kbd class=\"wb-kbd\">S</kbd></span>[arrow-right]</li>"
+  },
+  "rules": [
+    "⌘ / Ctrl + K 开关；模态，宽 640px，距顶 22vh；搜索框 48px，行高 40px，列表最高 384px",
+    "组顺序：当前记录 → 操作 → 跳转 → 帮助",
+    "带「…」的命令进入子列表，原地替换；Esc 或空搜索框退格返回",
+    "上下文标签可用退格或 ✕ 移除",
+    "执行后关闭并还焦点，用提示条确认结果"
+  ],
+  "states": [
+    "root",
+    "sub-list",
+    "no-results",
+    "with-context"
+  ],
+  "keyboard": [
+    "⌘ / Ctrl + K 开关",
+    "↑↓ 移动，Enter 执行",
+    "Esc 返回上级或关闭",
+    "空搜索框退格：返回上级或移除上下文"
+  ],
+  "accessibility": [
+    "原生 dialog showModal，焦点困在面板内",
+    "搜索框 combobox + aria-activedescendant"
+  ],
+  "doNotInvent": [
+    "显示没有实现的快捷键提示",
+    "级联弹出子菜单",
+    "执行后停留在面板里"
+  ]
+}

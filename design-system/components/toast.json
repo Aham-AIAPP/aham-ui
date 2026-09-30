@@ -1,0 +1,60 @@
+{
+  "slug": "toast",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-actions.html",
+  "intent": "操作完成后的短暂确认，可带一个操作按钮",
+  "specification": "WORKBENCH.md §12.5",
+  "reference": "examples/customer-list.html",
+  "api": "toast(message, { action: { label, run }, duration })",
+  "variantDimensions": [
+    {
+      "axis": "action",
+      "values": [
+        "none",
+        "undo",
+        "open"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "stack",
+      "toast",
+      "message",
+      "action"
+    ],
+    "required": [
+      "toast",
+      "message"
+    ]
+  },
+  "markup": {
+    "toast": "<section class=\"wb-toasts\" aria-label=\"通知\"><div class=\"wb-toast\" role=\"status\"><span>已把阶段改为「方案评估」</span><button class=\"wb-btn sm ghost\">撤销</button></div></section>"
+  },
+  "rules": [
+    "右下角，手机为底部通栏；宽 360px；最多 3 条",
+    "4 秒后消失，悬停或聚焦时暂停",
+    "只确认已完成的操作；需要修正的错误放字段旁或行内提示",
+    "不抢焦点"
+  ],
+  "states": [
+    "visible",
+    "paused",
+    "dismissed"
+  ],
+  "keyboard": [
+    "操作按钮可 Tab 到达"
+  ],
+  "accessibility": [
+    "role=\"status\"，读屏播报"
+  ],
+  "doNotInvent": [
+    "用提示条报告表单错误",
+    "彩色成功 / 失败图标",
+    "需要手动关闭的提示条"
+  ]
+}

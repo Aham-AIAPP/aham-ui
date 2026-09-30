@@ -53,3 +53,11 @@ test('filter-bar contract lists exactly the implemented operators', async () => 
   const contract = JSON.parse(readFileSync(new URL('../design-system/components/filter-bar.json', import.meta.url), 'utf8'));
   for (const [type, ops] of Object.entries(FILTER_OPERATORS)) assert.deepEqual(contract.operators[type], ops.map(o => o[1]), type);
 });
+
+test('key labels are readable on every platform', async () => {
+  const {formatKeys} = await import('../design-system/workbench.js');
+  assert.deepEqual(formatKeys('escape'), ['Esc']);
+  assert.deepEqual(formatKeys('space'), ['空格']);
+  assert.deepEqual(formatKeys('g l'), ['G', 'L']);
+  assert.ok(['⌘K', 'Ctrl+K'].includes(formatKeys('mod+k')[0]));
+});

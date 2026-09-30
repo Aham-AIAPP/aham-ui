@@ -69,12 +69,7 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
   rail?.addEventListener('click', e => {
     if (narrow.matches && isOpen() && e.target.closest('.wb-nav-item')) set(false, { restoreFocus: true });
   });
-  document.addEventListener('keydown', e => {
-    if (e.isComposing || !(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey || e.key.toLowerCase() !== 'b') return;
-    if (e.target instanceof HTMLElement && e.target.isContentEditable) return;
-    e.preventDefault();
-    set(!isOpen(), { restoreFocus: true });
-  });
+  registerShortcut({ keys: 'mod+b', label: '展开 / 收起导航', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } });
   narrow.addEventListener('change', () => set(narrow.matches ? false : remembered(), { persist: false }));
 
   set(narrow.matches ? false : remembered(), { persist: false });
@@ -123,11 +118,13 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
 // api.trigger may be reassigned when a re-render replaces the trigger element; call api.place() afterwards.
 let openPop = null;
 
-export function openPopover(trigger, panel, { align = 'start', onClose } = {}) {
+// point: { x, y } places the popover at a pointer position (context menu); returnFocus overrides where focus goes back.
+export function openPopover(trigger, panel, { align = 'start', onClose, point = null, returnFocus = null } = {}) {
   closePopover('replace');
   panel.hidden = false;
-  trigger.setAttribute('aria-expanded', 'true');
-  const place = () => placePopover(api.trigger, panel, align);
+  const expands = el => el.hasAttribute('aria-haspopup');
+  if (expands(trigger)) trigger.setAttribute('aria-expanded', 'true');
+  const place = () => placePopover(api.trigger, panel, align, point);
   const outside = e => { if (!panel.contains(e.target) && !api.trigger.contains(e.target)) api.close('outside'); };
   const release = pushLayer(reason => api.close(reason));
   document.addEventListener('pointerdown', outside, true);
@@ -143,8 +140,9 @@ export function openPopover(trigger, panel, { align = 'start', onClose } = {}) {
       removeEventListener('resize', place);
       document.removeEventListener('scroll', place, true);
       panel.hidden = true;
-      api.trigger.setAttribute('aria-expanded', 'false');
-      if ((reason === 'escape' || reason === 'done') && api.trigger.isConnected) api.trigger.focus();
+      if (expands(api.trigger)) api.trigger.setAttribute('aria-expanded', 'false');
+      const back = returnFocus || api.trigger;
+      if ((reason === 'escape' || reason === 'done') && (typeof back.isConnected !== 'boolean' || back.isConnected)) back.focus();
       onClose?.(reason);
     },
   };
@@ -156,8 +154,8 @@ export function openPopover(trigger, panel, { align = 'start', onClose } = {}) {
 export const closePopover = (reason = 'done') => openPop?.close(reason);
 export const activePopover = () => openPop;
 
-function placePopover(trigger, panel, align) {
-  const r = trigger.getBoundingClientRect(), gap = 4, edge = 8;
+function placePopover(trigger, panel, align, point) {
+  const r = point ? { left: point.x, right: point.x, top: point.y, bottom: point.y } : trigger.getBoundingClientRect(), gap = point ? 2 : 4, edge = 8;
   panel.style.left = '0px';
   panel.style.top = '0px';
   const w = panel.offsetWidth, h = panel.offsetHeight;
@@ -211,12 +209,14 @@ let uid = 0;
 // ── Command menu ─────────────────────────────────────────────────────────────
 // The cmdk pattern used across Circle: a search input over a listbox. Focus stays in the input; ↑↓ move the
 // highlight (looping), Enter chooses, typing filters by label and keywords, Backspace on an empty query calls onBack.
-// Item: { id, label, icon?, prefix?, count?, checked?, arrow?, keywords?, group? } — `checked` makes it a multi-select row.
+// Item: { id, label, icon?, prefix?, count?, checked?, current?, arrow?, keys?, danger?, keywords?, group?, heading? }
+// `checked` makes it a multi-select row; `heading` titles a group (palette); `keys` shows shortcut hints.
+// role: 'listbox' (pickers, filters) or 'menu' (context menu actions).
 // `items` may be a function of the query, which is how quick-search results are added under the field list.
-export function createCommand(host, { items, onSelect, onBack, placeholder = '搜索…', empty = '没有匹配项', search = true, label = '' }) {
+export function createCommand(host, { items, onSelect, onBack, placeholder = '搜索…', empty = '没有匹配项', search = true, label = '', role = 'listbox' }) {
   const id = `wb-cmd-${++uid}`;
   host.classList.add('wb-command');
-  host.innerHTML = `${search ? `<div class="wb-command-input">${icon('search')}<input type="text" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-controls="${id}" placeholder="${escapeHtml(placeholder)}" aria-label="${escapeHtml(label || placeholder)}" autocomplete="off"></div>` : ''}<ul class="wb-command-list" role="listbox" id="${id}" aria-label="${escapeHtml(label || placeholder)}" tabindex="${search ? -1 : 0}"></ul><p class="wb-command-empty" hidden>${escapeHtml(empty)}</p>`;
+  host.innerHTML = `${search ? `<div class="wb-command-input">${icon('search')}<input type="text" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-controls="${id}" placeholder="${escapeHtml(placeholder)}" aria-label="${escapeHtml(label || placeholder)}" autocomplete="off"></div>` : ''}<ul class="wb-command-list" role="${role}" id="${id}" aria-label="${escapeHtml(label || placeholder)}" tabindex="${search ? -1 : 0}"></ul><p class="wb-command-empty" hidden>${escapeHtml(empty)}</p>`;
   const input = host.querySelector('input'), list = host.querySelector('ul'), emptyEl = host.querySelector('.wb-command-empty');
   const keyTarget = input || list;
   let shown = [], active = 0;
@@ -227,16 +227,19 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     const all = typeof items === 'function' ? items(q) : items;
     shown = all.filter(it => it.always || matches(it, q));
     active = Math.min(active, Math.max(0, shown.length - 1));
-    list.setAttribute('aria-multiselectable', String(shown.some(it => it.checked !== undefined)));
+    if (role === 'listbox') list.setAttribute('aria-multiselectable', String(shown.some(it => it.checked !== undefined)));
+    const itemRole = role === 'menu' ? 'menuitem' : 'option';
     let html = '', group;
     const gap = shown.some(it => it.icon) ? '<span class="wb-command-gap" aria-hidden="true"></span>' : '';   // keep labels aligned when only some rows have icons
     shown.forEach((it, i) => {
-      if (i > 0 && it.group !== group) html += '<li class="wb-command-sep" role="separator"></li>';
+      if (it.heading && it.group !== group) html += `<li class="wb-command-heading" role="presentation">${escapeHtml(it.heading)}</li>`;
+      else if (i > 0 && it.group !== group) html += '<li class="wb-command-sep" role="separator"></li>';
       group = it.group;
       const check = it.checked === undefined ? '' : `<span class="wb-command-check" aria-hidden="true">${icon('check')}</span>`;
       const prefix = it.prefix ? `<span class="wb-command-prefix">${escapeHtml(it.prefix)}</span>${icon('chevron-right')}` : '';
       const count = it.count === undefined ? '' : `<sup class="wb-command-count">${it.count > 99 ? '99+' : it.count}</sup>`;
-      html += `<li role="option" id="${id}-${i}" data-index="${i}"${it.checked === undefined ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${it.arrow ? icon('arrow-right') : ''}</li>`;
+      const keys = it.keys ? `<span class="wb-kbd-group" aria-hidden="true">${formatKeys(it.keys).map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>` : '';
+      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${it.arrow ? icon('arrow-right') : ''}</li>`;
     });
     list.innerHTML = html;
     emptyEl.hidden = shown.length > 0;
@@ -244,7 +247,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
   }
   function highlight(i, scroll = true) {
     active = i;
-    list.querySelectorAll('[role=option]').forEach(li => li.toggleAttribute('data-active', Number(li.dataset.index) === i));
+    list.querySelectorAll('[data-index]').forEach(li => li.toggleAttribute('data-active', Number(li.dataset.index) === i));
     const el = list.querySelector(`[data-index="${i}"]`);
     keyTarget.setAttribute('aria-activedescendant', el ? el.id : '');
     if (scroll) el?.scrollIntoView({ block: 'nearest' });
@@ -258,12 +261,12 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     else if (e.key === 'Home' && n && !input?.value) { e.preventDefault(); highlight(0); }
     else if (e.key === 'End' && n && !input?.value) { e.preventDefault(); highlight(n - 1); }
     else if (e.key === 'Enter') { e.preventDefault(); choose(active); }
-    else if (e.key === 'Backspace' && input && !input.value && onBack) { e.preventDefault(); onBack(); }
+    else if ((e.key === 'Backspace' || (e.key === 'ArrowLeft' && !input)) && !input?.value && onBack) { e.preventDefault(); onBack(); }
   });
   input?.addEventListener('input', () => { active = 0; render(); });
-  list.addEventListener('mousemove', e => { const li = e.target.closest('[role=option]'); if (li && Number(li.dataset.index) !== active) highlight(Number(li.dataset.index), false); });
+  list.addEventListener('mousemove', e => { const li = e.target.closest('[data-index]'); if (li && Number(li.dataset.index) !== active) highlight(Number(li.dataset.index), false); });
   list.addEventListener('mousedown', e => e.preventDefault());       // keep focus in the input
-  list.addEventListener('click', e => { const li = e.target.closest('[role=option]'); if (li) choose(Number(li.dataset.index)); });
+  list.addEventListener('click', e => { const li = e.target.closest('[data-index]'); if (li) choose(Number(li.dataset.index)); });
   const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); } };
   render();
   const start = shown.findIndex(it => it.current);                 // pickers open with the current value highlighted
@@ -645,14 +648,8 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove }) {
 // ── Property pickers ─────────────────────────────────────────────────────────
 // Properties panel values that open a command menu (Circle's status / assignee pickers). Buttons [data-prop="key"]
 // inside `root`; fields: { key: { label, options, icon? } }. The current value is marked; choosing closes and reports.
-export function initPropertyPickers({ root, container, fields, value, onChange }) {
+export function initPropertyPickers({ container, fields, value, onChange }) {
   let values = { ...value };
-  const pop = document.createElement('div');
-  pop.className = 'wb-popover flush';
-  pop.hidden = true;
-  pop.setAttribute('role', 'dialog');
-  pop.innerHTML = '<div></div>';
-  root.append(pop);
   function paint() {
     container.querySelectorAll('[data-prop]').forEach(b => {
       const key = b.dataset.prop, f = fields[key], v = values[key];
@@ -667,19 +664,7 @@ export function initPropertyPickers({ root, container, fields, value, onChange }
     const b = e.target.closest('[data-prop]');
     if (!b) return;
     const key = b.dataset.prop, f = fields[key];
-    pop.setAttribute('aria-label', `修改${f.label}`);
-    createCommand(pop.firstElementChild, {
-      label: f.label, placeholder: `${f.label}…`, search: f.options.length > 6,
-      items: f.options.map(o => ({ id: o, label: o, icon: f.icon, current: o === values[key] })),
-      onSelect: it => {
-        const before = values[key];
-        values = { ...values, [key]: it.id };
-        closePopover('done');
-        paint();
-        if (before !== it.id) onChange?.(key, it.id, before);
-      },
-    });
-    openPopover(b, pop);
+    openPicker(b, { label: f.label, options: f.options, current: values[key], icon: f.icon, onSelect: (v, before) => { values = { ...values, [key]: v }; paint(); onChange?.(key, v, before); } });
   });
   paint();
   return { set(next) { values = { ...next }; paint(); }, get: () => ({ ...values }) };
@@ -709,4 +694,285 @@ export function initComposer(form, { onSubmit }) {
   form.addEventListener('submit', e => { e.preventDefault(); submit(); });
   sync();
   return { submit };
+}
+
+// ── Shortcuts ────────────────────────────────────────────────────────────────
+// One registry for every keyboard shortcut, so the help list only shows what is actually wired.
+// keys: 'mod+k' (⌘ on macOS, Ctrl elsewhere), 'shift+/', 'c', or a sequence 'g l' (press g, then l within 1s).
+// Single-key shortcuts never fire while typing in a field or while an IME is composing; mod+ shortcuts do.
+// external: true lists a key handled elsewhere (list keys, Esc) in the help without dispatching it here.
+const shortcuts = [];
+const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+const KEY_LABEL = { mod: isMac ? '⌘' : 'Ctrl', shift: isMac ? '⇧' : 'Shift', alt: isMac ? '⌥' : 'Alt', enter: 'Enter', escape: 'Esc', space: '空格', up: '↑', down: '↓', home: 'Home', end: 'End', f10: 'F10', '/': '/', '?': '?' };
+export function formatKeys(keys) {
+  return keys.split(' ').map(step => step.split('+').map(k => KEY_LABEL[k] ?? k.toUpperCase()).join(isMac ? '' : '+'));
+}
+function ariaKeys(keys) { return keys.split(' ').map(step => step.split('+').map(k => ({ mod: isMac ? 'Meta' : 'Control', shift: 'Shift', alt: 'Alt' })[k] ?? k.toUpperCase()).join('+')).join(' '); }
+export function registerShortcut(def) {
+  const entry = { group: '通用', when: () => true, ...def };
+  shortcuts.push(entry);
+  return () => { const i = shortcuts.indexOf(entry); if (i >= 0) shortcuts.splice(i, 1); };
+}
+export const listShortcuts = () => shortcuts.filter(s => s.label && (s.external || s.when())).map(({ keys, label, group }) => ({ keys, label, group }));
+const editable = el => el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
+let pending = null, pendingTimer = 0;
+function stepOf(e) {
+  // Shift+/ reports '?' on most layouts but '/' with shiftKey from some input sources; treat both as '?'.
+  const k = e.key === ' ' ? 'space' : e.key === '/' && e.shiftKey ? '?' : e.key.toLowerCase();
+  const mods = [(e.metaKey || e.ctrlKey) && 'mod', e.altKey && 'alt', e.shiftKey && e.key.length !== 1 && 'shift'].filter(Boolean);
+  return [...mods, k === '?' ? '?' : k].join('+');
+}
+if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
+  if (e.isComposing || e.defaultPrevented || e.repeat) return;
+  const step = stepOf(e), typing = editable(e.target);
+  const seq = pending ? `${pending} ${step}` : step;
+  const live = shortcuts.filter(s => !s.external);
+  const hit = live.find(s => s.keys === seq && s.when(e)) || (pending ? live.find(s => s.keys === step && s.when(e)) : null);
+  const modded = step.startsWith('mod+');
+  if (hit && (!typing || modded)) { e.preventDefault(); pending = null; hit.run(e); return; }
+  if (!typing && !modded && live.some(s => s.keys.startsWith(`${step} `) && s.when(e))) {
+    pending = step;
+    clearTimeout(pendingTimer);
+    pendingTimer = setTimeout(() => { pending = null; }, 1000);
+    return;
+  }
+  pending = null;
+});
+
+// ── Toast ────────────────────────────────────────────────────────────────────
+// Transient confirmation after an action, bottom-right (bottom on phones). At most 3 stay; each leaves after 4s,
+// paused while hovered or focused. An optional action (e.g. 撤销) runs once and dismisses. Errors that need a fix belong
+// next to the field or in an inline notice, not in a toast.
+let toastHost = null;
+export function toast(message, { action, duration = 4000 } = {}) {
+  const root = document.querySelector('.aham-workbench');
+  if (!root) return () => {};
+  if (!toastHost || !toastHost.isConnected) {
+    toastHost = document.createElement('section');
+    toastHost.className = 'wb-toasts';
+    toastHost.setAttribute('aria-label', '通知');
+    root.append(toastHost);
+  }
+  const el = document.createElement('div');
+  el.className = 'wb-toast';
+  el.setAttribute('role', 'status');
+  el.innerHTML = `<span>${escapeHtml(message)}</span>${action ? `<button type="button" class="wb-btn sm ghost">${escapeHtml(action.label)}</button>` : ''}`;
+  toastHost.append(el);
+  while (toastHost.children.length > 3) toastHost.firstElementChild.remove();
+  let timer = 0, left = duration, started = Date.now();
+  const dismiss = () => { clearTimeout(timer); el.remove(); };
+  const start = () => { started = Date.now(); timer = setTimeout(dismiss, left); };
+  const pause = () => { clearTimeout(timer); left -= Date.now() - started; };
+  el.addEventListener('mouseenter', pause); el.addEventListener('mouseleave', start);
+  el.addEventListener('focusin', pause); el.addEventListener('focusout', start);
+  el.querySelector('button')?.addEventListener('click', () => { action.run(); dismiss(); });
+  start();
+  return dismiss;
+}
+
+// ── Picker ───────────────────────────────────────────────────────────────────
+// Single-value property picker used by table cells, the properties panel and shortcuts: a command menu anchored to
+// the element being edited, opening on the current value.
+let pickerPop = null;
+export function openPicker(anchor, { label, options, current, icon: optionIcon, onSelect, returnFocus }) {
+  const root = anchor.closest('.aham-workbench') || document.querySelector('.aham-workbench');
+  if (!pickerPop || !pickerPop.isConnected) {
+    pickerPop = document.createElement('div');
+    pickerPop.className = 'wb-popover flush';
+    pickerPop.hidden = true;
+    pickerPop.setAttribute('role', 'dialog');
+    pickerPop.innerHTML = '<div></div>';
+  }
+  const host = anchor.closest('dialog') || root;                       // a modal dialog makes everything outside it inert
+  if (pickerPop.parentElement !== host) host.append(pickerPop);
+  pickerPop.setAttribute('aria-label', `修改${label}`);
+  pickerPop.firstElementChild.className = '';
+  createCommand(pickerPop.firstElementChild, {
+    label, placeholder: `${label}…`, search: options.length > 6,
+    items: options.map(o => ({ id: o, label: o, icon: optionIcon, current: o === current })),
+    onSelect: it => { closePopover('done'); if (it.id !== current) onSelect(it.id, current); },
+  });
+  return openPopover(anchor, pickerPop, { returnFocus });
+}
+
+// ── Command palette ──────────────────────────────────────────────────────────
+// ⌘K / Ctrl+K opens a modal command menu near the top of the window (Circle / Linear). Items come in headed groups;
+// an item with `children` opens a sub-list in place (no cascading menus): Esc or Backspace on an empty query goes back.
+// An optional context chip names the record the commands act on; Backspace on an empty query removes it.
+// groups(ctx) → [{ heading, items: [{ id, label, icon?, keys?, run?(ctx), children?(ctx) → items, keywords? }] }]
+export function initPalette({ root, groups, context }) {
+  const dialog = document.createElement('dialog');
+  dialog.className = 'wb-palette';
+  dialog.setAttribute('aria-label', '命令面板');
+  dialog.innerHTML = '<div class="wb-palette-context" hidden></div><div class="wb-palette-body"></div>';
+  root.append(dialog);
+  const chip = dialog.querySelector('.wb-palette-context'), body = dialog.querySelector('.wb-palette-body');
+  let stack = [], ctx = null, release = null, returnTo = null;
+
+  const flatten = list => list.flatMap((g, gi) => g.items.map(it => ({ ...it, group: gi, heading: g.heading, arrow: Boolean(it.children) })));
+  function page() {
+    const top = stack[stack.length - 1];
+    body.innerHTML = '<div></div>';
+    const cmd = createCommand(body.firstElementChild, {
+      label: top ? top.label : '命令', placeholder: top ? `${top.label}…` : '输入命令或搜索…', empty: '没有匹配的命令',
+      items: top ? top.items.map(it => ({ group: 0, heading: top.label, ...it })) : flatten(groups(ctx)),
+      onSelect: it => {
+        if (it.children) { stack.push({ label: it.label.replace(/…$/, ''), items: it.children(ctx) }); page(); return; }
+        close();
+        it.run?.(ctx);
+      },
+      onBack: () => {
+        if (stack.length) { stack.pop(); page(); }
+        else if (ctx) { ctx = null; paintChip(); page(); }
+      },
+    });
+    cmd.focus();
+  }
+  function paintChip() {
+    chip.hidden = !ctx;
+    chip.innerHTML = ctx ? `<span class="wb-palette-chip"><span class="wb-meta">${escapeHtml(ctx.code ?? '')}</span><span>${escapeHtml(ctx.label)}</span><button type="button" tabindex="-1" aria-label="移除上下文">${icon('close')}</button></span>` : '';
+  }
+  chip.addEventListener('click', e => { if (e.target.closest('button')) { ctx = null; paintChip(); page(); } });
+  function open(start) {
+    if (dialog.open) return;
+    returnTo = document.activeElement;
+    ctx = context?.() ?? null;
+    stack = [];
+    paintChip();
+    dialog.showModal();
+    release = pushLayer(() => { if (stack.length) { stack.pop(); page(); } else close(); });
+    if (start) stack.push(start);
+    page();
+  }
+  function close() {
+    if (!dialog.open) return;
+    release?.();
+    release = null;
+    dialog.close();
+    if (returnTo?.isConnected) returnTo.focus();
+  }
+  dialog.addEventListener('cancel', e => e.preventDefault());           // Esc goes through the layer stack
+  dialog.addEventListener('click', e => { if (e.target === dialog) close(); });
+  registerShortcut({ keys: 'mod+k', label: '打开命令面板', group: '通用', run: () => (dialog.open ? close() : open()) });
+  return { open, close, openAt: (label, items) => open({ label, items }) };
+}
+
+// ── Context menu ─────────────────────────────────────────────────────────────
+// Right-click on a row, or Shift+F10 / the Menu key on a focused row. Grouped actions; the destructive one last.
+// Items with `children` replace the menu in place (Aham: no cascading popovers); ← or Backspace returns.
+// items(row) → [{ id, label, icon?, keys?, danger?, group?, run?(row), children?(row) → items }]
+export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]', items }) {
+  const pop = document.createElement('div');
+  pop.className = 'wb-popover flush menu';
+  pop.hidden = true;
+  pop.setAttribute('role', 'dialog');
+  pop.setAttribute('aria-label', '操作菜单');
+  pop.innerHTML = '<div></div>';
+  root.append(pop);
+  function open(row, point) {
+    const stack = [];
+    const show = () => {
+      const top = stack[stack.length - 1];
+      const list = top ? [{ id: '__back', label: `返回 · ${top.label}`, icon: 'chevron-left', group: -1 }, ...top.items.map(it => ({ ...it, group: 0 }))] : items(row);
+      createCommand(pop.firstElementChild, {
+        role: 'menu', search: false, label: top ? top.label : '操作',
+        items: list.map(it => ({ ...it, arrow: Boolean(it.children) })),
+        onSelect: it => {
+          if (it.id === '__back') { stack.pop(); show(); return; }
+          if (it.children) { stack.push({ label: it.label, items: it.children(row) }); show(); return; }
+          closePopover('done');
+          it.run?.(row);
+        },
+        onBack: () => { if (stack.length) { stack.pop(); show(); } },
+      });
+      pop.querySelector('[role=menu]').focus();
+      activePopover()?.place();
+    };
+    show();
+    const r = row.getBoundingClientRect();
+    openPopover(row, pop, { point: point ?? { x: r.left + 48, y: r.top + r.height / 2 }, returnFocus: row });
+    pop.querySelector('[role=menu]').focus();
+  }
+  target.addEventListener('contextmenu', e => {
+    const row = e.target.closest(rowSelector);
+    if (!row) return;
+    e.preventDefault();
+    open(row, { x: e.clientX, y: e.clientY });
+  });
+  target.addEventListener('keydown', e => {
+    const row = e.target.closest?.(rowSelector);
+    if (row && e.target === row && (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10'))) { e.preventDefault(); open(row); }
+  });
+  return { open };
+}
+
+// ── Create dialog ────────────────────────────────────────────────────────────
+// Quick create, as Circle's new-issue modal: borderless title, description, property chips that open pickers,
+// then 继续新建 and the primary button. ⌘/Ctrl+Enter creates. Closing with unsaved text asks in place
+// (继续编辑 / 放弃 / 创建) instead of stacking a second modal. The title error is shown under the title.
+// fields: [{ key, label, options, icon?, value? }]; onSubmit({ title, description, ...props }) → true when saved.
+// returnFocus: where focus goes on close when the element that opened the dialog was re-rendered meanwhile.
+export function openCreateDialog({ root, title: heading, scope, fields = [], onSubmit, returnFocus }) {
+  const dialog = document.createElement('dialog');
+  dialog.className = 'wb-create';
+  dialog.setAttribute('aria-labelledby', 'wb-create-title');
+  const props = Object.fromEntries(fields.map(f => [f.key, f.value ?? '']));
+  dialog.innerHTML = `<form method="dialog" novalidate>
+    <div class="wb-create-head">${scope ? `<span class="wb-create-scope">${escapeHtml(scope)}</span>${icon('chevron-right')}` : ''}<span id="wb-create-title">${escapeHtml(heading)}</span></div>
+    <input class="wb-create-name" name="title" aria-label="标题" placeholder="标题" maxlength="200" autocomplete="off" aria-describedby="wb-create-error">
+    <p class="wb-value-error" id="wb-create-error" role="alert"></p>
+    <textarea class="wb-create-desc" name="description" aria-label="说明" placeholder="补充说明…" rows="3" maxlength="2000"></textarea>
+    <div class="wb-create-props">${fields.map(f => `<button type="button" class="wb-btn sm" data-create-prop="${escapeHtml(f.key)}" aria-haspopup="dialog" aria-expanded="false"></button>`).join('')}</div>
+    <div class="wb-create-foot">
+      <label class="wb-switch"><input type="checkbox" name="more"><span aria-hidden="true"></span>继续新建</label>
+      <div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="cancel">取消</button><button type="submit" class="wb-btn sm primary">创建</button></div>
+    </div>
+    <div class="wb-create-foot wb-create-confirm" hidden><span>有未保存的内容。</span><div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="keep">继续编辑</button><button type="button" class="wb-btn sm ghost danger" data-create="discard">放弃</button><button type="button" class="wb-btn sm primary" data-create="save">创建</button></div></div>
+  </form>`;
+  root.append(dialog);
+  const form = dialog.querySelector('form'), name = form.title, desc = form.description, err = dialog.querySelector('#wb-create-error');
+  const [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
+  const returnTo = document.activeElement;
+  const paintProps = () => dialog.querySelectorAll('[data-create-prop]').forEach(b => {
+    const f = fields.find(x => x.key === b.dataset.createProp), v = props[f.key];
+    b.innerHTML = `${f.icon ? icon(f.icon) : ''}<span>${escapeHtml(v || f.label)}</span>`;
+    b.classList.toggle('is-empty', !v);
+    b.setAttribute('aria-label', `${f.label}：${v || '未设置'}`);
+  });
+  const dirty = () => Boolean(name.value.trim() || desc.value.trim());
+  let release = null;
+  function finish() { release?.(); dialog.close(); dialog.remove(); (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.(); }
+  function askClose() {
+    if (!dirty()) { finish(); return; }
+    foot.hidden = true; confirm.hidden = false;
+    confirm.querySelector('[data-create="keep"]').focus();
+  }
+  async function submit() {
+    const t = name.value.trim();
+    if (!t) { err.textContent = '请填写标题。'; name.setAttribute('aria-invalid', 'true'); name.focus(); foot.hidden = false; confirm.hidden = true; return; }
+    const ok = await onSubmit({ title: t, description: desc.value.trim(), ...props });
+    if (!ok) return;
+    if (form.more.checked) { name.value = ''; desc.value = ''; err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
+    finish();
+  }
+  dialog.addEventListener('cancel', e => e.preventDefault());
+  form.addEventListener('submit', e => { e.preventDefault(); submit(); });
+  form.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); } });
+  name.addEventListener('input', () => { err.textContent = ''; name.removeAttribute('aria-invalid'); });
+  dialog.addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    if (b.dataset.createProp) {
+      const f = fields.find(x => x.key === b.dataset.createProp);
+      openPicker(b, { label: f.label, options: f.options, current: props[f.key], icon: f.icon, onSelect: v => { props[f.key] = v; paintProps(); } });
+    } else if (b.dataset.create === 'cancel') askClose();
+    else if (b.dataset.create === 'keep') { foot.hidden = false; confirm.hidden = true; name.focus(); }
+    else if (b.dataset.create === 'discard') finish();
+    else if (b.dataset.create === 'save') submit();
+  });
+  paintProps();
+  dialog.showModal();
+  release = pushLayer(() => (confirm.hidden ? askClose() : (foot.hidden = false, confirm.hidden = true, name.focus())));
+  name.focus();
+  return { close: finish };
 }

@@ -1,0 +1,60 @@
+{
+  "slug": "cell-picker",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-actions.html",
+  "intent": "表格单元格与属性值的就地修改：点击打开命令菜单，选中即保存，可撤销",
+  "specification": "WORKBENCH.md §12.4",
+  "reference": "examples/customer-list.html",
+  "api": "openPicker(anchor, { label, options, current, icon?, onSelect(value, before), returnFocus? })",
+  "variantDimensions": [
+    {
+      "axis": "field",
+      "values": [
+        "status",
+        "owner"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "cell-button",
+      "picker",
+      "toast-undo"
+    ],
+    "required": [
+      "cell-button",
+      "picker"
+    ]
+  },
+  "markup": {
+    "cell": "<td><button class=\"wb-cell-picker\" aria-haspopup=\"dialog\" aria-label=\"阶段：方案评估，点击修改\"><span class=\"wb-status\"><b></b>方案评估</span></button></td>"
+  },
+  "rules": [
+    "单元格按钮悬停灰底，点击在下方打开命令菜单",
+    "高亮停在当前值，选中即保存并关闭",
+    "同一修改可从右键菜单、命令面板、S / A 进入，共用一个修改函数",
+    "修改后提示条带「撤销」；以服务端结果为准，失败恢复原值"
+  ],
+  "states": [
+    "default",
+    "hover",
+    "open",
+    "saving",
+    "error"
+  ],
+  "keyboard": [
+    "单元格按钮可 Tab 到达；当前行按 S / A 打开对应字段"
+  ],
+  "accessibility": [
+    "按钮可访问名为「字段：值，点击修改」"
+  ],
+  "doNotInvent": [
+    "原生下拉框",
+    "行内输入框直接改枚举值",
+    "无撤销的批量静默修改"
+  ]
+}

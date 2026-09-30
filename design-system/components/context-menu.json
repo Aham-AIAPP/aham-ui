@@ -1,0 +1,58 @@
+{
+  "slug": "context-menu",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-actions.html",
+  "intent": "行的右键菜单：分组动作，下级选项原地替换",
+  "specification": "WORKBENCH.md §12.3",
+  "reference": "examples/customer-list.html",
+  "api": "initContextMenu({ root, target, rowSelector, items(row) }) → { open(row, point?) }",
+  "variantDimensions": [
+    {
+      "axis": "level",
+      "values": [
+        "root",
+        "sub-list"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "menu",
+      "group",
+      "item",
+      "key-hint",
+      "back-item",
+      "danger-item"
+    ],
+    "required": [
+      "menu",
+      "item"
+    ]
+  },
+  "rules": [
+    "右键或 Shift + F10 / 菜单键打开；宽 256px；出现在鼠标位置或当前行左侧",
+    "分组：属性 → 打开类 → 复制类 → 破坏性（红色文字，最后）",
+    "下级选项在同一菜单里替换，首项「返回」；← 或退格返回",
+    "关闭后焦点回到行"
+  ],
+  "states": [
+    "root",
+    "sub-list"
+  ],
+  "keyboard": [
+    "Shift + F10 / 菜单键 打开",
+    "↑↓ 移动，Enter 执行，← / 退格返回，Esc 关闭"
+  ],
+  "accessibility": [
+    "role=\"menu\" / \"menuitem\"，快捷键项带 aria-keyshortcuts"
+  ],
+  "doNotInvent": [
+    "级联子菜单",
+    "蓝色破坏性操作",
+    "只能用鼠标打开"
+  ]
+}

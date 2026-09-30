@@ -1,5 +1,5 @@
 // Record detail sample: composes the design-system detail patterns with fictional demo data.
-import {initShell, initPropertyPickers, initComposer, icon, escapeHtml as esc} from '../workbench.js';
+import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../workbench.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './customer-list-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -83,17 +83,45 @@ $('#record-next').addEventListener('click', () => go(1));
 document.title = `${record.name} · Aham UI`;
 
 const labels = { stage: '阶段', owner: '负责人', industry: '行业' };
-initPropertyPickers({
+function applyChange(key, value, before, { undoable = true } = {}) {
+  record[key] = value;
+  activity.push({ kind: 'event', icon: key === 'owner' ? 'user' : 'refresh', who: ME, text: `把${labels[key]}从「${before}」改为「${value}」`, when: '刚刚' });
+  pickers.set({ stage: record.stage, owner: record.owner, industry: record.industry });
+  renderMeta();
+  renderActivity();
+  if (undoable) toast(`已把${labels[key]}改为「${value}」`, { action: { label: '撤销', run: () => applyChange(key, before, value, { undoable: false }) } });
+}
+const pickers = initPropertyPickers({
   root, container: $('#record-props'),
   fields: { stage: { label: '阶段', options: STAGES }, owner: { label: '负责人', options: OWNERS, icon: 'user' }, industry: { label: '行业', options: INDUSTRIES } },
   value: { stage: record.stage, owner: record.owner, industry: record.industry },
-  onChange: (key, value, before) => {
-    record[key] = value;
-    activity.push({ kind: 'event', icon: key === 'owner' ? 'user' : 'refresh', who: ME, text: `把${labels[key]}从「${before}」改为「${value}」`, when: '刚刚' });
-    renderMeta();
-    renderActivity();
-  },
+  onChange: (key, value, before) => applyChange(key, value, before),
 });
+const options = { stage: STAGES, owner: OWNERS, industry: INDUSTRIES };
+const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys, group: k.group, heading: k.group }));
+const palette = initPalette({
+  root,
+  context: () => ({ id: record.id, code: record.code, label: record.name }),
+  groups: ctx => [
+    ...(ctx ? [{ heading: '当前记录', items: [
+      ...['stage', 'owner', 'industry'].map(key => ({ id: key, label: key === 'owner' ? '分配给…' : `修改${labels[key]}…`, icon: key === 'owner' ? 'user' : 'success', keys: { stage: 's', owner: 'a' }[key], children: () => options[key].map(o => ({ id: o, label: o, current: o === record[key], run: () => { if (o !== record[key]) applyChange(key, o, record[key]); } })) })),
+      { id: 'comment', label: '写评论', icon: 'edit', run: () => $('#composer textarea').focus() },
+    ] }] : []),
+    { heading: '跳转', items: [
+      { id: 'prev', label: '上一条', icon: 'chevron-up', keys: 'k', run: () => go(-1) },
+      { id: 'next', label: '下一条', icon: 'chevron-down', keys: 'j', run: () => go(1) },
+      { id: 'back', label: '返回列表', icon: 'arrow-left', run: () => { location.href = $('#back-link').href; } },
+    ] },
+    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
+  ],
+});
+registerShortcut({ keys: 's', label: '修改阶段', group: '详情', run: () => $('[data-prop="stage"]').click() });
+registerShortcut({ keys: 'a', label: '修改负责人', group: '详情', run: () => $('[data-prop="owner"]').click() });
+registerShortcut({ keys: 'k', label: '上一条', group: '详情', when: () => pos > 0, run: () => go(-1) });
+registerShortcut({ keys: 'j', label: '下一条', group: '详情', when: () => pos < nav.ids.length - 1, run: () => go(1) });
+registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
+registerShortcut({ keys: 'mod+enter', label: '发送评论（在评论框内）', group: '详情', external: true });
+registerShortcut({ keys: 'escape', label: '关闭最上层的浮层', group: '通用', external: true });
 initComposer($('#composer'), {
   onSubmit: text => { activity.push({ kind: 'comment', who: ME, text, when: '刚刚' }); renderActivity(); return true; },
 });

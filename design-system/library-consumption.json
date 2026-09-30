@@ -55,6 +55,11 @@
       "purpose": "列表键盘、属性栏、动态流的各种状态（由 workbench.js 实际渲染）"
     },
     {
+      "file": "preview/workbench-actions.html",
+      "priority": 7,
+      "purpose": "命令面板、右键菜单、单元格修改、提示条、新建弹窗、保留快捷键"
+    },
+    {
       "file": "examples/crm-quotation.html",
       "priority": 8,
       "purpose": "可运行的虚构单据示例"

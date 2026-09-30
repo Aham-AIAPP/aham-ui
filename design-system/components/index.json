@@ -179,6 +179,42 @@
       "name": "Activity Feed",
       "confidence": "high",
       "variantCount": 2
+    },
+    {
+      "slug": "command-palette",
+      "name": "Command Palette",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "shortcuts",
+      "name": "Shortcuts",
+      "confidence": "high",
+      "variantCount": 4
+    },
+    {
+      "slug": "context-menu",
+      "name": "Context Menu",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "cell-picker",
+      "name": "Cell Picker",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "toast",
+      "name": "Toast",
+      "confidence": "high",
+      "variantCount": 3
+    },
+    {
+      "slug": "create-dialog",
+      "name": "Create Dialog",
+      "confidence": "high",
+      "variantCount": 2
     }
   ]
 }

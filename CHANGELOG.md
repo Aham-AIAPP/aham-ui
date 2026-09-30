@@ -6,6 +6,7 @@
 
 ## [Unreleased]
 ### 变更
+- 快速操作（7.2 P4）：⌘K 命令面板（上下文标签、分组、子列表原地替换）、统一快捷键表与 ? 帮助、行右键菜单（Shift + F10，下级原地替换）、单元格就地改属性、右下角提示条（带撤销）、新建弹窗（继续新建、⌘ Enter、原地放弃确认）。新增 `initPalette` / `registerShortcut` / `initContextMenu` / `openPicker` / `toast` / `openCreateDialog`、6 个契约、规范 WORKBENCH §12、预览页 `preview/workbench-actions.html`；保留快捷键写入 `components/shortcuts.json`。
 - 列表键盘、预览与记录详情（7.2 P3）：当前行 ↑↓ 移动、空格预览、Enter 打开、x 勾选；详情页一条页眉带位置与上一条 / 下一条，720px 居中主内容，240px「标签 + 值」属性栏，动态流与 ⌘ / Ctrl + Enter 评论框。新增 `initListKeys` / `initPropertyPickers` / `initComposer`、契约 `list-keyboard` / `record-detail` / `properties-panel` / `activity-feed`、规范 WORKBENCH §11、预览页 `preview/workbench-detail.html`、示例 `examples/record-detail.html`。
 - 筛选改为 Circle / Linear 方式：「筛选」描边按钮（有条件后缩成图标）→ 命令菜单选字段、快速筛选选项值 → 页眉下方筛选行显示四段式条件标签，行首添加、行尾清除；选项勾选即生效，文本 / 数字 / 日期边输入边生效。「显示」改为填充按钮，调整过加墨色圆点；显示选项改为分组 / 排序 / 行高 + 属性标签。
 - 新增通用组件 `createCommand`（命令菜单）、`initFilter`、`initDisplay`，筛选语义 `FILTER_OPERATORS` / `matchesFilter` / 网址读写移入 `workbench.js`；新增契约 `command-menu`、状态预览页 `preview/workbench-filter.html`、规范 WORKBENCH §10。工作台浮层加 1px 描边、圆角 8px。

@@ -1,0 +1,76 @@
+{
+  "slug": "shortcuts",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-actions.html",
+  "intent": "统一快捷键表：登记后才能出现在界面提示和帮助列表里",
+  "specification": "WORKBENCH.md §12.2",
+  "reference": "examples/customer-list.html",
+  "api": "registerShortcut({ keys, label, group, when?, run?, external? }) / listShortcuts() / formatKeys(keys)",
+  "variantDimensions": [
+    {
+      "axis": "scope",
+      "values": [
+        "global",
+        "list",
+        "detail",
+        "input"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "registry",
+      "help-list",
+      "kbd-hint"
+    ],
+    "required": [
+      "registry"
+    ]
+  },
+  "reserved": {
+    "mod+k": "命令面板",
+    "mod+b": "展开 / 收起导航",
+    "?": "键盘快捷键",
+    "escape": "关闭最上层的浮层",
+    "c": "新建当前页的对象",
+    "/": "搜索",
+    "up": "上一行",
+    "down": "下一行",
+    "home": "第一行",
+    "end": "最后一行",
+    "space": "预览当前行",
+    "enter": "打开当前行",
+    "x": "勾选当前行",
+    "s": "修改状态类主属性",
+    "a": "修改负责人",
+    "shift+f10": "当前行的操作菜单",
+    "j": "下一条",
+    "k": "上一条",
+    "mod+enter": "提交评论或新建"
+  },
+  "rules": [
+    "单字母快捷键只在焦点不在输入框、输入法未组字时生效；mod 组合键在输入框里也生效",
+    "保留键不得改作他用；新增快捷键先登记再显示提示",
+    "帮助列表按组显示已登记的按键，由 ? 打开",
+    "macOS 显示 ⌘ ⇧ ⌥，其他系统显示 Ctrl Shift Alt"
+  ],
+  "states": [
+    "idle",
+    "sequence-pending"
+  ],
+  "keyboard": [
+    "? 打开帮助"
+  ],
+  "accessibility": [
+    "有快捷键的菜单项带 aria-keyshortcuts"
+  ],
+  "doNotInvent": [
+    "界面上显示没登记的快捷键",
+    "在输入框里拦截单字母键",
+    "把保留键挪作他用"
+  ]
+}
