@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workbench Detail — Aham UI Preview</title>
+  <link rel="stylesheet" href="../workbench.css">
+  <style>
+body { margin: 0; }
+/* Preview scaffold only; component styles come from workbench.css. */
+.pv { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; display: grid; gap: 32px; }
+.pv h1 { font-size: 20px; font-weight: 500; }
+.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
+.pv-story { display: grid; gap: 12px; }
+.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
+.pv-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.pv-frame { border-radius: 8px; box-shadow: 0 0 0 1px var(--wb-line); overflow: hidden; background: var(--wb-bg); }
+.pv-frame .wb-header-row:last-child { border-bottom: 0; }
+.pv-cap { display: block; margin-top: 8px; color: var(--wb-muted); font-size: 12px; }
+.pv .wb-popover.pv-static { position: static; max-height: none; }
+.pv-props { width: 240px; }
+.pv-feed { max-width: 560px; }
+  </style>
+</head>
+<body>
+<div class="aham-workbench wb-bare" data-theme="light">
+<main class="pv">
+  <header><h1>列表键盘、预览与记录详情 · 状态预览</h1></header>
+  <p>结构与交互照 Circle / Linear，颜色、字体、圆角取 Aham。表格、属性栏、评论框都是 <code>workbench.js</code> 的实际组件，可以直接操作。规则见 WORKBENCH §11。</p>
+
+  <section class="pv-story">
+    <div class="pv-label">详情页页眉 · 位置与上一条 / 下一条</div>
+    <div class="pv-row">
+      <div><div class="pv-frame"><div class="wb-header-row" style="width:460px"><nav class="wb-crumbs" aria-label="当前位置"><span>客户</span><span>/</span><strong aria-current="page">CUS-2026-0033</strong></nav><div class="wb-record-nav"><span>3 / 36</span><button type="button" class="wb-icon-btn" aria-label="上一条" data-i="chevron-up"></button><button type="button" class="wb-icon-btn" aria-label="下一条" data-i="chevron-down"></button></div></div></div><span class="pv-cap">中间某条：两个按钮都可用</span></div>
+      <div><div class="pv-frame"><div class="wb-header-row" style="width:460px"><nav class="wb-crumbs" aria-label="当前位置"><span>客户</span><span>/</span><strong aria-current="page">CUS-2026-0001</strong></nav><div class="wb-record-nav"><span>1 / 36</span><button type="button" class="wb-icon-btn" aria-label="上一条" data-i="chevron-up" disabled></button><button type="button" class="wb-icon-btn" aria-label="下一条" data-i="chevron-down"></button></div></div></div><span class="pv-cap">第一条：上一条不可用</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">列表键盘 · 焦点行与正在预览的行</div>
+    <div class="pv-frame"><table class="wb-table wb-list-table" id="pv-table" style="min-width:0">
+      <colgroup><col style="width:var(--wb-check-col)"><col><col style="width:96px"><col style="width:96px"></colgroup>
+      <thead><tr><th scope="col" class="wb-check"><span class="wb-sr-only">勾选</span></th><th scope="col">名称</th><th scope="col">负责人</th><th scope="col">阶段</th></tr></thead>
+      <tbody>
+        <tr data-id="1"><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 远川精密制造"></label></td><td>远川精密制造有限公司</td><td>林悦</td><td><span class="wb-status"><b></b>方案评估</span></td></tr>
+        <tr data-id="2" data-previewing><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 临江包装材料"></label></td><td>临江包装材料有限公司（正在预览）</td><td>周航</td><td><span class="wb-status"><b></b>需求调研</span></td></tr>
+        <tr data-id="3"><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 北岸汽车零部件"></label></td><td>北岸汽车零部件有限公司</td><td>林悦</td><td><span class="wb-status"><b></b>商务谈判</span></td></tr>
+      </tbody>
+    </table></div>
+    <span class="pv-cap" id="pv-keys">点一下表格里的行，再用 ↑↓ 移动、空格预览、Enter 打开、x 勾选，这里会显示触发的动作。键盘焦点行为浅灰底加蓝色细边线。</span>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">属性栏 · 可编辑值、只读值、空值、打开的选择菜单</div>
+    <div class="pv-row">
+      <div class="pv-frame pv-props"><div class="wb-props" id="pv-props">
+        <section class="wb-props-section"><h2 class="wb-props-title">属性</h2>
+          <div class="wb-prop"><span>阶段</span><button type="button" class="wb-prop-value" data-prop="stage"></button></div>
+          <div class="wb-prop"><span>负责人</span><button type="button" class="wb-prop-value" data-prop="owner"></button></div>
+          <div class="wb-prop"><span>行业</span><button type="button" class="wb-prop-value" data-prop="industry"></button></div>
+        </section>
+        <section class="wb-props-section"><h2 class="wb-props-title">信息</h2>
+          <div class="wb-prop"><span>编码</span><span class="wb-prop-value wb-mono">CUS-2026-0033</span></div>
+          <div class="wb-prop"><span>年度金额</span><span class="wb-prop-value wb-mono">1,254,000.00</span></div>
+        </section>
+      </div></div>
+      <div><div class="wb-popover flush pv-static" id="pv-picker"><div></div></div><span class="pv-cap">点「阶段」后打开的菜单：当前值字重 500，选中即保存</span></div>
+    </div>
+  </section>
+
+  <section class="pv-story">
+    <div class="pv-label">动态 · 事件、评论与评论框</div>
+    <div class="pv-feed">
+      <div class="wb-activity" role="log" aria-live="polite" id="pv-feed">
+        <div class="wb-activity-event"><span class="wb-activity-icon" data-i="edit"></span><span><strong>林悦</strong> 创建了记录</span><span class="wb-activity-time">· 08-10</span></div>
+        <article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">周</span><strong>周航</strong><span>09-27</span></div><p>已约好下周二现场调研，先确认设备接口清单。</p></article>
+        <div class="wb-activity-event"><span class="wb-activity-icon" data-i="refresh"></span><span><strong>林悦</strong> 把阶段从「需求调研」改为「方案评估」</span><span class="wb-activity-time">· 09-28</span></div>
+      </div>
+      <form class="wb-composer" id="pv-composer" aria-label="写评论"><textarea rows="2" aria-label="评论内容" placeholder="写评论…"></textarea><div class="wb-composer-foot"><span>⌘ / Ctrl + Enter 发送 · 预览不保存</span><button type="submit" class="wb-btn sm primary">发送</button></div></form>
+    </div>
+  </section>
+</main>
+</div>
+<script type="module">
+import {icon, createCommand, initListKeys, initPropertyPickers, initComposer, escapeHtml} from '../workbench.js';
+const root = document.querySelector('.aham-workbench');
+root.querySelectorAll('[data-i]').forEach(el => { el.innerHTML = icon(el.dataset.i); });
+
+const say = text => { document.querySelector('#pv-keys').textContent = text; };
+const keys = initListKeys({
+  table: document.querySelector('#pv-table'),
+  onMove: id => say(`当前行：第 ${id} 行`),
+  onPreview: id => say(`空格：预览第 ${id} 行`),
+  onOpen: id => say(`Enter：打开第 ${id} 行的详情`),
+  onToggle: id => { const box = document.querySelector(`#pv-table tr[data-id="${id}"] input`); box.checked = !box.checked; say(`x：${box.checked ? '勾选' : '取消勾选'}第 ${id} 行`); },
+});
+keys.refresh();
+
+const stages = ['初次接触', '需求调研', '方案评估', '商务谈判', '已签约'];
+initPropertyPickers({
+  root, container: document.querySelector('#pv-props'),
+  fields: { stage: { label: '阶段', options: stages }, owner: { label: '负责人', options: ['林悦', '周航', '许宁'], icon: 'user' }, industry: { label: '行业', options: ['装备制造', '电子'] } },
+  value: { stage: '方案评估', owner: '林悦', industry: '' },
+});
+createCommand(document.querySelector('#pv-picker > div'), { label: '阶段', search: false, items: stages.map(s => ({ id: s, label: s, current: s === '方案评估' })), onSelect() {} });
+
+initComposer(document.querySelector('#pv-composer'), {
+  onSubmit: text => {
+    document.querySelector('#pv-feed').insertAdjacentHTML('beforeend', `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">林</span><strong>林悦</strong><span>刚刚</span></div><p>${escapeHtml(text)}</p></article>`);
+    return true;
+  },
+});
+</script>
+</body>
+</html>

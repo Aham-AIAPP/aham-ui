@@ -155,6 +155,30 @@
       "name": "Command Menu",
       "confidence": "high",
       "variantCount": 2
+    },
+    {
+      "slug": "list-keyboard",
+      "name": "List Keyboard",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "record-detail",
+      "name": "Record Detail",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "properties-panel",
+      "name": "Properties Panel",
+      "confidence": "high",
+      "variantCount": 3
+    },
+    {
+      "slug": "activity-feed",
+      "name": "Activity Feed",
+      "confidence": "high",
+      "variantCount": 2
     }
   ]
 }

@@ -1,0 +1,68 @@
+{
+  "slug": "record-detail",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-detail.html",
+  "intent": "无明细表的记录详情页：页眉位置与上下条、居中主内容、240px 属性栏",
+  "specification": "WORKBENCH.md §11.3",
+  "reference": "examples/record-detail.html",
+  "variantDimensions": [
+    {
+      "axis": "context",
+      "values": [
+        "from-list",
+        "direct"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "header-row",
+      "crumbs",
+      "record-nav",
+      "main",
+      "title",
+      "meta",
+      "body",
+      "related",
+      "activity",
+      "properties-panel"
+    ],
+    "required": [
+      "header-row",
+      "main",
+      "properties-panel"
+    ]
+  },
+  "markup": {
+    "recordNav": "<div class=\"wb-record-nav\"><span>3 / 36</span><button class=\"wb-icon-btn\" aria-label=\"上一条\">[chevron-up]</button><button class=\"wb-icon-btn\" aria-label=\"下一条\">[chevron-down]</button></div>",
+    "layout": "<div class=\"wb-detail\"><div class=\"wb-detail-scroll\"><main class=\"wb-detail-main\">…</main></div><aside class=\"wb-panel wb-props\">…</aside></div>"
+  },
+  "rules": [
+    "页眉只用 1 条；右侧显示「位置 / 总数」与上一条、下一条",
+    "位置来自进入详情前的列表顺序，没有上下文时用全部记录",
+    "面包屑的列表链接保留原筛选与视图",
+    "主内容最宽 720px 居中，留白 32px；属性栏 240px 单独滚动；1024px 及以下属性栏移到主内容后方",
+    "标题 24px 字重 500；摘要行放状态点 + 文字、编码、负责人",
+    "有明细表和金额的单据用单据页（§4–6），不用本页型"
+  ],
+  "states": [
+    "default",
+    "first-record",
+    "last-record",
+    "no-list-context"
+  ],
+  "keyboard": [
+    "上一条 / 下一条按钮可 Tab 到达，首尾时不可用"
+  ],
+  "accessibility": [
+    "主内容滚动区与属性栏各有可访问名并可聚焦滚动"
+  ],
+  "doNotInvent": [
+    "页面级大标题区叠在页眉之上",
+    "属性栏里重复主内容的正文"
+  ]
+}

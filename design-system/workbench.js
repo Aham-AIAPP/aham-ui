@@ -83,7 +83,8 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
 
 // ── Side panels ──────────────────────────────────────────────────────────────
 // One panel open at a time. Narrow screens: wide panels float over the content, start closed,
-// take focus when opened and close with Esc.
+// take focus when opened and close with Esc. show(id, { layer: true, returnTo }) also lets Esc close an inline panel,
+// e.g. a preview opened with Space from a list row; focus then goes back to `returnTo`.
 export function initPanels(root = document.querySelector('.aham-workbench')) {
   if (!root) return null;
   const toggles = [...root.querySelectorAll('[data-panel-toggle]')];
@@ -92,7 +93,7 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
   const floating = p => narrow.matches && p?.dataset.size === 'wide';
   let current = null, release = null;
 
-  function show(id, { focus = false } = {}) {
+  function show(id, { focus = false, layer = false, returnTo = null } = {}) {
     release?.();
     release = null;
     current = id;
@@ -103,10 +104,10 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
       if (p) p.hidden = !on;
     }
     const p = panelOf(id);
-    if (floating(p)) {
-      const opener = toggles.find(t => t.dataset.panelToggle === id);
+    if (p && (floating(p) || layer)) {
+      const opener = returnTo || toggles.find(t => t.dataset.panelToggle === id);
       release = pushLayer(() => { show(null); opener?.focus(); });
-      if (focus) p.focus();
+      if (focus && floating(p)) p.focus();
     }
   }
   toggles.forEach(t => t.addEventListener('click', () => show(t.getAttribute('aria-pressed') === 'true' ? null : t.dataset.panelToggle, { focus: true })));
@@ -265,6 +266,8 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
   list.addEventListener('click', e => { const li = e.target.closest('[role=option]'); if (li) choose(Number(li.dataset.index)); });
   const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); } };
   render();
+  const start = shown.findIndex(it => it.current);                 // pickers open with the current value highlighted
+  if (start > 0) highlight(start);
   return api;
 }
 
@@ -594,4 +597,116 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
     get: () => structuredClone(state),
     set(next) { state = structuredClone(next); renderTrigger(); if (!pop.hidden) renderPop(); },
   };
+}
+
+// ── List keyboard ────────────────────────────────────────────────────────────
+// Linear-style row navigation on a native table. One row (the current row) is in the tab order (roving tabindex);
+// ↑↓ / Home / End move it, Space toggles the preview, Enter opens the record, x toggles its selection.
+// Keys act only when the row itself has focus, so checkboxes, links and inputs inside the row keep their own keys.
+// Call refresh() after every re-render. The table is not declared an ARIA grid (cells are not individually navigable).
+export function initListKeys({ table, onPreview, onOpen, onToggle, onMove }) {
+  let current = null;
+  const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
+  const idOf = tr => tr?.dataset.id ?? null;
+  function refresh() {
+    const list = rows();
+    if (!list.some(tr => idOf(tr) === current)) current = idOf(list[0]);
+    list.forEach(tr => { tr.tabIndex = idOf(tr) === current ? 0 : -1; });
+  }
+  function focusRow(tr) {
+    if (!tr) return;
+    current = idOf(tr);
+    refresh();
+    tr.focus();
+    tr.scrollIntoView({ block: 'nearest' });
+    onMove?.(current);
+  }
+  table.addEventListener('keydown', e => {
+    const tr = e.target.closest?.('tr[data-id]');
+    if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
+    const list = rows(), i = list.indexOf(tr);
+    switch (e.key) {
+      case 'ArrowDown': e.preventDefault(); focusRow(list[Math.min(i + 1, list.length - 1)]); break;
+      case 'ArrowUp': e.preventDefault(); focusRow(list[Math.max(i - 1, 0)]); break;
+      case 'Home': e.preventDefault(); focusRow(list[0]); break;
+      case 'End': e.preventDefault(); focusRow(list[list.length - 1]); break;
+      case ' ': e.preventDefault(); onPreview?.(idOf(tr)); break;
+      case 'Enter': e.preventDefault(); onOpen?.(idOf(tr)); break;
+      case 'x': case 'X': e.preventDefault(); onToggle?.(idOf(tr)); break;
+    }
+  });
+  table.addEventListener('focusin', e => {
+    const tr = e.target.closest?.('tr[data-id]');
+    if (tr && idOf(tr) !== current) { current = idOf(tr); refresh(); }
+  });
+  return { refresh, current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id)) ?? rows()[0]) };
+}
+
+// ── Property pickers ─────────────────────────────────────────────────────────
+// Properties panel values that open a command menu (Circle's status / assignee pickers). Buttons [data-prop="key"]
+// inside `root`; fields: { key: { label, options, icon? } }. The current value is marked; choosing closes and reports.
+export function initPropertyPickers({ root, container, fields, value, onChange }) {
+  let values = { ...value };
+  const pop = document.createElement('div');
+  pop.className = 'wb-popover flush';
+  pop.hidden = true;
+  pop.setAttribute('role', 'dialog');
+  pop.innerHTML = '<div></div>';
+  root.append(pop);
+  function paint() {
+    container.querySelectorAll('[data-prop]').forEach(b => {
+      const key = b.dataset.prop, f = fields[key], v = values[key];
+      b.classList.toggle('is-empty', !v);
+      b.innerHTML = `${f.icon ? icon(f.icon) : ''}<span>${escapeHtml(v || `设置${f.label}`)}</span>`;
+      b.setAttribute('aria-label', `${f.label}：${v || '未设置'}，点击修改`);
+      b.setAttribute('aria-haspopup', 'dialog');
+      if (!b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
+    });
+  }
+  container.addEventListener('click', e => {
+    const b = e.target.closest('[data-prop]');
+    if (!b) return;
+    const key = b.dataset.prop, f = fields[key];
+    pop.setAttribute('aria-label', `修改${f.label}`);
+    createCommand(pop.firstElementChild, {
+      label: f.label, placeholder: `${f.label}…`, search: f.options.length > 6,
+      items: f.options.map(o => ({ id: o, label: o, icon: f.icon, current: o === values[key] })),
+      onSelect: it => {
+        const before = values[key];
+        values = { ...values, [key]: it.id };
+        closePopover('done');
+        paint();
+        if (before !== it.id) onChange?.(key, it.id, before);
+      },
+    });
+    openPopover(b, pop);
+  });
+  paint();
+  return { set(next) { values = { ...next }; paint(); }, get: () => ({ ...values }) };
+}
+
+// ── Composer ─────────────────────────────────────────────────────────────────
+// Comment box: ⌘/Ctrl+Enter or the send button submits; Enter alone adds a line; nothing is sent while an IME is
+// composing or the text is blank. onSubmit(text) returns true (or a promise of true) when the comment was saved.
+export function initComposer(form, { onSubmit }) {
+  const area = form.querySelector('textarea'), send = form.querySelector('[type=submit]');
+  const sync = () => { send.disabled = !area.value.trim(); };
+  async function submit() {
+    const text = area.value.trim();
+    if (!text) return;
+    send.disabled = true;
+    form.setAttribute('aria-busy', 'true');
+    let ok = false;
+    try { ok = await onSubmit(text); } finally { form.removeAttribute('aria-busy'); }
+    if (ok) area.value = '';
+    sync();
+    area.focus();
+  }
+  area.addEventListener('input', sync);
+  area.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); }
+  });
+  form.addEventListener('submit', e => { e.preventDefault(); submit(); });
+  sync();
+  return { submit };
 }

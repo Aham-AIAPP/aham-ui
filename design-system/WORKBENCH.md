@@ -107,7 +107,7 @@
 
 类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，本例不下载字体；安装 Inter / JetBrains 或由产品合法自托管即可统一字形。
 
-组合契约 9 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html) 和 [客户列表](examples/customer-list.html)。
+组合契约 13 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html) 和 [记录详情](examples/record-detail.html)。
 
 外框行为在 `workbench.js`（原生 ES 模块，无依赖）：`initShell(root)` 负责导航开关，`initPanels(root)` 负责侧面板开关（按钮 `[data-panel-toggle="面板 id"]`），`openPopover(trigger, panel)` 负责弹层，`initSearch(root)` 负责页眉搜索，`createCommand` / `initFilter` / `initDisplay` 见第 10 节。所有浮层登记在同一个层栈里，Esc 每次只关最上面一层。
 
@@ -124,7 +124,7 @@
 ### 9.1 行与分组
 
 - 原生 `table`，默认行高 `rowList` 36px，显示选项可切到 32px；触屏或 640px 及以下为 44px。
-- 首列是勾选框，第二列是记录名称，名称固定显示。数字列右对齐、等宽数字，空值显示「—」。
+- 首列是勾选框，第二列是记录名称，名称固定显示；点击名称打开详情页。数字列右对齐、等宽数字，空值显示「—」。
 - 分组时先按分组顺序排列，组内按排序字段排，再分页。分组跨页时，组头写「本页 x / 共 y」。组头可以折叠。
 - 表头和分组标题在列表滚动区内吸顶。列标题可点击排序，当前排序列用 `aria-sort` 标记。
 - 状态列用 6px 点 + 文字，不给整行上色。勾选行用灰底。
@@ -173,7 +173,7 @@
 
 ### 9.7 暂未覆盖
 
-上下方向键在行间移动、空格预览、行内编辑、右键菜单、命令面板在后续阶段补。列顺序调整、列宽拖拽、固定列、保存查询方案尚未定义。
+行内编辑、右键菜单、命令面板在后续阶段补。列顺序调整、列宽拖拽、固定列、保存查询方案尚未定义。
 
 ## 10. 命令菜单与工作台浮层（7.2）
 
@@ -189,3 +189,46 @@
 工作台浮层（命令菜单、显示选项、属性选择）在基础 popover 契约上改两处：圆角用 `radius.md` 8px，外加 1px 分隔线色描边。原因是白底浮层压在白底密集列表上时，只靠 6% 透明度的阴影分辨不出边界。其余沿用基础契约：一次只开一个，点外部关闭，不嵌套。
 
 参考实现：`workbench.js` 的 `createCommand`（命令菜单）、`initFilter`（筛选按钮、筛选行、各类取值编辑）、`initDisplay`（显示选项）。产品只需提供字段定义和数据，筛选语义以 `FILTER_OPERATORS` 与 `matchesFilter` 为准，服务端查询按同样的语义实现。
+
+## 11. 列表键盘、预览与记录详情（7.2）
+
+列表 → 预览 → 详情是一条连续的路径，结构与交互照 Circle / Linear。状态见 [preview/workbench-detail.html](preview/workbench-detail.html)，组合见 [examples/customer-list.html](examples/customer-list.html) 与 [examples/record-detail.html](examples/record-detail.html)。
+
+### 11.1 列表键盘
+
+- 列表里只有一行在 Tab 顺序中（当前行），Tab 进入列表就落在当前行，再按 Tab 离开列表。
+- 当前行获得焦点时：↑↓ 移动，Home / End 到首尾，空格打开或关闭预览，Enter 打开详情，x 勾选或取消勾选。
+- 焦点在行内的勾选框、链接或输入框上时，这些键交还给控件本身。输入法组字时不响应。
+- 键盘焦点行：浅灰底加 1px 蓝色上下边线，首格加 2px 蓝色左边线（蓝色只用于焦点）。正在预览的行保持浅灰底。
+- 列表重绘后焦点回到同一条记录。表格不声明为 ARIA grid，因为单元格不能逐格移动。
+
+### 11.2 预览
+
+- 空格打开 400px 宽面板显示当前行，焦点留在列表里；预览打开时移动当前行，面板内容跟着切换。
+- 再按空格、按 Esc 或点面板开关关闭，焦点回到当前行。1024px 及以下，预览浮在列表右侧。
+- 预览只放快速判断需要的信息：名称、状态、关键属性。需要编辑或查看完整内容时进入详情。
+
+### 11.3 记录详情页
+
+- 页眉只用 1 条：左侧导航按钮与面包屑（最后一段是记录编码），右侧是「当前位置 / 总数」和上一条、下一条按钮（向上、向下箭头）。位置和上下条来自进入详情前的列表顺序；没有列表上下文时按全部记录排序。面包屑里的列表链接保留原来的筛选和视图。
+- 内容区分两栏：左侧可滚动的主内容，居中，最宽 `detailWidth` 720px，四周留 32px；右侧是 240px 属性栏，单独滚动。1024px 及以下属性栏移到主内容后方。
+- 主内容自上而下：标题（`detailTitle` 24px，字重 500）→ 摘要行（状态点 + 文字、编码、负责人）→ 正文（行高 1.75）→ 关联记录（36px 行，上下细线）→ 分隔线 → 动态。
+- 单据类记录（报价、订单、合同）仍用第 4–6 节的单据页，它们有明细表和金额摘要；本节用于没有明细表的记录。
+
+### 11.4 属性栏
+
+- 分组排列，组名用次级文字色、字重 500，组间距 24px。
+- 每行是「标签 + 值」：标签 72px、次级文字色，不可省略（Circle 的事项属性栏省略了标签，Aham 保留）。
+- 可编辑的值是按钮：悬停灰底，点击打开命令菜单（§10），当前值字重 500，选中即保存并关闭。只读的值是普通文本，等宽数字。空值显示「设置 + 字段名」，次级文字色。
+- 修改属性后在动态里追加一条「谁把什么从 A 改为 B」。真实产品要以服务端保存结果为准，失败时恢复原值并提示。
+
+### 11.5 动态
+
+- 按时间正序排列，最新的在底部，紧挨评论框。
+- 事件是一行次级文字：20px 圆形图标底（次级底色）+ 操作人（墨色、字重 500）+ 描述 + 「· 时间」。
+- 评论放在次级底色的块里（圆角 8px，内边距 12px，不加边框）：20px 头像 + 姓名 + 时间，下面是正文。
+- 评论框在同样的底色块里：多行输入，⌘ / Ctrl + Enter 或「发送」提交，单独按 Enter 换行。内容为空时发送按钮不可用，输入法组字时不提交；提交期间 `aria-busy`，失败时保留内容。
+- 动态区用 `role="log"`，新增内容会被读屏播报。
+
+参考实现：`workbench.js` 的 `initListKeys`、`initPanels(...).show(id, { layer, returnTo })`、`initPropertyPickers`、`initComposer`。
+

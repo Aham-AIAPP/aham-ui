@@ -50,6 +50,11 @@
       "purpose": "筛选、命令菜单、显示选项的各种状态（由 workbench.js 实际渲染）"
     },
     {
+      "file": "preview/workbench-detail.html",
+      "priority": 7,
+      "purpose": "列表键盘、属性栏、动态流的各种状态（由 workbench.js 实际渲染）"
+    },
+    {
       "file": "examples/crm-quotation.html",
       "priority": 8,
       "purpose": "可运行的虚构单据示例"
@@ -63,6 +68,11 @@
       "file": "examples/customer-list.html",
       "priority": 8,
       "purpose": "列表页示例：分组、筛选、显示选项、批量操作、翻页"
+    },
+    {
+      "file": "examples/record-detail.html",
+      "priority": 8,
+      "purpose": "记录详情页示例：位置与上下条、属性栏、动态流"
     }
   ],
   "componentResolution": {

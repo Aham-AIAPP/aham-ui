@@ -1,6 +1,6 @@
 // List page sample: wires the design-system components (workbench.js) to fictional demo data.
 // Everything reusable lives in workbench.js / workbench.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, initSearch, initFilter, initDisplay, createCommand, openPopover, closePopover, pushLayer, icon, escapeHtml as esc} from '../workbench.js';
+import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, createCommand, openPopover, closePopover, pushLayer, icon, escapeHtml as esc} from '../workbench.js';
 import {makeCustomers, FIELDS, field, OWNERS, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './customer-list-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -31,7 +31,7 @@ function compute() {
   cur = { base, rows, pg };
 }
 // Re-rendering replaces controls; put focus back on the equivalent control so keyboard users keep their place.
-const FOCUS_KEYS = ['select', 'selectPage', 'group', 'sort', 'page', 'view', 'pageSize'];
+const FOCUS_KEYS = ['id', 'select', 'selectPage', 'group', 'sort', 'page', 'view', 'pageSize'];
 function focusToken(el) {
   const k = el?.dataset && root.contains(el) ? FOCUS_KEYS.find(key => key in el.dataset) : null;
   return k ? `[data-${k.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}="${CSS.escape(el.dataset[k])}"]` : null;
@@ -43,6 +43,8 @@ function render(fallback) {
   $('#list-count').textContent = cur.rows.length === data.length ? `共 ${data.length} 条` : `${cur.rows.length} / ${data.length} 条`;
   $('#customer-list').dataset.listDensity = display.density;
   renderTable(); renderPager(); renderBulk(); renderPreview();
+  listKeys?.refresh();
+  markPreviewing();
   const qs = encodeState(state);
   history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
   if (token && !active.isConnected) {
@@ -71,7 +73,7 @@ function renderTable() {
   if (!rows.length) { table.innerHTML = ''; empty.innerHTML = emptyHtml(); return; }
   const cols = display.columns.filter(c => c[1]).map(c => field(c[0]));
   const span = cols.length + 2;
-  const rowHtml = r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td><td><button type="button" class="wb-row-link" data-preview="${r.id}" title="${esc(r.name)}">${esc(r.name)}</button></td>${cols.map(f => cell(f, r)).join('')}</tr>`;
+  const rowHtml = r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td><td><button type="button" class="wb-row-link" data-open="${r.id}" title="打开 ${esc(r.name)}">${esc(r.name)}</button></td>${cols.map(f => cell(f, r)).join('')}</tr>`;
   let body = '';
   for (const g of groupRows(pg.rows, display.group)) {
     const shut = g.key !== null && collapsed.has(g.key);
@@ -177,6 +179,32 @@ function confirmDelete() {
   dialog.showModal();
 }
 
+// ── Keyboard: ↑↓ current row, Space preview, Enter open, x select ────────────
+const PEEK = 'customer-peek';
+function markPreviewing() {
+  const open = panels?.current() === PEEK;
+  $$('#customer-table tr[data-id]').forEach(tr => tr.toggleAttribute('data-previewing', open && Number(tr.dataset.id) === previewId));
+}
+function preview(id) {
+  if (panels.current() === PEEK && previewId === id) { panels.show(null); markPreviewing(); return; }
+  previewId = id;
+  renderPreview();
+  panels.show(PEEK, { layer: true, returnTo: { focus: () => listKeys.focus(listKeys.current()) } });
+  markPreviewing();
+}
+// Opening a record keeps the list order so the detail page can offer 上一条 / 下一条 and a way back.
+function openRecord(id) {
+  try { sessionStorage.setItem('aham-ui:record-nav', JSON.stringify({ ids: cur.rows.map(r => r.id), back: location.search })); } catch { /* detail page falls back to the full list */ }
+  location.href = `record-detail.html?id=${id}`;
+}
+const listKeys = initListKeys({
+  table: $('#customer-table'),
+  onPreview: id => preview(Number(id)),
+  onOpen: id => openRecord(Number(id)),
+  onToggle: id => { const n = Number(id); selected.has(n) ? selected.delete(n) : selected.add(n); render(); },
+  onMove: id => { if (panels.current() === PEEK) { previewId = Number(id); renderPreview(); markPreviewing(); } },
+});
+
 // ── Events ───────────────────────────────────────────────────────────────────
 root.addEventListener('change', e => {
   const t = e.target;
@@ -202,7 +230,7 @@ root.addEventListener('click', e => {
   }
   if (d.group) { collapsed.has(d.group) ? collapsed.delete(d.group) : collapsed.add(d.group); render(); return; }
   if (d.page) { state.page += d.page === 'next' ? 1 : -1; render(d.page === 'next' ? '[data-page="prev"]' : '[data-page="next"]'); $('.wb-list-scroll').scrollTop = 0; return; }
-  if (d.preview) { previewId = Number(d.preview); renderPreview(); panels.show('customer-peek', { focus: true }); return; }
+  if (d.open) { openRecord(Number(d.open)); return; }
   if (b.id === 'assign-trigger') { openAssign(); return; }
   switch (d.action) {
     case 'clear-filters': state.filters = []; filter.set([]); narrowResult(); render(); $('#filter-trigger').focus(); break;

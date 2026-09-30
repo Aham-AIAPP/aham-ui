@@ -91,7 +91,7 @@ Circle 里有几处半成品，不照抄：31 个快捷键提示中只有 ⌘K�
 | P0 整理 | 提交 7.1；修文档与 token 不一致；拆通用类 | 报价示例外观不变，测试通过 | 已完成，见第 7 节 |
 | P1 外框与页眉 | 240 / 52px 侧栏、40px 横条页眉、两档面板宽度 | 1440 / 1024 / 390px、亮暗两色正常 | 已完成，见第 8 节 |
 | P2 列表页 | 行、分组、筛选、显示选项、批量条、翻页；命令菜单；状态预览页与组合示例 | 筛选存网址，刷新后恢复；显示选项存本机；空结果给返回路径 | 已完成，见第 9、10 节 |
-| P3 详情与预览 | 详情页结构（主内容 + 属性栏）、空格预览、上下键在行间移动；规则、契约、预览页 | 列表 → 预览 → 详情的键盘路径完整 | 未开始 |
+| P3 详情与预览 | 详情页结构（主内容 + 属性栏）、空格预览、上下键在行间移动；规则、契约、预览页 | 列表 → 预览 → 详情的键盘路径完整 | 已完成，见第 11 节 |
 | P4 交互原语 | 命令面板（⌘K）、快捷键表、右键菜单、行内属性选择、提示条、新建弹窗；基于 P2 的命令菜单 | 规范只列已实现的快捷键；全部操作可用键盘完成 | 未开始 |
 | P5 设置页与发布 | 设置页四层；全景页收录工作台组件；AI 读取顺序；版本号 7.2.0 与发布说明 | 全部预览页亮暗两色、三档宽度检查通过 | 未开始 |
 
@@ -151,3 +151,13 @@ Circle 里有几处半成品，不照抄：31 个快捷键提示中只有 ⌘K�
 6. 通用化：命令菜单、筛选、显示选项写成 `workbench.js` 的 `createCommand`、`initFilter`、`initDisplay`；筛选语义（`FILTER_OPERATORS`、`matchesFilter`、网址读写）移入 `workbench.js`，示例不再自带一份。示例脚本只剩接数据和渲染表格。
 7. 新增状态预览页 `preview/workbench-filter.html` 与契约 `command-menu.json`；契约里写明 DOM 结构，供不能运行脚本的 AI 直接照做。
 8. 规范措辞改为通用对象（记录 / 条），不再写「客户」。阶段表去掉 CRM 试点，P3–P5 改为规范交付。
+
+## 11. P3 记录
+
+1. 规范 WORKBENCH §11：列表键盘、预览、记录详情页、属性栏、动态流。结构照 Circle 的事项详情页（`issue-details.tsx`、`issue-properties-panel.tsx`、`activity-feed.tsx`、事项页眉），颜色与留白取 Aham。
+2. token 新增 `detailTitle` 24px、`detailWidth` 720px、`activityIcon` 20px。`detailWidth` 没有沿用 `contentWidth.read`（65ch）：工作台正文 12px 时 65ch 只有约 470px。
+3. `workbench.js` 新增 `initListKeys`（当前行在 Tab 顺序里，↑↓ / Home / End / 空格 / Enter / x）、`initPropertyPickers`（属性值打开命令菜单，高亮停在当前值）、`initComposer`（⌘ / Ctrl + Enter 发送，组字时不提交）；`initPanels().show` 增加 `layer` 与 `returnTo`，空格打开的内联预览也能用 Esc 关闭并把焦点还给当前行。
+4. 新增契约 `list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，状态预览页 `preview/workbench-detail.html`，组合示例 `examples/record-detail.html`。
+5. 与 Circle 的差异：属性栏保留 72px 标签（Circle 事项属性栏只有图标 + 值，Aham 规定标签不可省略）；评论块用次级底色、不加边框（Circle 用描边卡片）；属性栏 240px（Circle 320px），沿用「面板只留两档宽度」的决定。
+6. 列表示例改为点击名称进入详情（Linear 做法），预览改由空格或面板开关打开。
+7. 浏览器实测：列表里按 ↓ 移动、空格预览且移动时预览跟随、x 勾选、Esc 关闭预览焦点回到当前行；Enter 进入详情，位置显示「3 / 36」，返回链接保留视图；属性修改写入动态；⌘ Enter 发送评论。

@@ -12,6 +12,9 @@
  .aham-workbench.expanded {grid-template-columns:var(--wb-rail) minmax(0,1fr)}
  .aham-workbench.expanded .wb-rail {position:fixed;inset-block:0;inset-inline-start:0;z-index:var(--wb-z-nav);width:var(--wb-nav);box-shadow:var(--wb-shadow-float)}
  .aham-workbench .wb-layout.is-list {display:grid;overflow:hidden}
+ .aham-workbench .wb-detail {display:block;overflow:auto}
+ .aham-workbench .wb-detail-scroll {overflow:visible}
+ .aham-workbench .wb-detail>.wb-panel {border-top:1px solid var(--wb-line)}
  .aham-workbench .wb-panel[data-size=wide] {position:fixed;inset-block:0;inset-inline-end:0;z-index:var(--wb-z-nav);width:min(var(--wb-panel-wide),100vw);overflow:auto;box-shadow:var(--wb-shadow-float)}
 }
 /* ≤ mobile breakpoint: normal page flow; the rail is hidden until the header toggle opens it. */
@@ -34,6 +37,8 @@
  .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-s4)}
  .aham-workbench .wb-table {min-width:calc(var(--wb-table-min) + var(--wb-s8))}
  .aham-workbench .wb-layout.is-list {display:block;overflow:visible}
+ .aham-workbench .wb-detail {overflow:visible}
+ .aham-workbench .wb-detail-main {padding:var(--wb-s4)}
  .aham-workbench .wb-pager {flex-wrap:wrap;padding-block:var(--wb-s2)}
  .aham-workbench .wb-search {width:auto;flex:1}
  .aham-workbench .wb-filter-bar {align-items:center}

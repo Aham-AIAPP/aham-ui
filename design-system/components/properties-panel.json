@@ -1,0 +1,69 @@
+{
+  "slug": "properties-panel",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-detail.html",
+  "intent": "记录属性栏：分组的「标签 + 值」行，可编辑值打开命令菜单",
+  "specification": "WORKBENCH.md §11.4",
+  "reference": "examples/record-detail.html",
+  "api": "initPropertyPickers({ root, container, fields, value, onChange })",
+  "variantDimensions": [
+    {
+      "axis": "value",
+      "values": [
+        "editable",
+        "read-only",
+        "empty"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "section",
+      "section-title",
+      "row",
+      "label",
+      "value",
+      "picker"
+    ],
+    "required": [
+      "row",
+      "label",
+      "value"
+    ]
+  },
+  "markup": {
+    "row": "<div class=\"wb-prop\"><span>阶段</span><button class=\"wb-prop-value\" data-prop=\"stage\">方案评估</button></div>",
+    "readOnly": "<div class=\"wb-prop\"><span>编码</span><span class=\"wb-prop-value wb-mono\">CUS-2026-0033</span></div>"
+  },
+  "rules": [
+    "标签 72px、次级文字色，不可省略",
+    "可编辑值是按钮，悬停灰底，点击打开命令菜单；当前值字重 500；选中即保存并关闭",
+    "只读值是文本，数字等宽",
+    "空值显示「设置 + 字段名」，次级文字色",
+    "修改后在动态追加一条变更；以服务端结果为准，失败恢复原值并提示"
+  ],
+  "states": [
+    "default",
+    "hover",
+    "open",
+    "empty",
+    "saving",
+    "error"
+  ],
+  "keyboard": [
+    "值按钮可 Tab 到达，Enter / 空格打开",
+    "菜单内 ↑↓ 移动，Enter 选择，Esc 关闭并还焦点"
+  ],
+  "accessibility": [
+    "值按钮可访问名为「字段：值，点击修改」"
+  ],
+  "doNotInvent": [
+    "省略标签只留图标",
+    "彩色状态胶囊",
+    "行内展开的原生下拉框"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "slug": "list-keyboard",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-detail.html",
+  "intent": "Linear 式列表键盘：当前行在 Tab 顺序里，方向键移动，空格预览，Enter 打开，x 勾选",
+  "specification": "WORKBENCH.md §11.1–11.2",
+  "reference": "examples/customer-list.html",
+  "api": "initListKeys({ table, onPreview, onOpen, onToggle, onMove }) → { refresh, current, focus }",
+  "variantDimensions": [
+    {
+      "axis": "preview",
+      "values": [
+        "closed",
+        "open"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "current-row",
+      "previewing-row",
+      "preview-panel"
+    ],
+    "required": [
+      "current-row"
+    ]
+  },
+  "rules": [
+    "只有当前行 tabindex=0，其他行 -1；每次重绘后调用 refresh",
+    "键只在行本身有焦点时生效，行内控件保留自己的键",
+    "空格预览时焦点留在列表，移动当前行时预览跟着切换",
+    "Esc 或再按空格关闭预览，焦点回到当前行",
+    "焦点行浅灰底 + 蓝色细边线，正在预览的行浅灰底"
+  ],
+  "keyboard": [
+    "↑ ↓ 移动当前行",
+    "Home / End 到首尾",
+    "空格 打开 / 关闭预览",
+    "Enter 打开详情",
+    "x 勾选 / 取消勾选",
+    "Esc 关闭预览"
+  ],
+  "states": [
+    "idle",
+    "focused",
+    "previewing",
+    "selected"
+  ],
+  "accessibility": [
+    "不声明 ARIA grid",
+    "输入法组字时不响应",
+    "焦点不只靠颜色：焦点行有边线"
+  ],
+  "doNotInvent": [
+    "每个单元格都进 Tab 顺序",
+    "用蓝色整行底色表示焦点",
+    "按住修饰键时拦截方向键"
+  ]
+}

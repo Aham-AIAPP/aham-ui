@@ -14,6 +14,11 @@
 :where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;align-items:center;gap:var(--wb-s5);min-height:0;overflow-y:auto;padding:var(--wb-s4) var(--wb-s2);background:var(--wb-panel)}
 :where(.aham-workbench) .wb-brand{display:grid;place-items:center;width:var(--wb-s6);height:var(--wb-s6);font-size:var(--wb-title);font-weight:600;color:var(--wb-blue)}
 :where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;justify-content:center;gap:var(--wb-s2);background:transparent;border:0;border-radius:var(--wb-radius);width:var(--wb-nav-item);height:var(--wb-nav-item);color:var(--wb-muted)}
+:where(.aham-workbench) a.wb-nav-item{text-decoration:none}
+:where(.aham-workbench) .wb-crumbs a{color:inherit;text-decoration:none}
+:where(.aham-workbench) .wb-crumbs a:hover{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
+:where(.aham-workbench) .wb-related a{color:inherit;text-decoration:none}
+:where(.aham-workbench) .wb-related a:hover{text-decoration:underline;text-underline-offset:3px}
 :where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-nav-item span{display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-group{display:grid;gap:var(--wb-s1)}
@@ -222,6 +227,62 @@
 :where(.aham-workbench) .wb-btn.ghost.danger:hover{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-search{display:flex;align-items:center;gap:var(--wb-s1);width:var(--wb-search-width);height:var(--wb-header-control);padding:0 var(--wb-s2);border-radius:var(--wb-radius);background:var(--wb-hover)}
 :where(.aham-workbench) .wb-search input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent}
+
+/* List keyboard focus (7.2 P3): one row is in the tab order; ↑↓ move it, Space previews, Enter opens. */
+:where(.aham-workbench) .wb-list-table tbody tr[data-id]{outline:0}
+:where(.aham-workbench) .wb-list-table tbody tr[data-id]:focus-visible td{background:var(--wb-hover);box-shadow:inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
+:where(.aham-workbench) .wb-list-table tbody tr[data-id]:focus-visible td:first-child{box-shadow:inset 2px 0 0 var(--wb-blue),inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
+:where(.aham-workbench) .wb-list-table tbody tr[data-previewing] td{background:var(--wb-hover)}
+
+/* Record detail (7.2 P3): centred reading column + properties panel, as in Circle's issue page. */
+:where(.aham-workbench) .wb-record-nav{display:flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-record-nav>span{margin-inline-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-detail{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
+:where(.aham-workbench) .wb-detail-scroll{min-height:0;overflow-y:auto}
+:where(.aham-workbench) .wb-detail-main{max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6)}
+:where(.aham-workbench) .wb-detail-title{font-size:var(--wb-detail-title);font-weight:500;line-height:1.35}
+:where(.aham-workbench) .wb-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3);margin-block-start:var(--wb-s2);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-detail-body{margin-block-start:var(--wb-s5);line-height:1.75}
+:where(.aham-workbench) .wb-detail-body p+p{margin-block-start:var(--wb-s2)}
+:where(.aham-workbench) .wb-detail-section{margin-block-start:var(--wb-s6)}
+:where(.aham-workbench) .wb-section-heading{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);margin-block-end:var(--wb-s2)}
+:where(.aham-workbench) .wb-section-heading h2{font-size:var(--wb-text-sm);font-weight:500}
+:where(.aham-workbench) .wb-section-heading h2 span{margin-inline-start:var(--wb-s1);color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-related{margin:0;padding:0;list-style:none;border-top:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-related li{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row-list);padding:0 var(--wb-s1);border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-related li:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-related .wb-mono{flex:none;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-related .wb-grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-divider{height:1px;margin-block:var(--wb-s6) 0;border:0;background:var(--wb-line)}
+
+/* Properties panel: label + value rows (Aham keeps labels; Circle's project panel uses the same row form). */
+:where(.aham-workbench) .wb-props{display:grid;align-content:start;gap:var(--wb-s5);padding:var(--wb-s5) var(--wb-s4)}
+:where(.aham-workbench) .wb-props-section{display:grid;gap:var(--wb-s1)}
+:where(.aham-workbench) .wb-props-title{margin-block-end:var(--wb-s1);color:var(--wb-muted);font-weight:500}
+:where(.aham-workbench) .wb-prop{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr);align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-control)}
+:where(.aham-workbench) .wb-prop>span:first-child{color:var(--wb-muted);white-space:nowrap}
+:where(.aham-workbench) .wb-prop-value{display:flex;align-items:center;gap:var(--wb-s1);min-width:0;min-height:var(--wb-header-control);padding:0 var(--wb-s1);margin-inline-start:calc(-1 * var(--wb-s1));border:0;border-radius:var(--wb-radius);background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) button.wb-prop-value:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-prop-value.is-empty{color:var(--wb-muted)}
+
+/* Activity feed: events as quiet lines with a 20px icon disc; comments on the panel tier; composer sends with ⌘/Ctrl+Enter. */
+:where(.aham-workbench) .wb-activity{display:grid}
+:where(.aham-workbench) .wb-activity-event{display:flex;align-items:center;gap:var(--wb-s2);padding-block:var(--wb-s1);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-activity-event strong{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-activity-icon{display:inline-grid;place-items:center;flex:none;width:var(--wb-activity-icon);height:var(--wb-activity-icon);border-radius:50%;background:var(--wb-panel);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-activity-icon svg{width:var(--wb-s3);height:var(--wb-s3)}
+:where(.aham-workbench) .wb-activity-time{flex:none}
+:where(.aham-workbench) .wb-comment{margin-block:var(--wb-s2);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-panel)}
+:where(.aham-workbench) .wb-comment-head{display:flex;align-items:center;gap:var(--wb-s2);margin-block-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-comment-head strong{font-weight:500}
+:where(.aham-workbench) .wb-comment-head span:last-child{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-comment p{line-height:1.75}
+:where(.aham-workbench) .wb-avatar-xs{display:inline-grid;place-items:center;flex:none;width:var(--wb-activity-icon);height:var(--wb-activity-icon);border-radius:50%;background:var(--wb-selected);color:var(--wb-ink);font-size:var(--wb-body)}
+:where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-panel)}
+:where(.aham-workbench) .wb-composer textarea{display:block;width:100%;min-height:var(--wb-s7);margin:0;padding:0;border:0;background:transparent;resize:vertical;line-height:1.75}
+:where(.aham-workbench) .wb-composer textarea:focus-visible{outline:0}
+:where(.aham-workbench) .wb-composer:focus-within{box-shadow:0 0 0 2px var(--wb-blue)}
+:where(.aham-workbench) .wb-composer-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);color:var(--wb-muted)}
 
 /* Form-type popover sections (display options) */
 :where(.aham-workbench) .wb-pop-title{color:var(--wb-muted)}

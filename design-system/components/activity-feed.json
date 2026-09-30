@@ -1,0 +1,66 @@
+{
+  "slug": "activity-feed",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-detail.html",
+  "intent": "记录动态：事件行、评论块、评论框，按时间正序",
+  "specification": "WORKBENCH.md §11.5",
+  "reference": "examples/record-detail.html",
+  "api": "initComposer(form, { onSubmit(text) → boolean | Promise<boolean> })",
+  "variantDimensions": [
+    {
+      "axis": "item",
+      "values": [
+        "event",
+        "comment"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "event",
+      "event-icon",
+      "comment",
+      "comment-head",
+      "composer",
+      "send"
+    ],
+    "required": [
+      "event",
+      "composer"
+    ]
+  },
+  "markup": {
+    "event": "<div class=\"wb-activity-event\"><span class=\"wb-activity-icon\">[图标]</span><span><strong>林悦</strong> 把阶段改为「方案评估」</span><span class=\"wb-activity-time\">· 09-27</span></div>",
+    "comment": "<article class=\"wb-comment\"><div class=\"wb-comment-head\"><span class=\"wb-avatar-xs\">林</span><strong>林悦</strong><span>09-27</span></div><p>…</p></article>",
+    "composer": "<form class=\"wb-composer\"><textarea aria-label=\"评论内容\"></textarea><div class=\"wb-composer-foot\"><span>⌘ / Ctrl + Enter 发送</span><button type=\"submit\" class=\"wb-btn sm primary\">发送</button></div></form>"
+  },
+  "rules": [
+    "按时间正序，最新在底部，紧挨评论框",
+    "事件：20px 圆形图标底 + 操作人（墨色 500）+ 描述 + 时间，整行次级文字色",
+    "评论：次级底色块，圆角 8px，内边距 12px，无边框",
+    "评论框：⌘ / Ctrl + Enter 或发送按钮提交，Enter 换行；空内容不可发送；组字时不提交；失败保留内容"
+  ],
+  "states": [
+    "empty",
+    "typing",
+    "sending",
+    "sent",
+    "error"
+  ],
+  "keyboard": [
+    "⌘ / Ctrl + Enter 发送",
+    "Enter 换行"
+  ],
+  "accessibility": [
+    "动态区 role=\"log\" aria-live=\"polite\"",
+    "提交期间 aria-busy"
+  ],
+  "doNotInvent": [
+    "带边框阴影的评论卡片",
+    "倒序时间线把评论框放在顶部"
+  ]
+}
