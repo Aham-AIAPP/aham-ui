@@ -770,15 +770,18 @@ export function registerShortcut(def) {
 export const listShortcuts = () => shortcuts.filter(s => s.label && (singleKeys || !characterOnly(s.keys)) && (s.external || s.when())).map(({ keys, label, group }) => ({ keys, label, group }));
 const editable = el => el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 let pending = null, pendingTimer = 0;
-function stepOf(e) {
+// Arrow keys report 'ArrowDown' etc.; the registry and shortcuts.json name them 'down', 'up', 'left', 'right'.
+const KEY_ALIAS = { arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right', esc: 'escape' };
+export function keyStep(e) {
   // Shift+/ reports '?' on most layouts but '/' with shiftKey from some input sources; treat both as '?'.
-  const k = e.key === ' ' ? 'space' : e.key === '/' && e.shiftKey ? '?' : e.key.toLowerCase();
+  const raw = e.key === ' ' ? 'space' : e.key === '/' && e.shiftKey ? '?' : e.key.toLowerCase();
+  const k = KEY_ALIAS[raw] ?? raw;
   const mods = [(e.metaKey || e.ctrlKey) && 'mod', e.altKey && 'alt', e.shiftKey && e.key.length !== 1 && 'shift'].filter(Boolean);
   return [...mods, k === '?' ? '?' : k].join('+');
 }
 if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   if (e.isComposing || e.defaultPrevented || e.repeat) return;
-  const step = stepOf(e), typing = editable(e.target);
+  const step = keyStep(e), typing = editable(e.target);
   const seq = pending ? `${pending} ${step}` : step;
   const live = shortcuts.filter(s => !s.external && (singleKeys || !characterOnly(s.keys)));
   const hit = live.find(s => s.keys === seq && s.when(e)) || (pending ? live.find(s => s.keys === step && s.when(e)) : null);
@@ -1071,6 +1074,271 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
   release = pushLayer(() => (confirm.hidden ? askClose() : (foot.hidden = false, confirm.hidden = true, name.focus())));
   name.focus();
   return { close: finish };
+}
+
+// ── Files, tree table and version compare (WORKBENCH §15) ────────────────────
+// Pure helpers first (tested in Node), then the DOM behaviour. Aham renders no PDF or CAD itself: the product puts a
+// rendered page (img, canvas or svg) into the viewer canvas and swaps it in onPage.
+
+// Checks one file against the accepted extensions ('.pdf', '.step') and a size limit in bytes. null = accepted.
+export function checkFile(file, { accept = [], maxSize = Infinity } = {}) {
+  const name = String(file?.name ?? ''), dot = name.lastIndexOf('.');
+  const ext = dot > 0 ? name.slice(dot).toLowerCase() : '';
+  if (accept.length && !accept.some(a => a.toLowerCase() === ext)) return `不支持的类型${ext ? ` ${ext}` : ''}`;
+  if (!file.size) return '空文件';
+  if (file.size > maxSize) return `超过 ${formatBytes(maxSize)}`;
+  return null;
+}
+export function formatBytes(n) {
+  if (!Number.isFinite(n) || n < 0) return '—';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
+  return `${i && n < 10 ? n.toFixed(1) : Math.round(n)} ${units[i]}`;
+}
+// Subtotals for a flat tree [{ id, parent }]: a leaf contributes value(row), a parent the sum of its children.
+// Pass integers (e.g. cents) so that the sums are exact. Returns Map id → total.
+export function treeTotals(rows, value) {
+  const kids = new Map(), totals = new Map(), visiting = new Set();
+  for (const r of rows) if (r.parent != null) kids.set(r.parent, [...(kids.get(r.parent) || []), r]);
+  const total = r => {
+    if (totals.has(r.id)) return totals.get(r.id);
+    if (visiting.has(r.id)) throw new Error(`Cyclic tree at ${r.id}`);
+    visiting.add(r.id);
+    const children = kids.get(r.id);
+    const t = children ? children.reduce((sum, c) => sum + total(c), 0) : value(r);
+    totals.set(r.id, t);
+    return t;
+  };
+  rows.forEach(total);
+  return totals;
+}
+// Compares two versions of a record list by key. fields limits the compared fields (keys or { key }).
+// added and changed follow the newer order, removed the older order.
+export function diffRecords(before, after, { key = 'id', fields } = {}) {
+  const idOf = r => String(r[key]);
+  const old = new Map(before.map(r => [idOf(r), r])), now = new Map(after.map(r => [idOf(r), r]));
+  const keys = (fields ?? [...new Set([...before, ...after].flatMap(Object.keys))].filter(k => k !== key)).map(f => (typeof f === 'string' ? f : f.key));
+  const same = (a, b) => Object.is(a, b) || JSON.stringify(a) === JSON.stringify(b);
+  const changed = [];
+  let unchanged = 0;
+  for (const r of after) {
+    const o = old.get(idOf(r));
+    if (!o) continue;
+    const diffs = keys.filter(k => !same(o[k], r[k])).map(k => ({ field: k, from: o[k], to: r[k] }));
+    if (diffs.length) changed.push({ id: idOf(r), before: o, after: r, fields: diffs });
+    else unchanged++;
+  }
+  return { added: after.filter(r => !old.has(idOf(r))), removed: before.filter(r => !now.has(idOf(r))), changed, unchanged };
+}
+
+// Drop zone: drag files or a folder onto .wb-drop, or use its [data-drop="files" | "folder"] buttons (the keyboard path).
+// Every file comes back once, checked: onFiles([{ file, name, path, size, error }]). The product uploads, shows progress
+// and retries; nothing here talks to a server. A .zip is one file: unpacking happens on the server.
+const hasFiles = e => [...(e.dataTransfer?.types || [])].includes('Files');
+async function walkEntry(entry, prefix = '') {
+  if (entry.isFile) return [{ file: await new Promise((ok, fail) => entry.file(ok, fail)), path: prefix + entry.name }];
+  const reader = entry.createReader(), found = [];
+  for (let batch; (batch = await new Promise((ok, fail) => reader.readEntries(ok, fail))).length;) found.push(...batch);
+  return (await Promise.all(found.map(child => walkEntry(child, `${prefix}${entry.name}/`)))).flat();
+}
+export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles }) {
+  const inputs = [...zone.querySelectorAll('input[type=file]')];
+  inputs.forEach(input => { if (accept.length && !input.hasAttribute('webkitdirectory')) input.accept = accept.join(','); });
+  const deliver = list => {
+    const items = list.map(({ file, path }) => ({ file, name: file.name, path: path || file.webkitRelativePath || file.name, size: file.size, error: checkFile(file, { accept, maxSize }) }));
+    if (items.length) onFiles?.(items);
+  };
+  let depth = 0;
+  const over = on => { if (on) zone.dataset.drag = 'over'; else delete zone.dataset.drag; };
+  zone.addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; over(true); });
+  zone.addEventListener('dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+  zone.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) over(false); });
+  zone.addEventListener('drop', async e => {
+    if (!hasFiles(e)) return;
+    e.preventDefault();
+    depth = 0;
+    over(false);
+    // Entries must be read before the first await: the browser empties dataTransfer after the event.
+    const entries = [...e.dataTransfer.items].map(i => i.webkitGetAsEntry?.()).filter(Boolean);
+    deliver(entries.length ? (await Promise.all(entries.map(entry => walkEntry(entry)))).flat() : [...e.dataTransfer.files].map(file => ({ file })));
+  });
+  const open = (folder = false) => inputs.find(i => i.hasAttribute('webkitdirectory') === folder)?.click();
+  zone.addEventListener('click', e => { const b = e.target.closest?.('[data-drop]'); if (b) open(b.dataset.drop === 'folder'); });
+  inputs.forEach(input => input.addEventListener('change', () => { deliver([...input.files].map(file => ({ file }))); input.value = ''; }));
+  return { open };
+}
+
+// File viewer: toolbar [data-viewer="prev|next|page|pages|zoom|zoom-out|zoom-in|fit|actual"], a focusable scroll area
+// .wb-viewer-stage and the page .wb-viewer-canvas sized from its natural width × height. With the stage focused:
+// + / − zoom, 0 fits the page, PageUp / PageDown turn pages, arrows scroll; ⌘ / Ctrl + wheel zooms; drag pans when zoomed.
+// show({ page, x, y, width, height }) outlines a region in natural pixels, e.g. where a recognised field came from.
+const ZOOM_STEPS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
+export function initViewer(root, { pages = 1, page = 1, width, height, onPage, onZoom } = {}) {
+  const stage = root.querySelector('.wb-viewer-stage'), canvas = root.querySelector('.wb-viewer-canvas');
+  const part = name => root.querySelector(`[data-viewer="${name}"]`);
+  const size = { width: width ?? Number(canvas.dataset.width), height: height ?? Number(canvas.dataset.height) };
+  let zoom = 1, fitted = true, drag = null;
+  function paint() {
+    canvas.style.width = `${Math.round(size.width * zoom)}px`;
+    canvas.style.height = `${Math.round(size.height * zoom)}px`;
+    if (part('zoom')) part('zoom').textContent = `${Math.round(zoom * 100)}%`;
+    stage.dataset.pan = String(canvas.offsetWidth > stage.clientWidth || canvas.offsetHeight > stage.clientHeight);
+  }
+  function sync() {
+    if (part('page')) { part('page').value = page; part('page').max = pages; }
+    if (part('pages')) part('pages').textContent = pages;
+    if (part('prev')) part('prev').disabled = page <= 1;
+    if (part('next')) part('next').disabled = page >= pages;
+  }
+  function setZoom(z, fit = false) {
+    zoom = Math.min(ZOOM_STEPS[ZOOM_STEPS.length - 1], Math.max(0.1, z));
+    fitted = fit;
+    paint();
+    onZoom?.(zoom);
+  }
+  function fit() {
+    const css = getComputedStyle(stage);
+    const w = stage.clientWidth - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight);
+    const h = stage.clientHeight - parseFloat(css.paddingTop) - parseFloat(css.paddingBottom);
+    setZoom(Math.min(w / size.width, h / size.height) || 1, true);
+  }
+  const step = dir => {
+    const next = dir > 0 ? ZOOM_STEPS.find(s => s > zoom + 1e-3) : [...ZOOM_STEPS].reverse().find(s => s < zoom - 1e-3);
+    if (next) setZoom(next);
+  };
+  function setPage(n) {
+    const p = Math.min(pages, Math.max(1, Math.round(n) || 1));
+    const turned = p !== page;
+    page = p;
+    sync();
+    if (turned) onPage?.(page);
+  }
+  function show({ page: at, x, y, width: w, height: h }) {
+    if (at) setPage(at);
+    let mark = canvas.querySelector('.wb-viewer-mark');
+    if (!mark) {
+      mark = document.createElement('div');
+      mark.className = 'wb-viewer-mark';
+      mark.setAttribute('aria-hidden', 'true');
+      canvas.append(mark);
+    }
+    const pct = v => `${(v * 100).toFixed(3)}%`;
+    Object.assign(mark.style, { left: pct(x / size.width), top: pct(y / size.height), width: pct(w / size.width), height: pct(h / size.height) });
+    mark.hidden = false;
+    mark.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  const hide = () => { const mark = canvas.querySelector('.wb-viewer-mark'); if (mark) mark.hidden = true; };
+  // Call after the product has put a new page into the canvas (sizes in natural pixels).
+  function load({ width: w = size.width, height: h = size.height, pages: total = pages, page: at = page } = {}) {
+    Object.assign(size, { width: w, height: h });
+    pages = total;
+    page = Math.min(pages, Math.max(1, at));
+    sync();
+    if (fitted) fit(); else paint();
+  }
+  root.addEventListener('click', e => {
+    const b = e.target.closest?.('button[data-viewer]');
+    const act = { prev: () => setPage(page - 1), next: () => setPage(page + 1), 'zoom-in': () => step(1), 'zoom-out': () => step(-1), fit, actual: () => setZoom(1) }[b?.dataset.viewer];
+    act?.();
+  });
+  part('page')?.addEventListener('change', e => setPage(parseInt(e.target.value, 10)));
+  stage.addEventListener('keydown', e => {
+    if (e.target !== stage || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
+    const act = { '+': () => step(1), '=': () => step(1), '-': () => step(-1), 0: fit, PageDown: () => setPage(page + 1), PageUp: () => setPage(page - 1) }[e.key];
+    if (act) { e.preventDefault(); act(); }
+  });
+  stage.addEventListener('wheel', e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); step(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  stage.addEventListener('pointerdown', e => {
+    if (e.button !== 0 || stage.dataset.pan !== 'true') return;
+    drag = { x: e.clientX, y: e.clientY, left: stage.scrollLeft, top: stage.scrollTop };
+    stage.setPointerCapture(e.pointerId);
+    stage.dataset.dragging = '';
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!drag) return;
+    stage.scrollLeft = drag.left - (e.clientX - drag.x);
+    stage.scrollTop = drag.top - (e.clientY - drag.y);
+  });
+  const endDrag = () => { drag = null; delete stage.dataset.dragging; };
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => (fitted ? fit() : paint())).observe(stage);
+  sync();
+  fit();
+  return { load, setPage, setZoom, fit, show, hide, page: () => page, zoom: () => zoom };
+}
+
+// Tree table (BOM): a native table whose rows carry data-id and data-level (1 = top). Parent rows hold a
+// .wb-tree-toggle button with aria-expanded. One row is in the tab order; ↑↓ / Home / End move among visible rows,
+// → expands or steps to the first child, ← collapses or steps to the parent, Enter toggles. Keys act only when the row
+// itself has focus. Not declared an ARIA treegrid: cells are not individually navigable. Call refresh() after re-render.
+export function initTreeTable(table, { onToggle, onMove } = {}) {
+  let current = null;
+  const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
+  const level = tr => Number(tr.dataset.level) || 1;
+  const toggleOf = tr => tr.querySelector('.wb-tree-toggle');
+  const expanded = tr => toggleOf(tr)?.getAttribute('aria-expanded') === 'true';
+  const idOf = tr => tr?.dataset.id ?? null;
+  function refresh() {
+    const list = rows();
+    let hideBelow = Infinity;
+    for (const tr of list) {
+      const l = level(tr);
+      if (l <= hideBelow) hideBelow = Infinity;
+      tr.hidden = l > hideBelow;
+      if (!tr.hidden && toggleOf(tr) && !expanded(tr)) hideBelow = l;
+    }
+    let at = list.findIndex(tr => idOf(tr) === current);
+    if (at < 0) at = 0;
+    // A row inside a collapsed branch hands the tab stop to its nearest visible ancestor.
+    while (at > 0 && list[at]?.hidden) at--;
+    const hadFocus = list.some(tr => tr.hidden && tr.contains(document.activeElement));
+    current = idOf(list[at]);
+    list.forEach(tr => { tr.tabIndex = idOf(tr) === current ? 0 : -1; });
+    if (hadFocus) list[at]?.focus();
+  }
+  function focusRow(tr) {
+    if (!tr) return;
+    current = idOf(tr);
+    rows().forEach(r => { r.tabIndex = r === tr ? 0 : -1; });
+    tr.focus();
+    tr.scrollIntoView({ block: 'nearest' });
+    onMove?.(current);
+  }
+  function setExpanded(tr, on) {
+    const b = toggleOf(tr);
+    if (!b || expanded(tr) === on) return;
+    b.setAttribute('aria-expanded', String(on));
+    refresh();
+    onToggle?.(idOf(tr), on);
+  }
+  table.addEventListener('click', e => {
+    const b = e.target.closest?.('.wb-tree-toggle');
+    if (b) { const tr = b.closest('tr'); setExpanded(tr, !expanded(tr)); }
+  });
+  table.addEventListener('keydown', e => {
+    const tr = e.target.closest?.('tr[data-id]');
+    if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
+    const shown = rows().filter(r => !r.hidden), i = shown.indexOf(tr);
+    const act = {
+      ArrowDown: () => focusRow(shown[Math.min(i + 1, shown.length - 1)]),
+      ArrowUp: () => focusRow(shown[Math.max(i - 1, 0)]),
+      Home: () => focusRow(shown[0]),
+      End: () => focusRow(shown[shown.length - 1]),
+      ArrowRight: () => (toggleOf(tr) && !expanded(tr) ? setExpanded(tr, true) : level(shown[i + 1] ?? tr) > level(tr) && focusRow(shown[i + 1])),
+      ArrowLeft: () => (toggleOf(tr) && expanded(tr) ? setExpanded(tr, false) : focusRow(shown.slice(0, i).reverse().find(r => level(r) < level(tr)))),
+      Enter: () => toggleOf(tr) && setExpanded(tr, !expanded(tr)),
+    }[e.key];
+    if (act) { e.preventDefault(); act(); }
+  });
+  table.addEventListener('focusin', e => {
+    const tr = e.target.closest?.('tr[data-id]');
+    if (tr && idOf(tr) !== current) { current = idOf(tr); rows().forEach(r => { r.tabIndex = r === tr ? 0 : -1; }); }
+  });
+  const setAll = on => { rows().forEach(tr => toggleOf(tr)?.setAttribute('aria-expanded', String(on))); refresh(); };
+  refresh();
+  return { refresh, expandAll: () => setAll(true), collapseAll: () => setAll(false), current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id) && !tr.hidden)) };
 }
 
 // ── AI assistance (WORKBENCH §14) ────────────────────────────────────────────

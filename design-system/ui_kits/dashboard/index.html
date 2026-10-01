@@ -248,7 +248,7 @@ function Dashboard({ onOpenDialog }) {
               <div className="card-meta">数量: {item.count.toLocaleString()} | 金额: {item.amount.toLocaleString()}</div>
             </div>
             <div className="card-footer">
-              <span className="card-action" onClick={()=>onOpenDialog('confirm','项目详情',`查看 ${item.name} 的详细信息？`,false)}>查看详情</span>
+              <span className="card-action" onClick={()=>onOpenDialog('confirm','项目详情',`打开 ${item.name} 的详细信息。`,false)}>查看详情</span>
             </div>
           </div>
         ))}
@@ -491,7 +491,7 @@ function Settings({ onOpenDialog }) {
               <div style={{fontSize:'var(--aham-typography-fontSize-base)',fontWeight:'var(--aham-typography-fontWeight-medium)',color:'var(--color-ink-primary)'}}>删除项目</div>
               <div className="uikit-form-hint">此操作不可撤销，所有数据将被永久删除。</div>
             </div>
-            <button className="btn btn-md btn-danger uikit-nowrap" data-component="button" onClick={()=>onOpenDialog('danger','删除项目','确定要删除此项目吗？此操作不可撤销，所有关联数据将被永久删除。',true)}>删除项目</button>
+            <button className="btn btn-md btn-danger uikit-nowrap" data-component="button" onClick={()=>onOpenDialog('danger','删除项目','删除后，此项目的全部关联数据会被永久移除，无法撤销。',true)}>删除项目</button>
           </div>
         </div>
       </div>

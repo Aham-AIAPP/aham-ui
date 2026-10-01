@@ -21,20 +21,20 @@
   },
   "structurePatterns": [
     "Linear track = 4px height, full width, tier3-line color (#E7E7E7)",
-    "Linear fill = accent blue (#336EE8) — only 4px high subtle indication",
+    "线性填充 = 墨色（ink-primary），与 aham-ui.css 的 .progress__bar 相同；不用蓝色",
     "Circular = 20px diameter (sm) or 32px (md), 3px stroke width",
-    "Circular track = tier3-line, fill = accent blue",
+    "环形轨道 = tier3-line，填充 = 墨色",
     "Determinate shows % via CSS animation width/stroke-dashoffset",
-    "Indeterminate loops via CSS animation"
+    "不确定进度用循环动画，属于 DESIGN §1.7 写明的加载反馈例外；减少动态效果时停在一帧"
   ],
   "usageHints": [
-    "Blue fill is acceptable here as a progress signal — thin and subtle",
+    "进度填充用墨色；蓝色只用于 DESIGN §0 列出的位置",
     "Linear for page/content loading, circular for inline actions",
     "No text label within the progress — use caption below if needed"
   ],
   "doNotInvent": [
     "Large thick progress bars — 4px max for linear",
-    "Gradient fills — solid blue only",
+    "渐变或蓝色填充：只用纯墨色",
     "Overlay spinners — use linear at top of content area"
   ],
   "unknowns": ["Buffering/secondary track pattern"]

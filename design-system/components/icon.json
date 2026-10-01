@@ -67,7 +67,7 @@
     "name": "Lucide",
     "license": "ISC",
     "version": "lucide-static 1.24.0",
-    "count": 51,
+    "count": 53,
     "manifest": "icons/icons.json",
     "sprite": "icons/aham-icons.svg"
   }

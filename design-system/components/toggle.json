@@ -21,18 +21,18 @@
   "structurePatterns": [
     "Track = pill shape, md: 40x22px, sm: 32x18px",
     "Off state = panel gray (#F3F3F3) track, white knob — NO blue tint track",
-    "On state = accent blue (#336EE8) track, white knob — the ONE place blue fill is legitimate",
+    "开 = 墨色轨道（ink-primary #262626，token color.alias.control-on）+ 白色圆钮；不用蓝色（DESIGN §2.2）",
     "Disabled = quaternary gray (#C4C4C4) track",
     "Knob is circular with no shadow — flat",
     "Label = body text (14px) on left or right"
   ],
   "usageHints": [
     "Use for binary settings that take immediate effect (no submit needed)",
-    "Toggle is the ONLY component where blue fill is allowed — it signals 'on'",
+    "开关打开用墨色，与勾选框、单选一致；蓝色只用于焦点环（DESIGN §0）",
     "Do not use for actions with secondary confirmation"
   ],
   "doNotInvent": [
-    "Green 'on' state — Aham uses blue #336EE8 for 'on'",
+    "绿色或蓝色的打开状态：打开一律用墨色",
     "Rounded-square track — always pill (--radius-pill: 999px)",
     "Shadow on knob — Aham is flat"
   ],

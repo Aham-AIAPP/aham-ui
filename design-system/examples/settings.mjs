@@ -4,7 +4,7 @@ import {initShell, toast, pushLayer, setSingleKeyShortcuts, singleKeyShortcuts, 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
 const KEY = 'aham-ui:settings-demo:v1';
-const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, send: '⌘ / Ctrl + Enter', open: '进入详情页', theme: 'light', density: 'standard', ai: false, assign: true, digest: false };
+const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, open: '进入详情页', theme: 'light', density: 'standard', ai: false, assign: true, digest: false };
 let prefs = { ...DEFAULTS };
 try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY)) }; } catch { /* keep defaults */ }
 // Single-key shortcuts and AI consent are kept by workbench.js; show its current choice.

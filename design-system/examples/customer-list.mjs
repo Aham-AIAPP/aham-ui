@@ -166,7 +166,7 @@ function openAssign() {
 }
 function confirmDelete(ids = [...selected]) {
   const n = ids.length, gone = new Set(ids);
-  dialog.querySelector('#delete-title').textContent = `删除 ${n} 条记录？`;
+  dialog.querySelector('#delete-title').textContent = `删除 ${n} 条记录`;
   const release = pushLayer(() => dialog.close('cancel'));
   dialog.addEventListener('close', () => {
     release();

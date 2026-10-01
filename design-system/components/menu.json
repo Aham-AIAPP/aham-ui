@@ -25,7 +25,8 @@
     "Icon column = 20px fixed width (--icon-size-md)",
     "Shortcut = mono (13px), ink-tertiary, right-aligned",
     "Separator = 1px tier3-line with 8px horizontal margin",
-    "Danger menu item text = semantic danger (#9E3D31) on hover"
+    "Danger menu item text = semantic danger (#9E3D31) on hover",
+    "勾选 .checked：菜单项前的 ✓ 标出当前选中的选项或已打开的开关项（DESIGN §2.1）；在长列表里多选时改用命令菜单的勾选框（components/command-menu.json）"
   ],
   "usageHints": [
     "Triggered by button click (dropdown) or right-click (context)",
@@ -36,8 +37,7 @@
   "doNotInvent": [
     "Blue hover state — hover is subtle fill only",
     "Icons in every menu item — only for items that benefit from visual recognition",
-    "Thick separators — 1px line only",
-    "Checkmarks in menu for multi-select — use Submenu or separate controls"
+    "Thick separators — 1px line only"
   ],
   "unknowns": ["Nested submenu depth limit", "Long menu scrolling behavior"]
 }

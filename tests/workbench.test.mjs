@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters} from '../design-system/workbench.js';
+import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords,keyStep} from '../design-system/workbench.js';
 
 const fields = [
   { key: 'name', label: '名称', type: 'text' },
@@ -60,4 +60,45 @@ test('key labels are readable on every platform', async () => {
   assert.deepEqual(formatKeys('space'), ['空格']);
   assert.deepEqual(formatKeys('g l'), ['G', 'L']);
   assert.ok(['⌘K', 'Ctrl+K'].includes(formatKeys('mod+k')[0]));
+});
+
+test('file checks: extension case-insensitive, empty files and size limit give a reason', () => {
+  const rules = { accept: ['.pdf', '.step', '.dwg'], maxSize: 10 * 1024 * 1024 };
+  assert.equal(checkFile({ name: '图纸.DWG', size: 100 }, rules), null);
+  assert.equal(checkFile({ name: '说明.docx', size: 100 }, rules), '不支持的类型 .docx');
+  assert.equal(checkFile({ name: 'noext', size: 100 }, rules), '不支持的类型');
+  assert.equal(checkFile({ name: 'a.pdf', size: 0 }, rules), '空文件');
+  assert.equal(checkFile({ name: 'a.pdf', size: 11 * 1024 * 1024 }, rules), '超过 10 MB');
+  assert.equal(checkFile({ name: 'any.bin', size: 1 }), null);
+  assert.deepEqual([500, 1536, 18 * 1024 * 1024, -1].map(formatBytes), ['500 B', '1.5 KB', '18 MB', '—']);
+});
+
+test('tree totals: parents sum their children in integer cents, cycles are rejected', () => {
+  const rows = [{ id: 'a' }, { id: 'a1', parent: 'a', cents: 1840 }, { id: 'a2', parent: 'a' }, { id: 'a21', parent: 'a2', cents: 140 }, { id: 'a22', parent: 'a2', cents: 112 }, { id: 'b', cents: 5 }];
+  const t = treeTotals(rows, r => r.cents);
+  assert.equal(t.get('a2'), 252);
+  assert.equal(t.get('a'), 2092);
+  assert.equal(t.get('b'), 5);
+  assert.throws(() => treeTotals([{ id: 'x', parent: 'y' }, { id: 'y', parent: 'x' }], () => 1), /Cyclic/);
+});
+
+test('version diff: added, removed and changed fields by key, in version order', () => {
+  const before = [{ id: 'p1', qty: 1000, price: 1840 }, { id: 'p2', qty: 2000, price: 625 }, { id: 'p3', qty: 6000, price: 110 }];
+  const after = [{ id: 'p1', qty: 1200, price: 1840 }, { id: 'p3', qty: 6000, price: 110 }, { id: 'p4', qty: 4000, price: 28 }];
+  const d = diffRecords(before, after, { fields: ['qty', 'price'] });
+  assert.deepEqual(d.added.map(r => r.id), ['p4']);
+  assert.deepEqual(d.removed.map(r => r.id), ['p2']);
+  assert.deepEqual(d.changed.map(c => [c.id, c.fields]), [['p1', [{ field: 'qty', from: 1000, to: 1200 }]]]);
+  assert.equal(d.unchanged, 1);
+  assert.deepEqual(diffRecords([{ id: 1, a: [1] }], [{ id: 1, a: [1] }]).changed, [], 'structural equality');
+});
+
+test('key steps use the same names as the reserved table in shortcuts.json', async () => {
+  const {readFile} = await import('node:fs/promises');
+  const reserved = Object.keys(JSON.parse(await readFile(new URL('../design-system/components/shortcuts.json', import.meta.url), 'utf8')).reserved);
+  const ev = (key, mods = {}) => ({ key, metaKey: false, ctrlKey: false, altKey: false, shiftKey: false, ...mods });
+  const steps = [keyStep(ev('ArrowUp')), keyStep(ev('ArrowDown')), keyStep(ev('ArrowLeft')), keyStep(ev('ArrowRight')),
+    keyStep(ev('ArrowDown', { shiftKey: true })), keyStep(ev('Escape')), keyStep(ev(' ')), keyStep(ev('k', { ctrlKey: true }))];
+  assert.deepEqual(steps, ['up', 'down', 'left', 'right', 'shift+down', 'escape', 'space', 'mod+k']);
+  for (const s of steps) assert.ok(reserved.includes(s), `${s} is in the reserved table`);
 });

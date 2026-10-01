@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workbench Files — Aham UI Preview</title>
+  <link rel="stylesheet" href="../workbench.css">
+  <style>
+body { margin: 0; }
+/* Preview scaffold only; component styles come from workbench.css. */
+.pv { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
+.pv h1 { font-size: 20px; font-weight: 500; }
+.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
+.pv-story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
+.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
+.pv-cap { color: var(--wb-muted); font-size: 12px; }
+.pv-frame { border-radius: 12px; box-shadow: 0 0 0 1px var(--wb-line); overflow: hidden; min-width: 0; }
+.pv-viewer { height: 520px; }
+.pv-viewer > .wb-viewer-split { height: 100%; }
+.pv-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+.pv-tools > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  </style>
+</head>
+<body>
+<div class="aham-workbench wb-bare" data-theme="light">
+<main class="pv">
+  <header><h1>文件与版本 · 状态预览</h1></header>
+  <p>文件上传、文件预览、树形明细和版本对比四种组合。样式来自 <code>workbench.css</code>，行为来自 <code>workbench.js</code>。上传进度和识别结果是本页模拟的，图纸是手绘的示意 SVG，数据都是虚构的。规则见 WORKBENCH §15。</p>
+
+  <section class="pv-story" aria-labelledby="pv-upload-title">
+    <div class="pv-label" id="pv-upload-title">文件上传 · 拖入文件或文件夹，也可以用按钮选择</div>
+    <div class="wb-drop" id="pv-drop">
+      <svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-upload"/></svg>
+      <strong>把文件或文件夹拖到这里</strong>
+      <span>支持 PDF、STEP、DXF、DWG 和 ZIP 压缩包，单个文件不超过 200 MB</span>
+      <div class="wb-drop-actions">
+        <button type="button" class="wb-btn sm" data-drop="files"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg>选择文件</button>
+        <button type="button" class="wb-btn sm" data-drop="folder"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-folder"/></svg>选择文件夹</button>
+      </div>
+      <input type="file" multiple hidden>
+      <input type="file" webkitdirectory hidden>
+    </div>
+    <p class="pv-cap" id="pv-upload-status" role="status" aria-live="polite"></p>
+    <ul class="wb-files" id="pv-files" aria-label="待上传与已上传的文件"></ul>
+    <span class="pv-cap">五种行状态：已上传、上传中、压缩包、上传失败、未通过检查。新拖入的文件按模拟进度上传。</span>
+  </section>
+
+  <section class="pv-story" aria-labelledby="pv-viewer-title">
+    <div class="pv-label" id="pv-viewer-title">文件预览 · 图纸与识别字段并排，点字段在图上框出来源</div>
+    <div class="pv-frame pv-viewer">
+      <div class="wb-viewer-split">
+        <div class="wb-viewer" id="pv-viewer">
+          <div class="wb-viewer-bar">
+            <div>
+              <button type="button" class="wb-icon-btn" data-viewer="prev" aria-label="上一页" data-tooltip="上一页"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-chevron-left"/></svg></button>
+              <input class="wb-input" type="number" min="1" data-viewer="page" aria-label="页码">
+              <span>/ <span data-viewer="pages"></span></span>
+              <button type="button" class="wb-icon-btn" data-viewer="next" aria-label="下一页" data-tooltip="下一页"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-chevron-right"/></svg></button>
+            </div>
+            <div>
+              <button type="button" class="wb-icon-btn" data-viewer="zoom-out" aria-label="缩小" data-tooltip="缩小"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-minus"/></svg></button>
+              <span data-viewer="zoom" aria-live="polite"></span>
+              <button type="button" class="wb-icon-btn" data-viewer="zoom-in" aria-label="放大" data-tooltip="放大"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-plus"/></svg></button>
+              <button type="button" class="wb-btn sm ghost" data-viewer="fit">适合页面</button>
+              <button type="button" class="wb-btn sm ghost" data-viewer="actual">100%</button>
+            </div>
+          </div>
+          <div class="wb-viewer-stage" tabindex="0" aria-label="图纸 BRK-2041-A，获得焦点后按加号或减号缩放，按 0 适合页面，按 PageUp 或 PageDown 翻页">
+            <div class="wb-viewer-canvas" id="pv-canvas" data-width="800" data-height="566"></div>
+          </div>
+        </div>
+        <section class="wb-recognized" aria-labelledby="pv-fields-title">
+          <div class="wb-section-heading" style="padding:12px 16px 0"><h2 id="pv-fields-title">识别字段</h2><span class="wb-meta">点一行查看来源</span></div>
+          <div id="pv-fields"></div>
+        </section>
+      </div>
+    </div>
+    <span class="pv-cap">渲染 PDF 或 CAD 是产品的事：产品把渲染好的页面放进画布，Aham 只定工具栏、缩放、翻页和来源框。</span>
+  </section>
+
+  <section class="pv-story" aria-labelledby="pv-tree-title">
+    <div class="pv-label" id="pv-tree-title">树形明细 · 层级缩进、展开折叠、按层汇总</div>
+    <div class="pv-tools">
+      <span class="wb-risk warning"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-warning"/></svg>2 个零件的单价超过 90 天未更新：法兰螺母 M8、衬垫</span>
+      <div><button type="button" class="wb-btn sm ghost" id="pv-expand">全部展开</button><button type="button" class="wb-btn sm ghost" id="pv-collapse">全部折叠</button></div>
+    </div>
+    <div class="wb-table-scroll" tabindex="0" role="region" aria-label="物料明细，可横向滚动">
+      <table class="wb-table wb-tree-table" id="pv-tree">
+        <colgroup><col><col style="width:120px"><col style="width:72px"><col style="width:112px"><col style="width:128px"></colgroup>
+        <thead><tr><th scope="col">名称</th><th scope="col">编码</th><th scope="col" class="number">用量</th><th scope="col" class="number">单价（元）</th><th scope="col" class="number">金额（元）</th></tr></thead>
+        <tbody></tbody>
+        <tfoot><tr><td colspan="4">合计</td><td class="number" id="pv-tree-total"></td></tr></tfoot>
+      </table>
+    </div>
+    <span class="pv-cap">父行金额是子行之和，与明细同源计算。本例父件用量都是 1；用量连乘等规则由产品按业务定义。</span>
+  </section>
+
+  <section class="pv-story" aria-labelledby="pv-compare-title">
+    <div class="pv-label" id="pv-compare-title">版本对比 · 选两个版本，按分类列出新增、删除和改动</div>
+    <div class="pv-tools">
+      <div class="wb-compare-pick">
+        <label>从 <select class="wb-select" id="pv-from" aria-label="旧版本"></select></label>
+        <svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-arrow-right"/></svg>
+        <label>到 <select class="wb-select" id="pv-to" aria-label="新版本"></select></label>
+        <button type="button" class="wb-icon-btn" id="pv-swap" aria-label="交换两个版本" data-tooltip="交换两个版本"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-refresh"/></svg></button>
+      </div>
+      <div><span class="wb-count" id="pv-diff-count" role="status" aria-live="polite"></span>
+        <div class="wb-seg sm" role="group" aria-label="只看某类变化" id="pv-kind">
+          <button type="button" aria-pressed="true" data-kind="all">全部</button><button type="button" aria-pressed="false" data-kind="added">新增</button><button type="button" aria-pressed="false" data-kind="removed">删除</button><button type="button" aria-pressed="false" data-kind="changed">改动</button>
+        </div>
+      </div>
+    </div>
+    <div id="pv-diff"></div>
+  </section>
+</main>
+</div>
+<script type="module">
+import {icon, escapeHtml as esc, initTheme, initTooltips, initDropZone, formatBytes, initViewer, initTreeTable, treeTotals, diffRecords} from '../workbench.js';
+const root = document.querySelector('.aham-workbench');
+initTheme(root);
+initTooltips(root);
+const $ = s => root.querySelector(s);
+
+// ── Upload ──────────────────────────────────────────────────────────────────
+const ACCEPT = ['.pdf', '.step', '.stp', '.dxf', '.dwg', '.zip'];
+const MB = 1024 * 1024;
+const files = [
+  { name: '支架-A01.pdf', size: 2.4 * MB, state: 'done' },
+  { name: '外壳总成.step', size: 18 * MB, state: 'uploading', progress: 42 },
+  { name: '图纸包-2026-09.zip', size: 64 * MB, state: 'done', note: '压缩包，服务端解压后按文件列出' },
+  { name: '管夹.dwg', size: 3.1 * MB, state: 'failed', error: '上传失败：网络中断' },
+  { name: '报价说明.docx', size: 180 * 1024, state: 'rejected', error: '不支持的类型 .docx' },
+];
+function fileRow(f, i) {
+  const meta = `${esc(formatBytes(f.size))}${f.path && f.path !== f.name ? ` · ${esc(f.path)}` : ''}`;
+  const state = {
+    done: `<span class="wb-status"><b></b>已上传</span>${f.note ? `<span class="wb-meta">${esc(f.note)}</span>` : ''}`,
+    uploading: `<span>上传中 ${f.progress}%</span><span class="wb-progress" role="progressbar" aria-label="${esc(f.name)} 上传进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.progress}"><span style="width:${f.progress}%"></span></span>`,
+    failed: `<span class="wb-risk">${icon('error')}${esc(f.error)}</span>`,
+    rejected: `<span class="wb-risk">${icon('error')}${esc(f.error)}</span>`,
+  }[f.state];
+  const actions = {
+    uploading: `<button type="button" class="wb-btn sm ghost" data-act="cancel" data-i="${i}">取消</button>`,
+    failed: `<button type="button" class="wb-btn sm" data-act="retry" data-i="${i}">${icon('refresh')}重试</button>`,
+    rejected: `<button type="button" class="wb-btn sm ghost" data-act="remove" data-i="${i}">移除</button>`,
+  }[f.state] || '';
+  return `<li class="wb-file">${icon(f.name.endsWith('.zip') ? 'folder' : 'file')}<div><span class="wb-file-name" title="${esc(f.name)}">${esc(f.name)}</span><span class="wb-file-meta">${meta}</span></div><div class="wb-file-state">${state}</div><div class="wb-file-actions">${actions}</div></li>`;
+}
+const renderFiles = () => { $('#pv-files').innerHTML = files.map(fileRow).join(''); };
+function simulate(f) {
+  f.state = 'uploading';
+  f.progress = 0;
+  const timer = setInterval(() => {
+    if (f.state !== 'uploading') return clearInterval(timer);
+    f.progress = Math.min(100, f.progress + 20);
+    if (f.progress === 100) { f.state = 'done'; clearInterval(timer); }
+    renderFiles();
+  }, 400);
+}
+initDropZone($('#pv-drop'), {
+  accept: ACCEPT,
+  maxSize: 200 * MB,
+  onFiles: items => {
+    for (const it of items) {
+      const f = { name: it.name, path: it.path, size: it.size, state: it.error ? 'rejected' : 'uploading', error: it.error, progress: 0 };
+      files.push(f);
+      if (!it.error) simulate(f);
+    }
+    const bad = items.filter(it => it.error).length;
+    $('#pv-upload-status').textContent = `已加入 ${items.length} 个文件${bad ? `，${bad} 个未通过检查` : ''}。本页只模拟上传。`;
+    renderFiles();
+  },
+});
+$('#pv-files').addEventListener('click', e => {
+  const b = e.target.closest('button[data-act]');
+  if (!b) return;
+  const f = files[Number(b.dataset.i)];
+  if (b.dataset.act === 'retry') simulate(f);
+  if (b.dataset.act === 'cancel') { f.state = 'failed'; f.error = '已取消上传'; }
+  if (b.dataset.act === 'remove') files.splice(Number(b.dataset.i), 1);
+  renderFiles();
+});
+renderFiles();
+
+// ── Viewer ──────────────────────────────────────────────────────────────────
+const frame = inner => `<svg viewBox="0 0 800 566" fill="none" stroke="currentColor" stroke-width="1.2" font-family="inherit" font-size="13" role="img" aria-label="示意图纸">
+<rect x="12" y="12" width="776" height="542"/><rect x="520" y="454" width="268" height="100"/>
+<line x1="520" y1="488" x2="788" y2="488"/><line x1="520" y1="520" x2="788" y2="520"/><line x1="640" y1="454" x2="640" y2="554"/>
+<g fill="currentColor" stroke="none"><text x="530" y="476">图号</text><text x="650" y="476">BRK-2041-A</text><text x="530" y="508">名称</text><text x="650" y="508">安装支架</text><text x="530" y="541">材料</text><text x="650" y="541">SPCC t=1.5</text></g>${inner}</svg>`;
+const PAGES = [
+  frame(`<rect x="140" y="120" width="330" height="210" rx="6"/><circle cx="175" cy="155" r="10"/><circle cx="435" cy="155" r="10"/><circle cx="175" cy="295" r="10"/><circle cx="435" cy="295" r="10"/>
+<line x1="140" y1="370" x2="470" y2="370"/><line x1="140" y1="360" x2="140" y2="380"/><line x1="470" y1="360" x2="470" y2="380"/><line x1="100" y1="120" x2="100" y2="330"/><line x1="90" y1="120" x2="110" y2="120"/><line x1="90" y1="330" x2="110" y2="330"/>
+<g fill="currentColor" stroke="none"><text x="282" y="395">220</text><text x="60" y="230">140</text><text x="140" y="100">4 × ⌀10</text><text x="30" y="40">第 1 页 · 主视图</text></g>`),
+  frame(`<rect x="140" y="200" width="330" height="24"/><line x1="470" y1="200" x2="470" y2="120"/><line x1="494" y1="224" x2="494" y2="120"/><line x1="470" y1="120" x2="494" y2="120"/>
+<g fill="currentColor" stroke="none"><text x="140" y="260">t = 1.5</text><text x="505" y="170">折弯 90°</text><text x="30" y="40">第 2 页 · 侧视图</text></g>`),
+  frame(`<g fill="currentColor" stroke="none"><text x="60" y="120">技术要求</text><text x="60" y="160">1. 未注公差按 GB/T 1804-m。</text><text x="60" y="190">2. 表面处理：电泳，黑色（字迹模糊）。</text><text x="60" y="220">3. 去毛刺，锐边倒钝。</text><text x="30" y="40">第 3 页 · 技术要求</text></g>`),
+];
+const canvas = $('#pv-canvas');
+const showPage = n => { canvas.innerHTML = PAGES[n - 1]; };
+showPage(1);
+const viewer = initViewer($('#pv-viewer'), { pages: PAGES.length, onPage: n => { showPage(n); viewer.load(); } });
+const FIELDS = [
+  { label: '图号', value: 'BRK-2041-A', at: { page: 1, x: 640, y: 456, width: 146, height: 30 } },
+  { label: '名称', value: '安装支架', at: { page: 1, x: 640, y: 490, width: 146, height: 28 } },
+  { label: '材料', value: 'SPCC 冷轧钢板', at: { page: 1, x: 640, y: 522, width: 146, height: 30 } },
+  { label: '外形尺寸', value: '220 × 140 mm', at: { page: 1, x: 56, y: 120, width: 420, height: 282 } },
+  { label: '孔', value: '4 × ⌀10', at: { page: 1, x: 136, y: 84, width: 80, height: 24 } },
+  { label: '厚度', value: '1.5 mm', at: { page: 2, x: 136, y: 244, width: 70, height: 24 } },
+  { label: '表面处理', value: '电泳，黑色', at: { page: 3, x: 56, y: 172, width: 330, height: 26 }, unsure: '识别不确定：原图字迹模糊，请对照核对' },
+];
+$('#pv-fields').innerHTML = FIELDS.map((f, i) => `<button type="button" class="wb-recognized-row" data-i="${i}"><span>${esc(f.label)}</span><span>${esc(f.value)}</span><span>第 ${f.at.page} 页</span>${f.unsure ? `<span class="wb-risk warning">${icon('warning')}${esc(f.unsure)}</span>` : ''}</button>`).join('');
+const pick = e => { const b = e.target.closest?.('.wb-recognized-row'); if (b) viewer.show(FIELDS[Number(b.dataset.i)].at); };
+$('#pv-fields').addEventListener('click', pick);
+$('#pv-fields').addEventListener('focusin', pick);
+
+// ── Tree table ──────────────────────────────────────────────────────────────
+const BOM = [
+  { id: '1', name: '前支架总成', code: 'ASM-2041', qty: 1 },
+  { id: '1.1', parent: '1', name: '支架本体', code: 'BRK-2041-A', qty: 1, price: 1840 },
+  { id: '1.2', parent: '1', name: '加强板', code: 'PLT-0317', qty: 2, price: 625 },
+  { id: '1.3', parent: '1', name: '紧固件组', code: 'KIT-0088', qty: 1 },
+  { id: '1.3.1', parent: '1.3', name: '六角螺栓 M8×20', code: 'BLT-M8-20', qty: 4, price: 35 },
+  { id: '1.3.2', parent: '1.3', name: '法兰螺母 M8', code: 'NUT-M8-F', qty: 4, price: 28, stale: true },
+  { id: '2', name: '线束卡扣组件', code: 'ASM-5520', qty: 1 },
+  { id: '2.1', parent: '2', name: '卡扣本体', code: 'CLP-5520', qty: 6, price: 110 },
+  { id: '2.2', parent: '2', name: '衬垫', code: 'PAD-5521', qty: 6, price: 45, stale: true },
+];
+const totals = treeTotals(BOM, r => r.qty * r.price);
+const yuan = cents => (cents / 100).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const depth = r => (r.parent ? depth(BOM.find(p => p.id === r.parent)) + 1 : 1);
+const parents = new Set(BOM.map(r => r.parent).filter(Boolean));
+$('#pv-tree tbody').innerHTML = BOM.map(r => {
+  const lv = depth(r), kids = BOM.filter(c => c.parent === r.id).length;
+  const toggle = parents.has(r.id)
+    ? `<button type="button" class="wb-tree-toggle" aria-expanded="true" aria-label="${esc(r.name)}，第 ${lv} 层，含 ${kids} 项" tabindex="-1">${icon('chevron-down')}</button>`
+    : `<span class="wb-tree-spacer" aria-hidden="true"></span>`;
+  const price = r.price == null ? '—' : r.stale ? `<span class="wb-risk warning">${yuan(r.price)}<span class="wb-sr-only">（单价超过 90 天未更新）</span></span>` : yuan(r.price);
+  return `<tr data-id="${r.id}" data-level="${lv}"><td class="wb-tree-name" style="--wb-level:${lv}"><span>${toggle}<span class="wb-cell-title">${esc(r.name)}</span>${parents.has(r.id) ? '' : `<span class="wb-sr-only">，第 ${lv} 层</span>`}</span></td><td class="wb-mono">${esc(r.code)}</td><td class="number">${r.qty}</td><td class="number">${price}</td><td class="number">${yuan(totals.get(r.id))}</td></tr>`;
+}).join('');
+$('#pv-tree-total').textContent = yuan(BOM.filter(r => !r.parent).reduce((s, r) => s + totals.get(r.id), 0));
+const tree = initTreeTable($('#pv-tree'));
+$('#pv-expand').addEventListener('click', () => tree.expandAll());
+$('#pv-collapse').addEventListener('click', () => tree.collapseAll());
+
+// ── Version compare ─────────────────────────────────────────────────────────
+const VERSIONS = [
+  { id: 'V1', label: 'V1 · 2026-09-12 · 草稿', head: { 客户: '示例汽车部件有限公司', 交期: '2026-11-30', 付款: '月结 60 天', 有效期: '30 天' },
+    lines: [{ id: 'BRK-2041-A', name: '支架本体', qty: 1000, price: 1840 }, { id: 'PLT-0317', name: '加强板', qty: 2000, price: 625 }, { id: 'CLP-5520', name: '卡扣本体', qty: 6000, price: 110 }],
+    terms: [{ id: 't1', text: '含包装，不含运输。' }, { id: 't2', text: '价格按月度钢材指数调整。' }] },
+  { id: 'V2', label: 'V2 · 2026-09-20 · 已提交', head: { 客户: '示例汽车部件有限公司', 交期: '2026-12-15', 付款: '月结 60 天', 有效期: '30 天' },
+    lines: [{ id: 'BRK-2041-A', name: '支架本体', qty: 1000, price: 1790 }, { id: 'PLT-0317', name: '加强板', qty: 2000, price: 625 }, { id: 'CLP-5520', name: '卡扣本体', qty: 6000, price: 110 }, { id: 'PAD-5521', name: '衬垫', qty: 6000, price: 45 }],
+    terms: [{ id: 't1', text: '含包装，不含运输。' }, { id: 't2', text: '价格按月度钢材指数调整。' }] },
+  { id: 'V3', label: 'V3 · 2026-09-28 · 草稿', head: { 客户: '示例汽车部件有限公司', 交期: '2026-12-15', 付款: '月结 90 天', 有效期: '15 天' },
+    lines: [{ id: 'BRK-2041-A', name: '支架本体', qty: 1200, price: 1790 }, { id: 'CLP-5520', name: '卡扣本体', qty: 6000, price: 105 }, { id: 'PAD-5521', name: '衬垫', qty: 6000, price: 45 }, { id: 'NUT-M8-F', name: '法兰螺母 M8', qty: 4000, price: 28 }],
+    terms: [{ id: 't1', text: '含包装和运输。' }] },
+];
+const LABEL = { qty: '数量', price: '单价（元）', name: '名称', text: '内容' };
+const show = (field, v) => (v == null ? '—' : field === 'price' ? yuan(v) : typeof v === 'number' ? v.toLocaleString('zh-CN') : String(v));
+const numeric = field => field === 'price' || field === 'qty';
+const KIND = { added: ['新增', '+'], removed: ['删除', '−'], changed: ['改动', '~'] };
+const from = $('#pv-from'), to = $('#pv-to');
+for (const sel of [from, to]) sel.innerHTML = VERSIONS.map(v => `<option value="${v.id}">${esc(v.label)}</option>`).join('');
+from.value = 'V2';
+to.value = 'V3';
+let kind = 'all';
+function renderDiff() {
+  const a = VERSIONS.find(v => v.id === from.value), b = VERSIONS.find(v => v.id === to.value);
+  if (a === b) { $('#pv-diff').innerHTML = '<div class="wb-empty"><strong>选了同一个版本</strong><p>换一个「到」的版本再对比。</p></div>'; $('#pv-diff-count').textContent = ''; return; }
+  const groups = [
+    ['表头', diffRecords([{ id: 'head', ...a.head }], [{ id: 'head', ...b.head }]), () => '表头'],
+    ['明细', diffRecords(a.lines, b.lines, { fields: ['qty', 'price'] }), r => `${r.name} · ${r.id}`],
+    ['条款', diffRecords(a.terms, b.terms, { fields: ['text'] }), r => `条款 ${r.id.slice(1)}`],
+  ];
+  const n = { added: 0, removed: 0, changed: 0 };
+  const sections = groups.map(([title, d, name]) => {
+    const list = [
+      ...d.added.map(r => ({ k: 'added', obj: name(r), field: '—', from: '—', to: r.text ?? `数量 ${show('qty', r.qty)} · 单价 ${show('price', r.price)}` })),
+      ...d.removed.map(r => ({ k: 'removed', obj: name(r), field: '—', from: r.text ?? `数量 ${show('qty', r.qty)} · 单价 ${show('price', r.price)}`, to: '—' })),
+      ...d.changed.flatMap(c => c.fields.map(f => ({ k: 'changed', obj: name(c.after), field: LABEL[f.field] ?? f.field, from: show(f.field, f.from), to: show(f.field, f.to), num: numeric(f.field) }))),
+    ];
+    list.forEach(r => n[r.k]++);
+    const shown = list.filter(r => kind === 'all' || r.k === kind);
+    if (!shown.length) return '';
+    return `<section class="wb-diff-section"><div class="wb-section-heading"><h2>${title}<span>${shown.length}</span></h2></div><div class="wb-table-scroll" tabindex="0" role="region" aria-label="${title}的变化，可横向滚动"><table class="wb-table wb-diff-table"><colgroup><col style="width:88px"><col><col style="width:112px"><col style="width:22%"><col style="width:22%"></colgroup><thead><tr><th scope="col">变化</th><th scope="col">对象</th><th scope="col">字段</th><th scope="col">${esc(a.id)}</th><th scope="col">${esc(b.id)}</th></tr></thead><tbody>${shown.map(r => `<tr><td><span class="wb-diff-kind" data-sign="${KIND[r.k][1]}">${KIND[r.k][0]}</span></td><td>${esc(r.obj)}</td><td>${esc(r.field)}</td><td${r.num ? ' class="number"' : ''}><span class="${r.k === 'added' ? '' : 'wb-diff-old'}">${esc(r.from)}</span>${r.k === 'added' ? '' : '<span class="wb-sr-only">（原值）</span>'}</td><td${r.num ? ' class="number"' : ''}><span class="${r.k === 'removed' ? '' : 'wb-diff-new'}">${esc(r.to)}</span></td></tr>`).join('')}</tbody></table></div></section>`;
+  }).join('');
+  $('#pv-diff-count').textContent = `${a.id} → ${b.id}：新增 ${n.added} · 删除 ${n.removed} · 改动 ${n.changed}`;
+  $('#pv-diff').innerHTML = sections || '<div class="wb-empty"><strong>没有这类变化</strong><p>切回「全部」查看其他变化。</p></div>';
+}
+from.addEventListener('change', renderDiff);
+to.addEventListener('change', renderDiff);
+$('#pv-swap').addEventListener('click', () => { [from.value, to.value] = [to.value, from.value]; renderDiff(); });
+$('#pv-kind').addEventListener('click', e => {
+  const b = e.target.closest('button[data-kind]');
+  if (!b) return;
+  kind = b.dataset.kind;
+  $('#pv-kind').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  renderDiff();
+});
+renderDiff();
+</script>
+</body>
+</html>

@@ -25,7 +25,7 @@
     "Mixed state = ink-primary line inside box",
     "Disabled = quaternary ink (#C4C4C4) border, label at ink-tertiary",
     "Label = body text (14px) to the right, 8px gap (--space-2)",
-    "Focus ring = 3px rgba(51,110,232,0.20)"
+    "键盘焦点 = 2px 实线蓝色描边、偏移 2px（token focusRing）；3px 浅蓝光晕只用于文本输入框"
   ],
   "usageHints": [
     "Active/checked state is INK, not blue — blue only for focus ring",

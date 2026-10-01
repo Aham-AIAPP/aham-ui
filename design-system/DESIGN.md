@@ -6,6 +6,8 @@
 
 **八层结构**:0 原则 · 1 基础(含国际化/RTL、隐私) · 2 控件与组件 · 3 组合规则 · 4 模式 · 5 介质落地 · 6 输入 · 7 系统支撑 · **8 页面布局体系(v6.0 新增)**。
 
+**版本 v7.4**——网页工作台新增文件上传、文件预览、树形明细、版本对比(§2.10、`WORKBENCH.md` §15);确认弹窗写法见 §1.9,加载反馈的循环例外见 §1.7;另修正各文件之间的 25 处矛盾,见 `CHANGELOG.md`。
+
 **版本 v7.3**——字体栈改用 Linear:无衬线 `Inter Variable`(随包附带 4.1,见 `fonts/`),等宽 `Berkeley Mono`(未授权时 `JetBrains Mono`);字号和字重不变。规则见 §1.3、§1.11。
 
 **版本 v7.2**——网页工作台扩展：外框与 40px 页眉横条、列表与筛选、列表键盘与记录详情、命令面板与快捷键、设置页、AI 协作，规则见 `WORKBENCH.md` §2、§9–14；颜色字体沿用本规范，布局交互照 Circle / Linear。
@@ -126,12 +128,16 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:Inter Variable 自带�
 | 网页 / Office / 邮件 | **Lucide**(内联 SVG + `<use>` 雪碧图;邮件不支持则 PNG 回退) |
 | macOS app | **SF Symbols** 按名引用(`Image(systemName:)`,苹果原生;**不导出、不入库**;后续落地) |
 
-**用法**:`<svg class="icon"><use href="icons/aham-icons.svg#i-search"/></svg>`(`.icon--sm/--lg` 换档)。**命名**:语义名稳定(`i-success`),底层 Lucide 名记录在 `icons/icons.json`(51 起始件,含 `sfSymbol` 预留列)——换源不动业务名。**状态图标**必须配文字(守 §1.8 不靠颜色单独传达);**纯图标按钮**必须有 `aria-label`(守 §1.8 VoiceOver)。
+**用法**:`<svg class="icon"><use href="icons/aham-icons.svg#i-search"/></svg>`(`.icon--sm/--lg` 换档)。**命名**:语义名稳定(`i-success`),底层 Lucide 名记录在 `icons/icons.json`(现有 53 件,含 `sfSymbol` 预留列)——换源不动业务名。**状态图标**必须配文字(守 §1.8 不靠颜色单独传达);**纯图标按钮**必须有 `aria-label`(守 §1.8 VoiceOver)。
 
 > 图标来自 [Lucide](https://lucide.dev)(ISC),许可全文见 `icons/LICENSE`。SF Symbols 版权属 Apple,仅可用于苹果平台 App 及其 mockup,**不纳入本 MIT 仓库**。
 
 ### 1.7 动效
 服务反馈不表演,默认不动。时长:fast .12s / base .18s / slow .28s。缓动 `cubic-bezier(.2,0,0,1)`。禁循环/弹跳/视差/>.3s。
+
+**时长只取三档 token**:CSS 写 `var(--dur-fast)` 等变量,不写 .15s 这类档外值。悬停、勾选、开关、箭头旋转用 fast;面板展开、宽度变化用 base;大面积进出用 slow。
+
+**加载反馈例外**:spinner、骨架屏 `.skeleton`、不确定进度条 `.progress.is-indeterminate` 可以循环播放。它们表示「还在处理」,属于 §4 加载分级里的必要反馈。例外只限这三种,装饰性循环仍然禁止。它们的循环周期(现为 .6–1.4s)不受 .3s 上限和三档时长的约束。按钮 `.is-loading` 里的 spinner 和图片占位 `.image-box.loading` 分别算 spinner 和骨架屏。系统开启减少动态效果时,动画只播一次且时长接近 0,见下一段。
 
 **Reduce Motion 响应(↔Apple)**:`prefers-reduced-motion:reduce` 时,缩放/滑动/旋转**替换为 dissolve/淡入淡出**或直接切换(无过渡);禁视差与自动播放。**CSS 已实现该媒体查询**。
 
@@ -150,6 +156,8 @@ CSS 类:`.text-display`…`.text-mono`。**光学尺寸**:Inter Variable 自带�
 
 ### 1.9 内容文案
 语气克制直接不夸张;术语全系统一致;按钮用动词;空状态一句+一出路;错误说"发生什么+怎么办";数字格式统一(千分位/时间 `2026-06-19`/百分比位数一致)。
+
+**确认弹窗**:标题写动作和对象(「删除 3 条记录」),正文写后果(「删除后无法恢复」),标题和正文都不用问句(不写「确定要删除吗?」)。按钮文字与标题的动词一致。
 
 **文案体系(↔Apple Writing / Inclusion)**:按钮/菜单**动词开头**;正文第二人称("你");避免行话与带性别/文化偏见措辞;西文标题式 vs 句首大写保持一致;**空白屏必须给下一步动作 + 按钮/链接**(不只"暂无数据")。
 
@@ -174,7 +182,7 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
 
 **命中区(更正)**:Apple **唯一公开**的命中区数字是 **44×44pt**(明确涵盖指针);macOS 实际控件约 22–24pt。"28pt 指针最小值"是第三方约定、**非 Apple 官方**。Aham 自定取值,但保留原则——**围绕小目标(图标按钮)加 padding 形成命中区**,桌面 ≥32(含 padding)、触屏 Large=44。
 
-### 2.1–2.9 组件(按 9 组,各守铁规)
+### 2.1–2.10 组件(按 10 组,各守铁规)
 - **2.1 动作 Actions**(全变体):
   - 按钮 `.btn`:层级 `--primary/secondary/ghost/danger` × 尺寸 `--sm/(md 默认)/--lg`;状态 hover/active/focus/disabled/**`.is-loading`**;变体 **全宽 `--block` / toggle `--toggle[aria-pressed]` / 链接 `--link`** / 图标+文字(gap) / 纯图标 `.icon-btn`。**一组一 primary;宽度自适应。**
   - 按钮组 `.btn-group`:相邻合并描边。
@@ -240,6 +248,17 @@ local-first:数据默认留本机。**仅在需要时请求权限**(麦克风录
   - **认证/居中页壳 `.auth-shell` + `.brand-mark`**:居中页(登录/向导),`__brand`(品牌标,`.brand-mark` = **唯一蓝点缀**的 logo 方块)+ `__card`(宽 `--auth-max` 420)。补 §8 应用轨"仅登录/向导/空态居中"。
   - **表单分组 `.form-section` / `__title`**:`.field` 的上层分组容器(分组标题 + 一组字段),分组间顶部细线。
   - **lint 自查(第 7 章)**:① `.speaker-marker` 等多类别**必有形状/文字通道,不只颜色**;② `.player` 波形蓝只在已播放段、时间 mono;③ `.prose` 表格无竖线、无衬线强调、行宽 ≤65ch;④ `.avatar` 不得使用品牌色/语义色;⑤ `.composer` 一组一 primary;⑥ 九件颜色/尺寸/圆角只引既有 token(头像尺寸用 `avatar.*`),无裸值;⑦ `.auth-shell` 蓝仅出现在 `.brand-mark`/主按钮。
+
+- **2.10 文件与版本(网页工作台组合,v7.4)**:CSS 在 `workbench.css`,行为在 `workbench.js`,完整规则见 `WORKBENCH.md` §15,状态见 `preview/workbench-files.html`。
+  - **原则**:文件、层级和版本都是业务数据,沿用表格的写法:只有横线、数字右对齐等宽、选中用灰。颜色只在真实风险上出现(WORKBENCH §1.2)。渲染 PDF、CAD 和上传文件由产品接入,Aham 只定外框、交互和汇总方式。
+  - **结构**:
+    - 文件上传 = 拖放区 `.wb-drop` + 文件行 `.wb-file`(名称、大小、状态、行内操作)。
+    - 文件预览 = 工具栏 `.wb-viewer-bar` + 查看区 `.wb-viewer-stage` + 画布 `.wb-viewer-canvas`;对照时并排字段栏 `.wb-recognized`。
+    - 树形明细 = 原生表格 `.wb-tree-table` + 展开按钮 `.wb-tree-toggle`,按层缩进。
+    - 版本对比 = 版本选择 `.wb-compare-pick` + 摘要 + 按分类分节的差异表(`.wb-diff-kind` / `.wb-diff-old` / `.wb-diff-new`)。
+  - **变体**:上传分文件、文件夹、压缩包;预览分单独查看和与字段并排;树形明细分展开和折叠;版本对比按变化类型筛选。
+  - **约束**:拖放必须配选择按钮;拖入高亮用灰不用蓝;进度条用墨色;来源框用 2px 墨色描边;父行金额只能由子行求和;变化类型写文字加符号,不用红绿色;表格不声明为 ARIA grid 或 treegrid。
+  - **lint 自查(第 7 章)**:① 上传区有「选择文件」按钮;② 失败和未通过检查写明原因并可重试或移除;③ 查看区可聚焦且有可访问名;④ 父行合计与子行之和一致;⑤ 旧值除删除线外有隐藏文字;⑥ 这四种组合里没有蓝色高亮、彩色底色和竖线。
 
 **暗色**:所有组件引用语义 token,暗色下值切换,组件零改动自动适配(已验证)。
 
@@ -450,6 +469,6 @@ C 风格保持 Aham 的颜色、按钮圆角和状态表达，字体栈与 Linea
 1. **取值不抄 Apple**:学框架/方法/比例,数值是 Aham(版权 + Inter≠SF + pt≠px)。Apple 数据为特定版本核对,随版本变,仅作参考。
 2. **暗色是提案**,需真机实测对比度(尤其暗色主按钮蓝底白字、Increase Contrast 下深字压深底)。
 3. **命中区更正**:Apple 唯一公开命中区数字是 44×44pt;"28pt 指针目标"是第三方约定**非 Apple 官方**。Aham 自定取值,保留"足够命中区 + padding"原则。
-4. **tracking 未入 token**:字体特定,SF 值不适用 Inter,留待 Inter 实测/opsz 轴。
+4. **tracking 未入 token**:字体特定,SF 值不适用 Inter,留待 Inter 实测/opsz 轴。`aham-ui.css` 里现有的字距写死值是临时值,等实测后进 token:`.text-display`、`.text-title`、`.metric .v` 为 -.02em,`.text-heading`、`.card__head .ttl`、`.auth-shell__brand` 为 -.01em;表格分组行 `.doc-table tr.group-row td` 为 .03em,等宽类型标 `.attachment__type` 为 .04em。新增样式不要再加写死的字距。
 5. **行为类规范需真实代码验证**:拖放完整交互、VoiceOver 实际朗读、焦点组键盘导航、Dynamic Type 实际缩放——规范给规则 + CSS 给视觉/媒体查询支持,**完整行为在阶段 6 于真实 React/Swift 落地验证**。
 6. **base 14px / 4 基网格是 Aham 自定**(桌面/数据密度;Apple 现行未官方规定 8pt 网格),非未对齐。

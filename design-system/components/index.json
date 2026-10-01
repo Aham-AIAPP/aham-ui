@@ -100,7 +100,7 @@
       "slug": "icon",
       "name": "Icon",
       "confidence": "high",
-      "variantCount": 51
+      "variantCount": 53
     },
     {
       "slug": "workbench",
@@ -239,6 +239,30 @@
       "name": "AI Confirm",
       "confidence": "high",
       "variantCount": 2
+    },
+    {
+      "slug": "file-upload",
+      "name": "File Upload",
+      "confidence": "high",
+      "variantCount": 3
+    },
+    {
+      "slug": "file-viewer",
+      "name": "File Viewer",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "tree-table",
+      "name": "Tree Table",
+      "confidence": "high",
+      "variantCount": 2
+    },
+    {
+      "slug": "version-compare",
+      "name": "Version Compare",
+      "confidence": "high",
+      "variantCount": 4
     }
   ]
 }

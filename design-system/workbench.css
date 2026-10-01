@@ -49,6 +49,14 @@
 :where(.aham-workbench) :is(h2,h3){font-size:var(--wb-body);font-weight:600}
 :where(.aham-workbench) .wb-status{display:inline-flex;align-items:center;gap:var(--wb-dot);color:var(--wb-ink);white-space:nowrap}
 :where(.aham-workbench) .wb-status b{width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-muted)}
+/* Risk (WORKBENCH §1.2): the status dot stays gray; a real risk is a separate line or value in the semantic text colour,
+   with an icon (outside table cells) and words that say what is wrong. Warning text reaches 4.5:1 only on the white tier,
+   so on panel surfaces the words turn ink and only the icon keeps the warning colour. */
+:where(.aham-workbench) .wb-risk{display:inline-flex;align-items:center;gap:var(--wb-s1);color:var(--wb-danger)}
+:where(.aham-workbench) .wb-risk.warning{color:var(--wb-warning)}
+:where(.aham-workbench) .wb-risk svg{width:var(--wb-s3);height:var(--wb-s3)}
+:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer) .wb-risk.warning{color:var(--wb-ink)}
+:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer) .wb-risk.warning svg{color:var(--wb-warning)}
 :where(.aham-workbench) :is(.wb-meta,.wb-crumbs-meta){color:var(--wb-muted)}
 :where(.aham-workbench) .wb-mono{font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
@@ -91,9 +99,10 @@
 :where(.aham-workbench) .wb-sep{padding-inline:var(--wb-s2)}
 :where(.aham-workbench) .wb-find{display:flex;align-items:center;gap:var(--wb-s2);max-width:40%}
 :where(.aham-workbench) .wb-find input{background:transparent;width:100%;min-width:0;border:0;padding:var(--wb-s1)}
-:where(.aham-workbench) .wb-table-scroll{overflow-x:auto;max-width:100%}
+/* position:relative keeps visually hidden text inside table cells within the scroll area. */
+:where(.aham-workbench) .wb-table-scroll{position:relative;overflow-x:auto;max-width:100%}
 :where(.aham-workbench) .wb-table{width:100%;min-width:var(--wb-table-min);border-collapse:collapse;table-layout:fixed}
-:where(.aham-workbench) .wb-table th{font-weight:500;color:var(--wb-muted);text-align:start;background:var(--wb-panel);height:var(--wb-s6);white-space:nowrap}
+:where(.aham-workbench) .wb-table th{font-weight:500;color:var(--wb-muted);text-align:start;background:var(--wb-bg);height:var(--wb-row);white-space:nowrap}
 :where(.aham-workbench) .wb-table :is(th,td){padding:0 var(--wb-s2);border-bottom:1px solid var(--wb-line)}
 :where(.aham-workbench) .wb-table td{height:var(--wb-row);vertical-align:middle;white-space:nowrap}
 :where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-panel)}
@@ -198,14 +207,17 @@
 :where(.aham-workbench) .wb-toggle-chips{display:flex;flex-wrap:wrap;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-toggle-chip{height:var(--wb-s5);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius-pill);background:transparent;box-shadow:inset 0 0 0 1px var(--wb-line);color:var(--wb-muted);font-size:var(--wb-body)}
 :where(.aham-workbench) .wb-toggle-chip[aria-pressed=true]{background:var(--wb-selected);box-shadow:none;color:var(--wb-ink)}
-:where(.aham-workbench) .wb-list-table thead th{position:sticky;top:0;z-index:2}
-:where(.aham-workbench) .wb-list-table td{height:var(--wb-row-list)}
-:where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-table td{height:var(--wb-row)}
+/* List rows: header, group rows and data rows share one height (DESIGN §8.13); the header has no fill of its own (DESIGN §0) and
+   uses the content surface only so that it covers rows scrolling beneath it. */
+:where(.aham-workbench) .wb-list-table{--wb-list-row:var(--wb-row-list)}
+:where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-table{--wb-list-row:var(--wb-row)}
+:where(.aham-workbench) .wb-list-table thead th{position:sticky;top:0;z-index:2;height:var(--wb-list-row)}
+:where(.aham-workbench) .wb-list-table td{height:var(--wb-list-row)}
 :where(.aham-workbench) .wb-list-table tr[data-selected] td{background:var(--wb-selected)}
 :where(.aham-workbench) .wb-list-table :is(th,td).wb-check{padding:0;text-align:center}
 :where(.aham-workbench) .wb-check-hit{display:grid;place-items:center;min-height:calc(var(--wb-row) - 1px);cursor:pointer}
 :where(.aham-workbench) .wb-list-table input[type=checkbox]{display:inline-block;width:auto;height:auto;margin:0;padding:0;border:0;appearance:auto;accent-color:var(--wb-ink);vertical-align:middle}
-:where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-s6);z-index:1;height:var(--wb-row-list);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-list-row);z-index:1;height:var(--wb-list-row);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-group-toggle{display:inline-flex;align-items:center;gap:var(--wb-s2);height:var(--wb-header-control);padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;font-weight:500}
 :where(.aham-workbench) .wb-group-toggle:hover{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-group-toggle svg{transition:transform var(--wb-fast) var(--wb-ease)}
@@ -230,9 +242,9 @@
 :where(.aham-workbench) .wb-search input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent}
 
 /* List keyboard focus (7.2 P3): one row is in the tab order; ↑↓ move it, Space previews, Enter opens. */
-:where(.aham-workbench) .wb-list-table tbody tr[data-id]{outline:0}
-:where(.aham-workbench) .wb-list-table tbody tr[data-id]:focus-visible td{background:var(--wb-hover);box-shadow:inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
-:where(.aham-workbench) .wb-list-table tbody tr[data-id]:focus-visible td:first-child{box-shadow:inset 2px 0 0 var(--wb-blue),inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
+:where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]{outline:0}
+:where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]:focus-visible td{background:var(--wb-hover);box-shadow:inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
+:where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]:focus-visible td:first-child{box-shadow:inset 2px 0 0 var(--wb-blue),inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
 :where(.aham-workbench) .wb-list-table tbody tr[data-previewing] td{background:var(--wb-hover)}
 
 /* Record detail (7.2 P3): centred reading column + properties panel, as in Circle's issue page. */
@@ -378,6 +390,58 @@
 /* Tooltips: label + registered shortcut, Aham dark tip, shown after a short hover or on keyboard focus (WORKBENCH §12.7). */
 :where(.aham-workbench) .wb-tooltip{position:fixed;z-index:var(--wb-z-toast);display:flex;align-items:center;gap:var(--wb-s2);max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius-sm);background:var(--wb-ink);color:var(--wb-bg);font-size:var(--wb-body);line-height:1.4;box-shadow:var(--wb-shadow-pop);pointer-events:none}
 :where(.aham-workbench) .wb-tooltip .wb-kbd{min-width:auto;height:auto;padding:0 var(--wb-s1);background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 35%,transparent);color:inherit}
+/* Files, tree table and version compare (WORKBENCH §15). Gray drop feedback, ink progress, no colour for diff kinds. */
+:where(.aham-workbench) .wb-drop{display:grid;justify-items:center;gap:var(--wb-s2);padding:var(--wb-s6) var(--wb-s5);border:1.5px dashed var(--wb-line);border-radius:var(--wb-radius-lg);color:var(--wb-muted);text-align:center;transition:border-color var(--wb-fast) var(--wb-ease),background var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-drop[data-drag=over]{border-color:var(--wb-muted);background:var(--wb-panel);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-drop>svg{width:var(--wb-s5);height:var(--wb-s5)}
+:where(.aham-workbench) .wb-drop strong{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-drop-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-files{margin:0;padding:0;list-style:none;border-top:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-file{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(120px,200px) auto;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row-list);padding:var(--wb-s1) var(--wb-s2);border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-file>svg{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-file-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-file-meta{display:block;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-file-state{display:grid;gap:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-file-actions{display:flex;gap:var(--wb-s1)}
+:where(.aham-workbench) .wb-progress{display:block;height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line);overflow:hidden}
+:where(.aham-workbench) .wb-progress>span{display:block;height:100%;background:var(--wb-ink);transition:width var(--wb-fast) var(--wb-ease)}
+/* Viewer: toolbar row, a scrolling stage on the panel tier, the page on the white tier. The field mark is an ink outline. */
+:where(.aham-workbench) .wb-viewer{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
+:where(.aham-workbench) .wb-viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);height:var(--wb-header-row);padding:0 var(--wb-s3);border-bottom:1px solid var(--wb-line);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-viewer-bar>div{display:flex;align-items:center;gap:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-viewer-bar .wb-input{width:calc(var(--wb-s7) - var(--wb-s2));text-align:center;font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) [data-viewer=zoom]{min-width:var(--wb-s7);text-align:center;font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-viewer-stage{overflow:auto;padding:var(--wb-s4);background:var(--wb-panel);outline-offset:-2px}
+:where(.aham-workbench) .wb-viewer-stage[data-pan=true]{cursor:grab}
+:where(.aham-workbench) .wb-viewer-stage[data-dragging]{cursor:grabbing;user-select:none}
+:where(.aham-workbench) .wb-viewer-canvas{position:relative;margin:0 auto;background:var(--wb-bg)}
+:where(.aham-workbench) .wb-viewer-canvas>:is(img,svg,canvas){display:block;width:100%;height:100%}
+:where(.aham-workbench) .wb-viewer-mark{position:absolute;outline:2px solid var(--wb-ink);outline-offset:2px;border-radius:var(--wb-radius-sm);pointer-events:none}
+:where(.aham-workbench) .wb-viewer-split{display:grid;grid-template-columns:minmax(0,1fr) var(--wb-panel-wide);min-height:0}
+:where(.aham-workbench) .wb-viewer-split>.wb-viewer{border-inline-end:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-recognized{display:grid;align-content:start;min-height:0;overflow:auto}
+:where(.aham-workbench) .wb-recognized-row{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr) auto;align-items:center;gap:var(--wb-s2);width:100%;min-height:var(--wb-row-list);padding:var(--wb-s1) var(--wb-s4);border:0;border-bottom:1px solid var(--wb-line);background:transparent;text-align:start}
+:where(.aham-workbench) .wb-recognized-row:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-recognized-row>span:first-child{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-recognized-row>span:last-child{color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-recognized-row .wb-risk{grid-column:2 / -1}
+/* Tree table: indent per level, a 20px toggle, parent subtotals at weight 500. */
+:where(.aham-workbench) .wb-table td.wb-tree-name{padding-inline-start:calc(var(--wb-s2) + (var(--wb-level,1) - 1) * var(--wb-s4))}
+:where(.aham-workbench) .wb-tree-name>span{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;min-width:0}
+:where(.aham-workbench) .wb-tree-toggle,:where(.aham-workbench) .wb-tree-spacer{display:inline-grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);padding:0;border:0;border-radius:var(--wb-radius-sm);background:transparent;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-tree-toggle:hover{background:var(--wb-hover);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-tree-toggle svg{width:var(--wb-s3);height:var(--wb-s3);transition:transform var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-tree-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
+:where(.aham-workbench) .wb-tree-table tr:has(.wb-tree-toggle) td{font-weight:500}
+/* Version compare: the kind is a word with a mono sign; the old value is struck through in secondary ink. */
+:where(.aham-workbench) .wb-compare-pick{display:flex;align-items:center;gap:var(--wb-s2);min-width:0}
+:where(.aham-workbench) .wb-diff-section{margin-block-start:var(--wb-s5)}
+:where(.aham-workbench) .wb-diff-kind{display:inline-flex;align-items:center;gap:var(--wb-s1);white-space:nowrap}
+:where(.aham-workbench) .wb-diff-kind::before{content:attr(data-sign);width:var(--wb-s3);color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;text-align:center}
+:where(.aham-workbench) .wb-diff-old{color:var(--wb-muted);text-decoration:line-through;text-decoration-thickness:1px}
+:where(.aham-workbench) .wb-diff-new{font-weight:500}
+:where(.aham-workbench) .wb-diff-table td{white-space:normal}
+:where(.aham-workbench) .wb-diff-table .wb-diff-old,:where(.aham-workbench) .wb-diff-table .wb-diff-new{overflow-wrap:anywhere}
 /* AI assistance (WORKBENCH §14): the comment-block grammar — secondary surface, no border, no shadow, no AI colour. */
 :where(.aham-workbench) .wb-ai{display:grid;gap:var(--wb-s2);margin-block:var(--wb-s2);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-panel)}
 :where(.aham-workbench) .wb-ai-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-control)}

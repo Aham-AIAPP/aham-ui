@@ -6,6 +6,66 @@
 
 ## [Unreleased]
 
+## [7.4.0] - 2026-09-30
+
+> **文件与版本**：工作台新增文件上传、文件预览、树形明细、版本对比四种组合（WORKBENCH §15）；补写风险表达、主按钮位置和暗色取值；修正文件之间的 25 处矛盾。
+
+### 新增
+- 四种工作台组合，规则写在 WORKBENCH §15，DESIGN 第 2 层新增 2.10：
+  - 文件上传 `file-upload`：拖放文件或文件夹，另有选择按钮；逐个文件检查、显示进度、失败可重试。
+  - 文件预览 `file-viewer`：缩放、平移、翻页；与识别字段并排，点字段在图上框出来源。
+  - 树形明细 `tree-table`：层级缩进、展开折叠、行级键盘，父行金额由子行求和。
+  - 版本对比 `version-compare`：选两个版本，按分类列出新增、删除和改动，旧值和新值并排。
+- `workbench.js` 新增 `initDropZone`、`initViewer`、`initTreeTable`，以及纯函数 `checkFile`、`formatBytes`、`treeTotals`、`diffRecords`。
+- `workbench.css` 新增 `.wb-drop`、`.wb-file`、`.wb-progress`、`.wb-viewer*`、`.wb-recognized*`、`.wb-tree-*`、`.wb-diff-*`、`.wb-compare-pick`，取值只用工作台变量。
+- 状态预览页 `preview/workbench-files.html`，登记进 `library-consumption.json`。上传进度和识别结果是本页模拟的。
+- `components/shortcuts.json` 保留键增加 ←、→（树形明细）和 +、−、0、PageUp、PageDown（文件预览）。WORKBENCH §12.2 同步。
+- 测试增加 4 条：新契约与预览页的结构检查，以及文件检查、按层汇总、版本差异三组纯函数。
+- WORKBENCH §1.2 风险与警示：状态点保持灰色，真实风险用 `.wb-risk` 的语义色文字加说明。表格单元格只染数值，另配隐藏文字。
+- 工作台新增变量 `--wb-warning`（`color.semantic.warning`），供 `.wb-risk.warning` 使用。
+- WORKBENCH §2.1 写明主按钮的位置：单据页放标题区，列表、详情、设置放第 1 条横条最右端，第 2 条不放主按钮。
+- WORKBENCH §7.1 列出亮暗两种主题下主按钮、焦点、危险和警示文字的取值与对比度。
+- DESIGN 诚实声明第 4 条列出 `aham-ui.css` 里现有的写死字距，标为临时值。
+- AGENTS 的工作台硬性要求补两条：风险写法、主按钮位置。
+- `scripts/lint-design.mjs` 增加 4 组对比度：危险文字对次级底，暗色危险、警示文字对次级底，暗色焦点对次级底。
+
+### 变更
+- 工作台暗色的 `--wb-blue` 由 `#7BA3F0` 改为 `#5C8BED`，与 token `focusRing` 和基础层一致。焦点描边、当前页签下划线和列表焦点行边线随之变化。
+
+### 修复
+修正文件之间的 25 处矛盾。裁决顺序为 tokens → WORKBENCH / DESIGN → 契约 → 运行时 → 示例。
+
+- `aham-ui.css` 的 `[data-density="compact"]` 行高由 28px 改为 32px，与 tokens 一致。
+- 快捷键的方向键名与保留表一致：`workbench.js` 把 `ArrowDown` 等规范为 `down`、`up`、`left`、`right`，原来登记 `down` 的快捷键按不响应。新增导出 `keyStep`，测试核对它给出的键名都在 `shortcuts.json` 的保留表里。
+- 开关打开统一为墨色：`toggle.json` 和开关预览页原来写蓝色。
+- `button.json` 改为现行写法：主按钮 `#164EC3`，次级白底加线，危险红字。按钮预览页随之改。
+- 进度条和滑块的填充统一为墨色，改的是契约和预览页；`aham-ui.css` 原本就是墨色。
+- `segmented-control.json` 删去「选中段是白色卡片」；预览页的选中段改为扁平灰、去掉阴影。
+- `tooltip.json` 的出现延迟由 0.3s 改为 500ms，与 WORKBENCH §12.7 和 `workbench.js` 一致。
+- `menu.json` 删去「多选不用勾选」，改为说明 `.checked` 的用途（DESIGN §2.1）。
+- 基础层 `.popover` 圆角由 8px 改为 12px，与 `popover.json` 和 WORKBENCH §10 一致。
+- `nav.json` 写明 36px 用于应用轨和 content 网页，工作台导航项用 32px。
+- `command-palette.json` 的分组顺序补上「AI」组，与 WORKBENCH §12.1 一致。
+- token `workbench.detailWidth` 的说明改为 13px 正文。
+- 图标数量统一为 53：tokens、`icon.json`、`components/index.json`、DESIGN §1.6、组件预览页和 `design-system/README.md`。图标预览页补上 `ai`、`stop` 两件。
+- DESIGN §1.7 写明加载反馈的循环例外：spinner、骨架屏和不确定进度条。
+- 0.15s 的过渡改为 `motion.duration.fast`：`aham-ui.css` 的开关和两处箭头，以及组件预览页。
+- 工作台表头与数据行同高：列表 36 / 32px，触屏 44px，单据跟随单据行高。
+- 工作台表头去掉次级底色，吸顶时用白底，靠字重和底边线区分（DESIGN §0）。
+- 触屏和窄屏下，列表的 44px 行高不再被「紧凑」显示选项覆盖。
+- 基础层 `.drawer` 宽度改用 `overlayWidth.drawer`（400px）。
+- CONTRIBUTING 的铁律改为现行的蓝色用途，删去「蓝色用于选中」。
+- `design-system/README.md` 的暗色说明改为「单独取值」，与 DESIGN §1.2 一致。
+- 删除未使用的 `--ui-border-light`，tokens 里只有一种线色。
+- `SKILL.md` 的定位描述改为 AI 工具和 ToB 业务界面的设计系统。
+- `examples/workbench-shell.html` 的「筛选」「显示」改为次级按钮（WORKBENCH §9.2）。
+- `checkbox.json` 的键盘焦点改为 2px 实线描边；`search-field.json` 写明光晕只用于输入框聚焦。
+- `examples/page-shell.html` 去掉未定义的 `.text-overline`，改用 `.text-caption`。
+- 设置示例删去「发送评论：Enter」选项。评论框按 WORKBENCH §11.5 固定为 ⌘ / Ctrl + Enter 发送。
+- 确认弹窗标题去掉问句：客户列表、设置页、弹窗预览页和 dashboard 示例。DESIGN §1.9 写明这条规则。
+- 基础层 `.tree-item` 高度由 30px 改为 32px，回到 4px 网格。
+- `.wb-table-scroll` 加 `position:relative`。表格单元格里的隐藏文字原先会撑出页面，在 390px 宽时产生横向滚动。
+
 ## [7.3.0] - 2026-09-30
 
 > **字体改用 Linear 的字体栈**：无衬线 Inter Variable（随包附带 4.1），等宽 Berkeley Mono（未授权时 JetBrains Mono），开启 Linear 的 `cv01` / `ss03`；字号和字重仍用 Aham 的档位。
@@ -185,7 +245,8 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.3.0...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.4.0...HEAD
+[7.4.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.4.0
 [7.3.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.3.0
 [7.2.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.1
 [7.2.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.0

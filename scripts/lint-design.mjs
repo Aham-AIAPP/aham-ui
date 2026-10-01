@@ -69,6 +69,7 @@ const LEGACY_COLORS = {
   'aham-success': 'color.semantic.success', 'aham-success-bg': 'color.semantic.success-bg', 'aham-warning': 'color.semantic.warning', 'aham-warning-bg': 'color.semantic.warning-bg',
   'aham-danger': 'color.semantic.danger', 'aham-danger-bg': 'color.semantic.danger-bg', 'aham-fill-hover': 'color.fill.hover', 'aham-fill-active': 'color.fill.active',
   'color-focus-ring': 'color.alias.focus-ring', 'color-overlay': 'color.alias.overlay', 'focus-ring-color': 'focusRing.color',
+  'color-action-bg': 'color.alias.action-bg', 'color-action-bg-hover': 'color.alias.action-bg-hover',
 };
 const LEGACY_ROOT = {
   ...LEGACY_COLORS,
@@ -101,6 +102,7 @@ const PAIRS = [
   ['主按钮白字', 'color.ink.on-accent', 'color.alias.action-bg', 4.5], ['主按钮悬停白字', 'color.ink.on-accent', 'color.alias.action-bg-hover', 4.5],
   ['文字链接', 'color.accent.default', 'color.surface.tier1-white', 4.5],
   ...['success', 'warning', 'danger'].map(k => [`${k} 文字 / 白底`, `color.semantic.${k}`, 'color.surface.tier1-white', 4.5]),
+  ['危险文字 / 次级底（工作台风险提示）', 'color.semantic.danger', 'color.surface.tier2-panel', 4.5],
   ...['success', 'warning', 'danger'].map(k => [`通知正文 / ${k}-bg`, 'color.ink.primary', `color.semantic.${k}-bg`, 4.5]),
   ['焦点描边 / 白底', 'focusRing.color', 'color.surface.tier1-white', 3],
   ['高对比度控件边界 / 白底', 'color.contrastMore.control-border', 'color.surface.tier1-white', 3],
@@ -108,8 +110,10 @@ const PAIRS = [
   ...['tier1-bg', 'tier2-panel'].map(s => [`暗色次级文字 / ${s}`, 'color.dark.ink.secondary', `color.dark.surface.${s}`, 4.5]),
   ['暗色文字链接', 'color.dark.accent.default', 'color.dark.surface.tier1-bg', 4.5],
   ...['success', 'warning', 'danger'].map(k => [`暗色 ${k} 文字`, `color.dark.semantic.${k}`, 'color.dark.surface.tier1-bg', 4.5]),
+  ...['warning', 'danger'].map(k => [`暗色 ${k} 文字 / 次级底`, `color.dark.semantic.${k}`, 'color.dark.surface.tier2-panel', 4.5]),
   ...['success', 'warning', 'danger'].map(k => [`暗色通知正文 / ${k}-bg`, 'color.dark.ink.primary', `color.dark.semantic.${k}-bg`, 4.5]),
   ['暗色焦点描边', 'color.dark.accent.default', 'color.dark.surface.tier1-bg', 3],
+  ['暗色焦点描边 / 次级底', 'color.dark.accent.default', 'color.dark.surface.tier2-panel', 3],
   ['暗色高对比度控件边界', 'color.dark.contrastMore.control-border', 'color.dark.surface.tier1-bg', 3],
 ];
 const lum = hex => {

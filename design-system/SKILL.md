@@ -1,6 +1,6 @@
 ---
 name: aham-design
-description: Use this skill to generate well-branded interfaces and assets for Aham — a developer-tool dashboard design system. Contains essential design guidelines, colors, type, fonts, and UI kit components for prototyping dashboard UIs.
+description: Use this skill to generate well-branded interfaces and assets for Aham — the design system for Aham's AI tools and for ToB business interfaces (web content pages, the web workbench for lists, records, documents and settings, macOS apps, Office files and email). Contains tokens, rules, component contracts, fonts, icons and reference CSS / JS.
 user-invocable: true
 ---
 
@@ -44,4 +44,5 @@ For ToB admin UIs (lists, record detail, documents, settings) use WORKBENCH.md w
 - Quick actions (§12): ⌘K palette with record context and in-place sub-lists; one shortcut registry limited to components/shortcuts.json; context menu without cascading submenus; cell pickers with toast undo; quick-create dialog with 继续新建.
 - Settings (§13): grouped settings nav, 720px centred content, line-separated rows that apply immediately.
 - AI (§14): entries in the ⌘K "AI" group and in place; generated blocks on the secondary surface with an ai-icon marker, sources, stop / retry and one primary action; one field suggestion at a time; a confirmation dialog before any AI change is written; consent off by default. No AI colour, no floating chat bubble.
+- Files and versions (§15): a drop zone with 选择文件 / 选择文件夹 buttons and one row per file (check, ink progress, retry); a viewer with page, zoom and pan beside the recognised fields, which outlines each field's source in ink; a tree table with 16px indents, row keys and parent subtotals from treeTotals; a version compare with 从 / 到 pickers and sections of + / − / ~ rows (old value struck through), never red or green. Aham renders no PDF or CAD.
 Read order: WORKBENCH.md → tokens.json (workbench) → components/*.json → workbench.css / workbench.js → preview/workbench-*.html → examples/*.html.

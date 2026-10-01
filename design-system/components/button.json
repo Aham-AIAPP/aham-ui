@@ -56,19 +56,19 @@
   },
   "structurePatterns": [
     "All variants share same padding and radius",
-    "Primary uses accent blue (#336EE8) background with white text",
-    "Secondary uses panel (#F3F3F3) background with ink-primary text",
+    "主按钮：底色 #164EC3（token color.alias.action-bg，亮暗一致），白字 7.21:1；悬停 #336EE8",
+    "次级按钮：白底 + 1px 分隔线色描边（#E7E7E7），墨色字；悬停次级底色。基础层与工作台相同（WORKBENCH §8 两层组件对照）",
     "Ghost has no background, only text color on interaction",
-    "Danger uses muted red semantic color"
+    "危险按钮：白底 + 1px 分隔线描边 + 红字（semantic.danger），悬停浅红底；不用红底"
   ],
   "usageHints": [
-    "One primary button per view — accent blue is a garnish, not a fill",
+    "一组只放一个主按钮；主按钮是蓝色唯一允许的整块填充",
     "Default button height = 32px (--layout-btn-height)",
     "Use medium weight (500) for button labels",
     "Radius md (8px) for all buttons"
   ],
   "doNotInvent": [
-    "Outline variant — not in Aham system",
+    "灰底次级按钮：次级按钮一律白底加线",
     "Large fill areas of accent blue — blue is garnish only",
     "Rounded-full/pill buttons — use md radius (8px)",
     "Gradient or shadow on buttons — Aham is flat"

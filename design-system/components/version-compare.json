@@ -1,0 +1,92 @@
+{
+  "slug": "version-compare",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "implementation": "workbench.css",
+  "behavior": "workbench.js",
+  "preview": "preview/workbench-files.html",
+  "reference": "preview/workbench-files.html",
+  "specification": "WORKBENCH.md §15.4",
+  "intent": "版本对比：选两个版本，按分类列出新增、删除和改动，并排显示旧值和新值",
+  "api": "diffRecords(before, after, { key, fields }) → { added, removed, changed: [{ id, before, after, fields: [{ field, from, to }] }], unchanged }",
+  "variantDimensions": [
+    {
+      "axis": "kind-filter",
+      "values": [
+        "all",
+        "added",
+        "removed",
+        "changed"
+      ]
+    },
+    {
+      "axis": "category",
+      "values": [
+        "header",
+        "lines",
+        "terms"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "version-from",
+      "version-to",
+      "swap",
+      "summary",
+      "kind-filter",
+      "category-section",
+      "diff-table",
+      "kind-cell",
+      "object-cell",
+      "field-cell",
+      "old-value",
+      "new-value",
+      "empty"
+    ],
+    "required": [
+      "version-from",
+      "version-to",
+      "summary",
+      "category-section",
+      "diff-table"
+    ]
+  },
+  "markup": {
+    "row": "<tr><td><span class=\"wb-diff-kind\" data-sign=\"~\">改动</span></td><td>支架本体 · BRK-2041-A</td><td>数量</td><td class=\"number\"><span class=\"wb-diff-old\">1,000</span><span class=\"wb-sr-only\">（原值）</span></td><td class=\"number\"><span class=\"wb-diff-new\">1,200</span></td></tr>",
+    "picker": "<div class=\"wb-compare-pick\"><label>从 <select class=\"wb-select\" aria-label=\"旧版本\">…</select></label>[arrow-right]<label>到 <select class=\"wb-select\" aria-label=\"新版本\">…</select></label><button class=\"wb-icon-btn\" aria-label=\"交换两个版本\">…</button></div>"
+  },
+  "rules": [
+    "两个版本选择器写成「从 旧版本 到 新版本」，选项显示版本号、日期和状态；默认比较当前版本与上一版",
+    "摘要写成「V2 → V3：新增 1 · 删除 2 · 改动 5」，放在页眉第 2 条左侧或对比区顶部",
+    "按分类分节（如表头、明细、条款），每节一张表：变化 / 对象 / 字段 / 旧值 / 新值；没有变化的分类不显示",
+    "变化类型用文字加等宽符号（+ 新增、− 删除、~ 改动），不用红绿色",
+    "旧值用次级文字色加删除线，新值字重 500；数值右对齐等宽，可另加差额列",
+    "新增行的旧值、删除行的新值写「—」；一个对象多处改动时逐字段各占一行",
+    "两个版本相同时说明「选了同一个版本」；筛选后没有结果时给出切回「全部」的入口",
+    "差异由 diffRecords 按主键和字段计算，金额比较整数分，不比较格式化后的文字"
+  ],
+  "states": [
+    "default",
+    "filtered",
+    "same-version",
+    "no-changes",
+    "loading"
+  ],
+  "keyboard": [
+    "两个选择器和交换按钮按 Tab 顺序到达",
+    "变化类型筛选用分段按钮，aria-pressed 标出当前项"
+  ],
+  "accessibility": [
+    "摘要用 role=\"status\" 播报",
+    "删除线之外用隐藏文字「原值」标出旧值，不只靠删除线",
+    "每张差异表有列头 scope 和可访问名"
+  ],
+  "doNotInvent": [
+    "红色删除、绿色新增的底色或文字",
+    "只显示新版本、让人自己找差异",
+    "把所有分类混成一张不分节的长表",
+    "用字符级文本差异高亮代替字段级对比（需要时另加，不作为默认）"
+  ]
+}

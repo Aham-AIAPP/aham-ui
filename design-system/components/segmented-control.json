@@ -29,7 +29,7 @@
   "usageHints": [
     "Use for mutually exclusive view modes (list/grid, day/week/month)",
     "Best for 2-4 segments — more should use dropdown menu",
-    "Active segment is WHITE card, not blue"
+    "选中段是扁平灰（tier3-line）加墨色字，不是白色浮起的卡片，也不是蓝色"
   ],
   "doNotInvent": [
     "Blue selected segment or a floating white chip with shadow — selected = flat gray, no shadow",

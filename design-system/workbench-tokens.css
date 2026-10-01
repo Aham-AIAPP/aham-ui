@@ -75,6 +75,7 @@
   --wb-total: 24px;
   --wb-touch-input: 16px;
   --wb-danger-bg: #F4ECEA;
+  --wb-warning: #8A7333;
   --wb-s0: 0;
   --wb-s1: 4px;
   --wb-s2: 8px;
@@ -96,9 +97,10 @@
   --wb-selected: #3A3A3A;
   --wb-ink: #F5F5F5;
   --wb-muted: #A8A8A8;
-  --wb-blue: #7BA3F0;
+  --wb-blue: #5C8BED;
   --wb-danger: #D08070;
   --wb-danger-bg: #2A1E1A;
+  --wb-warning: #C2A855;
 }
 @media (prefers-color-scheme: dark) {
 .aham-workbench:not([data-theme="light"]) {
@@ -111,9 +113,10 @@
   --wb-selected: #3A3A3A;
   --wb-ink: #F5F5F5;
   --wb-muted: #A8A8A8;
-  --wb-blue: #7BA3F0;
+  --wb-blue: #5C8BED;
   --wb-danger: #D08070;
   --wb-danger-bg: #2A1E1A;
+  --wb-warning: #C2A855;
 }
 }
 /* Breakpoints are substituted from canonical tokens; CSS variables do not work in media conditions. */
@@ -138,6 +141,8 @@
  .aham-workbench .wb-settings-nav ul {grid-auto-flow:column;grid-auto-columns:max-content;overflow-x:auto}
  .aham-workbench .wb-settings-scroll {overflow:visible}
  .aham-workbench .wb-panel[data-size=wide] {position:fixed;inset-block:0;inset-inline-end:0;z-index:var(--wb-z-nav);width:min(var(--wb-panel-wide),100vw);overflow:auto;box-shadow:var(--wb-shadow-float)}
+ .aham-workbench .wb-viewer-split {grid-template-columns:minmax(0,1fr)}
+ .aham-workbench .wb-viewer-split>.wb-viewer {border-inline-end:0;border-bottom:1px solid var(--wb-line)}
 }
 /* ≤ mobile breakpoint: normal page flow; the rail is hidden until the header toggle opens it. */
 @media (max-width: 40rem) {
@@ -170,15 +175,18 @@
  .aham-workbench .wb-chip {flex:none;height:var(--wb-touch)}
  .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
  .aham-workbench {--wb-check-col:var(--wb-touch)}
- .aham-workbench .wb-list-table td {height:var(--wb-touch)}
+ .aham-workbench .wb-list-table,.aham-workbench .wb-list[data-list-density] .wb-list-table {--wb-list-row:var(--wb-touch)}
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
  .aham-workbench .wb-toasts {left:var(--wb-s4);right:var(--wb-s4);width:auto}
  .aham-workbench :is(.wb-palette,.wb-create) {margin-top:var(--wb-s4)}
+ .aham-workbench .wb-file {grid-template-columns:auto minmax(0,1fr)}
+ .aham-workbench .wb-viewer-bar {height:auto;min-height:var(--wb-header-row);flex-wrap:wrap;padding-block:var(--wb-s1)}
+ .aham-workbench :is(.wb-file-state,.wb-file-actions) {grid-column:2}
 }
 @media (pointer:coarse) {
  .aham-workbench button,.aham-workbench input:not([type=checkbox],[type=radio]) {min-height:var(--wb-touch);min-width:var(--wb-touch)}
  .aham-workbench {--wb-check-col:var(--wb-touch)}
- .aham-workbench .wb-list-table td {height:var(--wb-touch)}
+ .aham-workbench .wb-list-table,.aham-workbench .wb-list[data-list-density] .wb-list-table {--wb-list-row:var(--wb-touch)}
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
  .aham-workbench .wb-seg.sm {height:auto}
  .aham-workbench .wb-chip {height:var(--wb-touch)}

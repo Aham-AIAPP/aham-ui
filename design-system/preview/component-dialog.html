@@ -23,13 +23,13 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 .dlg-md { width: 480px; max-width: 100%; }
 .dlg-hd { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-4) 0; min-width: 0; }
 .dlg-tt { font-family: var(--font-display); font-size: var(--aham-typography-fontSize-lg); font-weight: var(--aham-typography-fontWeight-semibold); line-height: var(--aham-typography-lineHeight-snug); color: var(--color-ink-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dlg-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; border: none; background: none; color: var(--color-ink-tertiary); cursor: pointer; border-radius: var(--radius-xs); transition: background .15s, color .15s; padding: 0; }
+.dlg-close { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex-shrink: 0; border: none; background: none; color: var(--color-ink-tertiary); cursor: pointer; border-radius: var(--radius-xs); transition: background var(--duration-fast), color var(--duration-fast); padding: 0; }
 .dlg-close:hover { background: var(--color-fill-hover); color: var(--color-ink-primary); }
 .dlg-close svg { width: 16px; height: 16px; }
 .dlg-bd { padding: var(--space-3) var(--space-4); font-size: var(--aham-typography-fontSize-base); line-height: var(--aham-typography-lineHeight-normal); color: var(--color-ink-secondary); }
 .dlg-bd>:last-child { margin-bottom: 0; }
 .dlg-ft { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); padding: 0 var(--space-4) var(--space-4); }
-.dlg .btn { display: inline-flex; align-items: center; justify-content: center; height: var(--layout-btn-height); padding: 0 var(--space-4); font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); font-family: var(--font-sans); border-radius: var(--radius-md); border: none; cursor: pointer; white-space: nowrap; transition: background .15s, color .15s; flex-shrink: 0; min-width: var(--layout-btn-height); }
+.dlg .btn { display: inline-flex; align-items: center; justify-content: center; height: var(--layout-btn-height); padding: 0 var(--space-4); font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); font-family: var(--font-sans); border-radius: var(--radius-md); border: none; cursor: pointer; white-space: nowrap; transition: background var(--duration-fast), color var(--duration-fast); flex-shrink: 0; min-width: var(--layout-btn-height); }
 .dlg .btn-cancel { background: var(--color-bg-panel); color: var(--color-ink-primary); }
 .dlg .btn-cancel:hover { background: var(--color-bg-selected); }
 .dlg .btn-primary { background: var(--color-accent); color: var(--color-ink-on-accent); }
@@ -39,7 +39,7 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 .dlg-fld { display: flex; flex-direction: column; gap: var(--space-1); }
 .dlg-fld+.dlg-fld { margin-top: var(--space-3); }
 .dlg-lbl { font-size: var(--aham-typography-fontSize-sm); font-weight: var(--aham-typography-fontWeight-medium); color: var(--color-ink-primary); }
-.dlg-inp { height: var(--layout-control-height); padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--aham-typography-fontSize-base); font-family: var(--font-sans); color: var(--color-ink-primary); background: var(--color-surface); outline: none; transition: border-color .15s; width: 100%; box-sizing: border-box; }
+.dlg-inp { height: var(--layout-control-height); padding: 0 var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--aham-typography-fontSize-base); font-family: var(--font-sans); color: var(--color-ink-primary); background: var(--color-surface); outline: none; transition: border-color var(--duration-fast); width: 100%; box-sizing: border-box; }
 .dlg-inp:focus { border-color: var(--color-accent); box-shadow: var(--shadow-focus-ring); }
 /* @component-css-end */
 </style>
@@ -57,7 +57,7 @@ body { margin: 0; background: var(--color-bg-app); font-family: var(--font-sans)
 <span class="story-label" style="width:72px;flex-shrink:0;padding-top:var(--space-4)">确认</span>
 <div class="rail"><div class="dlg dlg-md">
 <div class="dlg-hd"><span class="dlg-tt">删除项目</span><button class="dlg-close" aria-label="关闭"><svg><use href="#icon-close"/></svg></button></div>
-<div class="dlg-bd">确定要删除"品牌官网"项目吗？此操作不可撤销，所有关联文件和设置将被永久移除。</div>
+<div class="dlg-bd">删除后，「品牌官网」的全部关联文件和设置会被永久移除，无法撤销。</div>
 <div class="dlg-ft"><button class="btn btn-cancel">取消</button><button class="btn btn-danger">删除</button></div>
 </div></div>
 </div>
