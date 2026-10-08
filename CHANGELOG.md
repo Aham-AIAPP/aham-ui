@@ -16,6 +16,8 @@
 - 工作台变量新增 `--wb-faint`、`--wb-warning-mark`、`--wb-text-md`、`--wb-form-label`、`--wb-form-col-min`、`--wb-form-col-max`、`--wb-doc-max`。
 - `workbench.css` 新增 `.wb-document.is-capped`、`.wb-doc-card*`、`.wb-doc-group*`、`.wb-doc-pair`、`.wb-doc-side`、`.wb-form-*`、`.wb-value.is-*`、`.wb-source`、`.wb-edit*`、`.wb-value-state`、`.wb-table-block`、`.wb-table-toolbar`、`.wb-edit-footer`、`.wb-msg-btn`、`.wb-messages`；标签位置和两列并排用容器查询，写在 `workbench-layout.css.in`。
 - `workbench.js` 新增 `initObjectPage`：进入编辑态、初始焦点、校验和值状态、消息列表、保存、有改动时取消先问、离开页面先问。
+- 页脚贴在正文底边：粘性定位会让开滚动容器的内边距，`.wb-edit-footer` 的 bottom 取 `.wb-document` 下内边距的负数；正文另设内边距时跟着改。
+- 小节里的表格表头用小节的次级底色，不留白条；只有标题行的卡片（收起的分区）去掉标题下的分隔线。
 - 示例页 `examples/object-page.html`，登记进 `library-consumption.json`。
 - 保留键新增 E（编辑当前单据）；⌘ / Ctrl + Enter 的说明加「保存编辑态」。WORKBENCH §12.2 同步。
 - `scripts/lint-design.mjs` 增加 4 组对比度：要核对的值、必填没写的值，亮暗各一组。

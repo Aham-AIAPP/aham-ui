@@ -397,6 +397,9 @@
 :where(.aham-workbench) .wb-doc-card{border:1px solid var(--wb-line);border-radius:var(--wb-radius-lg);padding:var(--wb-s3) var(--wb-s5) var(--wb-s5);margin-block-start:var(--wb-s4);scroll-margin-top:var(--wb-s5);container-type:inline-size}
 :where(.aham-workbench) .wb-doc-card-head{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-control);padding-block-end:var(--wb-s3);border-bottom:1px solid var(--wb-line)}
 :where(.aham-workbench) .wb-doc-card-head h2{margin:0;font-size:var(--wb-text-md);font-weight:600}
+/* A card with only its head (a folded section) drops the rule under the head and most of its bottom padding. */
+:where(.aham-workbench) .wb-doc-card-head:last-child{border-bottom:0;padding-block-end:0}
+:where(.aham-workbench) .wb-doc-card:has(>.wb-doc-card-head:last-child){padding-block-end:var(--wb-s3)}
 :where(.aham-workbench) .wb-doc-group{background:var(--wb-panel);border-radius:var(--wb-radius);padding:var(--wb-s3) var(--wb-s4) var(--wb-s4);margin-block-start:var(--wb-s3);container-type:inline-size;min-width:0}
 :where(.aham-workbench) .wb-doc-card-head+.wb-doc-group{margin-block-start:var(--wb-s4)}
 :where(.aham-workbench) .wb-doc-group-title{display:flex;align-items:center;gap:var(--wb-s2);margin:0 0 var(--wb-s1);font-size:var(--wb-text-base);font-weight:600;line-height:24px}
@@ -456,9 +459,12 @@
 :where(.aham-workbench) .wb-table-toolbar>.wb-spacer{flex:1}
 :where(.aham-workbench) .wb-table-block>.wb-table-scroll{position:relative;overflow-x:auto}
 :where(.aham-workbench) .wb-table-block .wb-table{min-width:420px;table-layout:fixed;width:100%}
+/* The table header is opaque for sticky scrolling; inside a group it takes the group's panel tier, not a white strip. */
+:where(.aham-workbench) .wb-doc-group .wb-table thead th{background:var(--wb-panel)}
 /* Edit footer: messages on the left, then optional fields for the whole save, then 保存 and 取消 on the right. Header
-   actions marked data-edit-hide only lose their visibility in edit mode, so nothing above the form moves. */
-:where(.aham-workbench) .wb-edit-footer{position:sticky;bottom:0;z-index:var(--wb-z-pop);display:none;flex-wrap:wrap;align-items:center;gap:var(--wb-s2) var(--wb-s3);margin-block-start:var(--wb-s5);padding:var(--wb-s2) var(--wb-s5);background:var(--wb-bg);border-top:1px solid var(--wb-line)}
+   actions marked data-edit-hide only lose their visibility in edit mode, so nothing above the form moves. A sticky
+   element stops at the scroll container's padding, so bottom is minus the document's end padding (.wb-document). */
+:where(.aham-workbench) .wb-edit-footer{position:sticky;bottom:calc(-1 * var(--wb-s4));z-index:var(--wb-z-pop);display:none;flex-wrap:wrap;align-items:center;gap:var(--wb-s2) var(--wb-s3);margin-block-start:var(--wb-s5);padding:var(--wb-s2) var(--wb-s5);background:var(--wb-bg);border-top:1px solid var(--wb-line)}
 :where(.aham-workbench) [data-mode=edit] .wb-edit-footer{display:flex}
 :where(.aham-workbench) .wb-edit-footer>.wb-spacer{flex:1}
 :where(.aham-workbench) [data-mode=edit] [data-edit-hide]{visibility:hidden}
