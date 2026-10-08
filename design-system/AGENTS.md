@@ -36,8 +36,8 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 ## 产出前自查(= 第 7 章 lint,最常违反的)
 - 状态用 **6px 点+文字**;可加状态图标,但必须配文字;不要 pill/色块/红黄绿灯。
 - 表格**只横线**,无竖线/整行底色;数字右对齐 mono。
-- 卡片**无边框无阴影**;选中=**扁平灰**,不是蓝。
-- 蓝**只**在 logo/主操作/发送/焦点环/当前页签下划线/文字链接;主按钮底色用深一档 `#164EC3`,其余用 `#336EE8`;选中用灰。
+- 卡片**无边框无阴影**;选中=**扁平灰**,不是蓝。例外:工作台单据正文的分区卡片 1px 描边、里面一层次级底色小节(WORKBENCH §4.1)。
+- 蓝**只**在 logo/主操作/发送/焦点环/当前页签下划线/文字链接/单据小节标题前的 3px 竖条;主按钮底色用深一档 `#164EC3`,其余用 `#336EE8`;选中用灰。
 - 一组**一个** primary;单一无衬线;内容区 `•`+文字,图标只在导航/工具栏/菜单/控件内部。
 - 字体不从第三方服务器加载;需要统一字形时自托管。
 - 颜色只来自 token 调色板;字体只用允许的几族;圆角只用档位。
@@ -70,7 +70,7 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 1. `WORKBENCH.md`：规则。§2 外框与页眉，§4–6 单据页，§9–10 列表与筛选，§11 列表键盘与详情，§12 快速操作，§13 设置页，§14 AI 协作，§15 文件、树形明细与版本对比。
 2. `tokens.json` 的 `workbench` 组：全部尺寸，不自创值。
 3. `components/index.json` 里的工作台契约：结构、状态、键盘、可访问性、禁止事项，多数写明 DOM 结构。
-4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`、`initTheme`、`initTooltips`、`setSingleKeyShortcuts`、`createAIOutput`、`showSuggestion`、`openAIConfirm`、`setAIEnabled`、`initDropZone`、`initViewer`、`initTreeTable`，以及纯函数 `checkFile`、`treeTotals`、`diffRecords`。
+4. `workbench.css` + `workbench.js`：直接引用，不要重写。行为函数：`initShell`、`initPanels`、`initSearch`、`initFilter`、`initDisplay`、`createCommand`、`initListKeys`、`initPropertyPickers`、`initComposer`、`initPalette`、`registerShortcut`、`initContextMenu`、`openPicker`、`toast`、`openCreateDialog`、`initTheme`、`initTooltips`、`setSingleKeyShortcuts`、`createAIOutput`、`showSuggestion`、`openAIConfirm`、`setAIEnabled`、`initDropZone`、`initViewer`、`initTreeTable`、`initObjectPage`，以及纯函数 `checkFile`、`treeTotals`、`diffRecords`。
 5. `preview/workbench-*.html` 看组件状态，`examples/*.html` 看页面组合。
 
 硬性要求：
@@ -81,5 +81,6 @@ Aham UI 是机读设计规范 + 参考实现,目的是**让你产出一致结果
 - AI 生成的内容要标记并列出依据；AI 改数据前必须弹窗确认，默认不开启 AI（WORKBENCH §14）。
 - 状态点保持灰色；真实风险用 `.wb-risk` 的语义色文字加说明，不给整行或状态点上色（WORKBENCH §1.2）。
 - 每页一个主按钮：单据页放标题区右端，其他页放第 1 条页眉横条最右端（WORKBENCH §2.1）。
+- 单据页：正文限宽、分区卡片加一层小节块，标签 148px 在值左边时加冒号；显示态和编辑态用同一套行，页脚放「保存」「取消」，用 `initObjectPage`（WORKBENCH §4.1–4.5）。
 - 取舍规则：颜色、形状听 Aham；字体栈、布局、交互、密度、键盘听 Linear；字号和字重仍用 Aham 的档位（WORKBENCH §1.1）。
 - 原网页内容、macOS、Office 规范继续适用。

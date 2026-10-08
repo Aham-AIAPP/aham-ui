@@ -29,6 +29,12 @@
   "specification": "WORKBENCH.md",
   "reference": "examples/crm-quotation.html",
   "implementation": "workbench.css",
+  "rules": [
+    "单据正文里的小表格放在 .wb-table-block：工具栏 .wb-table-toolbar 和表格同宽，标题在左，「添加」在右",
+    "表格放在 .wb-table-scroll 里，最小宽度 420px，窄屏时表格自己横向滚动，页面不横向滚动",
+    "编辑态每行最后一格是删除；有比例列的表格写合计，比例合计不对时作为错误列进消息列表",
+    "显示态的格子和表单的值写法相同：能改的有虚线，空着写「–」"
+  ],
   "states": [
     "default",
     "focus-visible",

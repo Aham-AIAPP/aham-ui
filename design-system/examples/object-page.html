@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 单据的显示态和编辑态</title><link rel="stylesheet" href="../workbench.css"><style>body{margin:0}</style></head>
+<body>
+<div class="aham-workbench" data-theme="light" aria-label="单据的显示态和编辑态示例">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <span class="wb-brand" aria-label="Aham CRM">A</span>
+    <div class="wb-nav-group"><a class="wb-nav-item" href="customer-list.html" aria-label="客户"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-users"/></svg><span>客户</span></a><a class="wb-nav-item" href="object-page.html" aria-label="立项单" aria-current="page"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-file"/></svg><span>立项单</span></a></div>
+    <div class="wb-nav-foot"><a class="wb-nav-item" href="settings.html" aria-label="设置"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-settings"/></svg><span>设置</span></a></div>
+  </nav>
+  <div class="wb-main" id="op" data-mode="read">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" data-tooltip="展开 / 收起导航" data-keys="mod+b"><svg aria-hidden="true"><use href="../icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="面包屑"><a href="#" data-action="placeholder">立项单</a><span aria-current="page" class="wb-mono">PJ-0007</span></nav></div>
+        <div class="wb-header-trail"><span class="wb-crumbs-meta">演示数据</span></div>
+      </div>
+    </header>
+    <header class="wb-page-head">
+      <div class="wb-page-head-lead"><h1>PJ-0007 · 华东仓储改造</h1><span class="wb-status"><b></b><span>草稿</span></span><span class="wb-meta" id="op-editing" hidden>编辑中</span></div>
+      <div class="wb-page-head-trail"><button type="button" class="wb-btn" data-edit-hide data-action="placeholder">导出</button><button type="button" class="wb-btn primary" id="op-edit" data-edit-hide data-tooltip="编辑" data-keys="e">编辑</button></div>
+    </header>
+    <div class="wb-layout">
+      <main class="wb-document is-capped" aria-label="立项单">
+
+        <section class="wb-doc-card" aria-labelledby="c-basic">
+          <div class="wb-doc-card-head"><h2 id="c-basic">基本信息</h2></div>
+          <div class="wb-doc-pair">
+            <div class="wb-doc-group">
+              <h3 class="wb-doc-group-title">项目</h3>
+              <div class="wb-form-col">
+                <div class="wb-form-row"><div class="wb-form-label" id="l-name">项目名称<span class="wb-colon" aria-hidden="true">：</span><span class="wb-form-required" aria-hidden="true">*</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-name"><span class="wb-read wb-form-text"><span class="wb-value is-editable" data-show="name">华东仓储改造</span></span><span class="wb-edit"><input class="wb-edit-input" name="name" aria-labelledby="l-name" required value="华东仓储改造"></span></div></div>
+                <div class="wb-form-row"><div class="wb-form-label" id="l-customer">客户<span class="wb-colon" aria-hidden="true">：</span><span class="wb-form-required" aria-hidden="true">*</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-customer"><span class="wb-read wb-form-text"><span class="wb-value is-editable" data-show="customer">示例客户甲</span></span><span class="wb-edit"><select class="wb-edit-input" name="customer" aria-labelledby="l-customer" required><option value="">–</option><option selected>示例客户甲</option><option>示例客户乙</option></select></span></div></div>
+                <div class="wb-form-row"><div class="wb-form-label" id="l-contact">客户联系人<span class="wb-colon" aria-hidden="true">：</span><span class="wb-form-required" aria-hidden="true">*</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-contact"><span class="wb-read wb-form-text"><span class="wb-value is-editable is-missing" data-show="contact">没写</span></span><span class="wb-edit"><input class="wb-edit-input" name="contact" aria-labelledby="l-contact" required value=""></span></div></div>
+              </div>
+            </div>
+            <div class="wb-doc-group">
+              <h3 class="wb-doc-group-title">日期和金额</h3>
+              <div class="wb-form-col">
+                <div class="wb-form-row"><div class="wb-form-label" id="l-start">立项日期<span class="wb-colon" aria-hidden="true">：</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-start"><span class="wb-read wb-form-text"><span class="wb-value is-editable wb-mono" data-show="start">2026-11-02</span></span><span class="wb-edit"><input class="wb-edit-input wb-mono" name="start" aria-labelledby="l-start" placeholder="YYYY-MM-DD" inputmode="numeric" value="2026-11-02"></span></div></div>
+                <div class="wb-form-row"><div class="wb-form-label" id="l-budget">预算<span class="wb-colon" aria-hidden="true">：</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-budget"><span class="wb-read wb-form-text"><span class="wb-value is-editable is-check" data-show="budget">1,200,000 元</span></span><span class="wb-edit"><input class="wb-edit-input is-number" name="budget" aria-labelledby="l-budget" inputmode="decimal" value="1200000"><span>元</span></span></div></div>
+                <div class="wb-form-row"><div class="wb-form-label" id="l-tax">税的口径<span class="wb-colon" aria-hidden="true">：</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-tax"><span class="wb-read wb-form-text"><span class="wb-value is-editable" data-show="tax">含税，税率 13.0%</span></span><span class="wb-edit is-groups"><span class="wb-edit-group"><select class="wb-edit-input" name="incl" aria-label="税的口径 是否含税"><option value="">是否含税</option><option selected>含税</option><option>不含税</option></select><span>，</span></span><span class="wb-edit-group"><span>税率</span><input class="wb-edit-input is-number" name="rate" aria-label="税的口径 税率" inputmode="decimal" size="5" value="13.0"><span>%</span></span></span></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="wb-doc-card" aria-labelledby="c-pay">
+          <div class="wb-doc-card-head"><h2 id="c-pay">付款</h2></div>
+          <div class="wb-doc-group">
+            <h3 class="wb-doc-group-title">账期和付款节点</h3>
+            <div class="wb-doc-side">
+              <div class="wb-form-col">
+                <div class="wb-form-row"><div class="wb-form-label" id="l-terms">账期<span class="wb-colon" aria-hidden="true">：</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-terms"><span class="wb-read wb-form-text"><span class="wb-value is-editable" data-show="terms">60 天，月末起算</span></span><span class="wb-edit is-groups"><span class="wb-edit-group"><input class="wb-edit-input is-number" name="days" aria-label="账期 天数" inputmode="numeric" size="4" value="60"><span>天，</span></span><span class="wb-edit-group"><select class="wb-edit-input" name="from" aria-label="账期 起算点"><option>开票</option><option selected>月末</option><option>验收</option></select><span>起算</span></span></span></div></div>
+                <div class="wb-form-row"><div class="wb-form-label" id="l-pay-note">付款说明<span class="wb-colon" aria-hidden="true">：</span></div>
+                  <div class="wb-form-value" tabindex="0" aria-labelledby="l-pay-note"><span class="wb-read wb-form-text"><span class="wb-value is-editable is-empty" data-show="paynote">–</span></span><span class="wb-edit"><textarea class="wb-edit-area" name="paynote" aria-labelledby="l-pay-note" rows="1"></textarea></span></div></div>
+              </div>
+              <div class="wb-table-block is-narrow">
+                <div class="wb-table-toolbar"><h4 class="wb-doc-group-title">付款节点</h4><span class="wb-spacer"></span><button type="button" class="wb-btn sm" id="op-add" data-edit-only>添加</button></div>
+                <div class="wb-table-scroll" tabindex="0" role="region" aria-label="付款节点，可横向滚动">
+                  <table class="wb-table" aria-label="付款节点">
+                    <colgroup><col><col style="width:104px"><col style="width:36px"></colgroup>
+                    <thead><tr><th scope="col">节点</th><th scope="col" class="number">比例</th><th scope="col"><span class="wb-sr-only">删除</span></th></tr></thead>
+                    <tbody id="op-ms"></tbody>
+                    <tfoot><tr><td>合计</td><td class="number wb-mono" id="op-ms-sum"></td><td></td></tr></tfoot>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="wb-doc-card" aria-labelledby="c-note">
+          <div class="wb-doc-card-head"><h2 id="c-note">备注</h2></div>
+          <div class="wb-doc-group">
+            <div class="wb-form-col">
+              <div class="wb-form-row"><div class="wb-form-label" id="l-note">备注<span class="wb-colon" aria-hidden="true">：</span></div>
+                <div class="wb-form-value" tabindex="0" aria-labelledby="l-note"><span class="wb-read wb-form-text"><span class="wb-value is-editable" data-show="note">分两期施工，一期先改收货区。</span></span><span class="wb-edit"><textarea class="wb-edit-area" name="note" aria-labelledby="l-note" rows="1">分两期施工，一期先改收货区。</textarea></span></div></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="wb-edit-footer" role="toolbar" aria-label="编辑立项单">
+          <button type="button" class="wb-msg-btn"></button>
+          <span class="wb-spacer"></span>
+          <button type="button" class="wb-btn primary" data-action="save" data-tooltip="保存" data-keys="mod+enter">保存</button>
+          <button type="button" class="wb-btn" data-action="cancel">取消</button>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="wb-popover" id="op-messages" role="dialog" aria-label="消息" hidden></div>
+</div>
+<script type="module" src="./object-page.mjs"></script>
+</body>
+</html>

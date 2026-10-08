@@ -1076,6 +1076,143 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
   return { close: finish };
 }
 
+// ── Object page (WORKBENCH §4.2) ─────────────────────────────────────────────
+// Read and edit mode on the same rows, as in the SAP Fiori object page. Each value is rendered twice: .wb-read for read
+// mode and .wb-edit holding the controls; [data-mode] on the page shows one of them. Header actions marked
+// data-edit-hide only lose their visibility, so nothing above the form moves. Enter with the edit button, E, a double
+// click on an editable value or Enter / F2 on a focused value; focus lands on that value, or on the first required empty
+// control. Save checks every control through validate(), shows each problem under its value and in the message list,
+// and leaves edit mode only after onSave() resolves. Cancel asks first when something changed.
+//   root      element that carries data-mode="read" | "edit"
+//   edit      the header edit button
+//   footer    .wb-edit-footer with [data-action=save], [data-action=cancel] and an empty .wb-msg-btn
+//   messages  a .wb-popover panel; the list of problems is rendered into it
+//   validate  root => [{ control, message, severity: 'error' | 'warning' }]; errors block saving, warnings do not
+//   onSave    values => Promise; values maps each control's name to its value
+const OBJECT_STATE_TEXT = { error: '错误', warning: '提醒' };
+export function initObjectPage(root, { edit, footer, messages, validate = () => [], onSave = async () => {}, saved = '已保存' } = {}) {
+  const controls = () => [...root.querySelectorAll('.wb-edit :is(input, select, textarea)')];
+  const save = footer.querySelector('[data-action=save]'), cancel = footer.querySelector('[data-action=cancel]');
+  const msgBtn = footer.querySelector('.wb-msg-btn');
+  let snapshot = new Map(), busy = false, problems = [];
+  const mode = () => root.dataset.mode;
+  const valueOf = c => (c.type === 'checkbox' ? c.checked : c.value);
+  const dirty = () => mode() === 'edit' && controls().some(c => snapshot.get(c) !== valueOf(c));
+  const grow = t => { t.style.height = 'auto'; t.style.height = `${Math.max(24, t.scrollHeight + 1)}px`; };
+  const rowOf = c => c.closest('[data-state], .wb-form-value, td') || c.parentElement;
+  function clearStates() {
+    root.querySelectorAll('[data-state]').forEach(el => { el.removeAttribute('data-state'); el.querySelector(':scope > .wb-value-state')?.remove(); });
+    controls().forEach(c => c.removeAttribute('aria-invalid'));
+  }
+  function showStates(list) {
+    clearStates();
+    for (const p of list) {
+      const host = rowOf(p.control);
+      if (host.dataset.state === 'error') continue;
+      host.dataset.state = p.severity;
+      if (p.severity === 'error') p.control.setAttribute('aria-invalid', 'true');
+      let box = host.querySelector(':scope > .wb-value-state');
+      if (!box) { box = document.createElement('div'); box.className = 'wb-value-state'; box.setAttribute('role', p.severity === 'error' ? 'alert' : 'status'); host.append(box); }
+      box.textContent = p.message;
+    }
+    const errors = list.filter(p => p.severity === 'error').length;
+    msgBtn.hidden = !list.length;
+    msgBtn.classList.toggle('is-error', errors > 0);
+    msgBtn.innerHTML = list.length ? `${icon(errors ? 'error' : 'warning')}<span>${list.length}</span>` : '';
+    msgBtn.setAttribute('aria-label', `消息 ${list.length} 条`);
+  }
+  function nameOf(c) {
+    const label = c.closest('.wb-form-row')?.querySelector('.wb-form-label');
+    return label ? label.textContent.replace(/[：:*\s]+$/, '').trim() : c.getAttribute('aria-label') || c.name;
+  }
+  function openMessages() {
+    if (!problems.length) return;
+    const group = c => c.closest('.wb-doc-group')?.querySelector('.wb-doc-group-title')?.textContent.trim() || '';
+    const sorted = [...problems].sort((a, b) => (a.severity === b.severity ? 0 : a.severity === 'error' ? -1 : 1));
+    let last = null;
+    messages.innerHTML = `<div class="wb-messages">${sorted.map((p, i) => {
+      const g = group(p.control), head = g !== last ? `<h3>${escapeHtml(g)}</h3>` : '';
+      last = g;
+      return `${head}<button type="button" data-i="${i}" data-severity="${p.severity}">${icon(p.severity === 'error' ? 'error' : 'warning')}<span>${escapeHtml(nameOf(p.control))}</span><small>${OBJECT_STATE_TEXT[p.severity]}：${escapeHtml(p.message)}</small></button>`;
+    }).join('')}</div>`;
+    messages.querySelectorAll('button[data-i]').forEach(b => b.addEventListener('click', () => {
+      const c = sorted[Number(b.dataset.i)].control;
+      closePopover('done');
+      c.focus({ preventScroll: true });
+      c.scrollIntoView({ block: 'nearest' });
+    }));
+    openPopover(msgBtn, messages);
+  }
+  function enter(target) {
+    if (mode() === 'edit') return;
+    snapshot = new Map(controls().map(c => [c, valueOf(c)]));
+    root.dataset.mode = 'edit';
+    root.querySelectorAll('.wb-edit-area').forEach(grow);
+    const first = target || controls().find(c => c.required && !c.value) || controls()[0];
+    first?.focus({ preventScroll: true });
+    first?.select?.();
+  }
+  function leave(restore) {
+    if (restore) for (const [c, v] of snapshot) { if (c.type === 'checkbox') c.checked = v; else c.value = v; }
+    problems = [];
+    showStates([]);
+    root.dataset.mode = 'read';
+    edit?.focus({ preventScroll: true });
+  }
+  async function doSave() {
+    if (busy || mode() !== 'edit') return;
+    problems = validate(root) || [];
+    showStates(problems);
+    if (problems.some(p => p.severity === 'error')) { openMessages(); return; }
+    busy = true;
+    save.setAttribute('aria-busy', 'true'); save.disabled = true; cancel.disabled = true;
+    try {
+      await onSave(Object.fromEntries(controls().filter(c => c.name).map(c => [c.name, valueOf(c)])));
+      leave(false);
+      toast(saved);
+    } catch (err) {
+      toast(err?.message || '保存失败，改动还在，可以再试一次');
+    } finally {
+      busy = false;
+      save.removeAttribute('aria-busy'); save.disabled = false; cancel.disabled = false;
+    }
+  }
+  function doCancel() {
+    if (!dirty()) { leave(true); return; }
+    messages.innerHTML = '<div class="wb-messages"><p class="wb-confirm-text">放弃这次的全部改动？</p><div class="wb-confirm-actions"><button type="button" class="wb-btn sm" data-keep>继续编辑</button><button type="button" class="wb-btn sm danger" data-drop>放弃改动</button></div></div>';
+    messages.querySelector('[data-keep]').addEventListener('click', () => closePopover('done'));
+    messages.querySelector('[data-drop]').addEventListener('click', () => { closePopover('replace'); leave(true); });
+    openPopover(cancel, messages);
+  }
+  edit?.addEventListener('click', () => enter());
+  save.addEventListener('click', doSave);
+  cancel.addEventListener('click', doCancel);
+  msgBtn.addEventListener('click', openMessages);
+  root.addEventListener('dblclick', e => {
+    if (mode() !== 'read' || !e.target.closest('.wb-value.is-editable')) return;
+    getSelection()?.removeAllRanges();
+    enter(e.target.closest('.wb-form-value, td')?.querySelector('.wb-edit :is(input, select, textarea)'));
+  });
+  root.addEventListener('keydown', e => {
+    if (mode() === 'read' && (e.key === 'Enter' || e.key === 'F2') && e.target.matches('.wb-form-value[tabindex]')) { e.preventDefault(); enter(e.target.querySelector('.wb-edit :is(input, select, textarea)')); }
+  });
+  root.addEventListener('input', e => { if (e.target.matches('.wb-edit-area')) grow(e.target); });
+  root.addEventListener('focusout', e => {
+    // A control that was wrong is checked again when it loses focus, so a fixed value clears its state at once.
+    if (mode() !== 'edit' || !problems.some(p => p.control === e.target)) return;
+    problems = (validate(root) || []).filter(p => problems.some(q => q.control === p.control));
+    showStates(problems);
+  });
+  addEventListener('beforeunload', e => { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
+  const offs = [
+    registerShortcut({ keys: 'e', label: '编辑', group: '单据', when: () => mode() === 'read' && Boolean(edit), run: () => enter() }),
+    registerShortcut({ keys: 'mod+enter', label: '保存', group: '单据', when: () => mode() === 'edit', run: doSave }),
+  ];
+  msgBtn.hidden = true;
+  root.dataset.mode ||= 'read';
+  return { enter, save: doSave, cancel: doCancel, isDirty: dirty, destroy: () => offs.forEach(off => off()) };
+}
+
 // ── Files, tree table and version compare (WORKBENCH §15) ────────────────────
 // Pure helpers first (tested in Node), then the DOM behaviour. Aham renders no PDF or CAD itself: the product puts a
 // rendered page (img, canvas or svg) into the viewer canvas and swaps it in onPage.

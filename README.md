@@ -35,7 +35,7 @@ Aham UI 把取值和规则放进一个仓库。取值全在 `tokens.json`，规�
 | `design-system/aham-ui.css`、`aham-ui.js` | 基础层运行时，用于内容页 |
 | `design-system/workbench.css`、`workbench.js` | 工作台运行时，ES 模块，无第三方依赖 |
 | `design-system/preview/` | 24 个预览页：基础组件 17 个、版式 2 个、工作台状态 5 个 |
-| `design-system/examples/` | 20 个示例页，含列表、记录详情、单据、设置 |
+| `design-system/examples/` | 21 个示例页，含列表、记录详情、单据、单据的显示态和编辑态、设置 |
 | `design-system/icons/` | Lucide 图标 53 个（ISC） |
 | `design-system/fonts/` | Inter Variable 4.1 正体、斜体与授权文本（SIL OFL） |
 | `design-system/aham-ui-office.md` | Word、Excel、PPT 的颜色与字体映射 |
@@ -94,7 +94,7 @@ node --test tests/*.test.mjs
 
 - 规范：[WORKBENCH.md](design-system/WORKBENCH.md) §1–15
 - 状态预览：[筛选](design-system/preview/workbench-filter.html) · [列表键盘与详情](design-system/preview/workbench-detail.html) · [快速操作](design-system/preview/workbench-actions.html) · [AI 协作](design-system/preview/workbench-ai.html) · [文件与版本](design-system/preview/workbench-files.html)
-- 页面示例：[外框](design-system/examples/workbench-shell.html) · [列表](design-system/examples/customer-list.html) · [记录详情](design-system/examples/record-detail.html) · [单据](design-system/examples/crm-quotation.html) · [设置](design-system/examples/settings.html)
+- 页面示例：[外框](design-system/examples/workbench-shell.html) · [列表](design-system/examples/customer-list.html) · [记录详情](design-system/examples/record-detail.html) · [单据](design-system/examples/crm-quotation.html) · [单据的显示态和编辑态](design-system/examples/object-page.html) · [设置](design-system/examples/settings.html)
 - 示例只用虚构数据。产品上线时，权限、审批、审计、并发和服务端保存要由产品自行接入。
 - 改了 tokens、图标、契约或读取顺序后，运行 `node scripts/build-panorama.mjs` 重写全景页里的数值和清单，其余部分手写。
 
@@ -102,7 +102,7 @@ node --test tests/*.test.mjs
 
 ## 更新记录
 
-当前版本 v7.4.0（2026-09-30）。
+当前版本 v7.5.0（2026-10-08）。
 
 [Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md)（Keep a Changelog · SemVer） · [CONTRIBUTING](CONTRIBUTING.md) · [MIT](LICENSE)
 

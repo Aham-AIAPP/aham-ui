@@ -390,6 +390,93 @@
 /* Tooltips: label + registered shortcut, Aham dark tip, shown after a short hover or on keyboard focus (WORKBENCH §12.7). */
 :where(.aham-workbench) .wb-tooltip{position:fixed;z-index:var(--wb-z-toast);display:flex;align-items:center;gap:var(--wb-s2);max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius-sm);background:var(--wb-ink);color:var(--wb-bg);font-size:var(--wb-body);line-height:1.4;box-shadow:var(--wb-shadow-pop);pointer-events:none}
 :where(.aham-workbench) .wb-tooltip .wb-kbd{min-width:auto;height:auto;padding:0 var(--wb-s1);background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 35%,transparent);color:inherit}
+/* Object page (WORKBENCH §4.1–4.5, 7.5): the document is capped, sections are cards with a hairline, groups are panel-tier
+   blocks with a 3px blue mark before the title, labels sit in a fixed column, and the same rows switch between read and edit
+   mode in place. Container queries for the label column and the two-column form are in workbench-layout.css.in. */
+:where(.aham-workbench) .wb-document.is-capped>*{max-width:calc(var(--wb-doc-max) + 2 * var(--wb-s5) + 2 * var(--wb-s4) + 2px)}
+:where(.aham-workbench) .wb-doc-card{border:1px solid var(--wb-line);border-radius:var(--wb-radius-lg);padding:var(--wb-s3) var(--wb-s5) var(--wb-s5);margin-block-start:var(--wb-s4);scroll-margin-top:var(--wb-s5);container-type:inline-size}
+:where(.aham-workbench) .wb-doc-card-head{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-control);padding-block-end:var(--wb-s3);border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-doc-card-head h2{margin:0;font-size:var(--wb-text-md);font-weight:600}
+:where(.aham-workbench) .wb-doc-group{background:var(--wb-panel);border-radius:var(--wb-radius);padding:var(--wb-s3) var(--wb-s4) var(--wb-s4);margin-block-start:var(--wb-s3);container-type:inline-size;min-width:0}
+:where(.aham-workbench) .wb-doc-card-head+.wb-doc-group{margin-block-start:var(--wb-s4)}
+:where(.aham-workbench) .wb-doc-group-title{display:flex;align-items:center;gap:var(--wb-s2);margin:0 0 var(--wb-s1);font-size:var(--wb-text-base);font-weight:600;line-height:24px}
+:where(.aham-workbench) .wb-doc-group-title::before{content:"";flex:none;width:3px;height:14px;border-radius:2px;background:var(--wb-blue)}
+:where(.aham-workbench) :is(.wb-doc-pair,.wb-doc-side,.wb-form-cols){display:grid;grid-template-columns:minmax(0,var(--wb-form-col-max));gap:0 var(--wb-s7)}
+:where(.aham-workbench) .wb-doc-pair{gap:var(--wb-s4) var(--wb-s7)}
+:where(.aham-workbench) .wb-doc-pair>.wb-doc-group{margin-block-start:0}
+:where(.aham-workbench) .wb-form-col{container-type:inline-size;display:grid;align-content:start;min-width:0}
+/* Form rows: label above the value by default; beside it, 148px wide and followed by a colon, once the column is wide enough. */
+:where(.aham-workbench) .wb-form-row{display:grid;grid-template-columns:minmax(0,1fr);gap:0 var(--wb-s4);align-items:start}
+:where(.aham-workbench) .wb-form-label{color:var(--wb-muted);line-height:20px;padding-block-start:6px;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-form-label .wb-colon{display:none}
+:where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
+:where(.aham-workbench) .wb-form-value{position:relative;display:flex;align-items:flex-start;gap:0 var(--wb-s1);min-height:var(--wb-control);padding-block:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-form-text{flex:1;min-width:0;line-height:24px;overflow-wrap:anywhere}
+:where(.aham-workbench) [data-mode=read] .wb-form-value[tabindex]:focus-visible{outline:2px solid var(--wb-blue);border-radius:var(--wb-radius-sm)}
+/* Values in read mode: a dashed underline marks what can be edited; a value to check gets a light mark behind the text only;
+   a required value that is missing is written in danger text on danger-bg. The row itself is never filled. */
+:where(.aham-workbench) .wb-value{font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-value.is-editable{border-bottom:1px dashed var(--wb-faint);padding-bottom:1px;cursor:text}
+:where(.aham-workbench) [data-mode=read] :is(.wb-form-value,td):hover .wb-value.is-editable{border-bottom-color:var(--wb-muted)}
+:where(.aham-workbench) .wb-value.is-check{background:var(--wb-warning-mark);border-radius:var(--wb-radius-sm);padding-inline:var(--wb-s1);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+:where(.aham-workbench) .wb-value.is-missing{background:var(--wb-danger-bg);color:var(--wb-danger);border-radius:var(--wb-radius-sm);padding-inline:var(--wb-s1)}
+:where(.aham-workbench) .wb-value.is-empty{display:inline-block;min-width:var(--wb-s6);color:var(--wb-muted);line-height:20px}
+:where(.aham-workbench) .wb-source{flex:none;width:24px;height:24px;display:inline-grid;place-items:center;border-radius:var(--wb-radius-sm);color:var(--wb-muted);cursor:help}
+:where(.aham-workbench) .wb-source:is(:hover,:focus-visible){background:var(--wb-hover);outline:none}
+/* Edit mode: one value = one control filling the value cell; a value in several parts = groups of prefix + control + unit
+   that never wrap inside; free text grows with its content. Controls are underlined so the row keeps its read-mode height. */
+:where(.aham-workbench) .wb-edit{flex:1;min-width:0;display:flex;align-items:flex-start;gap:0 var(--wb-s1);line-height:24px}
+:where(.aham-workbench) .wb-edit>:is(.wb-edit-input,.wb-edit-area){flex:1 1 auto;width:auto;min-width:0}
+:where(.aham-workbench) .wb-edit.is-groups{flex-wrap:wrap;gap:0 var(--wb-s2)}
+:where(.aham-workbench) .wb-edit-group{display:inline-flex;align-items:flex-start;gap:0 var(--wb-s1);white-space:nowrap;max-width:100%}
+:where(.aham-workbench) .wb-edit-group.is-fill{flex:1 1 140px;min-width:0}
+:where(.aham-workbench) .wb-edit-group.is-fill>:is(.wb-edit-input,.wb-edit-area){flex:1 1 auto;width:auto;min-width:80px}
+:where(.aham-workbench) .wb-edit-input{display:inline-block;height:22px;margin:1px 1px 0;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);color:inherit;font:inherit;line-height:20px;text-align:start;vertical-align:top;max-width:100%;min-width:0;outline:none}
+:where(.aham-workbench) .wb-edit-input.is-number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
+/* Inside a document table the edit controls keep their underline look; .wb-table input is for the dense quotation grid. */
+:where(.aham-workbench) .wb-table .wb-edit-input{display:inline-block;width:auto;height:22px;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);text-align:start;font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
+:where(.aham-workbench) .wb-table .wb-edit-input.is-number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) select.wb-edit-input{padding:0}
+:where(.aham-workbench) .wb-edit-area{display:block;width:100%;min-height:24px;margin:0;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);color:inherit;font:inherit;line-height:23px;resize:none;overflow:hidden;outline:none}
+:where(.aham-workbench) :is(.wb-edit-input,.wb-edit-area):focus{border-bottom:2px solid var(--wb-blue)}
+/* Value state (edit mode only): an error underlines in danger, a warning in the warning colour; the message floats under the
+   value while it has focus, so it never pushes the rows below. */
+:where(.aham-workbench) [data-state=error] :is(.wb-edit-input,.wb-edit-area){border-bottom:2px solid var(--wb-danger);background:var(--wb-danger-bg)}
+:where(.aham-workbench) [data-state=warning] :is(.wb-edit-input,.wb-edit-area){border-bottom:2px solid var(--wb-warning)}
+:where(.aham-workbench) .wb-value-state{display:none;position:absolute;inset-inline-start:0;top:calc(100% + 2px);z-index:var(--wb-z-pop);min-width:240px;max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius);box-shadow:var(--wb-shadow-pop);font-size:var(--wb-body-dense);line-height:18px}
+:where(.aham-workbench) [data-state]:focus-within>.wb-value-state{display:block}
+:where(.aham-workbench) [data-state=warning]>.wb-value-state{background:var(--wb-warning-mark);color:var(--wb-ink)}
+:where(.aham-workbench) [data-state=error]>.wb-value-state{background:var(--wb-danger-bg);color:var(--wb-danger)}
+/* Table inside a document: the toolbar is as wide as the table, title on the left, 添加 on the right; the table scrolls
+   sideways inside its own box below its minimum width instead of squeezing columns or widening the page. */
+:where(.aham-workbench) .wb-table-block{margin-block:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-table-block.is-narrow{max-width:var(--wb-form-col-max)}
+:where(.aham-workbench) .wb-table-toolbar{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-control)}
+:where(.aham-workbench) .wb-table-toolbar>.wb-doc-group-title{margin:0}
+:where(.aham-workbench) .wb-table-toolbar>.wb-spacer{flex:1}
+:where(.aham-workbench) .wb-table-block>.wb-table-scroll{position:relative;overflow-x:auto}
+:where(.aham-workbench) .wb-table-block .wb-table{min-width:420px;table-layout:fixed;width:100%}
+/* Edit footer: messages on the left, then optional fields for the whole save, then 保存 and 取消 on the right. Header
+   actions marked data-edit-hide only lose their visibility in edit mode, so nothing above the form moves. */
+:where(.aham-workbench) .wb-edit-footer{position:sticky;bottom:0;z-index:var(--wb-z-pop);display:none;flex-wrap:wrap;align-items:center;gap:var(--wb-s2) var(--wb-s3);margin-block-start:var(--wb-s5);padding:var(--wb-s2) var(--wb-s5);background:var(--wb-bg);border-top:1px solid var(--wb-line)}
+:where(.aham-workbench) [data-mode=edit] .wb-edit-footer{display:flex}
+:where(.aham-workbench) .wb-edit-footer>.wb-spacer{flex:1}
+:where(.aham-workbench) [data-mode=edit] [data-edit-hide]{visibility:hidden}
+:where(.aham-workbench) [data-mode=read] .wb-edit,:where(.aham-workbench) [data-mode=edit] .wb-read{display:none}
+:where(.aham-workbench) [data-mode=read] :is(.wb-form-required,[data-edit-only]){display:none}
+:where(.aham-workbench) .wb-msg-btn{display:inline-flex;align-items:center;gap:var(--wb-s1);height:var(--wb-header-control);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-warning-mark);color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-msg-btn.is-error{background:var(--wb-danger-bg);color:var(--wb-danger)}
+:where(.aham-workbench) .wb-messages{display:grid;min-width:min(300px,calc(100vw - var(--wb-s6)));padding:var(--wb-s1) 0}
+:where(.aham-workbench) .wb-messages h3{margin:var(--wb-s2) var(--wb-s3) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-body-dense);font-weight:500}
+:where(.aham-workbench) .wb-messages button{display:grid;grid-template-columns:18px minmax(0,1fr);gap:2px var(--wb-s2);width:100%;padding:var(--wb-s1) var(--wb-s3);border:0;background:transparent;text-align:start}
+:where(.aham-workbench) .wb-messages button:is(:hover,:focus-visible){background:var(--wb-hover)}
+:where(.aham-workbench) .wb-messages small{grid-column:2;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-messages button>svg{width:14px;height:14px;margin-block-start:3px}
+:where(.aham-workbench) .wb-messages [data-severity=error]>svg{color:var(--wb-danger)}
+:where(.aham-workbench) .wb-messages [data-severity=warning]>svg{color:var(--wb-warning)}
+:where(.aham-workbench) .wb-confirm-text{margin:var(--wb-s2) var(--wb-s3)}
+:where(.aham-workbench) .wb-confirm-actions{display:flex;justify-content:flex-end;gap:var(--wb-s2);padding:0 var(--wb-s3) var(--wb-s2)}
+
 /* Files, tree table and version compare (WORKBENCH §15). Gray drop feedback, ink progress, no colour for diff kinds. */
 :where(.aham-workbench) .wb-drop{display:grid;justify-items:center;gap:var(--wb-s2);padding:var(--wb-s6) var(--wb-s5);border:1.5px dashed var(--wb-line);border-radius:var(--wb-radius-lg);color:var(--wb-muted);text-align:center;transition:border-color var(--wb-fast) var(--wb-ease),background var(--wb-fast) var(--wb-ease)}
 :where(.aham-workbench) .wb-drop[data-drag=over]{border-color:var(--wb-muted);background:var(--wb-panel);color:var(--wb-ink)}

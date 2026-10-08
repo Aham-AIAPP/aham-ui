@@ -1,4 +1,12 @@
 /* Breakpoints are substituted from canonical tokens; CSS variables do not work in media conditions. */
+/* Object page (WORKBENCH §4.1): container queries, so a form column decides by its own width, not the window's. */
+@container (min-width: {{workbench.formColumnMin}}) {
+ .aham-workbench .wb-form-row {grid-template-columns:var(--wb-form-label) minmax(0,1fr)}
+ .aham-workbench .wb-form-label .wb-colon {display:inline}
+}
+@container (min-width: {{workbench.formPairMin}}) {
+ .aham-workbench :is(.wb-doc-pair,.wb-doc-side,.wb-form-cols) {grid-template-columns:repeat(2,minmax(var(--wb-form-col-min),var(--wb-form-col-max)))}
+}
 @media (max-width: {{workbench.formBreakpoint}}) {
  .aham-workbench .wb-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
 }

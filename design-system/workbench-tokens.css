@@ -63,6 +63,7 @@
   --wb-radius-lg: 12px;
   --wb-radius-pill: 999px;
   --wb-text-base: 14px;
+  --wb-text-md: 15px;
   --wb-pop-bg: #FFFFFF;
   --wb-hover: #F3F3F3;
   --wb-radius: 8px;
@@ -76,6 +77,12 @@
   --wb-touch-input: 16px;
   --wb-danger-bg: #F4ECEA;
   --wb-warning: #8A7333;
+  --wb-faint: #9B9B9B;
+  --wb-warning-mark: #E3DDCE;
+  --wb-form-label: 148px;
+  --wb-form-col-min: 480px;
+  --wb-form-col-max: 640px;
+  --wb-doc-max: 1328px;
   --wb-s0: 0;
   --wb-s1: 4px;
   --wb-s2: 8px;
@@ -101,6 +108,8 @@
   --wb-danger: #D08070;
   --wb-danger-bg: #2A1E1A;
   --wb-warning: #C2A855;
+  --wb-faint: #767676;
+  --wb-warning-mark: #443E2A;
 }
 @media (prefers-color-scheme: dark) {
 .aham-workbench:not([data-theme="light"]) {
@@ -117,9 +126,19 @@
   --wb-danger: #D08070;
   --wb-danger-bg: #2A1E1A;
   --wb-warning: #C2A855;
+  --wb-faint: #767676;
+  --wb-warning-mark: #443E2A;
 }
 }
 /* Breakpoints are substituted from canonical tokens; CSS variables do not work in media conditions. */
+/* Object page (WORKBENCH §4.1): container queries, so a form column decides by its own width, not the window's. */
+@container (min-width: 480px) {
+ .aham-workbench .wb-form-row {grid-template-columns:var(--wb-form-label) minmax(0,1fr)}
+ .aham-workbench .wb-form-label .wb-colon {display:inline}
+}
+@container (min-width: 1008px) {
+ .aham-workbench :is(.wb-doc-pair,.wb-doc-side,.wb-form-cols) {grid-template-columns:repeat(2,minmax(var(--wb-form-col-min),var(--wb-form-col-max)))}
+}
 @media (max-width: 80rem) {
  .aham-workbench .wb-fields {grid-template-columns:repeat(2,minmax(0,1fr))}
 }

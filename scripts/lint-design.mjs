@@ -104,6 +104,8 @@ const PAIRS = [
   ...['success', 'warning', 'danger'].map(k => [`${k} 文字 / 白底`, `color.semantic.${k}`, 'color.surface.tier1-white', 4.5]),
   ['危险文字 / 次级底（工作台风险提示）', 'color.semantic.danger', 'color.surface.tier2-panel', 4.5],
   ...['success', 'warning', 'danger'].map(k => [`通知正文 / ${k}-bg`, 'color.ink.primary', `color.semantic.${k}-bg`, 4.5]),
+  // 7.5 单据的值：要核对的值底下浅黄，必填没写的红字浅红底（WORKBENCH §4.3）
+  ['单据要核对的值 / warning-mark', 'color.ink.primary', 'color.semantic.warning-mark', 4.5], ['单据必填没写 / danger-bg', 'color.semantic.danger', 'color.semantic.danger-bg', 4.5],
   ['焦点描边 / 白底', 'focusRing.color', 'color.surface.tier1-white', 3],
   ['高对比度控件边界 / 白底', 'color.contrastMore.control-border', 'color.surface.tier1-white', 3],
   ...['tier1-bg', 'tier2-panel', 'tier3-line'].map(s => [`暗色正文 / ${s}`, 'color.dark.ink.primary', `color.dark.surface.${s}`, 4.5]),
@@ -112,6 +114,7 @@ const PAIRS = [
   ...['success', 'warning', 'danger'].map(k => [`暗色 ${k} 文字`, `color.dark.semantic.${k}`, 'color.dark.surface.tier1-bg', 4.5]),
   ...['warning', 'danger'].map(k => [`暗色 ${k} 文字 / 次级底`, `color.dark.semantic.${k}`, 'color.dark.surface.tier2-panel', 4.5]),
   ...['success', 'warning', 'danger'].map(k => [`暗色通知正文 / ${k}-bg`, 'color.dark.ink.primary', `color.dark.semantic.${k}-bg`, 4.5]),
+  ['暗色单据要核对的值', 'color.dark.ink.primary', 'color.dark.semantic.warning-mark', 4.5], ['暗色单据必填没写', 'color.dark.semantic.danger', 'color.dark.semantic.danger-bg', 4.5],
   ['暗色焦点描边', 'color.dark.accent.default', 'color.dark.surface.tier1-bg', 3],
   ['暗色焦点描边 / 次级底', 'color.dark.accent.default', 'color.dark.surface.tier2-panel', 3],
   ['暗色高对比度控件边界', 'color.dark.contrastMore.control-border', 'color.dark.surface.tier1-bg', 3],

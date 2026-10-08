@@ -6,6 +6,27 @@
 
 ## [Unreleased]
 
+## [7.5.0] - 2026-10-08
+
+> **单据的版式和编辑态**：工作台单据页正文限宽，分区是描边卡片、里面一层小节块，标签 148px 加冒号；显示态和编辑态用同一套行，照 SAP Fiori 的 Object Page（WORKBENCH §4.1–4.5）。规则来自一个生产项目的 RFQ 单据，经需求方逐轮确认后写进规范。
+
+### 新增
+- WORKBENCH §4.1 版式、§4.2 显示态和编辑态、§4.3 值的写法、§4.4 校验和消息、§4.5 编辑控件；§5 加单据正文里小表格的工具栏和横向滚动。
+- `tokens.json` 的 workbench 组新增 `formLabelWidth` 148px、`formColumnMin` 480px、`formColumnMax` 640px、`formPairMin` 1008px、`documentMaxWidth` 1328px；语义色新增 `warning-mark`（亮 #E3DDCE、暗 #443E2A），给要核对的值做文字底色。
+- 工作台变量新增 `--wb-faint`、`--wb-warning-mark`、`--wb-text-md`、`--wb-form-label`、`--wb-form-col-min`、`--wb-form-col-max`、`--wb-doc-max`。
+- `workbench.css` 新增 `.wb-document.is-capped`、`.wb-doc-card*`、`.wb-doc-group*`、`.wb-doc-pair`、`.wb-doc-side`、`.wb-form-*`、`.wb-value.is-*`、`.wb-source`、`.wb-edit*`、`.wb-value-state`、`.wb-table-block`、`.wb-table-toolbar`、`.wb-edit-footer`、`.wb-msg-btn`、`.wb-messages`；标签位置和两列并排用容器查询，写在 `workbench-layout.css.in`。
+- `workbench.js` 新增 `initObjectPage`：进入编辑态、初始焦点、校验和值状态、消息列表、保存、有改动时取消先问、离开页面先问。
+- 示例页 `examples/object-page.html`，登记进 `library-consumption.json`。
+- 保留键新增 E（编辑当前单据）；⌘ / Ctrl + Enter 的说明加「保存编辑态」。WORKBENCH §12.2 同步。
+- `scripts/lint-design.mjs` 增加 4 组对比度：要核对的值、必填没写的值，亮暗各一组。
+- 测试增加 1 条：单据页的规则、token、类、行为函数和示例页。
+
+### 变更
+- DESIGN §0、AGENTS、CONTRIBUTING 的「卡片无边框」注明例外：工作台单据正文的分区卡片 1px 描边，里面只套一层次级底色小节。
+- 蓝色的用途加一项：单据小节标题前的 3px 竖条。
+- WORKBENCH §1.1 第 3 条：就地修改、即时生效只用于列表的格子和属性栏，单据的表单改用编辑态、一次保存。§2 的字段标签一行改为单据表单 148px、窄面板 72px。
+- `document-form` 契约补结构、规则、状态和键盘，参考页改为 `examples/object-page.html`；`editable-table` 契约补规则。
+
 ## [7.4.0] - 2026-09-30
 
 > **文件与版本**：工作台新增文件上传、文件预览、树形明细、版本对比四种组合（WORKBENCH §15）；补写风险表达、主按钮位置和暗色取值；修正文件之间的 25 处矛盾。
@@ -245,7 +266,8 @@
 - **v3.0** — Workbench 蓝色版（三层灰 + 蓝 + flat，砍衬线统一 Inter）。
 - **v2.x / v1.x** — 早期 steel-blue 骨架（三层 token + DESIGN.md + tokens.json 成型）。
 
-[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.4.0...HEAD
+[Unreleased]: https://github.com/Aham-AIAPP/aham-ui/compare/v7.5.0...HEAD
+[7.5.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.5.0
 [7.4.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.4.0
 [7.3.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.3.0
 [7.2.1]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.2.1
