@@ -1098,7 +1098,7 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
   const mode = () => root.dataset.mode;
   const valueOf = c => (c.type === 'checkbox' ? c.checked : c.value);
   const dirty = () => mode() === 'edit' && controls().some(c => snapshot.get(c) !== valueOf(c));
-  const grow = t => { t.style.height = 'auto'; t.style.height = `${Math.max(24, t.scrollHeight + 1)}px`; };
+  const grow = t => { t.style.height = 'auto'; t.style.height = `${Math.max(32, t.scrollHeight + 1)}px`; };
   const rowOf = c => c.closest('[data-state], .wb-form-value, td') || c.parentElement;
   function clearStates() {
     root.querySelectorAll('[data-state]').forEach(el => { el.removeAttribute('data-state'); el.querySelector(':scope > .wb-value-state')?.remove(); });

@@ -18,6 +18,9 @@
 - `workbench.js` 新增 `initObjectPage`：进入编辑态、初始焦点、校验和值状态、消息列表、保存、有改动时取消先问、离开页面先问。
 - 页脚贴在正文底边：粘性定位会让开滚动容器的内边距，`.wb-edit-footer` 的 bottom 取 `.wb-document` 下内边距的负数；正文另设内边距时跟着改。
 - 小节里的表格表头用小节的次级底色，不留白条；只有标题行的卡片（收起的分区）去掉标题下的分隔线。
+- 编辑控件高 `--wb-hit` 32px，上下各用 -4px 外边距收回，行高仍是 24px。多行文本框最低 32px，`initObjectPage` 自动加高时也以 32px 为下限。
+- 单据小节里的 `.wb-risk.warning` 文字用墨色、图标保留警示色，和摘要栏等次级底色一样（§1.2）。
+- WORKBENCH §4.4 写明：点保存时有错误，打开消息列表，焦点在第一条。
 - 示例页 `examples/object-page.html`，登记进 `library-consumption.json`。
 - 保留键新增 E（编辑当前单据）；⌘ / Ctrl + Enter 的说明加「保存编辑态」。WORKBENCH §12.2 同步。
 - `scripts/lint-design.mjs` 增加 4 组对比度：要核对的值、必填没写的值，亮暗各一组。

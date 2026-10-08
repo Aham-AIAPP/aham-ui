@@ -55,8 +55,8 @@
 :where(.aham-workbench) .wb-risk{display:inline-flex;align-items:center;gap:var(--wb-s1);color:var(--wb-danger)}
 :where(.aham-workbench) .wb-risk.warning{color:var(--wb-warning)}
 :where(.aham-workbench) .wb-risk svg{width:var(--wb-s3);height:var(--wb-s3)}
-:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer) .wb-risk.warning{color:var(--wb-ink)}
-:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer) .wb-risk.warning svg{color:var(--wb-warning)}
+:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer,.wb-doc-group) .wb-risk.warning{color:var(--wb-ink)}
+:where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer,.wb-doc-group) .wb-risk.warning svg{color:var(--wb-warning)}
 :where(.aham-workbench) :is(.wb-meta,.wb-crumbs-meta){color:var(--wb-muted)}
 :where(.aham-workbench) .wb-mono{font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
@@ -427,20 +427,21 @@
 :where(.aham-workbench) .wb-source{flex:none;width:24px;height:24px;display:inline-grid;place-items:center;border-radius:var(--wb-radius-sm);color:var(--wb-muted);cursor:help}
 :where(.aham-workbench) .wb-source:is(:hover,:focus-visible){background:var(--wb-hover);outline:none}
 /* Edit mode: one value = one control filling the value cell; a value in several parts = groups of prefix + control + unit
-   that never wrap inside; free text grows with its content. Controls are underlined so the row keeps its read-mode height. */
+   that never wrap inside; free text grows with its content. Controls are underlined so the row keeps its read-mode height:
+   a control is --wb-hit (32px) tall for the hit target and takes back 4px above and below, so it fills the 24px line. */
 :where(.aham-workbench) .wb-edit{flex:1;min-width:0;display:flex;align-items:flex-start;gap:0 var(--wb-s1);line-height:24px}
 :where(.aham-workbench) .wb-edit>:is(.wb-edit-input,.wb-edit-area){flex:1 1 auto;width:auto;min-width:0}
 :where(.aham-workbench) .wb-edit.is-groups{flex-wrap:wrap;gap:0 var(--wb-s2)}
 :where(.aham-workbench) .wb-edit-group{display:inline-flex;align-items:flex-start;gap:0 var(--wb-s1);white-space:nowrap;max-width:100%}
 :where(.aham-workbench) .wb-edit-group.is-fill{flex:1 1 140px;min-width:0}
 :where(.aham-workbench) .wb-edit-group.is-fill>:is(.wb-edit-input,.wb-edit-area){flex:1 1 auto;width:auto;min-width:80px}
-:where(.aham-workbench) .wb-edit-input{display:inline-block;height:22px;margin:1px 1px 0;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);color:inherit;font:inherit;line-height:20px;text-align:start;vertical-align:top;max-width:100%;min-width:0;outline:none}
+:where(.aham-workbench) .wb-edit-input{display:inline-block;height:var(--wb-hit);margin:-4px 1px;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);color:inherit;font:inherit;line-height:20px;text-align:start;vertical-align:top;max-width:100%;min-width:0;outline:none}
 :where(.aham-workbench) .wb-edit-input.is-number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
 /* Inside a document table the edit controls keep their underline look; .wb-table input is for the dense quotation grid. */
-:where(.aham-workbench) .wb-table .wb-edit-input{display:inline-block;width:auto;height:22px;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);text-align:start;font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
+:where(.aham-workbench) .wb-table .wb-edit-input{display:inline-block;width:auto;height:var(--wb-hit);padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);text-align:start;font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
 :where(.aham-workbench) .wb-table .wb-edit-input.is-number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) select.wb-edit-input{padding:0}
-:where(.aham-workbench) .wb-edit-area{display:block;width:100%;min-height:24px;margin:0;padding:0 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);color:inherit;font:inherit;line-height:23px;resize:none;overflow:hidden;outline:none}
+:where(.aham-workbench) .wb-edit-area{display:block;width:100%;min-height:var(--wb-hit);margin-block:-4px;padding:4px 3px;border:0;border-bottom:1px solid var(--wb-muted);border-radius:0;background:var(--wb-bg);color:inherit;font:inherit;line-height:23px;resize:none;overflow:hidden;outline:none}
 :where(.aham-workbench) :is(.wb-edit-input,.wb-edit-area):focus{border-bottom:2px solid var(--wb-blue)}
 /* Value state (edit mode only): an error underlines in danger, a warning in the warning colour; the message floats under the
    value while it has focus, so it never pushes the rows below. */
