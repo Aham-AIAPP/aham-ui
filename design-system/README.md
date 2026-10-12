@@ -1,5 +1,6 @@
 # Aham Design System
 
+PC 工作台可使用 7.6 规范：[DESKTOP.md](DESKTOP.md)。显式选择 `.wb-pc` 时，连续白底、上置编辑标签、固定标题区保存等规则以该文档为准。
 A design system for **Aham** -- a family of AI tools and ToB business interfaces built with the temperament of a Claude desktop application. The system is purpose-built for building restrained, content-first interfaces across web (content pages and the business workbench), macOS app, Office document, and email surfaces.
 
 The design philosophy can be summed up in four words: **极简、克制、留白优先、内容优先** -- minimal, restrained, white-space first, content first. Every decision flows from the principle that the default answer is *don't add*. Blue is a garnish, never a fill. Hierarchy comes from whitespace, not shadow. The surface is flat at rest.

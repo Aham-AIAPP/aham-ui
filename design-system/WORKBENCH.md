@@ -1,6 +1,7 @@
 # Aham UI · 网页工作台与高密度单据
 
-版本 7.5.0。正式扩展 [DESIGN.md](DESIGN.md) §8，数值唯一来源为 [tokens.json](tokens.json)。C 风格是 Aham 的业务工作台模式：保留视觉身份，吸收 Circle / Linear 的空间组织与操作效率。它不是另一套皮肤。
+PC 工作台可使用 7.6 规范：[DESKTOP.md](DESKTOP.md)。显式选择 `.wb-pc` 时，连续白底、上置编辑标签、固定标题区保存等规则以该文档为准。
+版本 7.6.0。正式扩展 [DESIGN.md](DESIGN.md) §8，数值唯一来源为 [tokens.json](tokens.json)。C 风格是 Aham 的业务工作台模式：保留视觉身份，吸收 Circle / Linear 的空间组织与操作效率。它不是另一套皮肤。
 
 ## 1. 适用范围与身份边界
 
@@ -210,7 +211,7 @@ Aham 与 Linear 冲突时按下面的规则取舍，例外在对应章节写明�
 
 类名分两层。通用结构类以 `wb-` 开头，写在 `workbench.css`，CSS 变量以 `--wb-` 开头。页面专用样式写在示例旁边的同名 CSS（如 `examples/crm-quotation.css`），不得写进 `workbench.css`。外框、页眉、状态、按钮、页签、工具栏、表格、摘要栏都属于通用层。`workbench-tokens.css` 由 `tokens.json` 和 `workbench-layout.css.in` 生成，不能手改。没有 npm 运行依赖。字体遵循系统 token，基础层和工作台都不从第三方服务器下载字体；安装 Inter / JetBrains Mono，或由产品自托管（SIL OFL），即可统一字形。
 
-组合契约 27 个：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节），AI 协作 3 个（`ai-output`、`ai-suggestion`、`ai-confirm`，见第 14 节），文件与版本 4 个（`file-upload`、`file-viewer`、`tree-table`、`version-compare`，见第 15 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[单据的显示态和编辑态](examples/object-page.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
+组合契约 28 个（含 PC 工作台 `desktop-workbench`）：单据页 4 个（`workbench`、`document-form`、`editable-table`、`context-panel`），列表页 4 个（`list-view`、`filter-bar`、`display-options`、`bulk-bar`，见第 9 节），通用选择器 1 个（`command-menu`，见第 10 节），详情与预览 4 个（`list-keyboard`、`record-detail`、`properties-panel`、`activity-feed`，见第 11 节），快速操作 6 个（`command-palette`、`shortcuts`、`context-menu`、`cell-picker`、`toast`、`create-dialog`，见第 12 节），设置页 1 个（`settings-page`，见第 13 节），AI 协作 3 个（`ai-output`、`ai-suggestion`、`ai-confirm`，见第 14 节），文件与版本 4 个（`file-upload`、`file-viewer`、`tree-table`、`version-compare`，见第 15 节）。参考 [CRM 报价单](examples/crm-quotation.html)、[单据的显示态和编辑态](examples/object-page.html)、[工作台外框](examples/workbench-shell.html)、[客户列表](examples/customer-list.html)、[记录详情](examples/record-detail.html) 和 [设置](examples/settings.html)。
 
 两层组件对照（同一概念在两层长得一样；工作台只是尺寸更紧凑）：
 

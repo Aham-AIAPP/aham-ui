@@ -115,7 +115,9 @@ function baseExamples() {
 }
 
 function wbTokens() {
-  const rows = entries(tokens.workbench).map(([k, v]) => {
+  const flatten = (group, prefix = '') => entries(group).flatMap(([key, value]) =>
+    '$value' in value ? [[prefix + key, value]] : flatten(value, prefix + key + '.'));
+  const rows = flatten(tokens.workbench).map(([k, v]) => {
     const raw = String(v.$value), ref = raw.match(/^\{([^}]+)\}$/)?.[1];
     return `<tr><td><code>workbench.${k}</code></td><td class="mono">${esc(resolve(`workbench.${k}`))}</td><td class="t-2">${ref ? `<code>${ref}</code> ` : ''}${esc(v.$description || '')}</td></tr>`;
   }).join('');

@@ -6,6 +6,15 @@
 
 ## [Unreleased]
 
+## [7.6.0] - 2026-10-12
+
+### PC 工作台
+- 新增 DESKTOP.md、desktop-workbench 契约和 wb-pc 样式，统一页头、连续分区、表格和编辑状态。
+- 取值加入 workbench.desktop，由构建脚本生成 CSS；维持已有主题和其它介质的入口。
+- PC 采用 32 / 48px 页面边距、32px 控件、40px 表头、44px 正文行；编辑标签上置、双列与容器查询。
+- 约定真实改动比较、失败保稿、未保存离开保护和固定保存入口；新增可操作的合成数据示例。
+
+
 ## [7.5.0] - 2026-10-08
 
 > **单据的版式和编辑态**：工作台单据页正文限宽，分区是描边卡片、里面一层小节块，标签 148px 加冒号；显示态和编辑态用同一套行，照 SAP Fiori 的 Object Page（WORKBENCH §4.1–4.5）。规则来自一个生产项目的 RFQ 单据，经需求方逐轮确认后写进规范。
@@ -284,3 +293,5 @@
 [6.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.1.0
 [6.0.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v6.0.0
 [5.1.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v5.1.0
+
+[7.6.0]: https://github.com/Aham-AIAPP/aham-ui/releases/tag/v7.6.0

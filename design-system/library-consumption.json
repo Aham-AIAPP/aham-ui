@@ -2,7 +2,7 @@
   "version": 2,
   "brand": "Aham",
   "brandSlug": "aham",
-  "systemVersion": "7.5.0",
+  "systemVersion": "7.6.0",
   "readingOrder": [
     {
       "file": "tokens.json",
@@ -18,6 +18,11 @@
       "file": "WORKBENCH.md",
       "priority": 3,
       "purpose": "网页工作台和高密度单据规则"
+    },
+    {
+      "file": "DESKTOP.md",
+      "priority": 3,
+      "purpose": "PC 工作台选择 wb-pc 时的版式与编辑规则"
     },
     {
       "file": "components/index.json",
@@ -98,6 +103,16 @@
       "file": "examples/settings.html",
       "priority": 8,
       "purpose": "设置页示例：分组导航、横线分隔的设置行、即时生效"
+    },
+    {
+      "file": "desktop.css",
+      "priority": 7,
+      "purpose": "PC 工作台规范样式，工作台样式之后加载"
+    },
+    {
+      "file": "examples/desktop-workbench.html",
+      "priority": 8,
+      "purpose": "PC 表格与编辑状态示例，合成数据"
     }
   ],
   "componentResolution": {

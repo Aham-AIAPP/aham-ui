@@ -1,0 +1,83 @@
+{
+  "slug": "desktop-workbench",
+  "schemaVersion": 2,
+  "sourceKind": "structured-spec",
+  "confidence": "high",
+  "intent": "PC 工作台统一页型与编辑规范",
+  "implementation": "desktop.css",
+  "behavior": "examples/desktop-workbench.js",
+  "preview": "examples/desktop-workbench.html",
+  "reference": "examples/desktop-workbench.html",
+  "specification": "DESKTOP.md",
+  "api": {},
+  "variantDimensions": [
+    {
+      "axis": "mode",
+      "values": [
+        "read",
+        "edit"
+      ]
+    }
+  ],
+  "anatomy": {
+    "parts": [
+      "header",
+      "title",
+      "metadata",
+      "actions",
+      "section",
+      "table",
+      "form",
+      "feedback"
+    ],
+    "required": [
+      "header",
+      "section"
+    ]
+  },
+  "markup": {
+    "root": "<div class=\"aham-workbench wb-pc\">…</div>",
+    "form": "<div class=\"wb-form-grid\"><div class=\"wb-form-field\"><label for=\"name\">名称</label><input id=\"name\"></div></div>"
+  },
+  "rules": [
+    "以 wb-pc 显式启用；标题、目录和正文共用 32px 边距，1600px 以上为 48px",
+    "连续白底与分区留白，24px 标题、13px 正文、至少 12px 辅助文字",
+    "阅读标签 116px；编辑标签上置，双列 24px 间距，表单容器不足 720px 时单列",
+    "32px 控件、40px 表头、至少 44px 内容行；纯图标操作有名称及提示",
+    "整页保存位于固定标题区，弹窗取消在左保存右，共用 24px 边距",
+    "真实改动比较；改回原值恢复无改动，空值与零区分",
+    "失败保留草稿、错误关联到控件、定位第一处错误；有改动时关闭或离开先确认",
+    "浅色和深色、1280/1440/1920px；视觉与功能分别验证"
+  ],
+  "states": [
+    "read",
+    "edit",
+    "dirty",
+    "invalid",
+    "warning",
+    "saving",
+    "save-failed",
+    "conflict",
+    "focus-visible",
+    "readonly",
+    "empty"
+  ],
+  "keyboard": [
+    "Tab 按字段顺序移动；焦点始终可见",
+    "⌘ / Ctrl + Enter 保存编辑态",
+    "Esc 关闭确认弹窗并保留草稿"
+  ],
+  "accessibility": [
+    "输入都有可访问名称；错误通过 aria-describedby 关联到对应输入",
+    "PC 控件高 32px，编辑表格行至少 44px；焦点可见",
+    "不靠色彩表达状态；未实现网格键盘导航时使用原生表格",
+    "必填使用原生 required 或 aria-required，装饰符号不加入读屏名称"
+  ],
+  "doNotInvent": [
+    "不以禁用输入框代替阅读值",
+    "不让保存失败清空草稿",
+    "不把编辑表格压到 44px 以下",
+    "不把状态颜色当唯一说明",
+    "不使用负外边距收缩控件点击区"
+  ]
+}

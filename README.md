@@ -1,5 +1,7 @@
 # Aham UI — 供 AI 消费的设计系统
 
+PC 工作台新版规范见 [DESKTOP.md](design-system/DESKTOP.md)，取自已确认的高密度 RFQ 样板。
+
 [![Release](https://img.shields.io/github/v/release/Aham-AIAPP/aham-ui?color=336EE8)](https://github.com/Aham-AIAPP/aham-ui/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-336EE8.svg)](LICENSE)
 [![在线全景](https://img.shields.io/badge/%E5%9C%A8%E7%BA%BF%E5%85%A8%E6%99%AF-Pages-336EE8.svg)](https://aham-aiapp.github.io/aham-ui/)
@@ -102,7 +104,7 @@ node --test tests/*.test.mjs
 
 ## 更新记录
 
-当前版本 v7.5.0（2026-10-08）。
+当前规范 v7.6.0（2026-10-12）；发布状态见 Releases。
 
 [Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md)（Keep a Changelog · SemVer） · [CONTRIBUTING](CONTRIBUTING.md) · [MIT](LICENSE)
 
