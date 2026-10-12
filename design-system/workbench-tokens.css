@@ -83,6 +83,12 @@
   --wb-form-col-min: 480px;
   --wb-form-col-max: 640px;
   --wb-doc-max: 1328px;
+  --wb-pc-gutter: 32px;
+  --wb-pc-wide-gutter: 48px;
+  --wb-pc-form-max: 960px;
+  --wb-pc-label: 116px;
+  --wb-pc-table-head: 40px;
+  --wb-pc-dialog-padding: 24px;
   --wb-s0: 0;
   --wb-s1: 4px;
   --wb-s2: 8px;

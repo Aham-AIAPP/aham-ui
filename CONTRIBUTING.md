@@ -16,6 +16,8 @@
 3. **`aham-ui.css`** — 改参考实现（组件类 + 文本样式类 + 暗色）。
 4. **`CHANGELOG.md`** — 在 `[Unreleased]` 下记录本次改动。
 
+PC 工作台选用 `.wb-pc` 时，按 [DESKTOP.md](design-system/DESKTOP.md) 的连续分区、上置编辑标签和标题区操作执行。生成样式使用 `scripts/build-workbench.mjs`。
+
 ## 铁律（提交前自查）
 
 - 颜色/间距/圆角/控件尺寸**只用既定 token**，绝不裸写像素或自造色。
