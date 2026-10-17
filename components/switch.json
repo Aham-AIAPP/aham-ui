@@ -1,0 +1,32 @@
+{
+  "slug": "switch",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "开关",
+  "intent": "改了立即生效的是否设置",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#36-选择控件选型",
+  "classes": [
+    ".wb-switch"
+  ],
+  "markup": {
+    "switch": "<label class=\"wb-switch\"><input type=\"checkbox\"><span aria-hidden=\"true\"></span>单键快捷键</label>"
+  },
+  "states": [
+    "on",
+    "off",
+    "focus-visible",
+    "disabled"
+  ],
+  "rules": [
+    "只用在设置页这类改了立即生效的地方；表单里要保存的是否项用复选框",
+    "打开时墨色底"
+  ],
+  "accessibility": [
+    "用原生 checkbox，标签包住整个开关"
+  ],
+  "doNotInvent": [
+    "彩色开关",
+    "带文字的开关"
+  ]
+}

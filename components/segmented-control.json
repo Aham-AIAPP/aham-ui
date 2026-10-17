@@ -1,0 +1,31 @@
+{
+  "slug": "segmented-control",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "分段按钮",
+  "intent": "切换同一份内容的看法",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#36-选择控件选型",
+  "classes": [
+    ".wb-seg",
+    ".wb-seg.sm"
+  ],
+  "markup": {
+    "seg": "<div class=\"wb-seg\" role=\"group\" aria-label=\"内容密度\"><button type=\"button\" aria-pressed=\"true\">标准</button><button type=\"button\" aria-pressed=\"false\">紧凑</button></div>"
+  },
+  "states": [
+    "aria-pressed=true",
+    "aria-pressed=false",
+    "focus-visible"
+  ],
+  "rules": [
+    "2–4 段，每段两到四个字",
+    "切换不同的内容用页签"
+  ],
+  "accessibility": [
+    "按钮带 aria-pressed"
+  ],
+  "doNotInvent": [
+    "滑块动画"
+  ]
+}

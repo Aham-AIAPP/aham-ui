@@ -1,0 +1,27 @@
+{
+  "slug": "tooltip",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "name": "按钮提示",
+  "intent": "悬停或聚焦时显示按钮名称和快捷键",
+  "api": {
+    "initTooltips": "initTooltips(root)"
+  },
+  "preview": "examples/parts-actions.html",
+  "specification": "rules/7-键盘与命令.md#75-按钮提示",
+  "markup": {
+    "button": "<button class=\"wb-icon-btn\" aria-label=\"展开导航\" data-tooltip=\"展开 / 收起导航\" data-keys=\"mod+b\">…</button>"
+  },
+  "rules": [
+    "悬停 500ms 或键盘聚焦时出现",
+    "data-keys 必须是已登记的快捷键",
+    "触屏不显示"
+  ],
+  "accessibility": [
+    "提示不代替 aria-label"
+  ],
+  "doNotInvent": [
+    "提示里放可点击内容"
+  ]
+}

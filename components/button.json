@@ -1,0 +1,64 @@
+{
+  "slug": "button",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "按钮",
+  "intent": "触发一个操作",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#32-按钮",
+  "classes": [
+    ".wb-btn",
+    ".wb-btn.primary",
+    ".wb-btn.ghost",
+    ".wb-btn.danger",
+    ".wb-btn.sm",
+    ".wb-btn.icon-only",
+    ".wb-icon-btn"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "kind",
+      "values": [
+        "primary",
+        "default",
+        "ghost",
+        "danger",
+        "icon"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "32px",
+        "sm 28px"
+      ]
+    }
+  ],
+  "markup": {
+    "primary": "<button type=\"button\" class=\"wb-btn primary\">提交审批</button>",
+    "icon": "<button type=\"button\" class=\"wb-btn icon-only\" aria-label=\"更多操作\" data-tooltip=\"更多操作\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-more\"/></svg></button>"
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus-visible",
+    "disabled",
+    "aria-busy"
+  ],
+  "rules": [
+    "一个页面只有一个主按钮；编辑态和显示态各算一个页面",
+    "顺序从左到右：更多 → 普通按钮 → 主按钮",
+    "危险按钮只出现在确认弹窗里；页面上的删除放进「更多」菜单",
+    "文字写动作本身，不写「确定」",
+    "当前状态不能用的操作隐藏，不置灰"
+  ],
+  "accessibility": [
+    "只有图标的按钮必须有 aria-label",
+    "执行中加 aria-busy=\"true\" 并 disabled"
+  ],
+  "doNotInvent": [
+    "渐变或阴影按钮",
+    "胶囊形按钮",
+    "红底按钮"
+  ]
+}

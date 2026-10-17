@@ -1,21 +1,16 @@
-# ORIGIN — 来源与说明
+# ORIGIN · 来源与说明
 
-## 血缘
+## 来源
 
-Aham UI 是整个 Aham 应用矩阵的**设计地基**——Word / PPT / Voice / Survey 的视觉取值都源自这里。
+Aham UI 从 Aham Workbench 设计系统整理而来。7.x 时期包含网页、PC 工作台、macOS 应用、Office 文档、HTML 邮件多套规则；8.0 只保留业务管理系统一套，目录和规则整体重写。
 
-它自身规整自 **Aham Workbench** 设计系统：强调色由陶土棕改为钢蓝 `#336EE8`；字体统一为单一无衬线（Inter + 雅黑 / 黑体）+ 等宽（JetBrains Mono），去衬线、补 CJK 回退；其余取值忠实沿用 Workbench。框架 / 比例 / 方法对齐 Apple HIG 与业内主流设计系统（Material / Carbon / Ant / Fluent / GOV.UK 等），**取值全部自定，不抄 hex/pt**。
+8.0 的视觉参考 Claude 客户端的留白、细线和暖色中性色，交互规则参考 SAP Fiori，键盘操作参考 Linear。三家的色值、字体文件和图标都没有复制，取值全部自定。各项来源和可靠程度见 [rules/1-总则.md](rules/1-总则.md) 1.3，调研记录在 [research/](research/)。
 
-v7.0 起，规范被打包成 AI 可直接消费的组件库（17 组件契约 + 就地预览 + dashboard 示范），整体收进 `design-system/`。
+## 字体和图标
 
-## 图标
+- 字体：Inter Variable 4.1，SIL Open Font License，许可全文见 `assets/fonts/LICENSE.txt`。
+- 图标：[Lucide](https://lucide.dev)，ISC 许可，原始 SVG 和许可全文见 `assets/icons/`。
 
-图标集采用 [Lucide](https://lucide.dev)（ISC 许可），原始 SVG 与许可全文见 `design-system/icons/`。SF Symbols 版权属 Apple，仅可用于苹果平台及其 mockup，不纳入本 MIT 仓库。
+## 数据
 
-## 脱敏
-
-本仓库不含任何真实客户数据。`design-system/examples/`、`ui_kits/`、预览与截图里的数字、名称均为虚构样例，仅用于演示样式。
-
-## 工程实现参考
-
-三层令牌体系（primitive → semantic → component）、容器查询、暗色覆盖、组件 CSS 等，是设计系统的通用做法，已按 Aham 性格重写，并以 `tokens.json` 为单一事实源驱动。
+本仓库不含真实客户数据。示例页、截图和测试里的公司名、人名、金额都是虚构的。

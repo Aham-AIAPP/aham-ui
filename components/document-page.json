@@ -1,0 +1,106 @@
+{
+  "slug": "document-page",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "name": "单据页",
+  "intent": "查看、修改、提交、审批一张单据",
+  "api": {
+    "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit, changed, draft: { interval, onDraft, onDiscard } }) → { enter, save, cancel, discard, saveDraft, values, isDirty, destroy }",
+    "initAnchorBar": "initAnchorBar(nav, { scroller }) → { refresh }"
+  },
+  "preview": "examples/document.html",
+  "specification": "rules/5-单据.md",
+  "classes": [
+    ".wb-document.is-page",
+    ".wb-doc-head",
+    ".wb-doc-headline",
+    ".wb-doc-title",
+    ".wb-doc-meta",
+    ".wb-doc-actions",
+    ".wb-mode-note",
+    ".wb-doc-facts",
+    ".wb-anchors",
+    ".wb-doc-body",
+    ".wb-doc-section",
+    ".wb-form-grid",
+    ".wb-form-row",
+    ".wb-form-value",
+    ".wb-value",
+    ".wb-read",
+    ".wb-edit",
+    ".wb-table-block",
+    ".wb-table-toolbar",
+    ".wb-row-actions",
+    ".wb-doc-foot",
+    ".wb-draft-state",
+    ".wb-msg-btn",
+    ".wb-messages",
+    ".wb-context"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-mode",
+      "values": [
+        "read",
+        "edit"
+      ]
+    },
+    {
+      "axis": "status",
+      "values": [
+        "草稿",
+        "审批中",
+        "已退回",
+        "已生效",
+        "已作废"
+      ]
+    }
+  ],
+  "markup": {
+    "row": "<div class=\"wb-form-row\"><div class=\"wb-form-label\" id=\"l-contact\">客户联系人<span class=\"wb-form-required\" aria-hidden=\"true\">*</span></div><div class=\"wb-form-value\" tabindex=\"0\" aria-labelledby=\"l-contact\"><span class=\"wb-read\"><span class=\"wb-value is-editable\">沈工</span></span><span class=\"wb-edit\"><input class=\"wb-field\" name=\"contact\" aria-labelledby=\"l-contact\" required></span></div></div>",
+    "actions": "<div class=\"wb-doc-actions\" role=\"toolbar\"><span class=\"wb-mode-note\" data-edit-only>编辑中</span><button class=\"wb-btn\" data-read-only>编辑</button><button class=\"wb-btn primary\" data-read-only>提交审批</button><button class=\"wb-btn icon-only\" data-read-only aria-label=\"更多操作\"></button></div>",
+    "footer": "<footer class=\"wb-doc-foot\" data-edit-only role=\"toolbar\" aria-label=\"编辑操作\"><button class=\"wb-msg-btn\"></button><span class=\"wb-draft-state\" data-draft-state role=\"status\"></span><span class=\"wb-spacer\"></span><button class=\"wb-btn\" data-action=\"cancel\">放弃草稿</button><button class=\"wb-btn primary\" data-action=\"save\">保存</button></footer>",
+    "facts": "<dl class=\"wb-doc-facts\"><div><dt>客户</dt><dd>远川精密制造有限公司</dd></div><div><dt>价税合计（元）</dt><dd class=\"is-amount\">780,800.00</dd></div></dl>",
+    "anchors": "<nav class=\"wb-anchors\" aria-label=\"分区\"><button type=\"button\" data-target=\"s-basic\">基本信息</button><button type=\"button\" data-target=\"s-lines\">报价明细</button></nav>"
+  },
+  "states": [
+    "read",
+    "edit",
+    "saving",
+    "errors",
+    "warnings",
+    "dirty-cancel",
+    "draft-saved",
+    "leave-with-changes",
+    "head-collapsed"
+  ],
+  "keyboard": {
+    "e": "进入编辑态（状态允许时）",
+    "Enter / F2": "编辑获得焦点的值",
+    "mod+enter": "保存"
+  },
+  "rules": [
+    "显示态和编辑态版式相同",
+    "显示态的操作在单据头；编辑态的取消和保存在页脚工具栏，页脚只在编辑态和新建态出现",
+    "关键信息最多 5 对，只读，页面滚动后收起",
+    "3 个及以上分区时有锚点栏",
+    "有改动时每 20 秒自动保存草稿；离开时问保存、保留草稿或放弃草稿",
+    "焦点离开时只校验已标出问题的字段；保存时校验全部",
+    "错误阻止保存，提醒不阻止",
+    "只有允许修改的状态能进入编辑态（canEdit）",
+    "明细行少于 8 个字段时用弹窗添加；编辑态删行不弹确认",
+    "分区只用标题和留白，不套卡片"
+  ],
+  "accessibility": [
+    "出错的控件 aria-invalid",
+    "字段说明 role=\"alert\"（错误）或 role=\"status\"（提醒）",
+    "离开前有未保存改动时浏览器提示"
+  ],
+  "doNotInvent": [
+    "卡片套小节块",
+    "分区标题前的色条",
+    "保存按钮放在会随内容滚走的位置",
+    "关键信息里放输入框"
+  ]
+}

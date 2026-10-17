@@ -1,0 +1,32 @@
+{
+  "slug": "print-preview",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "打印预览",
+  "intent": "显示单据打印到 A4 纸上的样子",
+  "preview": "examples/print.html",
+  "specification": "rules/5-单据.md#512-打印",
+  "classes": [
+    ".wb-print-preview",
+    ".wb-print-bar",
+    ".wb-sheet",
+    ".wb-sheet-head",
+    ".wb-sheet-mark",
+    ".wb-sheet-total",
+    ".wb-sheet-sign"
+  ],
+  "rules": [
+    "A4 纵向，边距 15mm",
+    "未生效的单据印「草稿 · 未生效」这类标记",
+    "金额写大写（chineseAmount）",
+    "表头每页重复，一行不拆到两页",
+    "打印一律用亮色"
+  ],
+  "accessibility": [
+    "预览纸上的内容不可交互"
+  ],
+  "doNotInvent": [
+    "在打印件上放按钮或链接",
+    "暗色打印"
+  ]
+}

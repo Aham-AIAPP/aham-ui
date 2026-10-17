@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 打印预览</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}</style></head>
+<body>
+<!-- Print preview (rules/5-单据.md 打印): the sheet shows exactly what goes on paper. A document that has not taken
+     effect prints with a mark in the head, so a draft never reaches a customer looking final. -->
+<div class="aham-workbench wb-print-preview" data-theme="light" aria-label="报价单打印预览">
+  <div class="wb-print-bar">
+    <a class="wb-btn sm ghost" href="document.html">返回单据</a>
+    <span class="wb-meta">打印预览 · A4 纵向</span>
+    <span class="wb-spacer"></span>
+    <span class="wb-meta" id="print-note"></span>
+    <button type="button" class="wb-btn sm primary" id="print-go" data-tooltip="打印" data-keys="mod+p">打印</button>
+  </div>
+  <main class="wb-sheet" id="sheet" aria-label="打印内容"></main>
+</div>
+<script type="module" src="./print.mjs"></script>
+</body>
+</html>

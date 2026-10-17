@@ -1,0 +1,35 @@
+{
+  "slug": "choice",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "单选组和复选框",
+  "intent": "从 2–5 个选项里选一个或几个",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#36-选择控件选型",
+  "classes": [
+    ".wb-choices",
+    ".wb-choices.is-column",
+    ".wb-choice"
+  ],
+  "markup": {
+    "radio": "<span class=\"wb-choices\" role=\"radiogroup\" aria-labelledby=\"l-tax\"><label class=\"wb-choice\"><input type=\"radio\" name=\"tax\" value=\"含税\">含税</label><label class=\"wb-choice\"><input type=\"radio\" name=\"tax\" value=\"不含税\">不含税</label></span>"
+  },
+  "states": [
+    "checked",
+    "unchecked",
+    "disabled",
+    "focus-visible"
+  ],
+  "rules": [
+    "2–5 个互斥选项用单选组，6 个以上用下拉或选择菜单",
+    "保存时才生效的是否项用复选框",
+    "勾选框颜色是正文色"
+  ],
+  "accessibility": [
+    "单选组 role=\"radiogroup\" 并关联组标签",
+    "点击区域至少 32px"
+  ],
+  "doNotInvent": [
+    "自绘的圆形勾选动画"
+  ]
+}
