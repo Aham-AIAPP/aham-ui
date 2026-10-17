@@ -65,15 +65,17 @@ test('document page wires the status gate into initObjectPage', () => {
   const js = read('examples/document.mjs');
   assert.ok(js.includes('canEdit'), 'edit is refused when the status does not allow changes');
   assert.ok(js.includes("openConfirm({ root, title: '删除报价单"), 'delete asks first');
+  assert.ok(js.includes("footer: $('#doc-foot')"), 'save and cancel live in the footer toolbar');
+  assert.ok(js.includes('draft: { interval: 20000'), 'drafts are saved every 20 seconds');
   assert.ok(read('aham.js').includes('if (mode() === \'edit\' || !canEdit()) return;'));
 });
 
 // The writing rules the rule texts follow (rules/1-总则.md 1.6 and the project's style list).
-const RULES = files('rules/').filter(f => f.endsWith('.md'));
+const RULES = files('rules/').filter(f => f.endsWith('.md')).sort((a, b) => parseInt(a.slice(6)) - parseInt(b.slice(6)));
 const BANNED = ['承接', '赋能', '沉淀', '落地', '抓手', '闭环', '粒度', '归集', '收敛', '下沉', '对位', '波次', '地基', '命脉', '灰度', '旁路', '水位', '卡位', '颗粒度', '值得注意的是', '需要指出的是', '总而言之', '简而言之'];
 
-test('rules/ has the nine files in order', () => {
-  assert.deepEqual(RULES.map(f => f.replace('rules/', '')), ['1-总则.md', '2-视觉.md', '3-控件.md', '4-页面.md', '5-单据.md', '6-反馈.md', '7-键盘与命令.md', '8-AI协作.md', '9-验收.md']);
+test('rules/ has the ten files in order', () => {
+  assert.deepEqual(RULES.map(f => f.replace('rules/', '')), ['1-总则.md', '2-视觉.md', '3-控件.md', '4-页面.md', '5-单据.md', '6-反馈.md', '7-键盘与命令.md', '8-AI协作.md', '9-验收.md', '10-数据格式.md']);
 });
 
 test('rule headings are noun phrases: no question marks, no 你', () => {
@@ -97,5 +99,14 @@ test('rules name only class names and functions that exist', () => {
     const text = read(f);
     for (const [, cls] of text.matchAll(/`\.(wb-[a-z0-9-]+)/g)) assert.ok(css.includes(`.${cls}`), `${f}: .${cls}`);
     for (const [, fn] of text.matchAll(/`([a-zA-Z]+)\(\)`/g)) assert.ok(js.includes(`function ${fn}(`) || js.includes(`const ${fn} =`) || examples.includes(`function ${fn}(`), `${f}: ${fn}()`);
+  }
+});
+
+test('a button carries text or an icon, never both (rules/3-控件.md 3.2)', () => {
+  const pages = ['index.html', ...files('examples/').filter(f => f.endsWith('.html'))];
+  for (const page of pages) {
+    for (const [tag] of read(page).matchAll(/<(?:button|a)\b[^>]*class="wb-btn(?![^"]*icon-only)[^"]*"[^>]*>\s*<svg[\s\S]*?<\/(?:button|a)>/g)) {
+      assert.ok(/<\/svg>\s*<\/(?:button|a)>$/.test(tag), `${page}: ${tag.slice(0, 120)}`);
+    }
   }
 });

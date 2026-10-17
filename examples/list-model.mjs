@@ -157,7 +157,7 @@ export function normalizeDisplay(raw) {
 export const displayChanged = d => JSON.stringify(normalizeDisplay(d)) !== JSON.stringify(normalizeDisplay(null));
 
 export function money(cents) {
-  if (cents === null) return '—';
+  if (cents === null) return '–';
   const s = String(cents).padStart(3, '0');
   return `${s.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${s.slice(-2)}`;
 }

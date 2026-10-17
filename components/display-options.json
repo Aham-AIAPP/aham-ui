@@ -6,7 +6,7 @@
   "implementation": "aham.css",
   "behavior": "aham.js",
   "intent": "每位使用者自己的列表显示偏好：分组、排序、行高、显示属性",
-  "specification": "rules/4-页面.md#45-显示选项",
+  "specification": "rules/4-页面.md#46-显示选项",
   "preview": "examples/parts-filter.html",
   "reference": "examples/list.html",
   "api": "initDisplay({ root, trigger, groups, sorts, columns, value, defaults, onChange })",

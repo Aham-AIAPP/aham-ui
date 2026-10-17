@@ -40,7 +40,7 @@ body{margin:0}
   <header class="hm-head">
     <div>
       <h1>Aham UI<span class="hm-ver" id="hm-ver"></span></h1>
-      <p>业务管理系统的界面规范：取值、规则、样式、脚本和示例页。视觉参考 Claude 客户端，单据交互参考 SAP Fiori，键盘操作参考 Linear。示例数据全部虚构。</p>
+      <p>业务管理系统的界面规范：取值、规则、样式、脚本和示例页。中性色和细节参考 Claude 客户端，页型、单据、消息和数据格式参考 SAP Fiori，键盘操作参考 Linear。示例数据全部虚构。</p>
     </div>
     <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="assets/icons/aham-icons.svg#i-moon"/></svg></button>
   </header>
@@ -48,9 +48,10 @@ body{margin:0}
   <section aria-labelledby="hm-pages">
     <h2 id="hm-pages">示例页</h2>
     <nav class="hm-links" aria-labelledby="hm-pages">
-      <a href="examples/document.html"><b>单据页</b><span>显示态、编辑态、校验、提交、审批、作废</span></a>
+      <a href="examples/document.html"><b>单据页</b><span>关键信息、锚点栏、页脚保存、草稿、校验、审批、作废</span></a>
       <a href="examples/print.html"><b>打印预览</b><span>A4 版式、未生效标记、金额大写</span></a>
-      <a href="examples/list.html"><b>列表页</b><span>筛选、显示选项、分组、批量操作</span></a>
+      <a href="examples/list.html"><b>列表页</b><span>筛选、视图、批量编辑、批量结果、导出</span></a>
+      <a href="examples/worklist.html"><b>工作清单</b><span>待审批的报价单，行内通过和退回</span></a>
       <a href="examples/record.html"><b>记录详情页</b><span>属性栏、动态、评论、AI 摘要</span></a>
       <a href="examples/settings.html"><b>设置页</b><span>分区设置、立即生效、危险操作</span></a>
       <a href="examples/controls.html"><b>控件总览</b><span>按钮、输入框、选择控件、状态、标签、提示条</span></a>
@@ -65,7 +66,7 @@ body{margin:0}
 
   <section aria-labelledby="hm-color">
     <h2 id="hm-color">颜色</h2>
-    <p class="hm-cap">色值取自当前主题的 CSS 变量，切换深色模式后跟着变。每个颜色的用途见 rules/2-视觉.md 2.1–2.2。</p>
+    <p class="hm-cap">色值取自当前主题的 CSS 变量，切换深色模式后跟着变。每个颜色的用途见 rules/2-视觉.md 2.1–2.2。灰底只用在一行高的元素上。</p>
     <div class="hm-sw" id="hm-color-list"></div>
   </section>
 
@@ -89,10 +90,10 @@ initTooltips(root);
 
 const REPO = 'https://github.com/Aham-AIAPP/aham-ui/blob/main/';
 const RULES = [['1-总则', '范围、原则、视觉来源、术语、文件分工'], ['2-视觉', '颜色、对比度、字体、字号、间距、尺寸、圆角、图标、暗色'],
-  ['3-控件', '按钮、输入框、选择控件选型、状态、标签、提示条'], ['4-页面', '外框、页型、列表、筛选、详情、设置、断点'],
-  ['5-单据', '显示态和编辑态、校验、状态、提交审批、删除作废、打印'], ['6-反馈', '消息元素、轻提示、确认弹窗、文案、空状态'],
+  ['3-控件', '按钮、控件状态、工具栏、输入框、选择控件、值帮助弹窗'], ['4-页面', '页型、工作清单、列表、筛选、视图、批量编辑、导出'],
+  ['5-单据', '关键信息、锚点栏、编辑流程、页脚保存、草稿、状态、打印'], ['6-反馈', '消息框、批量结果、文案、空状态、忙碌和占位加载'],
   ['7-键盘与命令', '快捷键、命令面板、选择菜单、右键菜单、焦点'], ['8-AI协作', '入口、标记、生成过程、字段建议、隐私'],
-  ['9-验收', '自动检查、无障碍、页面情况、截图核对、自查']];
+  ['9-验收', '自动检查、无障碍、页面情况、截图核对、自查'], ['10-数据格式', '日期、时间、数字、金额、单位、换行和截断']];
 document.getElementById('hm-rule-list').innerHTML = RULES.map(([f, d]) =>
   `<a href="${REPO}rules/${encodeURIComponent(f)}.md"><b>${esc(f)}</b><span>${esc(d)}</span></a>`).join('');
 

@@ -1,0 +1,43 @@
+{
+  "slug": "worklist",
+  "name": "工作清单",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "intent": "逐条处理分给当前用户的事项：待审批、待确认",
+  "preview": "examples/worklist.html",
+  "specification": "rules/4-页面.md#42-页型",
+  "classes": [
+    ".wb-list-table",
+    ".wb-row-buttons",
+    ".wb-row-note",
+    ".wb-row-link",
+    ".wb-seg"
+  ],
+  "states": [
+    "todo",
+    "done",
+    "selected",
+    "row-disabled-with-reason",
+    "empty"
+  ],
+  "keyboard": {
+    "Tab": "按顺序到每行的勾选框、名称和处理按钮"
+  },
+  "rules": [
+    "没有筛选行，用分段按钮分类并写条数",
+    "每行末尾最多两个处理按钮，用文字",
+    "需要原因的操作弹窗填原因",
+    "处理完的行移到「我已处理」，轻提示带撤销",
+    "批量处理前先说明哪些不能处理，再问是否处理其余的",
+    "暂时不能处理的行，按钮禁用并在旁边写原因"
+  ],
+  "accessibility": [
+    "勾选框和按钮的 aria-label 带报价单名称",
+    "禁用按钮的原因写在按钮旁边，不放在悬停提示里"
+  ],
+  "doNotInvent": [
+    "行内图标按钮代替「通过」「退回」",
+    "整行染色表示状态"
+  ]
+}

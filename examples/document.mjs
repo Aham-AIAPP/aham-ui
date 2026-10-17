@@ -1,10 +1,11 @@
-// Quotation document (rules/5-单据.md). One page for read and edit mode, with the status deciding which actions show:
+// Quotation document (rules/5-单据.md). One page for read and edit mode, with the status deciding which actions show.
+// Display mode keeps its actions in the head; edit mode moves 放弃草稿 and 保存 into the footer toolbar, as in SAP Fiori.
 //   草稿 / 已退回  编辑、提交审批；更多：复制为新报价、删除
 //   审批中        撤回；演示用的「通过」「退回」在提示条里
 //   已生效        打印；更多：复制为新报价、作废
 //   已作废        只能查看、打印和复制
 // State lives in this page only. print.html reads the last saved copy from sessionStorage.
-import { initShell, initObjectPage, openConfirm, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
+import { initShell, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
 import { defaults, lineCents, totals, money } from './quotation-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -54,6 +55,15 @@ const state = {
   history: [{ who: '林悦', what: '创建报价单', when: '09-29 16:20' }],
 };
 
+// Lines that can be added in edit mode (demonstration catalogue).
+const CATALOG = [
+  { name: '数据看板许可', code: 'SW-050 · 车间与管理看板', unit: '套', priceCents: 36000_00, type: 'software' },
+  { name: '移动端许可', code: 'SW-055 · 巡检与报工 App', unit: '个', priceCents: 900_00, type: 'software' },
+  { name: '二次开发', code: 'SV-030 · 按需求评估', unit: '人天', priceCents: 2_500_00, type: 'service' },
+];
+// Rows on screen: the saved rows in read mode, a working copy in edit mode (lines can be added and removed).
+let work = state.rows, nextId = 100;
+
 const now = () => new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
 const canEdit = () => EDITABLE.includes(state.status);
 const lowDiscount = rows => rows.some(r => r.discountTenths < 800);
@@ -100,15 +110,25 @@ function lineRow(r, i) {
     + `<td class="number"><span class="wb-read"><span class="wb-value${editable}">${r.qty}</span></span><span class="wb-edit"><input class="wb-field is-number" name="qty-${r.id}" aria-label="第 ${i + 1} 行 ${esc(r.name)} 数量" inputmode="numeric" value="${r.qty}"></span></td>`
     + `<td>${esc(r.unit)}</td><td class="number">${money(r.priceCents)}</td>`
     + `<td class="number"><span class="wb-read"><span class="wb-value${editable}">${(r.discountTenths / 10).toFixed(1)}</span></span><span class="wb-edit"><input class="wb-field is-number" name="disc-${r.id}" aria-label="第 ${i + 1} 行 ${esc(r.name)} 折扣" inputmode="decimal" value="${(r.discountTenths / 10).toFixed(1)}"></span></td>`
-    + `<td class="number" data-amount>${money(lineCents(r))}</td></tr>`;
+    + `<td class="number" data-amount>${money(lineCents(r))}</td>`
+    + `<td class="wb-row-actions" data-edit-only><button type="button" class="wb-icon-btn" data-remove="${r.id}" aria-label="删除第 ${i + 1} 行 ${esc(r.name)}" data-tooltip="删除这一行">${icon('trash')}</button></td></tr>`;
 }
 function renderLines() {
-  $('#lines').innerHTML = state.rows.map(lineRow).join('');
-  $('#lines-meta').textContent = `${state.rows.length} 项 · 金额单位：元`;
-  renderTotals(state.rows);
+  $('#lines').innerHTML = work.map(lineRow).join('');
+  renderLineMeta();
+  renderTotals(work);
+}
+const renderLineMeta = () => { $('#lines-meta').textContent = `${work.length} 项 · 金额单位：元`; };
+// After a line is added or removed in edit mode: renumber, recount and total again without touching typed values.
+function relines() {
+  $$('#lines tr').forEach((tr, i) => { tr.firstElementChild.textContent = i + 1; });
+  renderLineMeta();
+  const rows = typedRows();
+  renderTotals(rows.map((r, i) => r || work[i]));
 }
 function renderTotals(rows) {
   const t = totals(rows);
+  renderFacts(t.total);
   $('#lines-total').textContent = money(t.total);
   $('#sum-total').textContent = money(t.total);
   $('#sum-software').textContent = money(t.software);
@@ -122,7 +142,7 @@ function renderTotals(rows) {
 const parseQty = v => (/^\d+$/.test(v.trim()) && Number(v) <= 999 ? Number(v) : null);
 const parseDisc = v => (/^\d+(\.\d)?$/.test(v.trim()) && Number(v) <= 100 ? Math.round(Number(v) * 10) : null);
 function typedRows() {
-  return state.rows.map(r => {
+  return work.map(r => {
     const qty = parseQty(doc.querySelector(`[name=qty-${r.id}]`).value), disc = parseDisc(doc.querySelector(`[name=disc-${r.id}]`).value);
     return qty === null || disc === null ? null : { ...r, qty, discountTenths: disc };
   });
@@ -130,9 +150,16 @@ function typedRows() {
 doc.addEventListener('input', e => {
   if (!e.target.matches('[name^=qty-], [name^=disc-]')) return;
   const rows = typedRows();
-  rows.forEach((r, i) => { if (r) doc.querySelector(`tr[data-id="${state.rows[i].id}"] [data-amount]`).textContent = money(lineCents(r)); });
-  renderTotals(rows.map((r, i) => r || state.rows[i]));
+  rows.forEach((r, i) => { if (r) doc.querySelector(`tr[data-id="${work[i].id}"] [data-amount]`).textContent = money(lineCents(r)); });
+  renderTotals(rows.map((r, i) => r || work[i]));
 });
+
+// ── Key facts in the head: four read-only pairs that fold away when the page scrolls ─────────
+function renderFacts(totalCents) {
+  const f = state.fields;
+  $('#doc-facts').innerHTML = [['客户', esc(f.customer || '–')], ['价税合计（元）', money(totalCents), 'is-amount'], ['有效期至', esc(f.validTo || '–'), 'is-amount'], ['负责人', esc(f.owner)]]
+    .map(([k, v, c]) => `<div><dt>${k}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`).join('');
+}
 
 // ── Status: badge, message strip, actions, approval, history ─────
 function renderStatus() {
@@ -182,7 +209,7 @@ function validate() {
   for (const c of doc.querySelectorAll('.wb-edit [required]')) if (!c.value.trim()) out.push({ control: c, severity: 'error', message: '必填，没填' });
   const from = doc.querySelector('[name=quoteDate]'), to = doc.querySelector('[name=validTo]');
   if (from.value && to.value && to.value < from.value) out.push({ control: to, severity: 'error', message: '要晚于报价日期' });
-  for (const r of state.rows) {
+  for (const r of work) {
     const q = doc.querySelector(`[name=qty-${r.id}]`), d = doc.querySelector(`[name=disc-${r.id}]`);
     if (parseQty(q.value) === null) out.push({ control: q, severity: 'error', message: '填 0～999 的整数' });
     const disc = parseDisc(d.value);
@@ -195,6 +222,7 @@ async function save(values) {
   await new Promise(r => setTimeout(r, 300));
   for (const f of [...FIELDS.basic, ...FIELDS.terms]) if (!f.fixed && f.key in values) state.fields[f.key] = String(values[f.key]).trim();
   state.rows = typedRows();
+  work = state.rows;
   state.history.unshift({ who: '林悦', what: '修改报价', when: `今天 ${now()}` });
   renderForms();
   renderLines();
@@ -253,11 +281,73 @@ root.addEventListener('click', e => {
   else if (b.dataset.demo === 'approve') { setStatus('approved', '审批通过'); toast('王卓已通过'); }
   else if (b.dataset.demo === 'return') openConfirm({ root, title: '退回报价单？', confirm: '退回', reason: { label: '退回原因' }, returnFocus: b, onConfirm: reason => { state.returnReason = reason; setStatus('returned', '退回报价单'); } });
   else if (b.dataset.fill) { $('#doc-strip').hidden = true; page.enter(doc.querySelector(`[name=${b.dataset.fill}]`)); }
+  else if (b.id === 'line-add') addLine(b);
+  else if (b.dataset.remove) removeLine(Number(b.dataset.remove));
+});
+
+// A line has three fields to fill, so it is added in a dialog (rules/5-单据.md 5.11); quantity and discount stay
+// editable in the table afterwards. Removing a line in edit mode asks nothing: 放弃草稿 brings it back.
+function addLine(trigger) {
+  openFormDialog({
+    root, title: '添加报价明细', submit: '添加', returnFocus: trigger,
+    fields: [
+      { key: 'item', label: '产品 / 服务', type: 'select', required: true, options: [{ value: '', label: '选择产品或服务' }, ...CATALOG.map((c, i) => ({ value: String(i), label: `${c.code.split(' · ')[0]} · ${c.name}` }))] },
+      { key: 'qty', label: '数量', type: 'number', inputmode: 'numeric', required: true, value: '1', hint: '0～999 的整数' },
+      { key: 'disc', label: '折扣 %', type: 'number', inputmode: 'decimal', value: '100.0', hint: '100.0 表示不打折' },
+    ],
+    onSubmit: v => {
+      const qty = parseQty(v.qty), disc = parseDisc(v.disc || '100');
+      const bad = {};
+      if (qty === null) bad.qty = '填 0～999 的整数';
+      if (disc === null) bad.disc = '填 0～100，最多一位小数';
+      if (Object.keys(bad).length) return bad;
+      const row = { id: nextId++, ...CATALOG[Number(v.item)], qty, discountTenths: disc };
+      work = [...work, row];
+      $('#lines').insertAdjacentHTML('beforeend', lineRow(row, work.length - 1));
+      relines();
+      toast(`已添加 ${row.name}`);
+      return true;
+    },
+  });
+}
+function removeLine(id) {
+  const i = work.findIndex(r => r.id === id), name = work[i].name;
+  const next = $(`#lines tr[data-id="${id}"]`).nextElementSibling?.querySelector('[data-remove]') || $('#line-add');
+  work = work.filter(r => r.id !== id);
+  $(`#lines tr[data-id="${id}"]`).remove();
+  relines();
+  next.focus();
+  toast(`已删除 ${name}，保存后生效`);
+}
+
+// Leaving the page with unsaved changes (rules/5-单据.md 5.7): save, keep the draft or discard it.
+let keepDraft = false;
+root.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a || a.target === '_blank' || !page.isDirty()) return;
+  e.preventDefault();
+  const go = () => { location.href = a.href; };
+  openConfirm({
+    root, title: '离开前保存报价单？', text: '报价单还在编辑中，有改动没有保存。保留草稿时，改动只有本人看得到，下次打开时继续编辑。',
+    confirm: '保存', cancel: '留在本页', returnFocus: a,
+    choices: [{ label: '放弃草稿', value: 'discard', danger: true }, { label: '保留草稿', value: 'keep' }],
+    onConfirm: async () => { await page.save(); if (!page.isDirty()) go(); },
+    onChoice: async v => {
+      if (v === 'keep') { await page.saveDraft(); keepDraft = true; }
+      page.discard();
+      go();
+    },
+  });
 });
 // The sticky head gets its bottom line once the page scrolls under it.
-doc.addEventListener('scroll', () => doc.querySelector('.wb-doc-head')?.classList.toggle('is-stuck', doc.scrollTop > 0), { passive: true });
+// Key facts fold away at the same time, so the head is shorter while the user reads further down.
+doc.addEventListener('scroll', () => doc.querySelector('.wb-doc-head')?.classList.toggle('is-stuck', doc.scrollTop > 24), { passive: true });
 // Values that can be double-clicked into edit mode carry is-editable only while the status allows editing.
-new MutationObserver(() => { if (doc.dataset.mode === 'read') renderLines(); }).observe(doc, { attributes: true, attributeFilter: ['data-mode'] });
+new MutationObserver(() => {
+  if (doc.dataset.mode === 'edit') { work = [...state.rows]; return; }
+  work = state.rows;
+  renderLines();
+}).observe(doc, { attributes: true, attributeFilter: ['data-mode'] });
 
 renderForms();
 renderLines();
@@ -265,6 +355,10 @@ renderStatus();
 publish();
 initShell(root);
 const page = initObjectPage(doc, {
-  edit: $('#doc-edit'), footer: $('#doc-actions'), messages: $('#doc-messages'),
+  edit: $('#doc-edit'), footer: $('#doc-foot'), messages: $('#doc-messages'),
   validate, onSave: save, canEdit, saved: '已保存',
+  changed: () => work.length !== state.rows.length || work.some((r, i) => r.id !== state.rows[i].id),
+  // Demonstration: the draft lives in this page only; a real product sends it to the server every 20 seconds.
+  draft: { interval: 20000, onDraft: () => new Promise(r => setTimeout(r, 200)), onDiscard: ({ changed }) => { if (changed && !keepDraft) toast('已放弃草稿'); keepDraft = false; } },
 });
+initAnchorBar($('#doc-anchors'), { scroller: doc });

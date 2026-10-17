@@ -5,7 +5,7 @@
   "name": "输入框",
   "intent": "录入文本、数字、日期，或从下拉里选一个值",
   "preview": "examples/controls.html",
-  "specification": "rules/3-控件.md#33-输入框",
+  "specification": "rules/3-控件.md#35-输入框",
   "classes": [
     ".wb-field",
     ".wb-field.sm",

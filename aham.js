@@ -380,7 +380,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
   function renderTrigger() {
     const n = filters.length;
     trigger.classList.toggle('icon-only', n > 0);
-    trigger.innerHTML = `${icon('filter')}${n ? '' : '<span>筛选</span>'}`;
+    trigger.innerHTML = n ? icon('filter') : '筛选';
     trigger.setAttribute('aria-label', n ? `添加筛选，已有 ${n} 个条件` : '筛选');
     trigger.setAttribute('aria-haspopup', 'dialog');
     if (!trigger.hasAttribute('aria-expanded')) trigger.setAttribute('aria-expanded', 'false');
@@ -393,7 +393,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
       const full = fd.type === 'option' ? f.values.join('、') : val;
       return `<div class="wb-chip" role="group" aria-label="${escapeHtml(`${fd.label} ${op} ${full}`)}"><span class="wb-chip-field">${fd.icon ? icon(fd.icon) : ''}${escapeHtml(fd.label)}</span><button type="button" class="wb-chip-op" data-filter-op="${f.field}" data-anchor="op:${f.field}" aria-haspopup="dialog" aria-expanded="false" aria-label="${escapeHtml(`${fd.label}的条件：${op}`)}">${escapeHtml(op)}</button><button type="button" class="wb-chip-value" data-filter-value="${f.field}" data-anchor="value:${f.field}" aria-haspopup="dialog" aria-expanded="false" title="${escapeHtml(full)}" aria-label="${escapeHtml(`${fd.label}的值：${full}`)}"><span>${escapeHtml(val)}</span></button><button type="button" class="wb-chip-remove" data-filter-remove="${f.field}" aria-label="${escapeHtml(`移除筛选：${fd.label}`)}">${icon('close')}</button></div>`;
     }).join('');
-    bar.innerHTML = `<div class="wb-filter-chips"><button type="button" class="wb-btn sm outline icon-only" data-filter-add data-anchor="add" aria-haspopup="dialog" aria-expanded="false" aria-label="添加筛选">${icon('filter')}</button>${chips}</div><button type="button" class="wb-btn sm ghost" data-filter-clear>${icon('close')}<span>清除</span></button>`;
+    bar.innerHTML = `<div class="wb-filter-chips"><button type="button" class="wb-btn sm outline icon-only" data-filter-add data-anchor="add" aria-haspopup="dialog" aria-expanded="false" aria-label="添加筛选">${icon('filter')}</button>${chips}</div><button type="button" class="wb-btn sm ghost" data-filter-clear>清除</button>`;
   }
   function commit() {
     renderTrigger();
@@ -578,7 +578,7 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
   const label = key => columns.find(c => c.key === key)?.label ?? key;
 
   function renderTrigger() {
-    trigger.innerHTML = `${icon('settings')}<span>显示</span>${changed() ? '<span class="wb-dot" aria-hidden="true"></span><span class="wb-sr-only">（已调整）</span>' : ''}`;
+    trigger.innerHTML = `显示${changed() ? '<span class="wb-dot" aria-hidden="true"></span><span class="wb-sr-only">（已调整）</span>' : ''}`;
     trigger.setAttribute('aria-haspopup', 'dialog');
     if (!trigger.hasAttribute('aria-expanded')) trigger.setAttribute('aria-expanded', 'false');
   }
@@ -1081,13 +1081,17 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
 // and the object; the text says what happens. With `reason`, a required text box comes first and its value is passed on.
 // The confirm button carries the action's own verb, never 确定. Esc and 取消 close without acting.
 //   openConfirm({ root, title, text, confirm: '删除', danger: true, reason: { label: '作废原因' }, onConfirm(reason) })
-export function openConfirm({ root, title, text = '', confirm = '确认', danger = false, reason = null, onConfirm, returnFocus }) {
+// choices adds buttons between 取消 and the confirm button, e.g. the leave dialog of a draft:
+//   openConfirm({ title: '离开前保存报价单？', confirm: '保存', choices: [{ label: '放弃草稿', value: 'discard', danger: true },
+//     { label: '保留草稿', value: 'keep' }], onConfirm: save, onChoice: value => … })
+export function openConfirm({ root, title, text = '', confirm = '确认', danger = false, reason = null, choices = [], onConfirm, onChoice, returnFocus, cancel = '取消' }) {
   const dialog = document.createElement('dialog');
   dialog.className = 'wb-dialog';
   dialog.setAttribute('aria-labelledby', 'wb-confirm-title');
-  dialog.innerHTML = `<form method="dialog" novalidate><h2 id="wb-confirm-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}${reason ? `<label class="wb-dialog-field"><span>${escapeHtml(reason.label)}<span class="wb-form-required" aria-hidden="true">*</span></span><textarea class="wb-field" name="reason" rows="3" maxlength="500" required aria-describedby="wb-confirm-error"></textarea><span class="wb-value-error" id="wb-confirm-error" role="alert"></span></label>` : ''}<div class="wb-dialog-foot"><button type="button" class="wb-btn" data-confirm="cancel">取消</button><button type="submit" class="wb-btn ${danger ? 'danger' : 'primary'}">${escapeHtml(confirm)}</button></div></form>`;
+  dialog.innerHTML = `<form method="dialog" novalidate><h2 id="wb-confirm-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}${reason ? `<label class="wb-dialog-field"><span>${escapeHtml(reason.label)}<span class="wb-form-required" aria-hidden="true">*</span></span><textarea class="wb-field" name="reason" rows="3" maxlength="500" required aria-describedby="wb-confirm-error"></textarea><span class="wb-value-error" id="wb-confirm-error" role="alert"></span></label>` : ''}<div class="wb-dialog-foot"><button type="button" class="wb-btn" data-confirm="cancel">${escapeHtml(cancel)}</button>${choices.map((c, i) => `<button type="button" class="wb-btn${c.danger ? ' ghost danger' : ''}" data-choice="${i}">${escapeHtml(c.label)}</button>`).join('')}<button type="submit" class="wb-btn ${danger ? 'danger' : 'primary'}">${escapeHtml(confirm)}</button></div></form>`;
   root.append(dialog);
   const returnTo = returnFocus || document.activeElement;
+  dialog.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => { finish(); onChoice?.(choices[Number(b.dataset.choice)].value); }));
   const field = dialog.querySelector('textarea'), err = dialog.querySelector('.wb-value-error');
   let release = null;
   function finish() { release?.(); dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }
@@ -1107,6 +1111,130 @@ export function openConfirm({ root, title, text = '', confirm = '确认', danger
   return { close: finish };
 }
 
+// ── Form dialog ──────────────────────────────────────────────────────────────
+// A small form in a modal: adding a line item, mass edit. Labels sit above the controls as on the document page.
+// fields: [{ key, label, type: 'text' | 'number' | 'select', options?, value?, required?, hint?, inputmode? }]
+// onSubmit(values) → true closes the dialog; a string is shown as the error of the whole form; an object
+// { key: message } marks single fields. Esc and 取消 close without acting.
+export function openFormDialog({ root, title, text = '', fields = [], submit = '保存', onSubmit, returnFocus }) {
+  const dialog = document.createElement('dialog');
+  dialog.className = 'wb-dialog is-form';
+  dialog.setAttribute('aria-labelledby', 'wb-form-title');
+  const control = f => {
+    const id = `wb-form-${f.key}`, base = `class="wb-field${f.type === 'number' ? ' is-number' : ''}" id="${id}" name="${escapeHtml(f.key)}"${f.required ? ' required' : ''} aria-describedby="${id}-error"`;
+    if (f.type === 'select') return `<select ${base}>${f.options.map(o => { const v = typeof o === 'object' ? o : { value: o, label: o }; return `<option value="${escapeHtml(v.value)}"${String(v.value) === String(f.value ?? '') ? ' selected' : ''}>${escapeHtml(v.label)}</option>`; }).join('')}</select>`;
+    return `<input ${base} value="${escapeHtml(f.value ?? '')}"${f.inputmode ? ` inputmode="${f.inputmode}"` : ''} maxlength="200" autocomplete="off">`;
+  };
+  dialog.innerHTML = `<form method="dialog" novalidate><h2 id="wb-form-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}<div class="wb-dialog-grid">${fields.map(f => `<div class="wb-form-row"><label class="wb-form-label" for="wb-form-${escapeHtml(f.key)}">${escapeHtml(f.label)}${f.required ? '<span class="wb-form-required" aria-hidden="true">*</span>' : ''}</label>${control(f)}${f.hint ? `<div class="wb-form-hint">${escapeHtml(f.hint)}</div>` : ''}<div class="wb-form-hint is-error" id="wb-form-${escapeHtml(f.key)}-error" role="alert"></div></div>`).join('')}</div><p class="wb-value-error" role="alert"></p><div class="wb-dialog-foot"><button type="button" class="wb-btn" data-form="cancel">取消</button><button type="submit" class="wb-btn primary">${escapeHtml(submit)}</button></div></form>`;
+  root.append(dialog);
+  const form = dialog.querySelector('form'), formError = form.querySelector(':scope > .wb-value-error');
+  const returnTo = returnFocus || document.activeElement;
+  const el = key => form.querySelector(`[name="${CSS.escape(key)}"]`);
+  let release = null;
+  function finish() { release?.(); dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }
+  function mark(key, message) {
+    const c = el(key), box = dialog.querySelector(`#wb-form-${CSS.escape(key)}-error`);
+    if (!c || !box) return;
+    box.textContent = message || '';
+    if (message) c.setAttribute('aria-invalid', 'true'); else c.removeAttribute('aria-invalid');
+  }
+  dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
+  dialog.querySelector('[data-form=cancel]').addEventListener('click', finish);
+  form.addEventListener('input', e => { if (e.target.name) mark(e.target.name, ''); formError.textContent = ''; });
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const values = Object.fromEntries(fields.map(f => [f.key, el(f.key).value.trim()]));
+    const missing = fields.filter(f => f.required && !values[f.key]);
+    fields.forEach(f => mark(f.key, missing.includes(f) ? `${f.label}没填` : ''));
+    if (missing.length) { el(missing[0].key).focus(); return; }
+    const result = await onSubmit?.(values);
+    if (result === true || result === undefined) { finish(); return; }
+    if (typeof result === 'string') { formError.textContent = result; return; }
+    const keys = Object.keys(result);
+    keys.forEach(k => mark(k, result[k]));
+    el(keys[0])?.focus();
+  });
+  dialog.showModal();
+  release = pushLayer(finish);
+  (form.querySelector('input, select') || form.querySelector('[data-form=cancel]')).focus();
+  return { close: finish, dialog };
+}
+
+// ── Result of processing several items (rules/6-反馈.md 6.4) ──────────────────
+// All done: a toast, no dialog. Some or all failed: a dialog whose first line is「X / Y 个已处理」and whose list
+// names each item that failed and why. items: [{ name, reason }] for the failures; total: how many were sent.
+export function showBatchResult({ root, action, noun, total, failed = [], returnFocus }) {
+  const done = total - failed.length;
+  if (!failed.length) { toast(`已${action} ${total} 个${noun}`); return null; }
+  const dialog = document.createElement('dialog');
+  dialog.className = 'wb-dialog is-form';
+  dialog.setAttribute('aria-labelledby', 'wb-batch-title');
+  dialog.innerHTML = `<form method="dialog"><h2 id="wb-batch-title">${done ? `${escapeHtml(action)}了部分${escapeHtml(noun)}` : `没有${escapeHtml(noun)}被${escapeHtml(action)}`}</h2><p>${done} / ${total} 个已${escapeHtml(action)}。下面 ${failed.length} 个没有${escapeHtml(action)}，仍保持勾选，处理后可以再试一次。</p><ul class="wb-batch-list">${failed.map(f => `<li>${icon('error')}<span>${escapeHtml(f.name)}</span><small>${escapeHtml(f.reason)}</small></li>`).join('')}</ul><div class="wb-dialog-foot"><button type="submit" class="wb-btn primary">关闭</button></div></form>`;
+  root.append(dialog);
+  const returnTo = returnFocus || document.activeElement;
+  let release = null;
+  function finish() { release?.(); dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }
+  dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
+  dialog.querySelector('form').addEventListener('submit', e => { e.preventDefault(); finish(); });
+  dialog.showModal();
+  release = pushLayer(finish);
+  dialog.querySelector('[type=submit]').focus();
+  return { close: finish };
+}
+
+// ── Export (rules/4-页面.md 4.10) ────────────────────────────────────────────
+// Rows to CSV with the columns, order and headings the user sees. A UTF-8 byte order mark lets Excel read Chinese.
+// columns: [{ key, label, value?(row) }]. Cells that start with = + - @ get a leading apostrophe so a spreadsheet
+// does not run them as formulas.
+export function toCSV(rows, columns) {
+  const cell = v => {
+    let t = v == null ? '' : String(v);
+    if (/^[=+\-@\t\r]/.test(t)) t = `'${t}`;
+    return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
+  };
+  const lines = [columns.map(c => cell(c.label)).join(','), ...rows.map(r => columns.map(c => cell(c.value ? c.value(r) : r[c.key])).join(','))];
+  return `﻿${lines.join('\r\n')}\r\n`;
+}
+export function downloadText(name, text, type = 'text/csv;charset=utf-8') {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = Object.assign(document.createElement('a'), { href: url, download: name });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ── Anchor bar (rules/5-单据.md 5.1) ─────────────────────────────────────────
+// One button per section; a click scrolls the section under the sticky head, scrolling marks the section on screen.
+//   <nav class="wb-anchors" aria-label="分区"><button type="button" data-target="s-basic">基本信息</button>…</nav>
+export function initAnchorBar(nav, { scroller }) {
+  const buttons = [...nav.querySelectorAll('[data-target]')];
+  const sections = buttons.map(b => document.getElementById(b.dataset.target)?.closest('section') || document.getElementById(b.dataset.target));
+  let lock = 0;
+  const mark = i => buttons.forEach((b, k) => { if (k === i) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+  function current() {
+    const top = nav.getBoundingClientRect().bottom + 8;
+    let i = 0;
+    sections.forEach((s, k) => { if (s && s.getBoundingClientRect().top <= top) i = k; });
+    if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) i = sections.length - 1;
+    return i;
+  }
+  nav.addEventListener('click', e => {
+    const b = e.target.closest('[data-target]');
+    if (!b) return;
+    const i = buttons.indexOf(b), s = sections[i];
+    lock = Date.now() + 600;
+    mark(i);
+    scroller.scrollTo({ top: Math.max(0, scroller.scrollTop + s.getBoundingClientRect().top - nav.getBoundingClientRect().bottom - 16), behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    s.querySelector('h2')?.setAttribute('tabindex', '-1');
+    s.querySelector('h2')?.focus({ preventScroll: true });
+  });
+  const onScroll = () => { if (Date.now() > lock) mark(current()); };
+  scroller.addEventListener('scroll', onScroll, { passive: true });
+  mark(0);
+  return { refresh: onScroll };
+}
+
 // ── Object page (rules/5-单据.md) ─────────────────────────────────────────────
 // Read and edit mode on the same rows, as in the SAP Fiori object page. Each value is rendered twice: .wb-read for read
 // mode and .wb-edit holding the controls; [data-mode] on the page shows one of them. Header actions marked
@@ -1116,21 +1244,40 @@ export function openConfirm({ root, title, text = '', confirm = '确认', danger
 // and leaves edit mode only after onSave() resolves. Cancel asks first when something changed.
 //   root      element that carries data-mode="read" | "edit"
 //   edit      the header edit button
-//   footer    .wb-edit-footer with [data-action=save], [data-action=cancel] and an empty .wb-msg-btn
+//   footer    the footer toolbar .wb-doc-foot with [data-action=save], [data-action=cancel] and an empty .wb-msg-btn
 //   messages  a .wb-popover panel; the list of problems is rendered into it
 //   validate  root => [{ control, message, severity: 'error' | 'warning' }]; errors block saving, warnings do not
 //   onSave    values => Promise; values maps each control's name to its value
 //   canEdit   () => boolean; false while the document's status does not allow changes (submitted, released, voided)
+//   changed   () => boolean; extra changes the controls cannot show, such as a line added or removed
+//   draft     { interval = 20000, onDraft(values) → Promise, onDiscard({ changed }) }: autosave while editing. The footer's
+//             [data-draft-state] shows「草稿已自动保存 16:21」; cancel then asks「放弃这份草稿？」
 const OBJECT_STATE_TEXT = { error: '错误', warning: '提醒' };
-export function initObjectPage(root, { edit, footer, messages, validate = () => [], onSave = async () => {}, saved = '已保存', canEdit = () => true } = {}) {
+export function initObjectPage(root, { edit, footer, messages, validate = () => [], onSave = async () => {}, saved = '已保存', canEdit = () => true, changed = () => false, draft = null } = {}) {
   const controls = () => [...root.querySelectorAll('.wb-edit :is(input, select, textarea)')];
   const save = footer.querySelector('[data-action=save]'), cancel = footer.querySelector('[data-action=cancel]');
   const msgBtn = footer.querySelector('.wb-msg-btn');
-  let snapshot = new Map(), busy = false, problems = [];
+  const draftState = footer.querySelector('[data-draft-state]');
+  let snapshot = new Map(), busy = false, problems = [], timer = 0, draftedAt = '', lastDraft = '';
   const mode = () => root.dataset.mode;
   const checkable = c => c.type === 'checkbox' || c.type === 'radio';
   const valueOf = c => (checkable(c) ? c.checked : c.value);
-  const dirty = () => mode() === 'edit' && controls().some(c => snapshot.get(c) !== valueOf(c));
+  const dirty = () => mode() === 'edit' && (changed() || controls().some(c => snapshot.get(c) !== valueOf(c)));
+  const values = () => Object.fromEntries(controls().filter(c => c.name && (c.type !== 'radio' || c.checked)).map(c => [c.name, c.type === 'radio' ? c.value : valueOf(c)]));
+  // Draft (rules/5-单据.md 5.7): while editing, a changed form is handed to draft.onDraft every draft.interval ms.
+  function paintDraft(text) { if (draftState) draftState.textContent = text; }
+  async function saveDraft() {
+    if (!draft || mode() !== 'edit' || busy || !dirty()) return;
+    const v = values(), key = JSON.stringify(v);
+    if (key === lastDraft && !changed()) return;
+    paintDraft('正在保存草稿…');
+    try {
+      await draft.onDraft(v);
+      lastDraft = key;
+      draftedAt = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+      paintDraft(`草稿已自动保存 ${draftedAt}`);
+    } catch { paintDraft('草稿没能自动保存，改动还在本页'); }
+  }
   const grow = t => { t.style.height = 'auto'; t.style.height = `${Math.max(32, t.scrollHeight + 1)}px`; };
   const rowOf = c => c.closest('[data-state], .wb-form-value, td') || c.parentElement;
   function clearStates() {
@@ -1180,6 +1327,8 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     if (mode() === 'edit' || !canEdit()) return;
     snapshot = new Map(controls().map(c => [c, valueOf(c)]));
     root.dataset.mode = 'edit';
+    lastDraft = JSON.stringify(values());
+    if (draft) { paintDraft('草稿'); timer = setInterval(saveDraft, draft.interval ?? 20000); }
     root.querySelectorAll('.wb-edit textarea').forEach(grow);
     const first = target || controls().find(c => c.required && !c.value) || controls()[0];
     first?.focus({ preventScroll: true });
@@ -1189,6 +1338,7 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     if (restore) for (const [c, v] of snapshot) { if (checkable(c)) c.checked = v; else c.value = v; }
     problems = [];
     showStates([]);
+    clearInterval(timer);
     root.dataset.mode = 'read';
     edit?.focus({ preventScroll: true });
   }
@@ -1201,7 +1351,7 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     save.setAttribute('aria-busy', 'true'); save.disabled = true; cancel.disabled = true;
     try {
       // A radio group gives its checked value under the group's name; a checkbox gives true or false.
-      await onSave(Object.fromEntries(controls().filter(c => c.name && (c.type !== 'radio' || c.checked)).map(c => [c.name, c.type === 'radio' ? c.value : valueOf(c)])));
+      await onSave(values());
       leave(false);
       toast(saved);
     } catch (err) {
@@ -1212,10 +1362,11 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     }
   }
   function doCancel() {
-    if (!dirty()) { leave(true); return; }
-    messages.innerHTML = '<div class="wb-messages"><p class="wb-confirm-text">放弃这次的全部改动？</p><div class="wb-confirm-actions"><button type="button" class="wb-btn sm" data-keep>继续编辑</button><button type="button" class="wb-btn sm danger" data-drop>放弃改动</button></div></div>';
+    if (!dirty()) { leave(true); draft?.onDiscard?.({ changed: false }); return; }
+    const [q, drop] = draft ? ['放弃这份草稿？草稿里的改动都不会保存。', '放弃草稿'] : ['放弃这次的全部改动？', '放弃改动'];
+    messages.innerHTML = `<div class="wb-messages"><p class="wb-confirm-text">${q}</p><div class="wb-confirm-actions"><button type="button" class="wb-btn sm" data-keep>继续编辑</button><button type="button" class="wb-btn sm danger" data-drop>${drop}</button></div></div>`;
     messages.querySelector('[data-keep]').addEventListener('click', () => closePopover('done'));
-    messages.querySelector('[data-drop]').addEventListener('click', () => { closePopover('replace'); leave(true); });
+    messages.querySelector('[data-drop]').addEventListener('click', () => { closePopover('replace'); leave(true); draft?.onDiscard?.({ changed: true }); });
     openPopover(cancel, messages);
   }
   edit?.addEventListener('click', () => enter());
@@ -1244,10 +1395,11 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
   ];
   msgBtn.hidden = true;
   root.dataset.mode ||= 'read';
-  return { enter, save: doSave, cancel: doCancel, isDirty: dirty, destroy: () => offs.forEach(off => off()) };
+  // discard: leave edit mode and throw the changes away without asking (the page asked already, e.g. in a leave dialog).
+  return { enter, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: () => { clearInterval(timer); offs.forEach(off => off()); } };
 }
 
-// ── Files, tree table and version compare (rules/5-单据.md 5.12) ────────────────────
+// ── Files, tree table and version compare (rules/5-单据.md 5.13) ────────────────────
 // Pure helpers first (tested in Node), then the DOM behaviour. Aham renders no PDF or CAD itself: the product puts a
 // rendered page (img, canvas or svg) into the viewer canvas and swaps it in onPage.
 
@@ -1261,7 +1413,7 @@ export function checkFile(file, { accept = [], maxSize = Infinity } = {}) {
   return null;
 }
 export function formatBytes(n) {
-  if (!Number.isFinite(n) || n < 0) return '—';
+  if (!Number.isFinite(n) || n < 0) return '–';
   const units = ['B', 'KB', 'MB', 'GB'];
   let i = 0;
   while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }

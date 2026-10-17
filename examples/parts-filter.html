@@ -61,9 +61,9 @@ import {createCommand, initFilter, initDisplay, icon, initTheme} from '../aham.j
 const root = document.querySelector('.aham-workbench');
 initTheme(root);
 // Icons for the static buttons above
-root.querySelectorAll('.wb-btn.outline').forEach(b => { b.innerHTML = b.classList.contains('icon-only') ? icon('filter') : `${icon('filter')}<span>筛选</span>`; });
+root.querySelectorAll('.wb-btn.outline').forEach(b => { b.innerHTML = b.classList.contains('icon-only') ? icon('filter') : '筛选'; });
 root.querySelectorAll('.wb-icon-btn[aria-label="预览面板"]').forEach(b => { b.innerHTML = icon('eye'); });
-root.querySelectorAll('.pv-frame .wb-btn.sm:not(.outline)').forEach((b, i) => { b.innerHTML = `${icon('settings')}<span>显示</span>${i === 1 ? '<span class="wb-dot" aria-hidden="true"></span>' : ''}`; });
+root.querySelectorAll('.pv-frame .wb-btn.sm:not(.outline)').forEach((b, i) => { b.innerHTML = `显示${i === 1 ? '<span class="wb-dot" aria-hidden="true"></span>' : ''}`; });
 
 const fields = [
   { key: 'name', label: '名称', type: 'text', icon: 'file' },

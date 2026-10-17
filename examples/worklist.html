@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 待我审批</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}</style></head>
+<body>
+<!-- Worklist (rules/4-页面.md 4.2): quotations waiting for the current user's approval. No filter row; two segments,
+     inline 通过 / 退回 on each row, and batch approval with the result rules of rules/6-反馈.md 6.4. Data is fictional. -->
+<div class="aham-workbench" data-theme="light" aria-label="待我审批示例">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <span class="wb-brand" aria-label="Aham CRM">A</span>
+    <div class="wb-nav-group">
+      <a class="wb-nav-item" href="list.html" aria-label="客户"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"/></svg><span>客户</span></a>
+      <a class="wb-nav-item" href="document.html" aria-label="报价单"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span>报价单</span></a>
+      <a class="wb-nav-item" href="worklist.html" aria-label="待我审批" aria-current="page"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-check"/></svg><span>待我审批</span></a>
+    </div>
+    <div class="wb-nav-foot"><span class="wb-avatar">王</span></div>
+  </nav>
+  <div class="wb-main">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" data-tooltip="展开 / 收起导航" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>销售工作空间</span><span>/</span><span aria-current="page">待我审批</span></nav><div class="wb-seg sm" role="group" aria-label="分类" id="tabs"></div></div>
+        <div class="wb-header-trail"><span class="wb-crumbs-meta">演示数据</span><button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button></div>
+      </div>
+      <div class="wb-header-row">
+        <div class="wb-header-lead" data-when="idle"><span class="wb-count" id="count"></span></div>
+        <div class="wb-header-lead" data-when="bulk" hidden><span class="wb-bulk-count" id="bulk-count"></span><button type="button" class="wb-btn sm ghost" data-action="clear-selection">清除选择</button></div>
+        <div class="wb-header-trail" data-when="bulk" hidden><button type="button" class="wb-btn sm" data-action="approve-selected">通过选中的报价单</button></div>
+      </div>
+    </header>
+    <div class="wb-layout is-list">
+      <section class="wb-list" aria-label="待我审批的报价单">
+        <div class="wb-list-scroll" tabindex="0" role="region" aria-label="报价单，可横向滚动">
+          <table class="wb-table wb-list-table" id="table"></table>
+          <div class="wb-empty" id="empty" hidden></div>
+          <p class="wb-note">报价单、客户和金额均为虚构示例。通过和退回只改当前页面里的数据，刷新后恢复。</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<script type="module" src="./worklist.mjs"></script>
+</body></html>

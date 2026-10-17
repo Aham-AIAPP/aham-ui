@@ -3,32 +3,40 @@
   "schemaVersion": 3,
   "implementation": "aham.css",
   "behavior": "aham.js",
-  "name": "确认弹窗",
+  "name": "确认弹窗和消息框",
   "intent": "不可撤销的操作之前问一次",
   "api": {
-    "openConfirm": "openConfirm({ root, title, text, confirm, danger, reason: { label }, onConfirm(reason), returnFocus }) → { close }"
+    "openConfirm": "openConfirm({ root, title, text, confirm, cancel, danger, reason: { label }, choices: [{ label, value, danger }], onConfirm(reason), onChoice(value), returnFocus }) → { close }",
+    "openFormDialog": "openFormDialog({ root, title, text, fields: [{ key, label, type, options, value, required, hint }], submit, onSubmit(values) → true | string | { key: message }, returnFocus }) → { close }",
+    "showBatchResult": "showBatchResult({ root, action, noun, total, failed: [{ name, reason }], returnFocus }) → 全部成功时轻提示，有失败时弹窗"
   },
   "preview": "examples/document.html",
-  "specification": "rules/6-反馈.md#63-确认弹窗",
+  "specification": "rules/6-反馈.md#63-确认弹窗和消息框",
   "classes": [
     ".wb-dialog",
     ".wb-dialog.is-form",
     ".wb-dialog.is-wide",
     ".wb-dialog-field",
-    ".wb-dialog-foot"
+    ".wb-dialog-foot",
+    ".wb-dialog-grid",
+    ".wb-batch-list"
   ],
   "states": [
     "open",
-    "reason-empty-error"
+    "reason-empty-error",
+    "form-field-error",
+    "batch-partial",
+    "batch-all-failed"
   ],
   "keyboard": {
     "Esc": "关闭，不执行",
     "Enter（在按钮上）": "执行"
   },
   "rules": [
-    "标题是带对象的问句",
-    "按钮写动作本身，危险操作红字",
+    "标题是带对象的问句；删除用「删除 <对象> <编号>？」「删除选中的 n 个<对象>？」",
+    "按钮写动作本身，危险操作红字，最多两个；离开草稿弹窗例外，用 choices",
     "需要原因时原因必填",
+    "批量处理全部成功用轻提示，有失败时弹窗列出失败项和原因",
     "一次只开一个模态弹窗"
   ],
   "accessibility": [

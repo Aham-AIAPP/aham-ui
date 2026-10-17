@@ -1,6 +1,6 @@
 // List page sample: wires the Aham UI components (aham.js) to fictional demo data.
 // Everything reusable lives in aham.js / aham.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openPicker, registerShortcut, listShortcuts, toast, createCommand, openPopover, closePopover, pushLayer, icon, escapeHtml as esc} from '../aham.js';
+import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
 import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -22,9 +22,60 @@ function saveDisplay() { try { localStorage.setItem(DISPLAY_KEY, JSON.stringify(
 function feedback(text) { $('#list-feedback').textContent = text; }
 function narrowResult() { state.page = 1; selected.clear(); }
 
+// ── Views (rules/4-页面.md 4.5): a view keeps filters, sort, group and columns. Standard views cannot change;
+// a changed view gets「*」and 另存视图. Saved views live in this page only.
+const customViews = [];
+const viewOf = id => customViews.find(v => v.id === id);
+const setting = () => ({ filters: state.filters, sort: display.sort, group: display.group, columns: display.columns });
+function savedSetting(id) {
+  const v = viewOf(id);
+  if (v) return v.setting;
+  const d = normalizeDisplay(null);
+  return { filters: [], sort: d.sort, group: d.group, columns: d.columns };
+}
+const viewChanged = () => JSON.stringify(setting()) !== JSON.stringify(savedSetting(state.view));
+function renderViews() {
+  const all = [...Object.entries(VIEWS), ...customViews.map(v => [v.id, v.label])], changed = viewChanged();
+  $('#views').innerHTML = all.map(([id, label]) => `<button type="button" aria-pressed="${id === state.view}" data-view="${esc(id)}">${esc(label)}${id === state.view && changed ? '<span aria-hidden="true"> *</span><span class="wb-sr-only">（有未保存的修改）</span>' : ''}</button>`).join('');
+  $('#view-save').hidden = !changed;
+}
+function applyViewSetting(id) {
+  const v = savedSetting(id);
+  state.view = id;
+  state.filters = structuredClone(v.filters);
+  filter.set(state.filters);
+  display = normalizeDisplay({ ...display, sort: v.sort, group: v.group, columns: v.columns });
+  displayCtl.set(display);
+  saveDisplay();
+  collapsed.clear();
+  narrowResult();
+  render();
+}
+function saveView() {
+  openFormDialog({
+    root, title: '另存视图', submit: '保存', returnFocus: $('#view-save'),
+    text: '保存当前的筛选、排序、分组和显示的列。行高和每页条数不随视图保存。',
+    fields: [
+      { key: 'label', label: '视图名称', required: true, hint: '最多 20 个字' },
+      { key: 'scope', label: '可见范围', type: 'select', options: ['只有自己', '工作区所有人'] },
+      { key: 'isDefault', label: '设为默认视图', type: 'select', options: ['否', '是'] },
+    ],
+    onSubmit: v => {
+      if (v.label.length > 20) return { label: '最多 20 个字' };
+      if ([...Object.values(VIEWS), ...customViews.map(x => x.label)].includes(v.label)) return { label: '已有同名视图' };
+      const id = `v${customViews.length + 1}`;
+      customViews.push({ id, label: v.label, scope: v.scope, setting: structuredClone(setting()) });
+      state.view = id;
+      render();
+      toast(`已保存视图「${v.label}」${v.isDefault === '是' ? '，下次进入列表时打开它' : ''}`);
+      return true;
+    },
+  });
+}
+
 // ── Rendering ────────────────────────────────────────────────────────────────
 function compute() {
-  const base = applySearch(applyView(data, state.view), state.q);
+  const base = applySearch(applyView(data, VIEWS[state.view] ? state.view : 'all'), state.q);
   const rows = arrange(applyFilters(base, state.filters), display);
   const pg = paginate(rows, state.page, display.pageSize);
   state.page = pg.page;
@@ -40,7 +91,7 @@ function focusToken(el) {
 function render(fallback) {
   const active = document.activeElement, token = focusToken(active);
   compute();
-  $$('[data-view]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.view === state.view)));
+  renderViews();
   $('#list-count').textContent = cur.rows.length === data.length ? `共 ${data.length} 条` : `${cur.rows.length} / ${data.length} 条`;
   $('#customer-list').dataset.listDensity = display.density;
   renderTable(); renderPager(); renderBulk(); renderPreview();
@@ -94,7 +145,7 @@ function renderTable() {
 }
 function emptyHtml() {
   if (!data.length) return '<strong>示例数据已全部删除</strong><p>刷新页面可以恢复。</p>';
-  const why = [state.q && `搜索「${esc(state.q)}」`, state.filters.length && `${state.filters.length} 个筛选条件`, state.view !== 'all' && `「${VIEWS[state.view]}」视图`].filter(Boolean).join('、');
+  const why = [state.q && `搜索「${esc(state.q)}」`, state.filters.length && `${state.filters.length} 个筛选条件`, state.view !== 'all' && `「${VIEWS[state.view] || viewOf(state.view)?.label}」视图`].filter(Boolean).join('、');
   const actions = [
     state.filters.length && '<button type="button" class="wb-btn sm" data-action="clear-filters">清除筛选</button>',
     state.q && '<button type="button" class="wb-btn sm" data-action="clear-search">清除搜索</button>',
@@ -148,38 +199,58 @@ const displayCtl = initDisplay({
   },
 });
 
-// Bulk: assign uses the same command menu as filters (Circle's property pickers).
-const assignPop = $('#assign-pop'), dialog = $('#delete-dialog');
-function openAssign() {
-  createCommand(assignPop.firstElementChild, {
-    label: '分配给', placeholder: '分配给…',
-    items: OWNERS.map(o => ({ id: o, label: o, icon: 'user' })),
-    onSelect: it => {
-      const n = selected.size;
-      data = data.map(r => (selected.has(r.id) ? { ...r, owner: it.id } : r));
-      closePopover('done');
-      feedback(`已把 ${n} 条记录分配给${it.id}。示例只改当前页面的数据。`);
+// ── Bulk actions: mass edit, export, delete ───────────────────────────────────
+// Mass edit (rules/4-页面.md 4.3): each field starts at 保留原值, or at the shared value when all selected rows agree.
+const KEEP = '__keep__', BLANK = '__blank__';
+function massEdit() {
+  const rows = data.filter(r => selected.has(r.id));
+  const opts = (key, options, required) => {
+    const same = new Set(rows.map(r => r[key])).size === 1 ? rows[0][key] : null;
+    return { value: same ?? KEEP, options: [{ value: KEEP, label: '保留原值' }, ...(required ? [] : [{ value: BLANK, label: '留空' }]), ...options.map(o => ({ value: o, label: o }))] };
+  };
+  const fields = [
+    { key: 'stage', label: '阶段', type: 'select', ...opts('stage', STAGES, true) },
+    { key: 'owner', label: '负责人', type: 'select', ...opts('owner', OWNERS, true) },
+    { key: 'industry', label: '行业', type: 'select', ...opts('industry', INDUSTRIES, false) },
+  ];
+  openFormDialog({
+    root, title: `批量编辑 ${rows.length} 个客户`, submit: '保存', returnFocus: $('[data-action="mass-edit"]'),
+    text: '只改这里选了新值的字段。阶段和负责人是必填，没有「留空」。',
+    fields,
+    onSubmit: v => {
+      const patch = Object.fromEntries(Object.entries(v).filter(([, x]) => x !== KEEP).map(([k, x]) => [k, x === BLANK ? '' : x]));
+      if (!Object.keys(patch).length) return '没有选新的值。不改的话点「取消」。';
+      data = data.map(r => (selected.has(r.id) ? { ...r, ...patch } : r));
+      showBatchResult({ root, action: '修改', noun: '客户', total: rows.length });
       render();
+      return true;
     },
   });
-  openPopover($('#assign-trigger'), assignPop, { align: 'end' });
 }
-function confirmDelete(ids = [...selected]) {
-  const n = ids.length, gone = new Set(ids);
-  dialog.querySelector('#delete-title').textContent = `删除 ${n} 条记录`;
-  const release = pushLayer(() => dialog.close('cancel'));
-  dialog.addEventListener('close', () => {
-    release();
-    if (dialog.returnValue !== 'confirm') return;
-    data = data.filter(r => !gone.has(r.id));
-    ids.forEach(id => selected.delete(id));
-    toast(`已删除 ${n} 条记录`);
-    feedback('示例只改当前页面的数据，刷新后恢复。');
-    render();
-    $('#filter-trigger').focus();
-  }, { once: true });
-  dialog.returnValue = '';
-  dialog.showModal();
+// Export (rules/4-页面.md 4.10): the columns, order and headings on screen; all filtered rows, or the selection.
+function exportRows(rows) {
+  const cols = [field('name'), ...display.columns.filter(c => c[1]).map(c => field(c[0]))]
+    .map(f => ({ key: f.key, label: f.label, value: f.key === 'amountCents' ? r => (r.amountCents === null ? '' : (r.amountCents / 100).toFixed(2)) : null }));
+  const ordered = groupRows(rows, display.group).flatMap(g => g.rows);   // same order as on screen, groups included
+  downloadText(`客户-${TODAY}.csv`, toCSV(ordered, cols));
+  toast(`已导出 ${rows.length} 条，文件 客户-${TODAY}.csv`);
+}
+// Delete: 已签约 customers fail on the server in this demonstration, so the result dialog can be seen.
+function confirmDelete(ids = [...selected], returnFocus) {
+  const n = ids.length, one = n === 1 ? recordOf(ids[0]) : null;
+  openConfirm({
+    root, returnFocus, danger: true, confirm: '删除',
+    title: one ? `删除客户 ${one.name}？` : `删除选中的 ${n} 个客户？`,
+    text: '删除后不能恢复。客户的联系人和跟进记录一起删除。',
+    onConfirm: () => {
+      const failed = ids.map(recordOf).filter(r => r.stage === '已签约').map(r => ({ id: r.id, name: r.name, reason: '有已签约的合同，先在合同里处理' }));
+      const gone = new Set(ids.filter(id => !failed.some(f => f.id === id)));
+      data = data.filter(r => !gone.has(r.id));
+      gone.forEach(id => selected.delete(id));
+      render();
+      showBatchResult({ root, action: '删除', noun: '客户', total: n, failed, returnFocus: $('#filter-trigger') });
+    },
+  });
 }
 
 // ── Keyboard: ↑↓ current row, Space preview, Enter open, x select ────────────
@@ -223,7 +294,8 @@ root.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b || b.closest('.wb-popover, .wb-filter-bar')) return;
   const d = b.dataset;
-  if (d.view) { state.view = d.view; narrowResult(); render(); return; }
+  if (d.view) { if (d.view !== state.view || viewChanged()) applyViewSetting(d.view); return; }
+  if (b.id === 'view-save') { saveView(); return; }
   if (d.sort) {
     const same = display.sort.field === d.sort;
     display = normalizeDisplay({ ...display, sort: { field: d.sort, dir: same ? (display.sort.dir === 'asc' ? 'desc' : 'asc') : FIRST_DIR[d.sort] } });
@@ -235,17 +307,18 @@ root.addEventListener('click', e => {
   if (d.group) { collapsed.has(d.group) ? collapsed.delete(d.group) : collapsed.add(d.group); render(); return; }
   if (d.page) { state.page += d.page === 'next' ? 1 : -1; render(d.page === 'next' ? '[data-page="prev"]' : '[data-page="next"]'); $('.wb-list-scroll').scrollTop = 0; return; }
   if (d.open) { openRecord(Number(d.open)); return; }
-  if (b.id === 'assign-trigger') { openAssign(); return; }
   if (d.cell) { editCell(Number(d.row), d.cell, b); return; }
   if (b.id === 'create-trigger') { openCreate(); return; }
   switch (d.action) {
     case 'clear-filters': state.filters = []; filter.set([]); narrowResult(); render(); $('#filter-trigger').focus(); break;
     case 'clear-search': state.q = ''; search?.close(); narrowResult(); render(); break;
-    case 'view-all': state.view = 'all'; narrowResult(); render(); break;
+    case 'view-all': applyViewSetting('all'); break;
     case 'select-matching': cur.rows.forEach(r => selected.add(r.id)); render(); break;
     case 'clear-selection': selected.clear(); render(); $('#filter-trigger').focus(); break;
-    case 'export': feedback(`已模拟导出 ${selected.size} 条记录，未生成文件。`); break;
-    case 'delete': confirmDelete(); break;
+    case 'export': exportRows(cur.rows.filter(r => selected.has(r.id))); break;
+    case 'export-all': exportRows(cur.rows); break;
+    case 'mass-edit': massEdit(); break;
+    case 'delete': confirmDelete([...selected], b); break;
     case 'placeholder': feedback('示例只演示列表页，其他入口只展示导航结构。'); break;
   }
 });
@@ -314,7 +387,7 @@ const palette = initPalette({
     { heading: '操作', items: [
       { id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: openCreate },
       { id: 'filter', label: '筛选…', icon: 'filter', run: () => filter.open() },
-      { id: 'view', label: '切换视图…', icon: 'eye', children: () => Object.entries(VIEWS).map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => { state.view = k; narrowResult(); render(); } })) },
+      { id: 'view', label: '切换视图…', icon: 'eye', children: () => [...Object.entries(VIEWS), ...customViews.map(v => [v.id, v.label])].map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => applyViewSetting(k) })) },
       { id: 'clear', label: '清除筛选', icon: 'close', run: () => { state.filters = []; filter.set([]); narrowResult(); render(); } },
       { id: 'display', label: '显示选项…', icon: 'settings', run: () => $('#display-trigger').click() },
       { id: 'peek', label: panels.current() === PEEK ? '关闭预览面板' : '打开预览面板', icon: 'eye', run: () => $('[data-panel-toggle="customer-peek"]').click() },

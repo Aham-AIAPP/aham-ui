@@ -5,7 +5,7 @@
   "name": "标签",
   "intent": "标出类别",
   "preview": "examples/controls.html",
-  "specification": "rules/3-控件.md#36-标签和分类",
+  "specification": "rules/3-控件.md#39-标签和分类",
   "classes": [
     ".wb-tag",
     ".wb-tag.is-plain",

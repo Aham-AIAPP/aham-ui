@@ -85,7 +85,7 @@ test('display options normalize stored data and report changes', () => {
 test('money formats cents without floating point', () => {
   assert.equal(money(78080000), '780,800.00');
   assert.equal(money(5), '0.05');
-  assert.equal(money(null), '—');
+  assert.equal(money(null), '–');
 });
 
 test('grouped rows stay contiguous and keep the sort inside each group', () => {

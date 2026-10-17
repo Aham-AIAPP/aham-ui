@@ -6,31 +6,43 @@
 
 ## [8.0.0] - 2026-10-17
 
-8.0 是一次重构：只保留业务管理系统一套规则，目录整体重排；视觉改为暖灰细线，交互规则参照 SAP Fiori 重写。
+8.0 是一次重构：只保留业务管理系统一套规则，目录整体重排；中性色和表面层级按 Claude 客户端量取，交互规则按 SAP Fiori 补全。
 
 ### 不兼容的改动
 - 删除 `design-system/` 目录，文件移到仓库根目录：`tokens.json`、`aham.css`、`aham.js`、`components/`、`examples/`、`assets/fonts/`、`assets/icons/`。
 - `workbench.css` 和 `workbench.js` 改名为 `aham.css` 和 `aham.js`。页面只引 `aham.css` 一个样式文件。
 - 删除基础层 `aham-ui.css`、`aham-ui.js`、`colors_and_type.css`、`components.css`，以及 PC 工作台的 `desktop.css`（`.wb-pc`）。
-- 删除规则文件 `DESIGN.md`、`WORKBENCH.md`、`DESKTOP.md`、`SKILL.md`、`aham-ui-office.md`，规则改写到 `rules/` 的九个文件。
+- 删除规则文件 `DESIGN.md`、`WORKBENCH.md`、`DESKTOP.md`、`SKILL.md`、`aham-ui-office.md`，规则改写到 `rules/` 的十个文件。
 - 删除 macOS 应用、Office 文档、HTML 邮件三套规则。
 - 删除 `preview/` 和 `ui_kits/`，以及 `library-consumption.json`、`css.json`、`uikit-plan.json`。
 - 输入框统一为 `.wb-field`，小号加 `.sm`。替代 `.wb-input`、`.wb-select`、`.wb-edit-input`、`.wb-edit-area`、`.wb-field-select`。
+- 单据页的保存和取消移到页脚工具栏 `.wb-doc-foot`，只在编辑态和新建态出现；单据头只放显示态的操作。
+- 一个按钮只用文字或只用图标。示例页里图标加文字的按钮全部改掉，`initFilter()` 和 `initDisplay()` 的触发按钮同样改掉。
 - 单据页版式改为连续纸面，删除 `.wb-doc-card*`、`.wb-doc-pair`、`.wb-doc-side`、`.wb-form-cols`、`.wb-form-col`、`.wb-edit-footer` 等类；新结构见 `rules/5-单据.md` 5.1。
 - 行高变量统一为 `--wb-row`（36px）和 `--wb-row-compact`（32px），删除 `--wb-list-row`、`--wb-row-list`、`--wb-row-detail`。电脑上不再使用 44px 行高，44px 只在触屏上使用（`--wb-touch`）。
 - 删除变量 `--wb-body-dense`、`--wb-text-md`、`--wb-doc-max`、`--wb-form-col-max`。
-- 组件契约升到 `schemaVersion` 3，`specification` 指向 `rules/` 的章节。原有 45 份契约删除 22 份、保留 23 份，另新增 13 份，共 36 份。
+- 组件契约升到 `schemaVersion` 3，`specification` 指向 `rules/` 的章节。原有 45 份契约删除 22 份、保留 23 份，另新增 14 份，共 37 份。
 
 ### 视觉
-- 中性色改为暖灰：纸面 `#FFFFFF`，面板 `#F6F5F3`，分隔线 `#E6E3DE`，正文 `#262522`，次要文字 `#6B6862`。
+- 中性色按 Claude 客户端截图量取，并和第三方项目 open-claude-ui 的取值核对：外框 `#F9F9F7`，内容区 `#FFFFFF`，一行高的灰底 `#F3F3F0`，选中 `#EDECE8`，分隔线 `#EAE9E4`，控件描边 `#E1E0D9`，正文 `#151515`，标签 `#52514E`，次要文字 `#6D6B67`，辅助说明 `#898781`。
+- 灰底只用在一行高的元素上。侧面板、汇总栏、表头改为白底，用分隔线区分。变量 `--wb-panel` 改名为 `--wb-fill`，新增 `--wb-canvas`、`--wb-line-strong`、`--wb-ink-2`、`--wb-hairline`。
+- 辅助说明（字段说明、设置项说明、表格副文字）改用 `--wb-faint`，对白底 3.59:1，低于 WCAG 正文要求，限制见 `rules/2-视觉.md` 2.1；增强对比度时换成 `#4A4743`。
 - 主色保持钢蓝 `#336EE8`。新增 4 个状态色（成功、警示、错误、信息）各带浅底，新增 6 个分类色。
 - 图标线宽从 2px 改为 1.5px。
-- 圆角：控件和弹层 6px，弹窗和外框 10px；胶囊形只用于开关、进度条和头像。
-- 新增增强对比度一套颜色，系统开启时使用。
+- 圆角：标签 4px，控件和弹层 8px，内容区外壳 10px，弹窗和命令面板 12px；胶囊形只用于开关、进度条和头像。
+- 2 倍及以上屏幕的分隔线画 0.5px。弹层和弹窗的阴影带一圈 1px 描边。
+- 动效时长改为 60 / 120 / 200 / 300ms，缓动改为 `cubic-bezier(.165,.84,.44,1)`，取自 open-claude-ui docs/v2，没有经过截图核对。
+- 新增增强对比度一套颜色，系统开启时使用；控件描边和辅助说明也跟着加深。
 - 打印时一律使用亮色。
+- 空值统一写短横线「–」，`money(null)` 和 `formatBytes()` 不再返回长破折号。
 
 ### 新增
-- `rules/1-总则.md` 至 `9-验收.md`。
+- `rules/1-总则.md` 至 `10-数据格式.md`。按 SAP Fiori 补全的规则：控件状态、工具栏排序和溢出、值帮助弹窗（3）；工作清单、向导、初始页、筛选、视图、表格选型、导出、批量编辑（4）；关键信息、锚点栏、明细条数、四种编辑流程、页脚工具栏、草稿和编辑状态（5）；消息框类型和文案、批量处理的结果、空状态、忙碌和占位加载（6）；日期、数字、单位、换行和截断（10）。
+- 示例页 `examples/worklist.html`：待审批的报价单，行内通过和退回，批量通过前说明不能处理的项。
+- 单据页示例：关键信息、锚点栏、添加明细行弹窗、编辑态删行、每 20 秒自动保存草稿、离开时的四选一弹窗。
+- 列表页示例：另存视图和「*」标记、批量编辑、删除部分失败的结果弹窗、导出 CSV。
+- `aham.js` 新增 `openFormDialog()`、`showBatchResult()`、`toCSV()`、`downloadText()`、`initAnchorBar()`；`openConfirm()` 新增 `choices` 和 `cancel`；`initObjectPage()` 新增 `changed`、`draft`，返回值新增 `discard`、`saveDraft`、`values`。
+- 新增 `.wb-skeleton` 占位加载和 `tr[data-dimmed]` 停用行的写法。
 - 示例页：单据页 `examples/document.html`、打印预览 `examples/print.html`、控件总览 `examples/controls.html`。
 - 单据状态：草稿、审批中、已退回、已生效、已作废，每个状态只显示可用的操作。
 - `aham.js` 新增 `openConfirm()`：确认弹窗，可以要求填写原因。
@@ -43,7 +55,8 @@
 ### 删除
 - `scripts/build-workbench.mjs`、`extract-components-css.mjs`、`build-panorama.mjs`、`lint-design.mjs`，由 `scripts/build.mjs` 和 `scripts/lint.mjs` 替代。
 - 示例页 `crm-quotation`、`object-page`、`desktop-workbench`，由 `examples/document.html` 替代。
-- 草稿自动恢复的示例代码。草稿规则改为有条件的规则，见 `rules/5-单据.md` 5.6。
+- 草稿自动恢复的示例代码。草稿规则见 `rules/5-单据.md` 5.7，示例页重新实现了自动保存和离开弹窗。
+- 列表批量条里的「分配负责人」，由批量编辑替代。
 
 ## [7.6.0] - 2026-10-12
 

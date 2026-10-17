@@ -7,7 +7,7 @@
   "behavior": "aham.js",
   "preview": "examples/parts-detail.html",
   "intent": "记录属性栏：分组的「标签 + 值」行，可编辑值打开命令菜单",
-  "specification": "rules/4-页面.md#47-记录详情页",
+  "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
   "api": "initPropertyPickers({ root, container, fields, value, onChange })",
   "variantDimensions": [

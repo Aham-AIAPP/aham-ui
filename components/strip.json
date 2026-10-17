@@ -6,7 +6,7 @@
   "intent": "说明整张单据或整个页面的状态、阻断原因",
   "preview": "examples/controls.html",
   "reference": "examples/document.html",
-  "specification": "rules/3-控件.md#37-提示条",
+  "specification": "rules/3-控件.md#310-提示条",
   "classes": [
     ".wb-strip"
   ],

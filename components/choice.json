@@ -5,7 +5,7 @@
   "name": "单选组和复选框",
   "intent": "从 2–5 个选项里选一个或几个",
   "preview": "examples/controls.html",
-  "specification": "rules/3-控件.md#34-选择控件选型",
+  "specification": "rules/3-控件.md#36-选择控件选型",
   "classes": [
     ".wb-choices",
     ".wb-choices.is-column",

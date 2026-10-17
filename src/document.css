@@ -37,7 +37,28 @@
    then sections separated by space and a 14px heading. No cards, no tinted blocks, no coloured bars. The same rows show
    text in read mode and controls in edit mode; labels sit above values in both modes, so nothing moves when the mode changes. */
 :where(.aham-workbench) .wb-document.is-page{padding:0 0 var(--wb-s8);container-type:inline-size}
-:where(.aham-workbench) .wb-doc-head{position:sticky;top:0;z-index:var(--wb-z-pop);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s5);padding:var(--wb-s5) var(--wb-page-gutter) var(--wb-s4);background:var(--wb-bg);border-bottom:1px solid transparent}
+:where(.aham-workbench) .wb-doc-head{position:sticky;top:0;z-index:var(--wb-z-pop);display:grid;gap:var(--wb-s4);padding:var(--wb-s5) var(--wb-page-gutter) 0;background:var(--wb-bg);border-bottom:var(--wb-hairline) solid transparent}
+:where(.aham-workbench) .wb-doc-headline{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s5)}
+:where(.aham-workbench) .wb-doc-head:not(:has(.wb-anchors)){padding-block-end:var(--wb-s4)}
+/* Key facts (Fiori header facets): up to five label and value pairs, read only. They fold away once the page scrolls. */
+:where(.aham-workbench) .wb-doc-facts{display:flex;flex-wrap:wrap;gap:var(--wb-s2) var(--wb-s6);margin:0}
+:where(.aham-workbench) .wb-doc-facts>div{display:grid;gap:2px;min-width:0}
+:where(.aham-workbench) .wb-doc-facts dt{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+:where(.aham-workbench) .wb-doc-facts dd{margin:0;font-weight:500;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-doc-facts dd.is-amount{font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-doc-head.is-stuck .wb-doc-facts{display:none}
+/* Anchor bar: one button per section under the head; the section on screen is underlined like a tab. */
+:where(.aham-workbench) .wb-anchors{display:flex;gap:var(--wb-s5);overflow-x:auto;scrollbar-width:none}
+:where(.aham-workbench) .wb-anchors button{position:relative;flex:none;height:var(--wb-header-row);padding:0;border:0;background:transparent;color:var(--wb-muted);white-space:nowrap}
+:where(.aham-workbench) .wb-anchors button:hover{color:var(--wb-ink)}
+:where(.aham-workbench) .wb-anchors button[aria-current]{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-anchors button[aria-current]::after{content:'';position:absolute;inset-inline:0;bottom:0;height:2px;background:var(--wb-blue)}
+/* Footer toolbar (Fiori): only in edit and create mode, stuck to the bottom of the page. Message button and draft
+   state on the left, 取消 and the primary button on the right. */
+:where(.aham-workbench) .wb-doc-foot{position:sticky;bottom:0;z-index:var(--wb-z-pop);display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-row-double);margin-block-start:var(--wb-s6);padding:0 var(--wb-page-gutter);background:var(--wb-bg);border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-doc-foot>.wb-spacer{flex:1}
+:where(.aham-workbench) .wb-draft-state{color:var(--wb-faint)}
+:where(.aham-workbench) [data-mode=edit] .wb-document.is-page,:where(.aham-workbench) .wb-document.is-page[data-mode=edit]{padding-block-end:0}
 :where(.aham-workbench) .wb-doc-head.is-stuck{border-bottom-color:var(--wb-line)}
 :where(.aham-workbench) .wb-doc-title{display:grid;gap:var(--wb-s2);min-width:0}
 :where(.aham-workbench) .wb-doc-title h1{font-size:var(--wb-detail-title);font-weight:600;line-height:1.3;overflow-wrap:anywhere}
@@ -45,8 +66,10 @@
 :where(.aham-workbench) .wb-doc-meta .wb-mono{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-doc-actions{display:flex;flex:none;align-items:center;gap:var(--wb-s2);padding-block-start:2px}
 :where(.aham-workbench) .wb-doc-actions .wb-mode-note{color:var(--wb-muted);margin-inline-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-mode-note{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-doc-body{display:grid;gap:var(--wb-s6);padding:var(--wb-s2) var(--wb-page-gutter) 0}
-:where(.aham-workbench) .wb-doc-section{min-width:0;scroll-margin-top:var(--wb-s8)}
+:where(.aham-workbench) .wb-doc-section{min-width:0}
+:where(.aham-workbench) .wb-doc-section h2:focus{outline:none}
 :where(.aham-workbench) .wb-doc-section>.wb-section-head{min-height:var(--wb-header-control);margin-block-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-text-base);font-weight:600}
 :where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill);color:var(--wb-ink);line-height:20px}
@@ -68,7 +91,7 @@
 :where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
 :where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:20px;overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
-:where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
+:where(.aham-workbench) .wb-form-hint{color:var(--wb-faint);font-size:var(--wb-text-xs);line-height:18px}
 :where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}
 :where(.aham-workbench) .wb-form-value{position:relative;display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-control);min-width:0}
 :where(.aham-workbench) [data-mode=read] .wb-form-value{align-items:flex-start;padding-block:6px}
@@ -129,3 +152,6 @@
 :where(.aham-workbench) .wb-messages [data-severity=warning]>svg{color:var(--wb-warning)}
 :where(.aham-workbench) .wb-confirm-text{margin:var(--wb-s2) var(--wb-s3)}
 :where(.aham-workbench) .wb-confirm-actions{display:flex;justify-content:flex-end;gap:var(--wb-s2);padding:0 var(--wb-s3) var(--wb-s2)}
+:where(.aham-workbench) .wb-table .wb-row-actions{width:var(--wb-check-col);padding-inline:0;text-align:center}
+:where(.aham-workbench) .wb-table-toolbar .wb-btn{margin-inline-start:auto}
+:where(.aham-workbench) .wb-table-toolbar .wb-btn~.wb-btn{margin-inline-start:0}

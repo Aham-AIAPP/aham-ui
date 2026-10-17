@@ -25,7 +25,7 @@ body{margin:0}
 <div class="aham-workbench wb-bare" data-theme="light" aria-label="控件总览">
 <main class="gl">
   <header class="gl-head">
-    <div><h1>控件</h1><p>按钮、输入、选择、状态和提示条。行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
+    <div><h1>控件</h1><p>按钮、输入、选择、状态、提示条和占位加载。行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
     <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button>
   </header>
 
@@ -42,10 +42,10 @@ body{margin:0}
     <div class="gl-row">
       <button type="button" class="wb-btn sm primary">新建</button>
       <button type="button" class="wb-btn sm">导出</button>
-      <button type="button" class="wb-btn sm ghost"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-filter"/></svg>筛选</button>
+      <button type="button" class="wb-btn sm ghost">筛选</button>
       <button type="button" class="wb-icon-btn" aria-label="刷新" data-tooltip="刷新"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-refresh"/></svg></button>
     </div>
-    <p class="gl-cap">一个页面只有一个主按钮。危险操作用 danger，确认弹窗的按钮写动作本身（删除、作废），不写「确定」。</p>
+    <p class="gl-cap">一个页面只有一个主按钮。一个按钮只用文字或只用图标。危险操作用 danger，确认弹窗的按钮写动作本身（删除、作废），不写「确定」。</p>
   </section>
 
   <section aria-labelledby="g-input">
@@ -113,6 +113,16 @@ body{margin:0}
       <div class="wb-strip" data-tone="danger"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-error"/></svg><span class="wb-grow">还有 1 项必填没填：客户联系人。补齐后再提交。</span><button type="button" class="wb-btn sm">去填写</button></div>
     </div>
     <p class="gl-cap">提示条放在单据头下面，说明整张单据的状态或阻断原因。单个字段的问题标在字段上，不放提示条。</p>
+  </section>
+
+  <section aria-labelledby="g-skeleton">
+    <h2 id="g-skeleton">占位加载</h2>
+    <div class="gl-stack" aria-busy="true" aria-label="正在加载">
+      <span class="wb-skeleton" style="width:40%"></span>
+      <span class="wb-skeleton" style="width:72%"></span>
+      <span class="wb-skeleton" style="width:56%"></span>
+    </div>
+    <p class="gl-cap">首次加载时在内容的位置画同尺寸的灰块，以 2 秒为周期整体变淡再恢复。1 秒内能完成的不显示。</p>
   </section>
 </main>
 </div>

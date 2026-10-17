@@ -8,7 +8,7 @@
 :where(.aham-workbench) .wb-file{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(120px,200px) auto;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s2);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-file>svg{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-file-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-:where(.aham-workbench) .wb-file-meta{display:block;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-file-meta{display:block;color:var(--wb-faint);font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-file-state{display:grid;gap:var(--wb-s1);min-width:0}
 :where(.aham-workbench) .wb-file-actions{display:flex;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-progress{display:block;height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line);overflow:hidden}

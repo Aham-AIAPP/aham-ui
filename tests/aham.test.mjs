@@ -70,7 +70,7 @@ test('file checks: extension case-insensitive, empty files and size limit give a
   assert.equal(checkFile({ name: 'a.pdf', size: 0 }, rules), '空文件');
   assert.equal(checkFile({ name: 'a.pdf', size: 11 * 1024 * 1024 }, rules), '超过 10 MB');
   assert.equal(checkFile({ name: 'any.bin', size: 1 }), null);
-  assert.deepEqual([500, 1536, 18 * 1024 * 1024, -1].map(formatBytes), ['500 B', '1.5 KB', '18 MB', '—']);
+  assert.deepEqual([500, 1536, 18 * 1024 * 1024, -1].map(formatBytes), ['500 B', '1.5 KB', '18 MB', '–']);
 });
 
 test('tree totals: parents sum their children in integer cents, cycles are rejected', () => {

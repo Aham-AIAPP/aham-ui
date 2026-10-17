@@ -7,7 +7,7 @@
   "behavior": "aham.js",
   "preview": "examples/parts-detail.html",
   "intent": "无明细表的记录详情页：页眉位置与上下条、居中主内容、240px 属性栏",
-  "specification": "rules/4-页面.md#47-记录详情页",
+  "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
   "variantDimensions": [
     {

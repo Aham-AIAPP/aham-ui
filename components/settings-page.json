@@ -7,7 +7,7 @@
   "behavior": "aham.js",
   "preview": "examples/settings.html",
   "reference": "examples/settings.html",
-  "specification": "rules/4-页面.md#48-设置页",
+  "specification": "rules/4-页面.md#49-设置页",
   "intent": "设置页：左侧分组导航，右侧居中的分区与设置行，单项修改即时生效",
   "variantDimensions": [
     {

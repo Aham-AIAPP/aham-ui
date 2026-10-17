@@ -2,7 +2,7 @@
    panels and controls are hidden; the document flows on the page; tables repeat their header row; rows never split. */
 @media print {
   .aham-workbench{display:block;height:auto;overflow:visible;background:var(--wb-bg)}
-  .aham-workbench :is(.wb-rail,.wb-header,.wb-doc-actions,.wb-panel,.wb-toasts,.wb-msg-btn,.wb-print-bar,[data-print=hide]){display:none!important}
+  .aham-workbench :is(.wb-rail,.wb-header,.wb-doc-actions,.wb-doc-foot,.wb-anchors,.wb-panel,.wb-toasts,.wb-msg-btn,.wb-print-bar,[data-print=hide]){display:none!important}
   .aham-workbench :is(.wb-main,.wb-layout,.wb-document){display:block;margin:0;overflow:visible;border-radius:0;height:auto}
   .aham-workbench .wb-doc-head{position:static;padding-inline:0}
   .aham-workbench .wb-doc-body{padding-inline:0}

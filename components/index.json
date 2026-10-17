@@ -12,42 +12,42 @@
       "slug": "field",
       "name": "输入框",
       "group": "控件",
-      "specification": "rules/3-控件.md#33-输入框",
+      "specification": "rules/3-控件.md#35-输入框",
       "preview": "examples/controls.html"
     },
     {
       "slug": "choice",
       "name": "单选组和复选框",
       "group": "控件",
-      "specification": "rules/3-控件.md#34-选择控件选型",
+      "specification": "rules/3-控件.md#36-选择控件选型",
       "preview": "examples/controls.html"
     },
     {
       "slug": "switch",
       "name": "开关",
       "group": "控件",
-      "specification": "rules/3-控件.md#34-选择控件选型",
+      "specification": "rules/3-控件.md#36-选择控件选型",
       "preview": "examples/controls.html"
     },
     {
       "slug": "segmented-control",
       "name": "分段按钮",
       "group": "控件",
-      "specification": "rules/3-控件.md#34-选择控件选型",
+      "specification": "rules/3-控件.md#36-选择控件选型",
       "preview": "examples/controls.html"
     },
     {
       "slug": "status",
       "name": "状态",
       "group": "控件",
-      "specification": "rules/3-控件.md#35-状态",
+      "specification": "rules/3-控件.md#38-状态",
       "preview": "examples/controls.html"
     },
     {
       "slug": "tag",
       "name": "标签",
       "group": "控件",
-      "specification": "rules/3-控件.md#36-标签和分类",
+      "specification": "rules/3-控件.md#39-标签和分类",
       "preview": "examples/controls.html"
     },
     {
@@ -71,6 +71,13 @@
       "specification": "rules/4-页面.md#43-列表页"
     },
     {
+      "slug": "worklist",
+      "name": "工作清单",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#42-页型",
+      "preview": "examples/worklist.html"
+    },
+    {
       "slug": "filter-bar",
       "name": "筛选",
       "group": "外框和页面",
@@ -81,7 +88,7 @@
       "slug": "display-options",
       "name": "显示选项",
       "group": "外框和页面",
-      "specification": "rules/4-页面.md#45-显示选项",
+      "specification": "rules/4-页面.md#46-显示选项",
       "preview": "examples/parts-filter.html"
     },
     {
@@ -94,7 +101,7 @@
       "slug": "list-keyboard",
       "name": "列表键盘",
       "group": "外框和页面",
-      "specification": "rules/4-页面.md#46-列表键盘和预览",
+      "specification": "rules/4-页面.md#47-列表键盘和预览",
       "preview": "examples/parts-detail.html"
     },
     {
@@ -108,28 +115,28 @@
       "slug": "record-detail",
       "name": "记录详情页",
       "group": "外框和页面",
-      "specification": "rules/4-页面.md#47-记录详情页",
+      "specification": "rules/4-页面.md#48-记录详情页",
       "preview": "examples/parts-detail.html"
     },
     {
       "slug": "properties-panel",
       "name": "属性栏",
       "group": "外框和页面",
-      "specification": "rules/4-页面.md#47-记录详情页",
+      "specification": "rules/4-页面.md#48-记录详情页",
       "preview": "examples/parts-detail.html"
     },
     {
       "slug": "activity-feed",
       "name": "动态",
       "group": "外框和页面",
-      "specification": "rules/4-页面.md#47-记录详情页",
+      "specification": "rules/4-页面.md#48-记录详情页",
       "preview": "examples/parts-detail.html"
     },
     {
       "slug": "settings-page",
       "name": "设置页",
       "group": "外框和页面",
-      "specification": "rules/4-页面.md#48-设置页",
+      "specification": "rules/4-页面.md#49-设置页",
       "preview": "examples/settings.html"
     },
     {
@@ -150,42 +157,42 @@
       "slug": "print-preview",
       "name": "打印预览",
       "group": "单据",
-      "specification": "rules/5-单据.md#511-打印",
+      "specification": "rules/5-单据.md#512-打印",
       "preview": "examples/print.html"
     },
     {
       "slug": "file-upload",
       "name": "附件上传",
       "group": "单据",
-      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "specification": "rules/5-单据.md#513-附件多层明细和版本对比",
       "preview": "examples/parts-files.html"
     },
     {
       "slug": "file-viewer",
       "name": "文件预览",
       "group": "单据",
-      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "specification": "rules/5-单据.md#513-附件多层明细和版本对比",
       "preview": "examples/parts-files.html"
     },
     {
       "slug": "tree-table",
       "name": "多层明细",
       "group": "单据",
-      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "specification": "rules/5-单据.md#513-附件多层明细和版本对比",
       "preview": "examples/parts-files.html"
     },
     {
       "slug": "version-compare",
       "name": "版本对比",
       "group": "单据",
-      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "specification": "rules/5-单据.md#513-附件多层明细和版本对比",
       "preview": "examples/parts-files.html"
     },
     {
       "slug": "strip",
       "name": "提示条",
       "group": "反馈",
-      "specification": "rules/3-控件.md#37-提示条",
+      "specification": "rules/3-控件.md#310-提示条",
       "preview": "examples/controls.html"
     },
     {
@@ -199,7 +206,7 @@
       "slug": "confirm-dialog",
       "name": "确认弹窗",
       "group": "反馈",
-      "specification": "rules/6-反馈.md#63-确认弹窗",
+      "specification": "rules/6-反馈.md#63-确认弹窗和消息框",
       "preview": "examples/document.html"
     },
     {

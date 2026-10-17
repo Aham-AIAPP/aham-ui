@@ -5,7 +5,7 @@
   "name": "状态",
   "intent": "说明记录或单据处在哪一步",
   "preview": "examples/controls.html",
-  "specification": "rules/3-控件.md#35-状态",
+  "specification": "rules/3-控件.md#38-状态",
   "classes": [
     ".wb-status"
   ],

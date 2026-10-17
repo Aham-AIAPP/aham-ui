@@ -5,7 +5,7 @@
   "name": "分段按钮",
   "intent": "切换同一份内容的看法",
   "preview": "examples/controls.html",
-  "specification": "rules/3-控件.md#34-选择控件选型",
+  "specification": "rules/3-控件.md#36-选择控件选型",
   "classes": [
     ".wb-seg",
     ".wb-seg.sm"

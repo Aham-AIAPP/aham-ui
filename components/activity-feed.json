@@ -7,7 +7,7 @@
   "behavior": "aham.js",
   "preview": "examples/parts-detail.html",
   "intent": "记录动态：事件行、评论块、评论框，按时间正序",
-  "specification": "rules/4-页面.md#47-记录详情页",
+  "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
   "api": "initComposer(form, { onSubmit(text) → boolean | Promise<boolean> })",
   "variantDimensions": [

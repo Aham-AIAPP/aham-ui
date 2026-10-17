@@ -7,7 +7,7 @@
   "behavior": "aham.js",
   "preview": "examples/parts-files.html",
   "reference": "examples/parts-files.html",
-  "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+  "specification": "rules/5-单据.md#513-附件多层明细和版本对比",
   "intent": "文件预览：查看 PDF、图片和 CAD 图纸的渲染页，缩放、平移、翻页，并与识别字段并排对照",
   "api": "initViewer(root, { pages, page, width, height, onPage, onZoom }) → { load, setPage, setZoom, fit, show(rect), hide, page, zoom }",
   "variantDimensions": [

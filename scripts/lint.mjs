@@ -20,7 +20,7 @@ export const RUNTIME_VARS = ['level', 'cat'];
 export const PAIRS = [
   ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和导航栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
   ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '导航栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'],
-  ['faint', 'bg', 2.5, '占位文字和空值（不承载信息）'],
+  ['faint', 'bg', 3, '辅助说明、占位文字、空值'], ['faint', 'fill', 3, '小元素底色上的辅助说明'],
   ['on', 'action', 4.5, '主按钮文字'],
   ['blue', 'bg', 3, '焦点框、链接图标'],
   ['success', 'bg', 4.5, '成功文字'], ['warning', 'bg', 4.5, '警示文字'], ['danger', 'bg', 4.5, '错误文字'], ['info', 'bg', 4.5, '信息文字'],

@@ -27,7 +27,7 @@
   --wb-s9: 96px;
   --wb-radius-sm: 4px;
   --wb-radius: 8px;
-  --wb-radius-lg: 10px;
+  --wb-radius-lg: 12px;
   --wb-shell-radius: 10px;
   --wb-radius-pill: 999px;
   --wb-shadow-pop: 0 0 0 1px rgba(20,20,20,0.08), 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.10);
@@ -82,10 +82,11 @@
   --wb-z-scrim: 300;
   --wb-z-nav: 400;
   --wb-z-toast: 500;
+  --wb-instant: 0.06s;
   --wb-fast: 0.12s;
-  --wb-base: 0.18s;
-  --wb-slow: 0.28s;
-  --wb-ease: cubic-bezier(.2,0,0,1);
+  --wb-base: 0.2s;
+  --wb-slow: 0.3s;
+  --wb-ease: cubic-bezier(.165,.84,.44,1);
   --wb-bg: #FFFFFF;
   --wb-canvas: #F9F9F7;
   --wb-fill: #F3F3F0;
@@ -385,12 +386,12 @@
 :where(.aham-workbench) .wb-table .number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-table th.number{font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
 :where(.aham-workbench) .wb-cell-title{display:block;overflow:hidden;text-overflow:ellipsis}
-:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-faint);font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-table input{display:block;text-align:end;font-family:var(--wb-mono);font-feature-settings:normal;border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
 :where(.aham-workbench) .wb-table input::-webkit-inner-spin-button{appearance:none}
 :where(.aham-workbench) .wb-table input:hover{background:var(--wb-bg);border-color:var(--wb-line)}
 :where(.aham-workbench) .wb-table tfoot td{height:var(--wb-header-row);font-weight:500;border-bottom:0}
-:where(.aham-workbench) .wb-table-hint{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--wb-s2);color:var(--wb-muted);padding:var(--wb-s1) 0 var(--wb-s4)}
+:where(.aham-workbench) .wb-table-hint{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--wb-s2);color:var(--wb-faint);padding:var(--wb-s1) 0 var(--wb-s4)}
 :where(.aham-workbench) .wb-sort{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:100%;padding:0;border:0;background:transparent;font-weight:inherit;color:inherit}
 :where(.aham-workbench) .wb-sort svg{width:var(--wb-s3);height:var(--wb-s3)}
 :where(.aham-workbench) .wb-row-link{display:block;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -403,6 +404,8 @@
 :where(.aham-workbench) .wb-tree-toggle svg{width:var(--wb-s3);height:var(--wb-s3);transition:transform var(--wb-fast) var(--wb-ease)}
 :where(.aham-workbench) .wb-tree-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
 :where(.aham-workbench) .wb-tree-table tr:has(.wb-tree-toggle) td{font-weight:500}
+:where(.aham-workbench) .wb-table tr[data-dimmed]>td{color:var(--wb-faint)}
+:where(.aham-workbench) .wb-table tr[data-dimmed] :is(button,input,select,a){color:var(--wb-ink)}
 /* ---- src/list.css ---- */
 /* List page (7.2 P2): filter row, grouped table with sticky headers, bulk mode, pager. */
 :where(.aham-workbench) .wb-list{display:flex;flex-direction:column;min-width:0;min-height:0}
@@ -453,6 +456,12 @@
 :where(.aham-workbench) .wb-list-table tbody tr[data-previewing] td{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-chip>:first-child{border-start-start-radius:inherit;border-end-start-radius:inherit}
 :where(.aham-workbench) .wb-chip>:last-child{border-start-end-radius:inherit;border-end-end-radius:inherit}
+/* Worklist row actions (rules/4-页面.md 4.2): text buttons at the row end; a reason for a disabled one sits before it. */
+:where(.aham-workbench) .wb-row-buttons{display:flex;align-items:center;justify-content:flex-end;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-row-note{color:var(--wb-faint);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+:where(.aham-workbench) .wb-row-link{color:var(--wb-ink);text-decoration:none}
+:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline}
+:where(.aham-workbench) .wb-list-table :is(th,td):first-child:not(.wb-check){padding-inline-start:var(--wb-s4)}
 /* ---- src/document.css ---- */
 /* Scroll areas: header rows stay put, the body scrolls. Side panels scroll on their own. */
 :where(.aham-workbench) .wb-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
@@ -493,7 +502,28 @@
    then sections separated by space and a 14px heading. No cards, no tinted blocks, no coloured bars. The same rows show
    text in read mode and controls in edit mode; labels sit above values in both modes, so nothing moves when the mode changes. */
 :where(.aham-workbench) .wb-document.is-page{padding:0 0 var(--wb-s8);container-type:inline-size}
-:where(.aham-workbench) .wb-doc-head{position:sticky;top:0;z-index:var(--wb-z-pop);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s5);padding:var(--wb-s5) var(--wb-page-gutter) var(--wb-s4);background:var(--wb-bg);border-bottom:1px solid transparent}
+:where(.aham-workbench) .wb-doc-head{position:sticky;top:0;z-index:var(--wb-z-pop);display:grid;gap:var(--wb-s4);padding:var(--wb-s5) var(--wb-page-gutter) 0;background:var(--wb-bg);border-bottom:var(--wb-hairline) solid transparent}
+:where(.aham-workbench) .wb-doc-headline{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s5)}
+:where(.aham-workbench) .wb-doc-head:not(:has(.wb-anchors)){padding-block-end:var(--wb-s4)}
+/* Key facts (Fiori header facets): up to five label and value pairs, read only. They fold away once the page scrolls. */
+:where(.aham-workbench) .wb-doc-facts{display:flex;flex-wrap:wrap;gap:var(--wb-s2) var(--wb-s6);margin:0}
+:where(.aham-workbench) .wb-doc-facts>div{display:grid;gap:2px;min-width:0}
+:where(.aham-workbench) .wb-doc-facts dt{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+:where(.aham-workbench) .wb-doc-facts dd{margin:0;font-weight:500;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-doc-facts dd.is-amount{font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-doc-head.is-stuck .wb-doc-facts{display:none}
+/* Anchor bar: one button per section under the head; the section on screen is underlined like a tab. */
+:where(.aham-workbench) .wb-anchors{display:flex;gap:var(--wb-s5);overflow-x:auto;scrollbar-width:none}
+:where(.aham-workbench) .wb-anchors button{position:relative;flex:none;height:var(--wb-header-row);padding:0;border:0;background:transparent;color:var(--wb-muted);white-space:nowrap}
+:where(.aham-workbench) .wb-anchors button:hover{color:var(--wb-ink)}
+:where(.aham-workbench) .wb-anchors button[aria-current]{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-anchors button[aria-current]::after{content:'';position:absolute;inset-inline:0;bottom:0;height:2px;background:var(--wb-blue)}
+/* Footer toolbar (Fiori): only in edit and create mode, stuck to the bottom of the page. Message button and draft
+   state on the left, 取消 and the primary button on the right. */
+:where(.aham-workbench) .wb-doc-foot{position:sticky;bottom:0;z-index:var(--wb-z-pop);display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-row-double);margin-block-start:var(--wb-s6);padding:0 var(--wb-page-gutter);background:var(--wb-bg);border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-doc-foot>.wb-spacer{flex:1}
+:where(.aham-workbench) .wb-draft-state{color:var(--wb-faint)}
+:where(.aham-workbench) [data-mode=edit] .wb-document.is-page,:where(.aham-workbench) .wb-document.is-page[data-mode=edit]{padding-block-end:0}
 :where(.aham-workbench) .wb-doc-head.is-stuck{border-bottom-color:var(--wb-line)}
 :where(.aham-workbench) .wb-doc-title{display:grid;gap:var(--wb-s2);min-width:0}
 :where(.aham-workbench) .wb-doc-title h1{font-size:var(--wb-detail-title);font-weight:600;line-height:1.3;overflow-wrap:anywhere}
@@ -501,8 +531,10 @@
 :where(.aham-workbench) .wb-doc-meta .wb-mono{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-doc-actions{display:flex;flex:none;align-items:center;gap:var(--wb-s2);padding-block-start:2px}
 :where(.aham-workbench) .wb-doc-actions .wb-mode-note{color:var(--wb-muted);margin-inline-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-mode-note{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-doc-body{display:grid;gap:var(--wb-s6);padding:var(--wb-s2) var(--wb-page-gutter) 0}
-:where(.aham-workbench) .wb-doc-section{min-width:0;scroll-margin-top:var(--wb-s8)}
+:where(.aham-workbench) .wb-doc-section{min-width:0}
+:where(.aham-workbench) .wb-doc-section h2:focus{outline:none}
 :where(.aham-workbench) .wb-doc-section>.wb-section-head{min-height:var(--wb-header-control);margin-block-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-text-base);font-weight:600}
 :where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill);color:var(--wb-ink);line-height:20px}
@@ -524,7 +556,7 @@
 :where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
 :where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:20px;overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
-:where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
+:where(.aham-workbench) .wb-form-hint{color:var(--wb-faint);font-size:var(--wb-text-xs);line-height:18px}
 :where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}
 :where(.aham-workbench) .wb-form-value{position:relative;display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-control);min-width:0}
 :where(.aham-workbench) [data-mode=read] .wb-form-value{align-items:flex-start;padding-block:6px}
@@ -585,6 +617,9 @@
 :where(.aham-workbench) .wb-messages [data-severity=warning]>svg{color:var(--wb-warning)}
 :where(.aham-workbench) .wb-confirm-text{margin:var(--wb-s2) var(--wb-s3)}
 :where(.aham-workbench) .wb-confirm-actions{display:flex;justify-content:flex-end;gap:var(--wb-s2);padding:0 var(--wb-s3) var(--wb-s2)}
+:where(.aham-workbench) .wb-table .wb-row-actions{width:var(--wb-check-col);padding-inline:0;text-align:center}
+:where(.aham-workbench) .wb-table-toolbar .wb-btn{margin-inline-start:auto}
+:where(.aham-workbench) .wb-table-toolbar .wb-btn~.wb-btn{margin-inline-start:0}
 /* ---- src/detail.css ---- */
 :where(.aham-workbench) .wb-related a{color:inherit;text-decoration:none}
 :where(.aham-workbench) .wb-related a:hover{text-decoration:underline;text-underline-offset:3px}
@@ -680,7 +715,7 @@
 :where(.aham-workbench) .wb-kbd-group+svg{margin-inline-start:var(--wb-s2)!important}
 :where(.aham-workbench) .wb-kbd{display:inline-grid;place-items:center;min-width:var(--wb-kbd);height:var(--wb-kbd);padding:0 var(--wb-s1);border-radius:var(--wb-radius-sm);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line);color:var(--wb-muted);font:inherit;font-size:var(--wb-body)}
 :where(.aham-workbench) .wb-popover.menu{width:var(--wb-menu-width)}
-:where(.aham-workbench) .wb-palette,:where(.aham-workbench) .wb-create{width:min(var(--wb-overlay-width),calc(100vw - var(--wb-s6)));max-height:calc(100vh - var(--wb-palette-top) - var(--wb-s5));margin:var(--wb-palette-top) auto 0;padding:0;border:0;border-radius:var(--wb-radius-lg);background:var(--wb-pop-bg);color:var(--wb-ink);box-shadow:0 0 0 1px var(--wb-line),var(--wb-shadow-float);overflow:hidden}
+:where(.aham-workbench) .wb-palette,:where(.aham-workbench) .wb-create{width:min(var(--wb-overlay-width),calc(100vw - var(--wb-s6)));max-height:calc(100vh - var(--wb-palette-top) - var(--wb-s5));margin:var(--wb-palette-top) auto 0;padding:0;border:0;border-radius:var(--wb-radius-lg);background:var(--wb-pop-bg);color:var(--wb-ink);box-shadow:var(--wb-shadow-float);overflow:hidden}
 :where(.aham-workbench) .wb-create{margin-top:var(--wb-create-top)}
 :where(.aham-workbench) :is(.wb-palette,.wb-create)::backdrop{background:var(--wb-scrim)}
 :where(.aham-workbench) .wb-palette .wb-command-input{height:var(--wb-palette-input);padding:0 var(--wb-s4)}
@@ -731,6 +766,20 @@
 /* Tooltips: label + registered shortcut, Aham dark tip, shown after a short hover or on keyboard focus (rules/7-键盘与命令.md 7.5). */
 :where(.aham-workbench) .wb-tooltip{position:fixed;z-index:var(--wb-z-toast);display:flex;align-items:center;gap:var(--wb-s2);max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius-sm);background:var(--wb-ink);color:var(--wb-bg);font-size:var(--wb-body);line-height:1.4;box-shadow:var(--wb-shadow-pop);pointer-events:none}
 :where(.aham-workbench) .wb-tooltip .wb-kbd{min-width:auto;height:auto;padding:0 var(--wb-s1);background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,currentColor 35%,transparent);color:inherit}
+:where(.aham-workbench) .wb-dialog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s4) var(--wb-s5);margin-block:var(--wb-s4) var(--wb-s5)}
+:where(.aham-workbench) .wb-dialog-grid .wb-form-row:only-child{grid-column:1 / -1}
+:where(.aham-workbench) .wb-dialog-grid .wb-form-hint.is-error:empty{display:none}
+:where(.aham-workbench) .wb-dialog form>.wb-value-error:empty{display:none}
+:where(.aham-workbench) .wb-batch-list{display:grid;max-height:240px;overflow:auto;margin:0 0 var(--wb-s5);padding:0;list-style:none;border-block:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-batch-list li{display:grid;grid-template-columns:16px minmax(0,1fr);gap:2px var(--wb-s2);padding:var(--wb-s2) 0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-batch-list li:last-child{border-bottom:0}
+:where(.aham-workbench) .wb-batch-list svg{width:14px;height:14px;margin-block-start:3px;color:var(--wb-danger)}
+:where(.aham-workbench) .wb-batch-list small{grid-column:2;color:var(--wb-muted)}
+/* Skeleton (rules/6-反馈.md 6.6): grey blocks in the shape of the content, pulsing together. */
+:where(.aham-workbench) .wb-skeleton{display:block;height:var(--wb-s3);border-radius:var(--wb-radius-sm);background:var(--wb-fill);animation:wb-skeleton 2s var(--wb-ease) infinite}
+@keyframes wb-skeleton{50%{opacity:.6}}
+/* While a footer toolbar shows, toasts sit above it so they never cover 保存. */
+:where(.aham-workbench):has([data-mode=edit] .wb-doc-foot) .wb-toasts{bottom:calc(var(--wb-row-double) + var(--wb-s4) + var(--wb-gutter))}
 /* ---- src/settings.css ---- */
 /* Settings (7.2 P5): Circle's settings kit — shell, section, rows — with Aham's line-separated rows instead of bordered cards. */
 :where(.aham-workbench) .wb-settings-layout{flex:1;min-height:0;display:grid;grid-template-columns:var(--wb-panel-narrow) minmax(0,1fr)}
@@ -752,7 +801,7 @@
 :where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-setting>div:first-child{min-width:0}
 :where(.aham-workbench) .wb-setting-title{font-size:var(--wb-text-sm);font-weight:500}
-:where(.aham-workbench) .wb-setting-desc{margin-block-start:2px;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-setting-desc{margin-block-start:2px;color:var(--wb-faint)}
 :where(.aham-workbench) .wb-setting-control{display:flex;flex:none;align-items:center;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-setting-control .wb-field{min-width:160px}
 :where(.aham-workbench) .wb-settings-section.is-danger h2{color:var(--wb-danger)}
@@ -767,7 +816,7 @@
 :where(.aham-workbench) .wb-file{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(120px,200px) auto;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s2);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-file>svg{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-file-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-:where(.aham-workbench) .wb-file-meta{display:block;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-file-meta{display:block;color:var(--wb-faint);font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-file-state{display:grid;gap:var(--wb-s1);min-width:0}
 :where(.aham-workbench) .wb-file-actions{display:flex;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-progress{display:block;height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line);overflow:hidden}
@@ -838,7 +887,7 @@
    panels and controls are hidden; the document flows on the page; tables repeat their header row; rows never split. */
 @media print {
   .aham-workbench{display:block;height:auto;overflow:visible;background:var(--wb-bg)}
-  .aham-workbench :is(.wb-rail,.wb-header,.wb-doc-actions,.wb-panel,.wb-toasts,.wb-msg-btn,.wb-print-bar,[data-print=hide]){display:none!important}
+  .aham-workbench :is(.wb-rail,.wb-header,.wb-doc-actions,.wb-doc-foot,.wb-anchors,.wb-panel,.wb-toasts,.wb-msg-btn,.wb-print-bar,[data-print=hide]){display:none!important}
   .aham-workbench :is(.wb-main,.wb-layout,.wb-document){display:block;margin:0;overflow:visible;border-radius:0;height:auto}
   .aham-workbench .wb-doc-head{position:static;padding-inline:0}
   .aham-workbench .wb-doc-body{padding-inline:0}
@@ -880,7 +929,7 @@
 /* Document form: two columns, one column when its container is narrower than bp-form (rules/5-单据.md). */
 @container (max-width: 720px) {
  .aham-workbench .wb-form-grid,.aham-workbench .wb-form-grid.is-wide {grid-template-columns:minmax(0,1fr)}
- .aham-workbench .wb-doc-head {flex-direction:column;gap:var(--wb-s3)}
+ .aham-workbench .wb-doc-headline {flex-direction:column;gap:var(--wb-s3)}
 }
 /* Screens at 2x and above draw divider lines at 0.5px (rules/2-视觉.md 2.8). */
 @media (min-resolution: 2dppx) {
@@ -962,13 +1011,13 @@
 }
 /* Increase contrast (rules/9-验收.md): control boundaries and dividers reach 3:1, secondary text darkens, inputs get an outline. */
 @media (prefers-contrast: more) {
- .aham-workbench {--wb-line:#8C8880;--wb-muted:#4A4743}
- .aham-workbench[data-theme="dark"] {--wb-line:#7A766F;--wb-muted:#A5A49A}
+ .aham-workbench {--wb-line:#8C8880;--wb-line-strong:#8C8880;--wb-muted:#4A4743;--wb-faint:#4A4743}
+ .aham-workbench[data-theme="dark"] {--wb-line:#7A766F;--wb-line-strong:#7A766F;--wb-muted:#A5A49A;--wb-faint:#A5A49A}
  .aham-workbench .wb-search {box-shadow:inset 0 0 0 1px var(--wb-line)}
  .aham-workbench :focus-visible {outline-width:3px}
 }
 @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
- .aham-workbench:not([data-theme="light"]) {--wb-line:#7A766F;--wb-muted:#A5A49A}
+ .aham-workbench:not([data-theme="light"]) {--wb-line:#7A766F;--wb-line-strong:#7A766F;--wb-muted:#A5A49A;--wb-faint:#A5A49A}
 }
 /* Reduce motion (rules/2-视觉.md): state changes switch without transitions. */
 @media (prefers-reduced-motion: reduce) {
