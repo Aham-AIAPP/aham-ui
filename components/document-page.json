@@ -1,0 +1,88 @@
+{
+  "slug": "document-page",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "name": "单据页",
+  "intent": "查看、修改、提交、审批一张单据",
+  "api": {
+    "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit }) → { enter, save, cancel, isDirty, destroy }"
+  },
+  "preview": "examples/document.html",
+  "specification": "rules/5-单据.md",
+  "classes": [
+    ".wb-document.is-page",
+    ".wb-doc-head",
+    ".wb-doc-title",
+    ".wb-doc-meta",
+    ".wb-doc-actions",
+    ".wb-mode-note",
+    ".wb-doc-body",
+    ".wb-doc-section",
+    ".wb-form-grid",
+    ".wb-form-row",
+    ".wb-form-value",
+    ".wb-value",
+    ".wb-read",
+    ".wb-edit",
+    ".wb-table-block",
+    ".wb-table-toolbar",
+    ".wb-msg-btn",
+    ".wb-messages",
+    ".wb-context"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-mode",
+      "values": [
+        "read",
+        "edit"
+      ]
+    },
+    {
+      "axis": "status",
+      "values": [
+        "草稿",
+        "审批中",
+        "已退回",
+        "已生效",
+        "已作废"
+      ]
+    }
+  ],
+  "markup": {
+    "row": "<div class=\"wb-form-row\"><div class=\"wb-form-label\" id=\"l-contact\">客户联系人<span class=\"wb-form-required\" aria-hidden=\"true\">*</span></div><div class=\"wb-form-value\" tabindex=\"0\" aria-labelledby=\"l-contact\"><span class=\"wb-read\"><span class=\"wb-value is-editable\">沈工</span></span><span class=\"wb-edit\"><input class=\"wb-field\" name=\"contact\" aria-labelledby=\"l-contact\" required></span></div></div>",
+    "actions": "<div class=\"wb-doc-actions\" role=\"toolbar\"><span class=\"wb-mode-note\" data-edit-only>编辑中</span><button class=\"wb-msg-btn\"></button><button class=\"wb-btn\" data-action=\"cancel\" data-edit-only>取消</button><button class=\"wb-btn primary\" data-action=\"save\" data-edit-only>保存</button><button class=\"wb-btn\" data-read-only>编辑</button></div>"
+  },
+  "states": [
+    "read",
+    "edit",
+    "saving",
+    "errors",
+    "warnings",
+    "dirty-cancel"
+  ],
+  "keyboard": {
+    "e": "进入编辑态（状态允许时）",
+    "Enter / F2": "编辑获得焦点的值",
+    "mod+enter": "保存"
+  },
+  "rules": [
+    "显示态和编辑态版式相同",
+    "保存按钮在吸顶的单据头里",
+    "焦点离开时只校验已标出问题的字段；保存时校验全部",
+    "错误阻止保存，提醒不阻止",
+    "只有允许修改的状态能进入编辑态（canEdit）",
+    "分区只用标题和留白，不套卡片"
+  ],
+  "accessibility": [
+    "出错的控件 aria-invalid",
+    "字段说明 role=\"alert\"（错误）或 role=\"status\"（提醒）",
+    "离开前有未保存改动时浏览器提示"
+  ],
+  "doNotInvent": [
+    "卡片套小节块",
+    "分区标题前的色条",
+    "保存按钮放在页面底部滚动区里"
+  ]
+}

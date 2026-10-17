@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 单据</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}</style></head>
+<body>
+<!-- Document page (rules/5-单据.md): one quotation through its whole life — read, edit, save, submit, approve or
+     return, void, delete and print. Every value and status here is demonstration data; nothing leaves the page. -->
+<div class="aham-workbench" data-theme="light" aria-label="销售报价单示例">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <span class="wb-brand" aria-label="Aham CRM">A</span>
+    <div class="wb-nav-group">
+      <a class="wb-nav-item" href="list.html" aria-label="客户"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"/></svg><span>客户</span></a>
+      <a class="wb-nav-item" href="document.html" aria-label="报价单" aria-current="page"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span>报价单</span></a>
+    </div>
+    <div class="wb-nav-foot"><a class="wb-nav-item" href="settings.html" aria-label="设置"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-settings"/></svg><span>设置</span></a></div>
+  </nav>
+  <div class="wb-main">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" data-tooltip="展开 / 收起导航" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><a href="list.html">报价单</a><span aria-current="page" class="wb-mono">QT-20260930-018</span></nav></div>
+        <div class="wb-header-trail"><span class="wb-crumbs-meta">演示数据</span><button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button></div>
+      </div>
+    </header>
+    <div class="wb-layout">
+      <article class="wb-document is-page" id="doc" data-mode="read" aria-labelledby="doc-title">
+        <header class="wb-doc-head">
+          <div class="wb-doc-title">
+            <h1 id="doc-title">远川精密 MES 一期报价</h1>
+            <div class="wb-doc-meta"><span class="wb-mono">QT-20260930-018</span><span class="wb-status" id="doc-status"><b></b><span></span></span><span id="doc-updated"></span></div>
+          </div>
+          <div class="wb-doc-actions" id="doc-actions" role="toolbar" aria-label="报价单操作">
+            <span class="wb-mode-note" data-edit-only>编辑中</span>
+            <button type="button" class="wb-msg-btn"></button>
+            <button type="button" class="wb-btn" data-action="cancel" data-edit-only>取消</button>
+            <button type="button" class="wb-btn primary" data-action="save" data-edit-only data-tooltip="保存" data-keys="mod+enter">保存</button>
+            <button type="button" class="wb-btn icon-only" id="doc-more" data-read-only aria-haspopup="menu" aria-expanded="false" aria-label="更多操作" data-tooltip="更多操作"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-more"/></svg></button>
+            <a class="wb-btn" id="doc-print" data-read-only href="print.html" target="_blank" rel="noopener">打印预览</a>
+            <button type="button" class="wb-btn" id="doc-withdraw" data-read-only hidden>撤回</button>
+            <button type="button" class="wb-btn" id="doc-edit" data-read-only data-tooltip="编辑" data-keys="e" hidden>编辑</button>
+            <button type="button" class="wb-btn primary" id="doc-submit" data-read-only hidden>提交审批</button>
+          </div>
+        </header>
+        <div class="wb-doc-body">
+          <div class="wb-strip" id="doc-strip" role="status" hidden></div>
+
+          <section class="wb-doc-section" aria-labelledby="s-basic">
+            <div class="wb-section-head"><h2 id="s-basic">基本信息</h2></div>
+            <div class="wb-form-grid" id="f-basic"></div>
+          </section>
+
+          <section class="wb-doc-section" aria-labelledby="s-lines">
+            <div class="wb-table-block">
+              <div class="wb-table-toolbar"><h2 id="s-lines">报价明细</h2><span class="wb-meta" id="lines-meta"></span></div>
+              <div class="wb-table-scroll" tabindex="0" role="region" aria-label="报价明细，可横向滚动">
+                <table class="wb-table" aria-labelledby="s-lines">
+                  <colgroup><col style="width:40px"><col><col style="width:88px"><col style="width:96px"><col style="width:56px"><col style="width:112px"><col style="width:96px"><col style="width:128px"></colgroup>
+                  <thead><tr><th scope="col">#</th><th scope="col">产品 / 服务</th><th scope="col">编码</th><th scope="col" class="number">数量</th><th scope="col">单位</th><th scope="col" class="number">含税单价</th><th scope="col" class="number">折扣 %</th><th scope="col" class="number">含税金额</th></tr></thead>
+                  <tbody id="lines"></tbody>
+                  <tfoot><tr><td colspan="7">合计</td><td class="number" id="lines-total"></td></tr></tfoot>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="wb-doc-section" aria-labelledby="s-terms">
+            <div class="wb-section-head"><h2 id="s-terms">商务条款</h2></div>
+            <div class="wb-form-grid" id="f-terms"></div>
+          </section>
+        </div>
+      </article>
+      <aside class="wb-context wb-panel" tabindex="0" aria-label="金额汇总和审批">
+        <section class="wb-summary"><h2>报价汇总</h2><div class="wb-total-label">价税合计（元）</div><div class="wb-total" id="sum-total"></div><dl><dt>软件许可</dt><dd id="sum-software"></dd><dt>专业服务</dt><dd id="sum-service"></dd><dt>折前金额</dt><dd id="sum-original"></dd><dt>优惠金额</dt><dd id="sum-discount"></dd></dl></section>
+        <section class="wb-payment"><h2>收款计划</h2><div><span>预付款 <small>40%</small></span><strong id="pay-1"></strong></div><div><span>上线款 <small>40%</small></span><strong id="pay-2"></strong></div><div><span>验收款 <small>20%</small></span><strong id="pay-3"></strong></div></section>
+        <section class="wb-approval"><div class="wb-section-head"><h2>审批</h2><span>顺序审批</span></div><ol id="approval"></ol></section>
+        <section class="wb-history" id="history"><h2>变更记录</h2></section>
+      </aside>
+    </div>
+  </div>
+  <div class="wb-popover" id="doc-messages" role="dialog" aria-label="消息" hidden></div>
+  <div class="wb-popover flush menu" id="doc-menu" role="dialog" aria-label="更多操作" hidden><div></div></div>
+</div>
+<script type="module" src="./document.mjs"></script>
+</body>
+</html>

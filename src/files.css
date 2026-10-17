@@ -1,0 +1,44 @@
+/* Files, tree table and version compare (rules/5-单据.md 5.12). Gray drop feedback, ink progress, no colour for diff kinds. */
+:where(.aham-workbench) .wb-drop{display:grid;justify-items:center;gap:var(--wb-s2);padding:var(--wb-s6) var(--wb-s5);border:1.5px dashed var(--wb-line);border-radius:var(--wb-radius-lg);color:var(--wb-muted);text-align:center;transition:border-color var(--wb-fast) var(--wb-ease),background var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-drop[data-drag=over]{border-color:var(--wb-muted);background:var(--wb-panel);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-drop>svg{width:var(--wb-s5);height:var(--wb-s5)}
+:where(.aham-workbench) .wb-drop strong{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-drop-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-files{margin:0;padding:0;list-style:none;border-top:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-file{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(120px,200px) auto;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s2);border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-file>svg{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-file-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-file-meta{display:block;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-file-state{display:grid;gap:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-file-actions{display:flex;gap:var(--wb-s1)}
+:where(.aham-workbench) .wb-progress{display:block;height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line);overflow:hidden}
+:where(.aham-workbench) .wb-progress>span{display:block;height:100%;background:var(--wb-ink);transition:width var(--wb-fast) var(--wb-ease)}
+/* Viewer: toolbar row, a scrolling stage on the panel tier, the page on the white tier. The field mark is an ink outline. */
+:where(.aham-workbench) .wb-viewer{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
+:where(.aham-workbench) .wb-viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);height:var(--wb-header-row);padding:0 var(--wb-s3);border-bottom:1px solid var(--wb-line);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-viewer-bar>div{display:flex;align-items:center;gap:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-viewer-bar .wb-field{width:calc(var(--wb-s7) - var(--wb-s2));text-align:center;font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-viewer-stage{overflow:auto;padding:var(--wb-s4);background:var(--wb-panel);outline-offset:-2px}
+:where(.aham-workbench) .wb-viewer-stage[data-pan=true]{cursor:grab}
+:where(.aham-workbench) .wb-viewer-stage[data-dragging]{cursor:grabbing;user-select:none}
+:where(.aham-workbench) .wb-viewer-canvas{position:relative;margin:0 auto;background:var(--wb-bg)}
+:where(.aham-workbench) .wb-viewer-canvas>:is(img,svg,canvas){display:block;width:100%;height:100%}
+:where(.aham-workbench) .wb-viewer-mark{position:absolute;outline:2px solid var(--wb-ink);outline-offset:2px;border-radius:var(--wb-radius-sm);pointer-events:none}
+:where(.aham-workbench) .wb-viewer-split{display:grid;grid-template-columns:minmax(0,1fr) var(--wb-panel-wide);min-height:0}
+:where(.aham-workbench) .wb-viewer-split>.wb-viewer{border-inline-end:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-recognized{display:grid;align-content:start;min-height:0;overflow:auto}
+:where(.aham-workbench) .wb-recognized-row{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr) auto;align-items:center;gap:var(--wb-s2);width:100%;min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s4);border:0;border-bottom:1px solid var(--wb-line);background:transparent;text-align:start}
+:where(.aham-workbench) .wb-recognized-row:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-recognized-row>span:first-child{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-recognized-row>span:last-child{color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-recognized-row .wb-risk{grid-column:2 / -1}
+/* Version compare: the kind is a word with a mono sign; the old value is struck through in secondary ink. */
+:where(.aham-workbench) .wb-compare-pick{display:flex;align-items:center;gap:var(--wb-s2);min-width:0}
+:where(.aham-workbench) .wb-diff-section{margin-block-start:var(--wb-s5)}
+:where(.aham-workbench) .wb-diff-kind{display:inline-flex;align-items:center;gap:var(--wb-s1);white-space:nowrap}
+:where(.aham-workbench) .wb-diff-kind::before{content:attr(data-sign);width:var(--wb-s3);color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;text-align:center}
+:where(.aham-workbench) .wb-diff-old{color:var(--wb-muted);text-decoration:line-through;text-decoration-thickness:1px}
+:where(.aham-workbench) .wb-diff-new{font-weight:500}
+:where(.aham-workbench) .wb-diff-table td{white-space:normal}
+:where(.aham-workbench) .wb-diff-table .wb-diff-old,:where(.aham-workbench) .wb-diff-table .wb-diff-new{overflow-wrap:anywhere}
+:where(.aham-workbench) [data-viewer=zoom]{min-width:var(--wb-s7);text-align:center;font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}

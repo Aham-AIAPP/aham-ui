@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 控件</title><link rel="stylesheet" href="../aham.css">
+<style>
+body{margin:0}
+/* Page scaffold only. Every control below is styled by aham.css. */
+.gl{max-width:960px;margin:0 auto;padding:var(--wb-s7) var(--wb-page-gutter) var(--wb-s8);display:grid;gap:var(--wb-s7)}
+.gl-head{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--wb-s4)}
+.gl-head h1{font-size:var(--wb-detail-title);font-weight:600}
+.gl-head p{margin-block-start:var(--wb-s2);color:var(--wb-muted)}
+.gl section{display:grid;gap:var(--wb-s4)}
+.gl h2{font-size:var(--wb-text-base);font-weight:600}
+.gl-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3) var(--wb-s4)}
+.gl-cap{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+.gl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s4) var(--wb-s5)}
+.gl-field{display:grid;gap:var(--wb-s1);align-content:start}
+.gl-field>span:first-child{color:var(--wb-muted)}
+.gl-field .wb-field{width:100%}
+.gl-stack{display:grid;gap:var(--wb-s2)}
+@media (max-width:640px){.gl-grid{grid-template-columns:minmax(0,1fr)}}
+</style></head>
+<body>
+<!-- Control gallery (rules/3-控件.md). Each block shows the control in its states; which control to choose is decided by
+     the table in rules/3-控件.md, not by this page. -->
+<div class="aham-workbench wb-bare" data-theme="light" aria-label="控件总览">
+<main class="gl">
+  <header class="gl-head">
+    <div><h1>控件</h1><p>按钮、输入、选择、状态和提示条。行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
+    <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button>
+  </header>
+
+  <section aria-labelledby="g-btn">
+    <h2 id="g-btn">按钮</h2>
+    <div class="gl-row">
+      <button type="button" class="wb-btn primary">提交审批</button>
+      <button type="button" class="wb-btn">编辑</button>
+      <button type="button" class="wb-btn ghost">取消</button>
+      <button type="button" class="wb-btn danger">删除</button>
+      <button type="button" class="wb-btn" disabled>不可用</button>
+      <button type="button" class="wb-btn icon-only" aria-label="更多操作" data-tooltip="更多操作"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-more"/></svg></button>
+    </div>
+    <div class="gl-row">
+      <button type="button" class="wb-btn sm primary">新建</button>
+      <button type="button" class="wb-btn sm">导出</button>
+      <button type="button" class="wb-btn sm ghost"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-filter"/></svg>筛选</button>
+      <button type="button" class="wb-icon-btn" aria-label="刷新" data-tooltip="刷新"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-refresh"/></svg></button>
+    </div>
+    <p class="gl-cap">一个页面只有一个主按钮。危险操作用 danger，确认弹窗的按钮写动作本身（删除、作废），不写「确定」。</p>
+  </section>
+
+  <section aria-labelledby="g-input">
+    <h2 id="g-input">输入</h2>
+    <div class="gl-grid">
+      <label class="gl-field"><span>客户名称<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" required value="远川精密制造有限公司"></label>
+      <label class="gl-field"><span>报价日期</span><input class="wb-field wb-mono" type="date" value="2026-09-30"></label>
+      <div class="gl-field"><span id="g-amount">预算</span><span class="wb-edit"><input class="wb-field is-number" aria-labelledby="g-amount" inputmode="decimal" value="1,200,000"><span class="wb-unit">元</span></span></div>
+      <label class="gl-field"><span>结算币种</span><select class="wb-field"><option>人民币 CNY</option><option>美元 USD</option></select></label>
+      <div class="gl-field" data-state="error"><span id="g-err">客户联系人<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" aria-labelledby="g-err" aria-invalid="true" placeholder="姓名 · 部门"><span class="wb-form-hint is-error">必填，没填</span></div>
+      <label class="gl-field"><span>负责人</span><input class="wb-field" value="林悦 · 华东销售组" disabled></label>
+      <label class="gl-field" style="grid-column:1/-1"><span>备注</span><textarea class="wb-field" rows="3">设备接口以现场确认清单为准。</textarea></label>
+    </div>
+    <div class="gl-row"><input class="wb-field sm" placeholder="小号，用在工具栏" aria-label="小号输入框"><select class="wb-field sm" aria-label="小号下拉"><option>按更新时间</option><option>按金额</option></select></div>
+    <p class="gl-cap">标签在上，值在下。必填的星号只在编辑时出现。数字右对齐用等宽字体，单位跟在框外。</p>
+  </section>
+
+  <section aria-labelledby="g-choice">
+    <h2 id="g-choice">选择</h2>
+    <div class="gl-grid">
+      <div class="gl-field"><span id="g-radio">价格口径</span><span class="wb-choices" role="radiogroup" aria-labelledby="g-radio"><label class="wb-choice"><input type="radio" name="g-tax" checked>含税</label><label class="wb-choice"><input type="radio" name="g-tax">不含税</label></span></div>
+      <div class="gl-field"><span id="g-check">通知方式</span><span class="wb-choices" role="group" aria-labelledby="g-check"><label class="wb-choice"><input type="checkbox" checked>站内消息</label><label class="wb-choice"><input type="checkbox">邮件</label><label class="wb-choice"><input type="checkbox" disabled>短信</label></span></div>
+      <div class="gl-field"><span>开关</span><label class="wb-switch"><input type="checkbox" checked><span aria-hidden="true"></span>保存后自动打开下一条</label></div>
+      <div class="gl-field"><span>分段</span><div class="wb-seg" role="group" aria-label="内容密度"><button type="button" aria-pressed="true">标准</button><button type="button" aria-pressed="false">紧凑</button></div></div>
+    </div>
+    <p class="gl-cap">2～5 个互斥选项用单选，多于 5 个用下拉；开关只用在立即生效的设置上，表单里要保存的是非项用复选框。</p>
+  </section>
+
+  <section aria-labelledby="g-status">
+    <h2 id="g-status">状态和分类</h2>
+    <div class="gl-row">
+      <span class="wb-status" data-tone="draft"><b></b><span>草稿</span></span>
+      <span class="wb-status" data-tone="info"><b></b><span>审批中</span></span>
+      <span class="wb-status" data-tone="warning"><b></b><span>已退回</span></span>
+      <span class="wb-status" data-tone="success"><b></b><span>已生效</span></span>
+      <span class="wb-status" data-tone="danger"><b></b><span>已逾期</span></span>
+      <span class="wb-status"><b></b><span>已作废</span></span>
+    </div>
+    <div class="gl-row">
+      <span class="wb-tag" data-cat="1">软件</span>
+      <span class="wb-tag" data-cat="2">服务</span>
+      <span class="wb-tag" data-cat="3">硬件</span>
+      <span class="wb-tag" data-cat="4">集成</span>
+      <span class="wb-tag" data-cat="5">培训</span>
+      <span class="wb-tag" data-cat="6">运维</span>
+      <span class="wb-tag is-plain">未分类</span>
+    </div>
+    <div class="gl-row">
+      <svg class="wb-cat-icon" data-cat="1" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg>
+      <svg class="wb-cat-icon" data-cat="2" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"/></svg>
+      <svg class="wb-cat-icon" data-cat="3" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-folder"/></svg>
+      <svg class="wb-cat-icon" data-cat="4" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-link"/></svg>
+      <svg class="wb-cat-icon" data-cat="5" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-calendar"/></svg>
+      <svg class="wb-cat-icon" data-cat="6" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-settings"/></svg>
+    </div>
+    <p class="gl-cap">状态用圆点加文字，颜色只表达状态。分类色只用在小图标和标签上，同一个分类在全系统用同一个序号。</p>
+  </section>
+
+  <section aria-labelledby="g-strip">
+    <h2 id="g-strip">提示条</h2>
+    <div class="gl-stack">
+      <div class="wb-strip" data-tone="info"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-info"/></svg><span class="wb-grow">已提交，等待销售负责人审批。审批期间不能修改。</span></div>
+      <div class="wb-strip" data-tone="success"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-success"/></svg><span class="wb-grow">已生效，可以打印发给客户。</span></div>
+      <div class="wb-strip" data-tone="warning"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-warning"/></svg><span class="wb-grow">王卓退回：折扣需要重新核算。修改后重新提交。</span></div>
+      <div class="wb-strip" data-tone="danger"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-error"/></svg><span class="wb-grow">还有 1 项必填没填：客户联系人。补齐后再提交。</span><button type="button" class="wb-btn sm">去填写</button></div>
+    </div>
+    <p class="gl-cap">提示条放在单据头下面，说明整张单据的状态或阻断原因。单个字段的问题标在字段上，不放提示条。</p>
+  </section>
+</main>
+</div>
+<script type="module">
+import { initTheme, initTooltips } from '../aham.js';
+const root = document.querySelector('.aham-workbench');
+initTheme(root);
+initTooltips(root);
+root.querySelectorAll('.wb-seg').forEach(seg => seg.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (b) seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+}));
+</script>
+</body>
+</html>

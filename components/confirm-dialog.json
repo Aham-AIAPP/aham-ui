@@ -1,0 +1,42 @@
+{
+  "slug": "confirm-dialog",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "name": "确认弹窗",
+  "intent": "不可撤销的操作之前问一次",
+  "api": {
+    "openConfirm": "openConfirm({ root, title, text, confirm, danger, reason: { label }, onConfirm(reason), returnFocus }) → { close }"
+  },
+  "preview": "examples/document.html",
+  "specification": "rules/6-反馈.md#63-确认弹窗",
+  "classes": [
+    ".wb-dialog",
+    ".wb-dialog.is-form",
+    ".wb-dialog.is-wide",
+    ".wb-dialog-field",
+    ".wb-dialog-foot"
+  ],
+  "states": [
+    "open",
+    "reason-empty-error"
+  ],
+  "keyboard": {
+    "Esc": "关闭，不执行",
+    "Enter（在按钮上）": "执行"
+  },
+  "rules": [
+    "标题是带对象的问句",
+    "按钮写动作本身，危险操作红字",
+    "需要原因时原因必填",
+    "一次只开一个模态弹窗"
+  ],
+  "accessibility": [
+    "原生 dialog 加 showModal",
+    "关闭后焦点回到触发元素"
+  ],
+  "doNotInvent": [
+    "「确定 / 取消」按钮",
+    "叠加第二个弹窗"
+  ]
+}

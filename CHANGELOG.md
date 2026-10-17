@@ -1,10 +1,49 @@
 # Changelog 更新日志
 
-本项目所有重要变更记录于此。
-格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本 SemVer](https://semver.org/lang/zh-CN/)。
-单一事实源在 `tokens.json`，下游（DESIGN.md / aham-ui.css / Office）全部派生。
+本项目的重要变更记录在这里。格式参照 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号按 [语义化版本](https://semver.org/lang/zh-CN/)。7.6.0 及更早的条目保留原文，其中的路径和文件名指当时的 `design-system/` 目录。
 
 ## [Unreleased]
+
+## [8.0.0] - 2026-10-17
+
+8.0 是一次重构：只保留业务管理系统一套规则，目录整体重排；视觉改为暖灰细线，交互规则参照 SAP Fiori 重写。
+
+### 不兼容的改动
+- 删除 `design-system/` 目录，文件移到仓库根目录：`tokens.json`、`aham.css`、`aham.js`、`components/`、`examples/`、`assets/fonts/`、`assets/icons/`。
+- `workbench.css` 和 `workbench.js` 改名为 `aham.css` 和 `aham.js`。页面只引 `aham.css` 一个样式文件。
+- 删除基础层 `aham-ui.css`、`aham-ui.js`、`colors_and_type.css`、`components.css`，以及 PC 工作台的 `desktop.css`（`.wb-pc`）。
+- 删除规则文件 `DESIGN.md`、`WORKBENCH.md`、`DESKTOP.md`、`SKILL.md`、`aham-ui-office.md`，规则改写到 `rules/` 的九个文件。
+- 删除 macOS 应用、Office 文档、HTML 邮件三套规则。
+- 删除 `preview/` 和 `ui_kits/`，以及 `library-consumption.json`、`css.json`、`uikit-plan.json`。
+- 输入框统一为 `.wb-field`，小号加 `.sm`。替代 `.wb-input`、`.wb-select`、`.wb-edit-input`、`.wb-edit-area`、`.wb-field-select`。
+- 单据页版式改为连续纸面，删除 `.wb-doc-card*`、`.wb-doc-pair`、`.wb-doc-side`、`.wb-form-cols`、`.wb-form-col`、`.wb-edit-footer` 等类；新结构见 `rules/5-单据.md` 5.1。
+- 行高变量统一为 `--wb-row`（36px）和 `--wb-row-compact`（32px），删除 `--wb-list-row`、`--wb-row-list`、`--wb-row-detail`。电脑上不再使用 44px 行高，44px 只在触屏上使用（`--wb-touch`）。
+- 删除变量 `--wb-body-dense`、`--wb-text-md`、`--wb-doc-max`、`--wb-form-col-max`。
+- 组件契约升到 `schemaVersion` 3，`specification` 指向 `rules/` 的章节。原有 45 份契约删除 22 份、保留 23 份，另新增 13 份，共 36 份。
+
+### 视觉
+- 中性色改为暖灰：纸面 `#FFFFFF`，面板 `#F6F5F3`，分隔线 `#E6E3DE`，正文 `#262522`，次要文字 `#6B6862`。
+- 主色保持钢蓝 `#336EE8`。新增 4 个状态色（成功、警示、错误、信息）各带浅底，新增 6 个分类色。
+- 图标线宽从 2px 改为 1.5px。
+- 圆角：控件和弹层 6px，弹窗和外框 10px；胶囊形只用于开关、进度条和头像。
+- 新增增强对比度一套颜色，系统开启时使用。
+- 打印时一律使用亮色。
+
+### 新增
+- `rules/1-总则.md` 至 `9-验收.md`。
+- 示例页：单据页 `examples/document.html`、打印预览 `examples/print.html`、控件总览 `examples/controls.html`。
+- 单据状态：草稿、审批中、已退回、已生效、已作废，每个状态只显示可用的操作。
+- `aham.js` 新增 `openConfirm()`：确认弹窗，可以要求填写原因。
+- `initObjectPage()` 新增 `canEdit` 参数，按单据状态决定能否进入编辑态；支持单选组。
+- 打印预览：A4、15mm 页边距，未生效的单据印出状态标记，金额印大写（`chineseAmount()`）。
+- `scripts/lint.mjs`：检查变量定义、写死的颜色和字号、亮暗两套颜色的对比度。
+- `tests/structure.test.mjs`：检查生成文件、链接、契约、规则文件的标题和用词。
+- CI 改为 `.github/workflows/check.yml`。
+
+### 删除
+- `scripts/build-workbench.mjs`、`extract-components-css.mjs`、`build-panorama.mjs`、`lint-design.mjs`，由 `scripts/build.mjs` 和 `scripts/lint.mjs` 替代。
+- 示例页 `crm-quotation`、`object-page`、`desktop-workbench`，由 `examples/document.html` 替代。
+- 草稿自动恢复的示例代码。草稿规则改为有条件的规则，见 `rules/5-单据.md` 5.6。
 
 ## [7.6.0] - 2026-10-12
 

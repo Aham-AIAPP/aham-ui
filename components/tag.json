@@ -1,0 +1,44 @@
+{
+  "slug": "tag",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "标签",
+  "intent": "标出类别",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#36-标签和分类",
+  "classes": [
+    ".wb-tag",
+    ".wb-tag.is-plain",
+    ".wb-cat-icon"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-cat",
+      "values": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ]
+    }
+  ],
+  "markup": {
+    "tag": "<span class=\"wb-tag\" data-cat=\"2\">服务</span>",
+    "icon": "<svg class=\"wb-cat-icon\" data-cat=\"2\" aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-users\"/></svg>"
+  },
+  "rules": [
+    "同一类别全系统同一个序号",
+    "一页最多 6 种分类色",
+    "标签不能点击；能点的筛选条件用 .wb-chip",
+    "一个值最多两个标签，多的写「+ N」"
+  ],
+  "accessibility": [
+    "标签有文字，颜色只是辅助"
+  ],
+  "doNotInvent": [
+    "用分类色表达好坏",
+    "彩色文字"
+  ]
+}

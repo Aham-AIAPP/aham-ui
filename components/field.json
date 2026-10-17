@@ -1,0 +1,64 @@
+{
+  "slug": "field",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "输入框",
+  "intent": "录入文本、数字、日期，或从下拉里选一个值",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#33-输入框",
+  "classes": [
+    ".wb-field",
+    ".wb-field.sm",
+    ".wb-field.is-number",
+    ".wb-unit",
+    ".wb-form-label",
+    ".wb-form-required",
+    ".wb-form-hint"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "element",
+      "values": [
+        "input",
+        "select",
+        "textarea",
+        "input[type=date]"
+      ]
+    },
+    {
+      "axis": "size",
+      "values": [
+        "32px",
+        "sm 28px"
+      ]
+    }
+  ],
+  "markup": {
+    "text": "<label><span class=\"wb-form-label\">客户名称</span><input class=\"wb-field\" required></label>",
+    "number": "<span class=\"wb-edit\"><input class=\"wb-field is-number\" inputmode=\"decimal\"><span class=\"wb-unit\">元</span></span>"
+  },
+  "states": [
+    "default",
+    "hover",
+    "focus",
+    "aria-invalid",
+    "disabled",
+    "placeholder"
+  ],
+  "rules": [
+    "标签在上，值在下，标签不加冒号",
+    "必填星号只在编辑态显示",
+    "数字右对齐、等宽；单位在框外",
+    "占位文字写格式示例，不代替标签",
+    "系统生成的值在编辑态也显示成文字"
+  ],
+  "accessibility": [
+    "每个输入框有关联标签",
+    "错误时 aria-invalid=\"true\"，说明文字用 role=\"alert\""
+  ],
+  "doNotInvent": [
+    "浮动标签",
+    "圆角胶囊输入框",
+    "在框里写单位"
+  ]
+}

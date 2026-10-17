@@ -1,0 +1,41 @@
+{
+  "slug": "strip",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "提示条",
+  "intent": "说明整张单据或整个页面的状态、阻断原因",
+  "preview": "examples/controls.html",
+  "reference": "examples/document.html",
+  "specification": "rules/3-控件.md#37-提示条",
+  "classes": [
+    ".wb-strip"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-tone",
+      "values": [
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "（不写：中性）"
+      ]
+    }
+  ],
+  "markup": {
+    "strip": "<div class=\"wb-strip\" data-tone=\"warning\" role=\"status\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-warning\"/></svg><span class=\"wb-grow\">王卓退回：折扣需要重新核算。修改后重新提交。</span></div>"
+  },
+  "rules": [
+    "放在单据头下面",
+    "一页最多一条，状态变了就换内容",
+    "可以带一个按钮",
+    "单个字段的问题标在字段上"
+  ],
+  "accessibility": [
+    "role=\"status\""
+  ],
+  "doNotInvent": [
+    "可关闭的提示条叠加多条",
+    "提示条代替确认弹窗"
+  ]
+}

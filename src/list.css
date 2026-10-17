@@ -1,0 +1,49 @@
+/* List page (7.2 P2): filter row, grouped table with sticky headers, bulk mode, pager. */
+:where(.aham-workbench) .wb-list{display:flex;flex-direction:column;min-width:0;min-height:0}
+:where(.aham-workbench) .wb-list-scroll{flex:1;min-height:0;overflow:auto}
+:where(.aham-workbench) .wb-list-scroll>.wb-note{margin:var(--wb-s4)}
+:where(.aham-workbench) .wb-filter-bar{flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s4);border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-filter-chips{display:flex;flex-wrap:wrap;gap:var(--wb-s2);min-width:0}
+:where(.aham-workbench) .wb-chip{display:inline-flex;align-items:stretch;max-width:100%;height:var(--wb-header-control);border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line)}
+:where(.aham-workbench) .wb-chip>*{display:inline-flex;align-items:center;gap:var(--wb-s1);min-width:0;padding:0 var(--wb-s2);border:0;background:transparent;white-space:nowrap}
+:where(.aham-workbench) .wb-chip>*+*{box-shadow:inset 1px 0 0 var(--wb-line)}
+:where(.aham-workbench) .wb-chip>button:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-chip-field{font-weight:500}
+:where(.aham-workbench) .wb-chip-op{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-chip-value span{overflow:hidden;text-overflow:ellipsis;max-width:240px}
+:where(.aham-workbench) .wb-chip-remove{justify-content:center;width:var(--wb-header-control);padding:0;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-toggle-chips{display:flex;flex-wrap:wrap;gap:var(--wb-s1)}
+:where(.aham-workbench) .wb-toggle-chip{height:var(--wb-s5);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;box-shadow:inset 0 0 0 1px var(--wb-line);color:var(--wb-muted);font-size:var(--wb-body)}
+:where(.aham-workbench) .wb-toggle-chip[aria-pressed=true]{background:var(--wb-selected);box-shadow:none;color:var(--wb-ink)}
+/* List rows: header, group rows and data rows share one height (rules/4-页面.md 4.3); the header has no fill of its own (rules/2-视觉.md 2.8) and
+   uses the content surface only so that it covers rows scrolling beneath it. */
+:where(.aham-workbench) .wb-list[data-list-density=compact]{--wb-row:var(--wb-row-compact)}
+:where(.aham-workbench) .wb-list-table thead th{position:sticky;top:0;z-index:2;height:var(--wb-row)}
+:where(.aham-workbench) .wb-list-table td{height:var(--wb-row)}
+:where(.aham-workbench) .wb-list-table tr[data-selected] td{background:var(--wb-selected)}
+:where(.aham-workbench) .wb-list-table :is(th,td).wb-check{padding:0;text-align:center}
+:where(.aham-workbench) .wb-list-table :is(th,td):last-child{padding-inline-end:var(--wb-s4)}
+:where(.aham-workbench) .wb-check-hit{display:grid;place-items:center;min-height:calc(var(--wb-row) - 1px);cursor:pointer}
+:where(.aham-workbench) .wb-list-table input[type=checkbox]{display:inline-block;width:auto;height:auto;margin:0;padding:0;border:0;appearance:auto;accent-color:var(--wb-ink);vertical-align:middle}
+:where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-row);z-index:1;height:var(--wb-row);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-group-toggle{display:inline-flex;align-items:center;gap:var(--wb-s2);height:var(--wb-header-control);padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;font-weight:500}
+:where(.aham-workbench) .wb-group-toggle:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-group-toggle svg{transition:transform var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-group-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
+:where(.aham-workbench) .wb-group-count{color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-empty{display:grid;justify-items:start;gap:var(--wb-s2);padding:var(--wb-s7) var(--wb-s4)}
+:where(.aham-workbench) .wb-empty strong{font-size:var(--wb-text-base);font-weight:500}
+:where(.aham-workbench) .wb-empty p{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-empty>div{display:flex;flex-wrap:wrap;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-pager{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);min-height:var(--wb-header-row);padding:0 var(--wb-s4);border-top:1px solid var(--wb-line);color:var(--wb-muted);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-pager>div{display:flex;align-items:center;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-bulk-count{color:var(--wb-ink);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-search{display:flex;align-items:center;gap:var(--wb-s1);width:var(--wb-search-width);height:var(--wb-header-control);padding:0 var(--wb-s2);border-radius:var(--wb-radius);background:var(--wb-hover)}
+:where(.aham-workbench) .wb-search input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent}
+/* List keyboard focus (7.2 P3): one row is in the tab order; ↑↓ move it, Space previews, Enter opens. */
+:where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]{outline:0}
+:where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]:focus-visible td{background:var(--wb-hover);box-shadow:inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
+:where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]:focus-visible td:first-child{box-shadow:inset 2px 0 0 var(--wb-blue),inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
+:where(.aham-workbench) .wb-list-table tbody tr[data-previewing] td{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-chip>:first-child{border-start-start-radius:inherit;border-end-start-radius:inherit}
+:where(.aham-workbench) .wb-chip>:last-child{border-start-end-radius:inherit;border-end-end-radius:inherit}

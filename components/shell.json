@@ -1,0 +1,41 @@
+{
+  "slug": "shell",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "name": "外框",
+  "intent": "导航栏、页眉、内容区和侧面板",
+  "api": {
+    "initShell": "initShell(root) → { set, isOpen, theme }",
+    "initPanels": "initPanels(root) → { show, hide }",
+    "initTheme": "initTheme(root)"
+  },
+  "preview": "examples/shell.html",
+  "specification": "rules/4-页面.md#41-外框",
+  "classes": [
+    ".aham-workbench",
+    ".wb-rail",
+    ".wb-main",
+    ".wb-header",
+    ".wb-header-row",
+    ".wb-layout",
+    ".wb-panel"
+  ],
+  "keyboard": {
+    "mod+b": "展开或收起导航",
+    "Esc": "关闭最上面一层"
+  },
+  "rules": [
+    "导航收起 52px、展开 240px",
+    "页眉每条 40px",
+    "侧面板一次只开一个",
+    "1024px 及以下宽面板浮在内容上方"
+  ],
+  "accessibility": [
+    "导航开关 aria-controls 指向导航栏，aria-expanded 跟随状态"
+  ],
+  "doNotInvent": [
+    "顶部大横幅",
+    "悬浮聊天按钮"
+  ]
+}

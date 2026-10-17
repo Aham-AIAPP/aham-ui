@@ -1,0 +1,41 @@
+{
+  "slug": "status",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "name": "状态",
+  "intent": "说明记录或单据处在哪一步",
+  "preview": "examples/controls.html",
+  "specification": "rules/3-控件.md#35-状态",
+  "classes": [
+    ".wb-status"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-tone",
+      "values": [
+        "draft",
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "（不写：无色）"
+      ]
+    }
+  ],
+  "markup": {
+    "status": "<span class=\"wb-status\" data-tone=\"success\"><b></b><span>已生效</span></span>"
+  },
+  "rules": [
+    "6px 圆点加文字；文字用正文色",
+    "含义固定：success 完成、warning 要注意、danger 要处理、info 进行中、draft 草稿",
+    "列表、单据头、详情页同一写法"
+  ],
+  "accessibility": [
+    "状态必须有文字"
+  ],
+  "doNotInvent": [
+    "彩色徽章",
+    "整行底色",
+    "只有颜色没有文字"
+  ]
+}

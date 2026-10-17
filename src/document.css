@@ -1,0 +1,131 @@
+/* Scroll areas: header rows stay put, the body scrolls. Side panels scroll on their own. */
+:where(.aham-workbench) .wb-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
+:where(.aham-workbench) .wb-layout>.wb-document{min-height:0;overflow:auto}
+:where(.aham-workbench) .wb-document{min-width:0;padding:var(--wb-s4)}
+:where(.aham-workbench) .wb-panel{width:var(--wb-panel-narrow);min-width:0;min-height:0;overflow:auto;background:var(--wb-bg);border-inline-start:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-panel[data-size=wide]{width:var(--wb-panel-wide)}
+:where(.aham-workbench) .wb-peek{display:grid;align-content:start;gap:var(--wb-s3);padding:var(--wb-s4)}
+:where(.aham-workbench) .wb-peek h2{font-size:var(--wb-title);font-weight:500}
+:where(.aham-workbench) .wb-section-head{display:flex;align-items:center;justify-content:space-between;margin-block-end:var(--wb-s3);gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-section-head>span{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-toolbar{display:flex;justify-content:space-between;align-items:center;padding:var(--wb-s2) 0;color:var(--wb-muted);gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-sep{padding-inline:var(--wb-s2)}
+:where(.aham-workbench) .wb-find{display:flex;align-items:center;gap:var(--wb-s2);max-width:40%}
+:where(.aham-workbench) .wb-find input{background:transparent;width:100%;min-width:0;border:0;padding:var(--wb-s1)}
+:where(.aham-workbench) .wb-context{background:var(--wb-panel);padding:var(--wb-s4);min-width:0;border-inline-start:0}
+:where(.aham-workbench) .wb-context>section{padding-block-end:var(--wb-s5);margin-block-end:var(--wb-s5);border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-context>section:last-child{border:0;padding:0;margin:0}
+:where(.aham-workbench) .wb-total-label{color:var(--wb-muted);margin:var(--wb-s4) 0 var(--wb-s2)}
+:where(.aham-workbench) .wb-total{font:500 var(--wb-total)/1.4 var(--wb-mono);overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-context dd{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) :is(.wb-summary-foot,.wb-payment>div){display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);margin-block-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-summary-foot{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-payment strong{font-family:var(--wb-mono);font-feature-settings:normal;font-weight:400}
+:where(.aham-workbench) .wb-approval ol{list-style:none;margin:var(--wb-s3) 0 0;padding:0}
+:where(.aham-workbench) .wb-approval li{display:flex;gap:var(--wb-s3);padding-block-end:var(--wb-s4)}
+:where(.aham-workbench) .wb-step-dot{width:var(--wb-dot);height:var(--wb-dot);border:1px solid var(--wb-muted);border-radius:50%;margin-block-start:var(--wb-s2);flex:none}
+:where(.aham-workbench) .wb-approval .done .wb-step-dot{background:var(--wb-muted)}
+:where(.aham-workbench) .wb-approval small{display:block}
+:where(.aham-workbench) .wb-history p{margin-block-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-history>span{display:block;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-feedback:not(:empty){margin-block-start:var(--wb-s3);padding:var(--wb-s2) var(--wb-s3);background:var(--wb-panel);border-radius:var(--wb-radius)}
+:where(.aham-workbench)[data-density=compact]{--wb-row:var(--wb-row-compact)}
+:where(.aham-workbench)[data-density=detail]{--wb-row:var(--wb-row-double)}
+:where(.aham-workbench)[data-density=detail] .wb-cell-sub{display:block}
+:where(.aham-workbench) .wb-list>.wb-feedback:not(:empty){margin:var(--wb-s2) var(--wb-s4) 0}
+/* Document page (rules/5-单据.md). One continuous white page: a sticky head with the title, status and the page's actions,
+   then sections separated by space and a 14px heading. No cards, no tinted blocks, no coloured bars. The same rows show
+   text in read mode and controls in edit mode; labels sit above values in both modes, so nothing moves when the mode changes. */
+:where(.aham-workbench) .wb-document.is-page{padding:0 0 var(--wb-s8);container-type:inline-size}
+:where(.aham-workbench) .wb-doc-head{position:sticky;top:0;z-index:var(--wb-z-pop);display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s5);padding:var(--wb-s5) var(--wb-page-gutter) var(--wb-s4);background:var(--wb-bg);border-bottom:1px solid transparent}
+:where(.aham-workbench) .wb-doc-head.is-stuck{border-bottom-color:var(--wb-line)}
+:where(.aham-workbench) .wb-doc-title{display:grid;gap:var(--wb-s2);min-width:0}
+:where(.aham-workbench) .wb-doc-title h1{font-size:var(--wb-detail-title);font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-doc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s1) var(--wb-s4);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-doc-meta .wb-mono{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-doc-actions{display:flex;flex:none;align-items:center;gap:var(--wb-s2);padding-block-start:2px}
+:where(.aham-workbench) .wb-doc-actions .wb-mode-note{color:var(--wb-muted);margin-inline-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-doc-body{display:grid;gap:var(--wb-s6);padding:var(--wb-s2) var(--wb-page-gutter) 0}
+:where(.aham-workbench) .wb-doc-section{min-width:0;scroll-margin-top:var(--wb-s8)}
+:where(.aham-workbench) .wb-doc-section>.wb-section-head{min-height:var(--wb-header-control);margin-block-end:var(--wb-s4)}
+:where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-text-base);font-weight:600}
+:where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-panel);color:var(--wb-ink);line-height:20px}
+:where(.aham-workbench) .wb-strip>svg{margin-block-start:2px;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-strip[data-tone=info]{background:var(--wb-info-bg)}
+:where(.aham-workbench) .wb-strip[data-tone=info]>svg{color:var(--wb-info)}
+:where(.aham-workbench) .wb-strip[data-tone=success]{background:var(--wb-success-bg)}
+:where(.aham-workbench) .wb-strip[data-tone=success]>svg{color:var(--wb-success)}
+:where(.aham-workbench) .wb-strip[data-tone=warning]{background:var(--wb-warning-bg)}
+:where(.aham-workbench) .wb-strip[data-tone=warning]>svg{color:var(--wb-warning)}
+:where(.aham-workbench) .wb-strip[data-tone=danger]{background:var(--wb-danger-bg)}
+:where(.aham-workbench) .wb-strip[data-tone=danger]>svg{color:var(--wb-danger)}
+:where(.aham-workbench) .wb-strip>.wb-grow{flex:1;min-width:0}
+/* Form: two columns up to form-max, one column below bp-form (container query in layout.css.in). Label above the value,
+   8px apart; required fields get an asterisk in edit mode only. Long text and composite conditions take a full row. */
+:where(.aham-workbench) .wb-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s4) var(--wb-s5);max-width:var(--wb-form-max)}
+:where(.aham-workbench) .wb-form-grid.is-wide{max-width:none;grid-template-columns:repeat(3,minmax(0,1fr))}
+:where(.aham-workbench) .wb-form-row{display:grid;align-content:start;gap:var(--wb-s1);min-width:0}
+:where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
+:where(.aham-workbench) .wb-form-label{color:var(--wb-muted);line-height:20px;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
+:where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
+:where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}
+:where(.aham-workbench) .wb-form-value{position:relative;display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-control);min-width:0}
+:where(.aham-workbench) [data-mode=read] .wb-form-value{align-items:flex-start;padding-block:6px}
+:where(.aham-workbench) [data-mode=read] .wb-form-value[tabindex]:focus-visible{outline:2px solid var(--wb-blue);outline-offset:2px;border-radius:var(--wb-radius-sm)}
+:where(.aham-workbench) .wb-value{line-height:20px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-value.is-editable{cursor:text}
+:where(.aham-workbench) .wb-value.is-check{background:var(--wb-warning-mark);border-radius:var(--wb-radius-sm);padding-inline:var(--wb-s1);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+:where(.aham-workbench) .wb-value.is-missing{color:var(--wb-danger)}
+:where(.aham-workbench) .wb-value.is-empty{color:var(--wb-faint)}
+:where(.aham-workbench) .wb-source{flex:none;width:20px;height:20px;display:inline-grid;place-items:center;border-radius:var(--wb-radius-sm);color:var(--wb-muted);cursor:help}
+:where(.aham-workbench) .wb-source:is(:hover,:focus-visible){background:var(--wb-hover);outline:none}
+:where(.aham-workbench) .wb-source svg{width:14px;height:14px}
+/* Edit controls are .wb-field (controls.css). Here only their width inside a form row and a table cell; a unit never wraps. */
+:where(.aham-workbench) .wb-edit{flex:1;min-width:0;display:flex;align-items:center;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-edit.is-groups{flex-wrap:wrap}
+:where(.aham-workbench) .wb-edit-group{display:inline-flex;align-items:center;gap:var(--wb-s1);white-space:nowrap;max-width:100%}
+:where(.aham-workbench) .wb-edit-group.is-fill{flex:1 1 140px;min-width:0}
+:where(.aham-workbench) .wb-edit>.wb-field,:where(.aham-workbench) .wb-edit>.wb-choices{flex:1 1 auto;width:100%}
+:where(.aham-workbench) .wb-edit-group>.wb-field{width:auto}
+/* A textarea in a document grows with its text (aham.js), so it starts one row high and never shows a scrollbar. */
+:where(.aham-workbench) .wb-edit>textarea.wb-field{min-height:var(--wb-control);resize:none;overflow:hidden}
+:where(.aham-workbench) .wb-edit .wb-unit{flex:none}
+:where(.aham-workbench) .wb-unit{flex:none;color:var(--wb-muted);white-space:nowrap}
+:where(.aham-workbench) .wb-table .wb-field{height:var(--wb-field);padding-inline:var(--wb-s1)}
+/* Value state: an error has a red line, a warning an amber line; the message floats under the value while it has focus. */
+:where(.aham-workbench) [data-state=error] .wb-field{border-color:var(--wb-danger)}
+:where(.aham-workbench) [data-state=warning] .wb-field{border-color:var(--wb-warning)}
+:where(.aham-workbench) .wb-value-state{display:none;position:absolute;inset-inline-start:0;top:calc(100% + 4px);z-index:var(--wb-z-pop);min-width:240px;max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius);box-shadow:var(--wb-shadow-pop);line-height:20px}
+:where(.aham-workbench) [data-state]:focus-within>.wb-value-state{display:block}
+:where(.aham-workbench) [data-state=warning]>.wb-value-state{background:var(--wb-warning-bg);color:var(--wb-ink)}
+:where(.aham-workbench) [data-state=error]>.wb-value-state{background:var(--wb-danger-bg);color:var(--wb-danger)}
+/* Table inside a document: the toolbar is as wide as the table; the table sits in a 1px box with a tinted header row
+   and scrolls sideways inside the box below its minimum width. */
+:where(.aham-workbench) .wb-table-block{min-width:0}
+:where(.aham-workbench) .wb-table-toolbar{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-control);margin-block-end:var(--wb-s3)}
+:where(.aham-workbench) .wb-table-toolbar h2{font-size:var(--wb-text-base);font-weight:600}
+:where(.aham-workbench) .wb-table-toolbar>.wb-spacer{flex:1}
+:where(.aham-workbench) .wb-table-toolbar .wb-meta{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-table-block>.wb-table-scroll{border:1px solid var(--wb-line);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-table-block .wb-table{min-width:560px}
+:where(.aham-workbench) .wb-table-block .wb-table thead th{background:var(--wb-panel)}
+:where(.aham-workbench) .wb-table-block .wb-table tbody:last-child tr:last-child>td,:where(.aham-workbench) .wb-table-block .wb-table tfoot tr:last-child>td{border-bottom:0}
+:where(.aham-workbench) .wb-table-block .wb-table :is(th,td):first-child{padding-inline-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-table-block .wb-table :is(th,td):last-child{padding-inline-end:var(--wb-s3)}
+/* Mode switch. Header actions marked data-read-only are removed in edit mode and data-edit-only ones in read mode;
+   the head keeps its height, so the content below never moves. */
+:where(.aham-workbench) [data-mode=read] .wb-edit,:where(.aham-workbench) [data-mode=edit] .wb-read{display:none}
+:where(.aham-workbench) [data-mode=read] :is(.wb-form-required,[data-edit-only]),:where(.aham-workbench) [data-mode=edit] [data-read-only]{display:none}
+:where(.aham-workbench) .wb-msg-btn{display:inline-flex;align-items:center;gap:var(--wb-s1);height:var(--wb-control);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-warning-bg);color:var(--wb-warning);font-weight:500}
+:where(.aham-workbench) .wb-msg-btn.is-error{background:var(--wb-danger-bg);color:var(--wb-danger)}
+:where(.aham-workbench) .wb-messages{display:grid;min-width:min(320px,calc(100vw - var(--wb-s6)));padding:var(--wb-s1) 0}
+:where(.aham-workbench) .wb-messages h3{margin:var(--wb-s2) var(--wb-s3) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:500}
+:where(.aham-workbench) .wb-messages button{display:grid;grid-template-columns:18px minmax(0,1fr);gap:2px var(--wb-s2);width:100%;padding:var(--wb-s1) var(--wb-s3);border:0;background:transparent;text-align:start}
+:where(.aham-workbench) .wb-messages button:is(:hover,:focus-visible){background:var(--wb-hover)}
+:where(.aham-workbench) .wb-messages small{grid-column:2;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-messages button>svg{width:14px;height:14px;margin-block-start:3px}
+:where(.aham-workbench) .wb-messages [data-severity=error]>svg{color:var(--wb-danger)}
+:where(.aham-workbench) .wb-messages [data-severity=warning]>svg{color:var(--wb-warning)}
+:where(.aham-workbench) .wb-confirm-text{margin:var(--wb-s2) var(--wb-s3)}
+:where(.aham-workbench) .wb-confirm-actions{display:flex;justify-content:flex-end;gap:var(--wb-s2);padding:0 var(--wb-s3) var(--wb-s2)}

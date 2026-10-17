@@ -1,0 +1,255 @@
+{
+  "$description": "控件和组合的机读契约。每份契约的 specification 指向 rules/ 里的条文，preview 指向示例页。",
+  "components": [
+    {
+      "slug": "button",
+      "name": "按钮",
+      "group": "控件",
+      "specification": "rules/3-控件.md#32-按钮",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "field",
+      "name": "输入框",
+      "group": "控件",
+      "specification": "rules/3-控件.md#33-输入框",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "choice",
+      "name": "单选组和复选框",
+      "group": "控件",
+      "specification": "rules/3-控件.md#34-选择控件选型",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "switch",
+      "name": "开关",
+      "group": "控件",
+      "specification": "rules/3-控件.md#34-选择控件选型",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "segmented-control",
+      "name": "分段按钮",
+      "group": "控件",
+      "specification": "rules/3-控件.md#34-选择控件选型",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "status",
+      "name": "状态",
+      "group": "控件",
+      "specification": "rules/3-控件.md#35-状态",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "tag",
+      "name": "标签",
+      "group": "控件",
+      "specification": "rules/3-控件.md#36-标签和分类",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "tooltip",
+      "name": "按钮提示",
+      "group": "控件",
+      "specification": "rules/7-键盘与命令.md#75-按钮提示",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "shell",
+      "name": "外框",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#41-外框",
+      "preview": "examples/shell.html"
+    },
+    {
+      "slug": "list-view",
+      "name": "列表",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#43-列表页"
+    },
+    {
+      "slug": "filter-bar",
+      "name": "筛选",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#44-筛选",
+      "preview": "examples/parts-filter.html"
+    },
+    {
+      "slug": "display-options",
+      "name": "显示选项",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#45-显示选项",
+      "preview": "examples/parts-filter.html"
+    },
+    {
+      "slug": "bulk-bar",
+      "name": "批量操作条",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#43-列表页"
+    },
+    {
+      "slug": "list-keyboard",
+      "name": "列表键盘",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#46-列表键盘和预览",
+      "preview": "examples/parts-detail.html"
+    },
+    {
+      "slug": "cell-picker",
+      "name": "单元格选择器",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#43-列表页",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "record-detail",
+      "name": "记录详情页",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#47-记录详情页",
+      "preview": "examples/parts-detail.html"
+    },
+    {
+      "slug": "properties-panel",
+      "name": "属性栏",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#47-记录详情页",
+      "preview": "examples/parts-detail.html"
+    },
+    {
+      "slug": "activity-feed",
+      "name": "动态",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#47-记录详情页",
+      "preview": "examples/parts-detail.html"
+    },
+    {
+      "slug": "settings-page",
+      "name": "设置页",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#48-设置页",
+      "preview": "examples/settings.html"
+    },
+    {
+      "slug": "create-dialog",
+      "name": "新建弹窗",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#42-页型",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "document-page",
+      "name": "单据页",
+      "group": "单据",
+      "specification": "rules/5-单据.md",
+      "preview": "examples/document.html"
+    },
+    {
+      "slug": "print-preview",
+      "name": "打印预览",
+      "group": "单据",
+      "specification": "rules/5-单据.md#511-打印",
+      "preview": "examples/print.html"
+    },
+    {
+      "slug": "file-upload",
+      "name": "附件上传",
+      "group": "单据",
+      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "preview": "examples/parts-files.html"
+    },
+    {
+      "slug": "file-viewer",
+      "name": "文件预览",
+      "group": "单据",
+      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "preview": "examples/parts-files.html"
+    },
+    {
+      "slug": "tree-table",
+      "name": "多层明细",
+      "group": "单据",
+      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "preview": "examples/parts-files.html"
+    },
+    {
+      "slug": "version-compare",
+      "name": "版本对比",
+      "group": "单据",
+      "specification": "rules/5-单据.md#512-附件多层明细和版本对比",
+      "preview": "examples/parts-files.html"
+    },
+    {
+      "slug": "strip",
+      "name": "提示条",
+      "group": "反馈",
+      "specification": "rules/3-控件.md#37-提示条",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "toast",
+      "name": "轻提示",
+      "group": "反馈",
+      "specification": "rules/6-反馈.md#62-轻提示",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "confirm-dialog",
+      "name": "确认弹窗",
+      "group": "反馈",
+      "specification": "rules/6-反馈.md#63-确认弹窗",
+      "preview": "examples/document.html"
+    },
+    {
+      "slug": "command-menu",
+      "name": "选择菜单",
+      "group": "键盘与命令",
+      "specification": "rules/7-键盘与命令.md#73-选择菜单",
+      "preview": "examples/parts-filter.html"
+    },
+    {
+      "slug": "command-palette",
+      "name": "命令面板",
+      "group": "键盘与命令",
+      "specification": "rules/7-键盘与命令.md#72-命令面板",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "context-menu",
+      "name": "右键菜单",
+      "group": "键盘与命令",
+      "specification": "rules/7-键盘与命令.md#74-右键菜单",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "shortcuts",
+      "name": "快捷键",
+      "group": "键盘与命令",
+      "specification": "rules/7-键盘与命令.md#71-快捷键表",
+      "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "ai-output",
+      "name": "AI 生成结果",
+      "group": "AI 协作",
+      "specification": "rules/8-AI协作.md#83-生成过程",
+      "preview": "examples/parts-ai.html"
+    },
+    {
+      "slug": "ai-suggestion",
+      "name": "AI 字段建议",
+      "group": "AI 协作",
+      "specification": "rules/8-AI协作.md#84-字段建议",
+      "preview": "examples/parts-ai.html"
+    },
+    {
+      "slug": "ai-confirm",
+      "name": "AI 修改确认",
+      "group": "AI 协作",
+      "specification": "rules/8-AI协作.md#85-改数据之前",
+      "preview": "examples/parts-ai.html"
+    }
+  ]
+}

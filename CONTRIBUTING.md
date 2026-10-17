@@ -1,45 +1,39 @@
-# 贡献指南 Contributing
+# 贡献指南
 
-感谢关注 Aham UI。本仓库是一套**供 AI 消费的设计规范 + 参考实现**，欢迎报告问题、提议组件、改进规范。
+Aham UI 是一套业务管理系统的界面规范和参考实现。问题和建议用 [Issue](https://github.com/Aham-AIAPP/aham-ui/issues/new/choose) 提交，写清期望的结果、实际的结果、所在文件和浏览器。
 
-## 报告问题 / 提议
+## 改动顺序
 
-- 用 [Issue 模板](https://github.com/Aham-AIAPP/aham-ui/issues/new/choose) 提交：**Bug 反馈**（设计/CSS 不一致）或 **功能提议**（新组件/规范）。
-- 描述清楚：期望 vs 实际、所在文件、浏览器/环境。
+1. **改取值**：只改 [tokens.json](tokens.json)。
+2. **改规则**：改 [rules/](rules/) 里对应的文件。规则变了先改规则，再改实现。
+3. **改实现**：样式改 `src/*.css`，行为改 `aham.js`，结构变了同步改 `components/*.json`。
+4. **重新生成**：运行 `node scripts/build.mjs` 生成 aham.css。aham.css 不手改。
+5. **同步示例**：规则涉及的示例页一起改。
+6. **记录**：在 [CHANGELOG.md](CHANGELOG.md) 的 `[Unreleased]` 下写本次改动。
 
-## 核心理念：单一事实源
+## 提交前检查
 
-所有数值的源头是 **`tokens.json`**，下游全部派生。**改动务必按此顺序**，保持四处一致：
+```bash
+node scripts/build.mjs --check
+node scripts/lint.mjs
+node --test
+```
 
-1. **`tokens.json`** — 改值（颜色/间距/字号/尺寸…）。这是唯一事实源。
-2. **`DESIGN.md`** — 改规则（八层规范，新组件归第 2 层）。
-3. **`aham-ui.css`** — 改参考实现（组件类 + 文本样式类 + 暗色）。
-4. **`CHANGELOG.md`** — 在 `[Unreleased]` 下记录本次改动。
+三条都要通过，CI 运行同样的三条。改了视觉的，按 [rules/9-验收.md](rules/9-验收.md) 9.4 截图核对亮色和暗色。
 
-PC 工作台选用 `.wb-pc` 时，按 [DESKTOP.md](design-system/DESKTOP.md) 的连续分区、上置编辑标签和标题区操作执行。生成样式使用 `scripts/build-workbench.mjs`。
+## 规则文字的写法
 
-## 铁律（提交前自查）
+- 标题用名词短语，不用问句。
+- 每条规则写到能核对：写数值、写条件、写例外的判断标准。
+- 同一个概念只用一个词，词表见 [rules/1-总则.md](rules/1-总则.md) 1.4。
+- `tests/structure.test.mjs` 会检查标题和禁用词。
 
-- 颜色/间距/圆角/控件尺寸**只用既定 token**，绝不裸写像素或自造色。
-- 单蓝 `#336EE8` 只点缀：logo、主操作、发送、焦点环、当前页签下划线、文字链接。主按钮底色用深一档 `#164EC3`。选中用扁平灰，不用蓝。
-- 卡片无边框无阴影（工作台单据正文的分区卡片例外，见 WORKBENCH §4.1）；表格只横线；状态 = 点 + 文字。
-- 单一无衬线（Inter Variable）+ 数字和代码用等宽（Berkeley Mono，未授权时 JetBrains Mono）。
-- **不靠颜色单独传达**：多类别用形状/文字/图标（见 `.speaker-marker`）。
-- 新增组件需在 `DESIGN.md` 第 2 层写明：原则 / 结构 / 变体 / 约束 / lint 自查。
+## 发版
 
-## 发版流程（维护者）
-
-每次"规范更新"按此走，保证 GitHub 门面规范、版本可追溯：
-
-1. 升版本号：`tokens.json` 的 `$meta.version` + `DESIGN.md` 头部 + `README.md` 版本行（遵 [SemVer](https://semver.org/lang/zh-CN/)：新增功能 → MINOR，修复 → PATCH，破坏性 → MAJOR）。
-2. 把 `CHANGELOG.md` 的 `[Unreleased]` 内容移入新版本号 + 当日日期 + `新增/变更/修复/移除` 分组。
-3. 提交并推送：`git commit && git push origin main`。
-4. 发布 Release（自动建 tag）：
-   ```sh
-   gh release create v6.1.0 --title "v6.1.0 — 一句话主题" --notes "<取自 CHANGELOG 该版本>" --latest
-   ```
-5. 封面 `assets/social-preview.png` **不印版本号**——版本由 README 的 Release 徽章动态显示。
+1. 改 `tokens.json` 的 `$meta.version` 和 `rules/1-总则.md` 开头的版本号。新增功能升次版本号，修复升修订号，不兼容的改动升主版本号。
+2. 把 CHANGELOG 的 `[Unreleased]` 移到新版本号下，写上日期。
+3. 提交并推送到 main，在 GitHub 上发布 Release。
 
 ## 许可
 
-贡献默认遵 [MIT](./LICENSE)。维护者：@Aham-AIAPP
+贡献的内容按 [MIT](LICENSE) 许可发布。维护者：@Aham-AIAPP
