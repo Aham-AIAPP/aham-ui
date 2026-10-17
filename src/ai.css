@@ -1,7 +1,7 @@
 :where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer,.wb-doc-group) .wb-risk.warning{color:var(--wb-ink)}
 :where(.aham-workbench) :is(.wb-context,.wb-comment,.wb-ai,.wb-composer,.wb-doc-group) .wb-risk.warning svg{color:var(--wb-warning)}
 /* AI assistance (rules/8-AI协作.md): the comment-block grammar — secondary surface, no border, no shadow, no AI colour. */
-:where(.aham-workbench) .wb-ai{display:grid;gap:var(--wb-s2);margin-block:var(--wb-s2);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-panel)}
+:where(.aham-workbench) .wb-ai{display:grid;gap:var(--wb-s2);margin-block:var(--wb-s2);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
 :where(.aham-workbench) .wb-ai-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-control)}
 :where(.aham-workbench) .wb-ai-mark{display:inline-flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-body);white-space:nowrap}
 :where(.aham-workbench) .wb-ai-mark svg{width:var(--wb-s3);height:var(--wb-s3)}
@@ -17,15 +17,15 @@
 :where(.aham-workbench) .wb-ai-sources a:hover{color:var(--wb-ink)}
 :where(.aham-workbench) .wb-ai-actions{display:flex;flex-wrap:wrap;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-ai-actions:empty{display:none}
-:where(.aham-workbench) .wb-ai-suggest{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s1) var(--wb-s2);margin-block:var(--wb-s1) var(--wb-s2);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius-sm);background:var(--wb-panel);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-ai-suggest{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s1) var(--wb-s2);margin-block:var(--wb-s1) var(--wb-s2);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius-sm);background:var(--wb-fill);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-ai-suggest>svg{width:var(--wb-s3);height:var(--wb-s3)}
 :where(.aham-workbench) .wb-ai-suggest strong{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-ai-reason{flex-basis:100%}
 :where(.aham-workbench) .wb-ai-suggest-actions{display:flex;gap:var(--wb-s1);margin-inline-start:calc(-1 * var(--wb-s2))}
 :where(.aham-workbench) .wb-ai-confirm h2{margin-block-start:var(--wb-s2)}
 :where(.aham-workbench) .wb-ai-changes{display:grid;gap:0;margin:var(--wb-s3) 0;padding:0;list-style:none}
-:where(.aham-workbench) .wb-ai-changes li{display:flex;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s2) 0;border-top:1px solid var(--wb-line)}
-:where(.aham-workbench) .wb-ai-changes li:last-child{border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-ai-changes li{display:flex;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s2) 0;border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-ai-changes li:last-child{border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-ai-changes li>span:first-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-ai-changes strong{font-weight:500}
 :where(.aham-workbench) .wb-dialog p.wb-ai-note{margin-block:0 var(--wb-s5)}

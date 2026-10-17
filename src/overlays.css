@@ -6,7 +6,7 @@
 /* Command menu (cmdk pattern): search input, listbox, highlight follows ↑↓ and the pointer. Reused by filters,
    property pickers and the command palette. */
 :where(.aham-workbench) .wb-command{display:flex;flex-direction:column;min-width:var(--wb-pop-min)}
-:where(.aham-workbench) .wb-command-input{display:flex;align-items:center;gap:var(--wb-s2);height:var(--wb-command-input);padding:0 var(--wb-s3);border-bottom:1px solid var(--wb-line);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-command-input{display:flex;align-items:center;gap:var(--wb-s2);height:var(--wb-command-input);padding:0 var(--wb-s3);border-bottom:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-command-input input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent;color:var(--wb-ink);outline:0}
 :where(.aham-workbench) .wb-command-list{max-height:300px;overflow-y:auto;margin:0;padding:var(--wb-s1);list-style:none;outline:0}
 :where(.aham-workbench) .wb-command-list [data-index]{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-nav-item);padding:0 var(--wb-s2);border-radius:var(--wb-radius-sm);cursor:default;user-select:none;white-space:nowrap}
@@ -26,7 +26,7 @@
 :where(.aham-workbench) [aria-checked=true] .wb-command-check{border-color:var(--wb-ink);background:var(--wb-ink)}
 :where(.aham-workbench) .wb-command-sep{height:1px;margin:var(--wb-s1) calc(-1 * var(--wb-s1));background:var(--wb-line)}
 :where(.aham-workbench) .wb-command-empty{padding:var(--wb-s5) var(--wb-s3);text-align:center;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-command-head{display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-command-input);padding:0 var(--wb-s2);border-bottom:1px solid var(--wb-line);font-weight:500}
+:where(.aham-workbench) .wb-command-head{display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-command-input);padding:0 var(--wb-s2);border-bottom:var(--wb-hairline) solid var(--wb-line);font-weight:500}
 :where(.aham-workbench) .wb-value-editor{gap:var(--wb-s3);padding-bottom:var(--wb-s3);min-width:280px}
 :where(.aham-workbench) .wb-value-editor>.wb-seg{margin:0 var(--wb-s3);align-self:flex-start}
 :where(.aham-workbench) .wb-value-inputs{display:flex;align-items:center;gap:var(--wb-s2);padding:0 var(--wb-s3)}
@@ -64,19 +64,19 @@
 :where(.aham-workbench) .wb-create-desc{min-height:var(--wb-s8);margin:var(--wb-s2) var(--wb-s4) 0;padding:0;border:0;background:transparent;resize:vertical;line-height:1.75;outline:0}
 :where(.aham-workbench) .wb-create-props{display:flex;flex-wrap:wrap;gap:var(--wb-s1);padding:var(--wb-s3) var(--wb-s4)}
 :where(.aham-workbench) .wb-create-props .is-empty{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-create-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s2) var(--wb-s4);border-top:1px solid var(--wb-line);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-create-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s2) var(--wb-s4);border-top:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-create-actions{display:flex;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-cell-picker{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:var(--wb-header-control);margin-inline-start:calc(-1 * var(--wb-s1));padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;white-space:nowrap}
 :where(.aham-workbench) .wb-cell-picker:hover{background:var(--wb-selected)}
 /* Form-type popover sections (display options) */
 :where(.aham-workbench) .wb-pop-title{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-pop-section{display:grid;gap:var(--wb-s2);padding:var(--wb-s3)}
-:where(.aham-workbench) .wb-pop-section+.wb-pop-section{border-top:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-pop-section+.wb-pop-section{border-top:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-pop-field{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3)}
 :where(.aham-workbench) .wb-pop-field>span{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-pop-field .wb-field{width:144px}
 :where(.aham-workbench) .wb-pop-row{display:flex;align-items:center;gap:var(--wb-s1);min-width:0}
-:where(.aham-workbench) .wb-pop-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-top:1px solid var(--wb-line);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-pop-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-top:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-dialog{width:min(var(--wb-dialog-width),calc(100vw - var(--wb-s6)));padding:var(--wb-s5);border:0;border-radius:var(--wb-radius-lg);background:var(--wb-pop-bg);color:var(--wb-ink);box-shadow:var(--wb-shadow-float)}
 :where(.aham-workbench) .wb-dialog::backdrop{background:var(--wb-scrim)}
 :where(.aham-workbench) .wb-dialog h2{font-size:var(--wb-text-base)}

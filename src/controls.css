@@ -1,5 +1,5 @@
 :where(.aham-workbench) .wb-icon-btn{display:inline-grid;place-items:center;flex:none;width:var(--wb-header-control);height:var(--wb-header-control);padding:0;border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-icon-btn:hover{background:var(--wb-panel);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-icon-btn:hover{background:var(--wb-hover);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-icon-btn[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-status{display:inline-flex;align-items:center;gap:var(--wb-dot);color:var(--wb-ink);white-space:nowrap}
 :where(.aham-workbench) .wb-status b{width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-muted)}
@@ -11,22 +11,22 @@
 :where(.aham-workbench) :is(.wb-meta,.wb-crumbs-meta){color:var(--wb-muted)}
 :where(.aham-workbench) .wb-mono{font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
-:where(.aham-workbench) .wb-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
+:where(.aham-workbench) .wb-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line-strong);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) a.wb-btn{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
 :where(.aham-workbench) .wb-btn:hover{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-btn.ghost{background:transparent;box-shadow:none;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-btn.ghost:hover{background:var(--wb-panel);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-btn.ghost:hover{background:var(--wb-hover);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.ghost[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.primary{background:var(--wb-action);box-shadow:none;color:var(--wb-on)}
 :where(.aham-workbench) .wb-btn.primary:hover{background:var(--wb-action-hover)}
 :where(.aham-workbench) button:disabled{opacity:.4;cursor:not-allowed}
 :where(.aham-workbench) .wb-link{border:0;background:transparent;color:var(--wb-muted);padding:var(--wb-s1);min-height:var(--wb-s6)}
-:where(.aham-workbench) .wb-tabs-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--wb-line);gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-tabs-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:var(--wb-hairline) solid var(--wb-line);gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-tabs{display:flex;gap:var(--wb-s5)}
 :where(.aham-workbench) .wb-tabs button{border:0;border-bottom:2px solid transparent;background:transparent;padding:var(--wb-s2) 0;color:var(--wb-muted);white-space:nowrap}
 :where(.aham-workbench) .wb-tabs button.active{color:var(--wb-ink);border-bottom-color:var(--wb-blue)}
-:where(.aham-workbench) .wb-seg{display:inline-flex;gap:var(--wb-s1);background:var(--wb-panel);padding:var(--wb-s1);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-seg{display:inline-flex;gap:var(--wb-s1);background:var(--wb-fill);padding:var(--wb-s1);border-radius:var(--wb-radius)}
 :where(.aham-workbench) .wb-seg button{background:transparent;border:0;border-radius:var(--wb-radius-sm);padding:var(--wb-s1) var(--wb-s2);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-seg button[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:0}
@@ -73,14 +73,14 @@
 :where(.aham-workbench) .wb-tag::before{content:'';width:6px;height:6px;border-radius:2px;background:var(--wb-cat,var(--wb-muted))}
 :where(.aham-workbench) .wb-tag.is-plain::before{display:none}
 /* Field: text box, select and textarea share one look, 32px with a 1px line; .sm is 28px for toolbars and popovers. */
-:where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:20px;height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:20px;height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line-strong);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-field.sm{height:var(--wb-header-control)}
 :where(.aham-workbench) select.wb-field{padding-inline-end:var(--wb-s1)}
 :where(.aham-workbench) textarea.wb-field{height:auto;min-height:calc(var(--wb-control) * 2);padding-block:5px;line-height:20px;resize:vertical}
 :where(.aham-workbench) .wb-field:hover{border-color:var(--wb-faint)}
 :where(.aham-workbench) .wb-field:focus{outline:0;border-color:var(--wb-blue);box-shadow:0 0 0 3px var(--wb-blue-bg)}
 :where(.aham-workbench) .wb-field[aria-invalid=true]{outline:0;border-color:var(--wb-danger)}
-:where(.aham-workbench) .wb-field:disabled{background:var(--wb-panel);color:var(--wb-faint);cursor:not-allowed}
+:where(.aham-workbench) .wb-field:disabled{background:var(--wb-fill);color:var(--wb-faint);cursor:not-allowed}
 :where(.aham-workbench) .wb-field::placeholder{color:var(--wb-faint)}
 :where(.aham-workbench) .wb-field.is-number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) input[type=checkbox],:where(.aham-workbench) input[type=radio]{width:14px;height:14px;margin:0;accent-color:var(--wb-ink)}

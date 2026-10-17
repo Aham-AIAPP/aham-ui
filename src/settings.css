@@ -1,6 +1,6 @@
 /* Settings (7.2 P5): Circle's settings kit — shell, section, rows — with Aham's line-separated rows instead of bordered cards. */
 :where(.aham-workbench) .wb-settings-layout{flex:1;min-height:0;display:grid;grid-template-columns:var(--wb-panel-narrow) minmax(0,1fr)}
-:where(.aham-workbench) .wb-settings-nav{min-height:0;overflow-y:auto;padding:var(--wb-s4) var(--wb-s2);border-inline-end:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-settings-nav{min-height:0;overflow-y:auto;padding:var(--wb-s4) var(--wb-s2);border-inline-end:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-settings-nav h2{padding:var(--wb-s3) var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-settings-nav ul{display:grid;gap:2px;margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-settings-nav a{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-nav-item);padding:0 var(--wb-s2);border-radius:var(--wb-radius);color:var(--wb-muted);text-decoration:none}
@@ -14,8 +14,8 @@
 :where(.aham-workbench) .wb-settings-section>header{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--wb-s4);margin-block-end:var(--wb-s3)}
 :where(.aham-workbench) .wb-settings-section h2{font-size:var(--wb-text-base);font-weight:500}
 :where(.aham-workbench) .wb-settings-section header p{margin-block-start:2px;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-settings-rows{border-top:1px solid var(--wb-line)}
-:where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:1px solid var(--wb-line)}
+:where(.aham-workbench) .wb-settings-rows{border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-setting>div:first-child{min-width:0}
 :where(.aham-workbench) .wb-setting-title{font-size:var(--wb-text-sm);font-weight:500}
 :where(.aham-workbench) .wb-setting-desc{margin-block-start:2px;color:var(--wb-muted)}

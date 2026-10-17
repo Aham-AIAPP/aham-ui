@@ -18,8 +18,8 @@ export const RUNTIME_VARS = ['level', 'cat'];
 
 // [foreground, background, minimum, what it is]. 4.5 for text, 3 for icons, focus rings and large text.
 export const PAIRS = [
-  ['ink', 'bg', 4.5, '正文'], ['ink', 'panel', 4.5, '面板上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
-  ['muted', 'bg', 4.5, '次要文字'], ['muted', 'panel', 4.5, '面板上的次要文字'],
+  ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和导航栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
+  ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '导航栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'],
   ['faint', 'bg', 2.5, '占位文字和空值（不承载信息）'],
   ['on', 'action', 4.5, '主按钮文字'],
   ['blue', 'bg', 3, '焦点框、链接图标'],
