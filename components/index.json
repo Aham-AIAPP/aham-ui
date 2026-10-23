@@ -58,6 +58,27 @@
       "preview": "examples/parts-actions.html"
     },
     {
+      "slug": "avatar",
+      "name": "头像",
+      "group": "控件",
+      "specification": "rules/3-控件.md#311-头像",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "stages",
+      "name": "阶段条和时间线",
+      "group": "控件",
+      "specification": "rules/3-控件.md#312-阶段条和时间线",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "next-step",
+      "name": "下一步提示条",
+      "group": "控件",
+      "specification": "rules/3-控件.md#313-下一步提示条",
+      "preview": "examples/controls.html"
+    },
+    {
       "slug": "shell",
       "name": "外框",
       "group": "外框和页面",
@@ -145,6 +166,34 @@
       "group": "外框和页面",
       "specification": "rules/4-页面.md#42-页型",
       "preview": "examples/parts-actions.html"
+    },
+    {
+      "slug": "fold",
+      "name": "记录折叠",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#48-记录详情页",
+      "preview": "examples/record.html"
+    },
+    {
+      "slug": "expand-list",
+      "name": "单行展开列表",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#43-列表页",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "nums",
+      "name": "概况数字行",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#413-概况数字行",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "form-page",
+      "name": "对外填报页",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#412-对外填报页",
+      "preview": "examples/form.html"
     },
     {
       "slug": "document-page",

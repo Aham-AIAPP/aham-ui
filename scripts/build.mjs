@@ -7,7 +7,7 @@ const read = f => readFileSync(new URL(f, root), 'utf8');
 export const tokens = JSON.parse(read('tokens.json'));
 
 // Style sources in cascade order. A later file may refine an earlier one, never the reverse.
-export const SOURCES = ['base', 'shell', 'controls', 'table', 'list', 'document', 'detail', 'overlays', 'settings', 'files', 'ai', 'print'];
+export const SOURCES = ['base', 'shell', 'controls', 'table', 'list', 'document', 'detail', 'overlays', 'settings', 'files', 'flow', 'ai', 'print'];
 // Groups whose leaves become --wb-* variables on .aham-workbench. color.dark and color.contrast-more are applied separately.
 export const VAR_GROUPS = ['font', 'text', 'space', 'radius', 'shadow', 'size', 'layout', 'breakpoint', 'z', 'motion'];
 

@@ -26,7 +26,9 @@
       "comment",
       "comment-head",
       "composer",
-      "send"
+      "send",
+      "composer-files",
+      "fold"
     ],
     "required": [
       "event",
@@ -35,14 +37,15 @@
   },
   "markup": {
     "event": "<div class=\"wb-activity-event\"><span class=\"wb-activity-icon\">[图标]</span><span><strong>林悦</strong> 把阶段改为「方案评估」</span><span class=\"wb-activity-time\">· 09-27</span></div>",
-    "comment": "<article class=\"wb-comment\"><div class=\"wb-comment-head\"><span class=\"wb-avatar-xs\">林</span><strong>林悦</strong><span>09-27</span></div><p>…</p></article>",
-    "composer": "<form class=\"wb-composer\"><textarea aria-label=\"评论内容\"></textarea><div class=\"wb-composer-foot\"><span>⌘ / Ctrl + Enter 发送</span><button type=\"submit\" class=\"wb-btn sm primary\">发送</button></div></form>"
+    "comment": "<article class=\"wb-comment\"><div class=\"wb-comment-head\"><span class=\"wb-avatar-xs\" data-cat=\"3\" aria-hidden=\"true\">林</span><strong>林悦</strong><span>09-27</span></div><p>…</p></article>",
+    "composer": "<form class=\"wb-composer\"><textarea aria-label=\"评论内容\"></textarea><ul class=\"wb-composer-files\"><li class=\"wb-composer-file\"><svg class=\"wb-cat-icon\" data-cat=\"5\" aria-hidden=\"true\">…</svg><span>点检表.pdf</span><span class=\"wb-file-meta\">1.2 MB</span><button type=\"button\" class=\"wb-icon-btn\" aria-label=\"移除 点检表.pdf\">…</button></li></ul><div class=\"wb-composer-foot\"><button type=\"button\" class=\"wb-btn sm ghost\">文件</button><button type=\"button\" class=\"wb-btn sm ghost\">录音</button><span>⌘ / Ctrl + Enter 发送</span><button type=\"submit\" class=\"wb-btn sm primary\">发送</button></div></form>"
   },
   "rules": [
-    "按时间正序，最新在底部，紧挨评论框",
+    "默认折叠在页尾一行（.wb-fold）；展开后按时间正序，最新在底部。评论框不随动态折叠",
     "事件：20px 圆形图标底 + 操作人（墨色 500）+ 描述 + 时间，整行次级文字色",
     "评论：次级底色块，圆角 6px（--wb-radius），内边距 12px，无边框",
-    "评论框：⌘ / Ctrl + Enter 或发送按钮提交，Enter 换行；空内容不可发送；组字时不提交；失败保留内容"
+    "评论框：⌘ / Ctrl + Enter 或发送按钮提交，Enter 换行；空内容不可发送；组字时不提交；失败保留内容",
+    "输入区：文字、文件和录音在同一个框里；文件可拖入，每个可移除；录音不转文字"
   ],
   "states": [
     "empty",

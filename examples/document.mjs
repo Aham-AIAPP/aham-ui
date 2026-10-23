@@ -87,7 +87,7 @@ function control(f) {
 }
 function readValue(f) {
   const v = state.fields[f.key];
-  if (!v) return f.required ? '<span class="wb-value is-missing">没填</span>' : '<span class="wb-value is-empty">–</span>';
+  if (!v) return f.required ? '<span class="wb-value is-missing">未填写</span>' : '<span class="wb-value is-empty">–</span>';
   return `<span class="wb-value${f.type === 'date' ? ' wb-mono' : ''}${canEdit() ? ' is-editable' : ''}">${esc(v)}</span>`;
 }
 function formRow(f) {
@@ -206,7 +206,7 @@ function publish() {
 // ── Edit, validate, save ─────────────────────────────────────────────────────
 function validate() {
   const out = [];
-  for (const c of doc.querySelectorAll('.wb-edit [required]')) if (!c.value.trim()) out.push({ control: c, severity: 'error', message: '必填，没填' });
+  for (const c of doc.querySelectorAll('.wb-edit [required]')) if (!c.value.trim()) out.push({ control: c, severity: 'error', message: '必填，未填写' });
   const from = doc.querySelector('[name=quoteDate]'), to = doc.querySelector('[name=validTo]');
   if (from.value && to.value && to.value < from.value) out.push({ control: to, severity: 'error', message: '要晚于报价日期' });
   for (const r of work) {
@@ -237,7 +237,7 @@ function submit() {
     const strip = $('#doc-strip');
     strip.hidden = false;
     strip.dataset.tone = 'danger';
-    strip.innerHTML = `${icon('error')}<span class="wb-grow">还有 ${missing.length} 项必填没填：${missing.map(f => esc(f.label)).join('、')}。补齐后再提交。</span><button type="button" class="wb-btn sm" data-fill="${missing[0].key}">去填写</button>`;
+    strip.innerHTML = `${icon('error')}<span class="wb-grow">还有 ${missing.length} 项必填未填写：${missing.map(f => esc(f.label)).join('、')}。补齐后再提交。</span><button type="button" class="wb-btn sm" data-fill="${missing[0].key}">去填写</button>`;
     return;
   }
   setStatus('review', state.status === 'returned' ? '重新提交审批' : '提交审批');

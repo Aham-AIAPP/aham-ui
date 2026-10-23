@@ -14,6 +14,7 @@
       "axis": "data-tone",
       "values": [
         "draft",
+        "wait",
         "info",
         "success",
         "warning",
@@ -27,7 +28,7 @@
   },
   "rules": [
     "6px 圆点加文字；文字用正文色",
-    "含义固定：success 完成、warning 要注意、danger 要处理、info 进行中、draft 草稿",
+    "含义固定：success 完成、warning 要注意、danger 要处理、info 进行中、wait 等待（信息色空心圆）、draft 草稿（次要文字色空心圆）",
     "列表、单据头、详情页同一写法"
   ],
   "accessibility": [

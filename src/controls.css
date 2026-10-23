@@ -50,12 +50,14 @@
 :where(.aham-workbench) :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button){position:relative}
 :where(.aham-workbench) :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button)::after{content:'';position:absolute;inset:calc((var(--wb-header-control) - var(--wb-hit)) / 2) 0}
 :where(.aham-workbench) .wb-icon-btn::after{inset:calc((var(--wb-header-control) - var(--wb-hit)) / 2)}
-/* Status: a 6px dot in the status colour plus words. Tones: neutral (default), info, success, warning, danger. */
+/* Status: a 6px dot in the status colour plus words. Tones: neutral (default), draft, wait, info, success, warning, danger. */
 :where(.aham-workbench) .wb-status[data-tone=info] b{background:var(--wb-info)}
 :where(.aham-workbench) .wb-status[data-tone=success] b{background:var(--wb-success)}
 :where(.aham-workbench) .wb-status[data-tone=warning] b{background:var(--wb-warning)}
 :where(.aham-workbench) .wb-status[data-tone=danger] b{background:var(--wb-danger)}
 :where(.aham-workbench) .wb-status[data-tone=draft] b{background:transparent;box-shadow:inset 0 0 0 1px var(--wb-muted)}
+/* Wait: a hollow ring in the info colour. The step is someone else's, or has not started (rules/2-视觉.md 2.2). */
+:where(.aham-workbench) .wb-status[data-tone=wait] b{background:transparent;box-shadow:inset 0 0 0 1.5px var(--wb-info)}
 :where(.aham-workbench) .wb-status svg{width:14px;height:14px}
 :where(.aham-workbench) .wb-status[data-tone=success] svg{color:var(--wb-success)}
 :where(.aham-workbench) .wb-status[data-tone=warning] svg{color:var(--wb-warning)}
@@ -77,11 +79,11 @@
 :where(.aham-workbench) .wb-field.sm{height:var(--wb-header-control)}
 :where(.aham-workbench) select.wb-field{padding-inline-end:var(--wb-s1)}
 :where(.aham-workbench) textarea.wb-field{height:auto;min-height:calc(var(--wb-control) * 2);padding-block:5px;line-height:20px;resize:vertical}
-:where(.aham-workbench) .wb-field:hover{border-color:var(--wb-faint)}
+:where(.aham-workbench) .wb-field:hover{border-color:var(--wb-muted)}
 :where(.aham-workbench) .wb-field:focus{outline:0;border-color:var(--wb-blue);box-shadow:0 0 0 3px var(--wb-blue-bg)}
 :where(.aham-workbench) .wb-field[aria-invalid=true]{outline:0;border-color:var(--wb-danger)}
 :where(.aham-workbench) .wb-field:disabled{background:var(--wb-fill);color:var(--wb-faint);cursor:not-allowed}
-:where(.aham-workbench) .wb-field::placeholder{color:var(--wb-faint)}
+:where(.aham-workbench) .wb-field::placeholder{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-field.is-number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
 :where(.aham-workbench) input[type=checkbox],:where(.aham-workbench) input[type=radio]{width:14px;height:14px;margin:0;accent-color:var(--wb-ink)}
 :where(.aham-workbench) .wb-choice{display:inline-flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-hit);cursor:pointer}

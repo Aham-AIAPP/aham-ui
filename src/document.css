@@ -57,7 +57,7 @@
    state on the left, 取消 and the primary button on the right. */
 :where(.aham-workbench) .wb-doc-foot{position:sticky;bottom:0;z-index:var(--wb-z-pop);display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-row-double);margin-block-start:var(--wb-s6);padding:0 var(--wb-page-gutter);background:var(--wb-bg);border-top:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-doc-foot>.wb-spacer{flex:1}
-:where(.aham-workbench) .wb-draft-state{color:var(--wb-faint)}
+:where(.aham-workbench) .wb-draft-state{color:var(--wb-muted)}
 :where(.aham-workbench) [data-mode=edit] .wb-document.is-page,:where(.aham-workbench) .wb-document.is-page[data-mode=edit]{padding-block-end:0}
 :where(.aham-workbench) .wb-doc-head.is-stuck{border-bottom-color:var(--wb-line)}
 :where(.aham-workbench) .wb-doc-title{display:grid;gap:var(--wb-s2);min-width:0}
@@ -91,7 +91,7 @@
 :where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
 :where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:20px;overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
-:where(.aham-workbench) .wb-form-hint{color:var(--wb-faint);font-size:var(--wb-text-xs);line-height:18px}
+:where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
 :where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}
 :where(.aham-workbench) .wb-form-value{position:relative;display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-control);min-width:0}
 :where(.aham-workbench) [data-mode=read] .wb-form-value{align-items:flex-start;padding-block:6px}
@@ -100,7 +100,7 @@
 :where(.aham-workbench) .wb-value.is-editable{cursor:text}
 :where(.aham-workbench) .wb-value.is-check{background:var(--wb-warning-mark);border-radius:var(--wb-radius-sm);padding-inline:var(--wb-s1);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 :where(.aham-workbench) .wb-value.is-missing{color:var(--wb-danger)}
-:where(.aham-workbench) .wb-value.is-empty{color:var(--wb-faint)}
+:where(.aham-workbench) .wb-value.is-empty{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-source{flex:none;width:20px;height:20px;display:inline-grid;place-items:center;border-radius:var(--wb-radius-sm);color:var(--wb-muted);cursor:help}
 :where(.aham-workbench) .wb-source:is(:hover,:focus-visible){background:var(--wb-hover);outline:none}
 :where(.aham-workbench) .wb-source svg{width:14px;height:14px}

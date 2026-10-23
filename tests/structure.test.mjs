@@ -110,3 +110,24 @@ test('a button carries text or an icon, never both (rules/3-控件.md 3.2)', () 
     }
   }
 });
+
+test('navigation names have two characters (rules/4-页面.md 4.1)', () => {
+  for (const page of files('examples/').filter(f => f.endsWith('.html'))) {
+    for (const [, name] of read(page).matchAll(/class="wb-nav-item"[^>]*>[\s\S]*?<span>([^<]+)<\/span>/g)) {
+      assert.equal([...name].length, 2, `${page}: ${name}`);
+    }
+  }
+});
+
+test('text never uses the faint grey; it is kept for icons and disabled text (rules/2-视觉.md 2.1)', () => {
+  const allowed = [/\.wb-field:disabled\{/];
+  for (const f of files('src/').filter(f => f.endsWith('.css'))) {
+    for (const line of read(f).split('\n').filter(l => /[^-]color:var\(--wb-faint\)/.test(l))) {
+      assert.ok(allowed.some(r => r.test(line)), `${f}: ${line.slice(0, 120)}`);
+    }
+  }
+});
+
+test('the old empty-value word is gone (rules/10-数据格式.md 10.5)', () => {
+  for (const f of [...RULES, 'aham.js', 'AGENTS.md', ...files('examples/')]) assert.ok(!read(f).includes('没填'), f);
+});

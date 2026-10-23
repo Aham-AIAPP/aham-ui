@@ -75,7 +75,7 @@ body { margin: 0; }
     <div class="pv-feed">
       <div class="wb-activity" role="log" aria-live="polite" id="pv-feed">
         <div class="wb-activity-event"><span class="wb-activity-icon" data-i="edit"></span><span><strong>林悦</strong> 创建了记录</span><span class="wb-activity-time">· 08-10</span></div>
-        <article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">周</span><strong>周航</strong><span>09-27</span></div><p>已约好下周二现场调研，先确认设备接口清单。</p></article>
+        <article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" data-cat="1" aria-hidden="true">周</span><strong>周航</strong><span>09-27</span></div><p>已约好下周二现场调研，先确认设备接口清单。</p></article>
         <div class="wb-activity-event"><span class="wb-activity-icon" data-i="refresh"></span><span><strong>林悦</strong> 把阶段从「需求调研」改为「方案评估」</span><span class="wb-activity-time">· 09-28</span></div>
       </div>
       <form class="wb-composer" id="pv-composer" aria-label="写评论"><textarea rows="2" aria-label="评论内容" placeholder="写评论…"></textarea><div class="wb-composer-foot"><span>⌘ / Ctrl + Enter 发送 · 预览不保存</span><button type="submit" class="wb-btn sm primary">发送</button></div></form>
@@ -109,7 +109,7 @@ createCommand(document.querySelector('#pv-picker > div'), { label: '阶段', sea
 
 initComposer(document.querySelector('#pv-composer'), {
   onSubmit: text => {
-    document.querySelector('#pv-feed').insertAdjacentHTML('beforeend', `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">林</span><strong>林悦</strong><span>刚刚</span></div><p>${escapeHtml(text)}</p></article>`);
+    document.querySelector('#pv-feed').insertAdjacentHTML('beforeend', `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" data-cat="4" aria-hidden="true">林</span><strong>林悦</strong><span>刚刚</span></div><p>${escapeHtml(text)}</p></article>`);
     return true;
   },
 });

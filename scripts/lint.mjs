@@ -13,14 +13,15 @@ const root = new URL('../', import.meta.url);
 const read = f => readFileSync(new URL(f, root), 'utf8');
 const list = (dir, ext) => readdirSync(new URL(dir, root)).filter(f => ext.some(e => f.endsWith(e))).map(f => `${dir}${f}`);
 
-// Variables set at run time rather than by tokens: --wb-level by the tree table, --wb-cat by [data-cat].
-export const RUNTIME_VARS = ['level', 'cat'];
+// Variables set at run time rather than by tokens: --wb-level by the tree table, --wb-cat by [data-cat], --wb-expand-cols by the page.
+export const RUNTIME_VARS = ['level', 'cat', 'expand-cols'];
 
 // [foreground, background, minimum, what it is]. 4.5 for text, 3 for icons, focus rings and large text.
 export const PAIRS = [
   ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和导航栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
   ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '导航栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'],
-  ['faint', 'bg', 3, '辅助说明、占位文字、空值'], ['faint', 'fill', 3, '小元素底色上的辅助说明'],
+  ['faint', 'bg', 3, '图标、禁用文字'], ['faint', 'fill', 3, '小元素底色上的图标'],
+  ['line-strong', 'bg', 3, '输入框和按钮的描边'], ['line-strong', 'canvas', 3, '外框上的控件描边'], ['line-strong', 'pop-bg', 3, '弹层里的控件描边'],
   ['on', 'action', 4.5, '主按钮文字'],
   ['blue', 'bg', 3, '焦点框、链接图标'],
   ['success', 'bg', 4.5, '成功文字'], ['warning', 'bg', 4.5, '警示文字'], ['danger', 'bg', 4.5, '错误文字'], ['info', 'bg', 4.5, '信息文字'],

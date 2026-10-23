@@ -41,7 +41,6 @@
 :where(.aham-workbench) .wb-comment-head strong{font-weight:500}
 :where(.aham-workbench) .wb-comment-head span:last-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-comment p{line-height:1.75}
-:where(.aham-workbench) .wb-avatar-xs{display:inline-grid;place-items:center;flex:none;width:var(--wb-activity-icon);height:var(--wb-activity-icon);border-radius:50%;background:var(--wb-selected);color:var(--wb-ink);font-size:var(--wb-body)}
 :where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
 :where(.aham-workbench) .wb-composer textarea{display:block;width:100%;min-height:var(--wb-s7);margin:0;padding:0;border:0;background:transparent;resize:vertical;line-height:1.75}
 :where(.aham-workbench) .wb-composer textarea:focus-visible{outline:0}

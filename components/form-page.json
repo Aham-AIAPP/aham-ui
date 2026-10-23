@@ -1,0 +1,36 @@
+{
+  "slug": "form-page",
+  "name": "对外填报页",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/form.html",
+  "reference": "examples/form.html",
+  "intent": "公司外部的人通过链接填写信息",
+  "specification": "rules/4-页面.md#412-对外填报页",
+  "classes": [
+    ".wb-form-page",
+    ".wb-form-page-brand",
+    ".wb-form-page-title",
+    ".wb-form-progress",
+    ".wb-form-page-foot"
+  ],
+  "markup": {
+    "page": "<div class=\"aham-workbench wb-bare\"><main class=\"wb-form-page\"><p class=\"wb-form-page-brand\">远川精密 · 设备需求填报</p><h1 class=\"wb-form-page-title\">…</h1><div class=\"wb-form-progress\"><ol aria-hidden=\"true\"><li data-state=\"done\"></li><li data-state=\"current\"></li><li></li></ol><p>第 2 步，共 3 步</p></div>…<div class=\"wb-form-page-foot\"><button class=\"wb-btn\">上一步</button><button class=\"wb-btn primary\">下一步</button></div></main></div>"
+  },
+  "rules": [
+    "单栏居中，最宽 720px",
+    "不显示导航、面包屑、目录和内部名称",
+    "分步时只放分段进度和「第 n 步，共 n 步」",
+    "只显示已复核的内容",
+    "390px 宽必须验收"
+  ],
+  "accessibility": [
+    "进度用文字写出第几步",
+    "手机上控件 44px，输入框 16px"
+  ],
+  "doNotInvent": [
+    "导航栏",
+    "内部字段名",
+    "未复核的 AI 判断"
+  ]
+}

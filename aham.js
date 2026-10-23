@@ -59,8 +59,11 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
   const remembered = () => { try { return localStorage.getItem(NAV_STORE) === 'expanded'; } catch { return false; } };
   const remember = open => { try { localStorage.setItem(NAV_STORE, open ? 'expanded' : 'collapsed'); } catch { /* storage blocked: keep in-page state only */ } };
   const isOpen = () => root.classList.contains('expanded');
+  // The labelled rail (.is-labeled, 72px) shows its names already and never expands on wide screens; it still opens as an overlay on narrow ones.
+  const labeled = root.classList.contains('is-labeled');
 
   function set(open, { persist = true, restoreFocus = false } = {}) {
+    if (labeled && !narrow.matches) open = false;
     root.classList.toggle('expanded', open);
     if (toggle) {
       toggle.setAttribute('aria-expanded', String(open));
@@ -699,7 +702,9 @@ export function initPropertyPickers({ container, fields, value, onChange }) {
     container.querySelectorAll('[data-prop]').forEach(b => {
       const key = b.dataset.prop, f = fields[key], v = values[key];
       b.classList.toggle('is-empty', !v);
-      b.innerHTML = `${f.icon ? icon(f.icon) : ''}<span>${escapeHtml(v || `设置${f.label}`)}</span>`;
+      // person: true shows people as an avatar plus the name (rules/3-控件.md 3.11).
+      const lead = f.person && v ? `<span class="wb-avatar-xs" data-cat="${avatarCat(v)}" aria-hidden="true">${escapeHtml([...v][0])}</span>` : f.icon ? icon(f.icon) : '';
+      b.innerHTML = `${lead}<span>${escapeHtml(v || `设置${f.label}`)}</span>`;
       b.setAttribute('aria-label', `${f.label}：${v || '未设置'}，点击修改`);
       b.setAttribute('aria-haspopup', 'dialog');
       if (!b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
@@ -1048,7 +1053,7 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
   }
   async function submit() {
     const t = name.value.trim();
-    if (!t) { err.textContent = '标题没填'; name.setAttribute('aria-invalid', 'true'); name.focus(); foot.hidden = false; confirm.hidden = true; return; }
+    if (!t) { err.textContent = '标题未填写'; name.setAttribute('aria-invalid', 'true'); name.focus(); foot.hidden = false; confirm.hidden = true; return; }
     const ok = await onSubmit({ title: t, description: desc.value.trim(), ...props });
     if (!ok) return;
     if (form.more.checked) { name.value = ''; desc.value = ''; err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
@@ -1101,7 +1106,7 @@ export function openConfirm({ root, title, text = '', confirm = '确认', danger
   dialog.querySelector('form').addEventListener('submit', e => {
     e.preventDefault();
     const value = field ? field.value.trim() : '';
-    if (field && !value) { err.textContent = `${reason.label}没填`; field.setAttribute('aria-invalid', 'true'); field.focus(); return; }
+    if (field && !value) { err.textContent = `${reason.label}未填写`; field.setAttribute('aria-invalid', 'true'); field.focus(); return; }
     finish();
     onConfirm?.(value);
   });
@@ -1145,7 +1150,7 @@ export function openFormDialog({ root, title, text = '', fields = [], submit = '
     e.preventDefault();
     const values = Object.fromEntries(fields.map(f => [f.key, el(f.key).value.trim()]));
     const missing = fields.filter(f => f.required && !values[f.key]);
-    fields.forEach(f => mark(f.key, missing.includes(f) ? `${f.label}没填` : ''));
+    fields.forEach(f => mark(f.key, missing.includes(f) ? `${f.label}未填写` : ''));
     if (missing.length) { el(missing[0].key).focus(); return; }
     const result = await onSubmit?.(values);
     if (result === true || result === undefined) { finish(); return; }
@@ -1419,6 +1424,43 @@ export function formatBytes(n) {
   while (n >= 1024 && i < units.length - 1) { n /= 1024; i++; }
   return `${i && n < 10 ? n.toFixed(1) : Math.round(n)} ${units[i]}`;
 }
+// ── People and files (rules/3-控件.md 3.11, rules/2-视觉.md 2.2) ─────────────────────────────
+// Category number 1–6 for a person's avatar, from the name, so the same person has the same colour on every page.
+export function avatarCat(name) {
+  let h = 0;
+  for (const ch of String(name ?? '').trim()) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+  return (h % 6) + 1;
+}
+// The avatar and the name. An empty name gives the dashed circle and「未指定」(rules/10-数据格式.md 10.5).
+export function personHTML(name, { size = 'xs', label = '未指定' } = {}) {
+  const n = String(name ?? '').trim(), cls = size === 'xs' ? 'wb-avatar-xs' : 'wb-avatar';
+  if (!n) return `<span class="wb-person is-none"><span class="${cls} is-none" aria-hidden="true"></span><span>${escapeHtml(label)}</span></span>`;
+  return `<span class="wb-person"><span class="${cls}" data-cat="${avatarCat(n)}" aria-hidden="true">${escapeHtml([...n][0])}</span><span>${escapeHtml(n)}</span></span>`;
+}
+// Category number for a file icon by type: PDF 5, Office 1, image 3, drawing 2. Other types get no colour (0).
+export const FILE_CATS = { 5: ['.pdf'], 1: ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.csv'], 3: ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.heic'], 2: ['.dwg', '.dxf', '.step', '.stp', '.iges', '.igs'] };
+export function fileCat(name) {
+  const s = String(name ?? ''), dot = s.lastIndexOf('.');
+  const ext = dot > 0 ? s.slice(dot).toLowerCase() : '';
+  for (const [cat, exts] of Object.entries(FILE_CATS)) if (exts.includes(ext)) return Number(cat);
+  return 0;
+}
+
+// ── Single-open list (rules/4-页面.md 4.3) ──────────────────────────────────────────────
+// Rows are <details> with one shared name, so the browser closes the open row when another opens. This also does it
+// for browsers without the name attribute, and keeps the opened row in view.
+export function initSingleExpand(list) {
+  const rows = () => [...list.querySelectorAll(':scope > details')];
+  const onToggle = e => {
+    const row = e.target;
+    if (!(row instanceof HTMLDetailsElement) || row.parentElement !== list || !row.open) return;
+    for (const other of rows()) if (other !== row && other.open) other.open = false;
+    row.scrollIntoView?.({ block: 'nearest' });
+  };
+  list.addEventListener('toggle', onToggle, true);
+  return { destroy: () => list.removeEventListener('toggle', onToggle, true), open: i => { const r = rows()[i]; if (r) r.open = true; } };
+}
+
 // Subtotals for a flat tree [{ id, parent }]: a leaf contributes value(row), a parent the sum of its children.
 // Pass integers (e.g. cents) so that the sums are exact. Returns Map id → total.
 export function treeTotals(rows, value) {

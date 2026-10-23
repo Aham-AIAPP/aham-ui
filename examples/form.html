@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>设备需求填报</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}</style></head>
+<body>
+<!-- Outside form page (rules/4-页面.md 4.12): one centred column for people outside the company. No navigation,
+     no internal names. The data is fictional and nothing is sent. Add ?theme=dark to check the dark colours. -->
+<div class="aham-workbench wb-bare" aria-label="对外填报页示例">
+<main class="wb-form-page" id="form-page">
+  <p class="wb-form-page-brand">远川精密 · 设备需求填报</p>
+  <h1 class="wb-form-page-title">设备改进需求</h1>
+  <div class="wb-form-progress">
+    <ol aria-hidden="true" id="progress"><li></li><li></li><li></li></ol>
+    <p id="progress-text" aria-live="polite"></p>
+  </div>
+  <form id="form" novalidate>
+    <section data-step="1" aria-labelledby="s1">
+      <h2 id="s1" class="wb-sr-only">联系方式</h2>
+      <div class="wb-form-grid">
+        <label class="wb-form-row"><span class="wb-form-label">企业名称<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" name="company" required autocomplete="organization" placeholder="营业执照上的全称"></label>
+        <label class="wb-form-row"><span class="wb-form-label">联系人<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" name="contact" required autocomplete="name"></label>
+        <label class="wb-form-row"><span class="wb-form-label">手机号<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field wb-mono" name="phone" required inputmode="numeric" autocomplete="tel" placeholder="11 位手机号"></label>
+      </div>
+    </section>
+    <section data-step="2" aria-labelledby="s2" hidden>
+      <h2 id="s2" class="wb-sr-only">要解决的问题</h2>
+      <div class="wb-form-grid">
+        <label class="wb-form-row is-full"><span class="wb-form-label">现在<span class="wb-form-required" aria-hidden="true">*</span></span><textarea class="wb-field" name="now" required rows="3" placeholder="现在怎么做、花多少时间、哪里容易出错"></textarea></label>
+        <label class="wb-form-row is-full"><span class="wb-form-label">希望<span class="wb-form-required" aria-hidden="true">*</span></span><textarea class="wb-field" name="want" required rows="3" placeholder="改进后希望达到的结果，能写数字的写数字"></textarea></label>
+        <div class="wb-form-row is-full"><span class="wb-form-label" id="files-label">样本资料</span>
+          <div class="wb-composer" id="files-box" aria-labelledby="files-label">
+            <ul class="wb-composer-files" id="files"></ul>
+            <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><span>表格、照片和图纸可以拖到这里，单个不超过 20 MB</span><input type="file" multiple hidden></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section data-step="3" aria-labelledby="s3" hidden>
+      <h2 id="s3" tabindex="-1">核对后提交</h2>
+      <dl id="summary"></dl>
+    </section>
+  </form>
+  <div class="wb-form-page-foot">
+    <button type="button" class="wb-btn" id="prev">上一步</button>
+    <button type="button" class="wb-btn primary" id="next">下一步</button>
+  </div>
+</main>
+</div>
+<script type="module" src="./form.mjs"></script>
+</body>
+</html>

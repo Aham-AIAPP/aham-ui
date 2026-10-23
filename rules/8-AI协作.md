@@ -1,6 +1,15 @@
 # 8 AI 协作
 
-AI 在管理系统里做三件事：起草、总结、建议。是否采纳由人决定，AI 不直接改数据。示例：[examples/record.html](../examples/record.html)、[examples/parts-ai.html](../examples/parts-ai.html)。示例文字由 `examples/ai-sample.mjs` 在本地模拟，没有连接任何模型服务。
+AI 在管理系统里做三件事：起草、总结、建议。是否采纳由人决定，AI 不直接改数据。
+
+本章按产品接入 AI 的方式适用：
+
+| 接入方式 | 适用的条文 |
+|---|---|
+| 界面里内嵌 AI：页面上有生成、起草、建议的入口 | 全章 |
+| AI 只通过外部接口读写数据（例如 MCP），界面里没有 AI 入口 | 8.2 标记和依据、8.5 改数据之前。8.1、8.3、8.4 不适用 |
+
+通过外部接口写入的内容，在界面上同样标出来源，并且由人确认后才生效。示例：[examples/record.html](../examples/record.html)、[examples/parts-ai.html](../examples/parts-ai.html)。示例文字由 `examples/ai-sample.mjs` 在本地模拟，没有连接任何模型服务。
 
 ## 8.1 入口
 
