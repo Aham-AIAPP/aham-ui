@@ -25,7 +25,7 @@ body{margin:0}
 <div class="aham-workbench wb-bare" data-theme="light" aria-label="控件总览">
 <main class="gl">
   <header class="gl-head">
-    <div><h1>控件</h1><p>按钮、输入、选择、状态、提示条和占位加载。行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
+    <div><h1>控件</h1><p>按钮、输入、选择、状态、提示条、人员、阶段、下一步、数字行、折叠和占位加载。行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
     <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button>
   </header>
 
@@ -55,7 +55,7 @@ body{margin:0}
       <label class="gl-field"><span>报价日期</span><input class="wb-field wb-mono" type="date" value="2026-09-30"></label>
       <div class="gl-field"><span id="g-amount">预算</span><span class="wb-edit"><input class="wb-field is-number" aria-labelledby="g-amount" inputmode="decimal" value="1,200,000"><span class="wb-unit">元</span></span></div>
       <label class="gl-field"><span>结算币种</span><select class="wb-field"><option>人民币 CNY</option><option>美元 USD</option></select></label>
-      <div class="gl-field" data-state="error"><span id="g-err">客户联系人<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" aria-labelledby="g-err" aria-invalid="true" placeholder="姓名 · 部门"><span class="wb-form-hint is-error">必填，没填</span></div>
+      <div class="gl-field" data-state="error"><span id="g-err">客户联系人<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" aria-labelledby="g-err" aria-invalid="true" placeholder="姓名 · 部门"><span class="wb-form-hint is-error">必填，未填写</span></div>
       <label class="gl-field"><span>负责人</span><input class="wb-field" value="林悦 · 华东销售组" disabled></label>
       <label class="gl-field" style="grid-column:1/-1"><span>备注</span><textarea class="wb-field" rows="3">设备接口以现场确认清单为准。</textarea></label>
     </div>
@@ -78,6 +78,7 @@ body{margin:0}
     <h2 id="g-status">状态和分类</h2>
     <div class="gl-row">
       <span class="wb-status" data-tone="draft"><b></b><span>草稿</span></span>
+      <span class="wb-status" data-tone="wait"><b></b><span>待确认</span></span>
       <span class="wb-status" data-tone="info"><b></b><span>审批中</span></span>
       <span class="wb-status" data-tone="warning"><b></b><span>已退回</span></span>
       <span class="wb-status" data-tone="success"><b></b><span>已生效</span></span>
@@ -101,7 +102,13 @@ body{margin:0}
       <svg class="wb-cat-icon" data-cat="5" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-calendar"/></svg>
       <svg class="wb-cat-icon" data-cat="6" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-settings"/></svg>
     </div>
-    <p class="gl-cap">状态用圆点加文字，颜色只表达状态。分类色只用在小图标和标签上，同一个分类在全系统用同一个序号。</p>
+    <ul class="wb-files" aria-label="文件类型色">
+      <li class="wb-file"><svg class="wb-cat-icon" data-cat="5" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span class="wb-file-name">设备点检表.pdf</span><span class="wb-file-meta">1.2 MB</span><span></span></li>
+      <li class="wb-file"><svg class="wb-cat-icon" data-cat="1" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span class="wb-file-name">产量月报.xlsx</span><span class="wb-file-meta">86 KB</span><span></span></li>
+      <li class="wb-file"><svg class="wb-cat-icon" data-cat="3" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span class="wb-file-name">现场照片.jpg</span><span class="wb-file-meta">2.4 MB</span><span></span></li>
+      <li class="wb-file"><svg class="wb-cat-icon" data-cat="2" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span class="wb-file-name">夹具总装.step</span><span class="wb-file-meta">5.8 MB</span><span></span></li>
+    </ul>
+    <p class="gl-cap">状态用圆点加文字，颜色只表达状态。等待和草稿都是空心圆：等待用信息色，草稿用次要文字色。分类色只用在小图标、标签、头像和文件类型上，同一个分类在全系统用同一个序号。</p>
   </section>
 
   <section aria-labelledby="g-strip">
@@ -110,9 +117,66 @@ body{margin:0}
       <div class="wb-strip" data-tone="info"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-info"/></svg><span class="wb-grow">已提交，等待销售负责人审批。审批期间不能修改。</span></div>
       <div class="wb-strip" data-tone="success"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-success"/></svg><span class="wb-grow">已生效，可以打印发给客户。</span></div>
       <div class="wb-strip" data-tone="warning"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-warning"/></svg><span class="wb-grow">王卓退回：折扣需要重新核算。修改后重新提交。</span></div>
-      <div class="wb-strip" data-tone="danger"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-error"/></svg><span class="wb-grow">还有 1 项必填没填：客户联系人。补齐后再提交。</span><button type="button" class="wb-btn sm">去填写</button></div>
+      <div class="wb-strip" data-tone="danger"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-error"/></svg><span class="wb-grow">还有 1 项必填未填写：客户联系人。补齐后再提交。</span><button type="button" class="wb-btn sm">去填写</button></div>
     </div>
     <p class="gl-cap">提示条放在单据头下面，说明整张单据的状态或阻断原因。单个字段的问题标在字段上，不放提示条。</p>
+  </section>
+
+  <section aria-labelledby="g-person">
+    <h2 id="g-person">人员</h2>
+    <div class="gl-row" id="people-demo"></div>
+    <p class="gl-cap">圆形头像写姓名第一个字，底色由姓名算出，同一个人全系统同色。没有指定时是虚线空心圆和「未指定」。</p>
+  </section>
+
+  <section aria-labelledby="g-stage">
+    <h2 id="g-stage">阶段条和时间线</h2>
+    <ol class="wb-stages" aria-label="阶段">
+      <li data-state="done" aria-label="收集：已完成，林悦 10-08"><span class="wb-stage-name"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-check"/></svg>收集</span><span class="wb-stage-sub">林悦 · 10-08</span></li>
+      <li data-state="done" aria-label="判断：已完成，王卓 10-12"><span class="wb-stage-name"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-check"/></svg>判断</span><span class="wb-stage-sub">王卓 · 10-12</span></li>
+      <li data-state="current" aria-label="立项：进行中，等陈思确认"><span class="wb-stage-name">立项</span><span class="wb-stage-sub">等陈思确认</span></li>
+      <li data-state="todo" aria-label="开发：没开始"><span class="wb-stage-name">开发</span><span class="wb-stage-sub"></span></li>
+      <li data-state="todo" aria-label="验证：没开始"><span class="wb-stage-name">验证</span><span class="wb-stage-sub"></span></li>
+      <li data-state="off" aria-label="上线：不进行"><span class="wb-stage-name">上线</span><span class="wb-stage-sub">本期不做</span></li>
+    </ol>
+    <div class="gl-grid">
+      <ol class="wb-timeline" aria-label="需求进度">
+        <li data-state="done"><span class="wb-timeline-name">提出</span><span class="wb-timeline-sub">林悦 · 10-12</span></li>
+        <li data-state="done"><span class="wb-timeline-name">双方确认</span><span class="wb-timeline-sub">王卓 · 10-14</span></li>
+        <li data-state="current"><span class="wb-timeline-name">开发</span><span class="wb-timeline-sub">陈思 · 计划 10-25</span></li>
+        <li data-state="todo"><span class="wb-timeline-name">验证</span></li>
+        <li data-state="todo"><span class="wb-timeline-name">已验证</span></li>
+      </ol>
+    </div>
+    <p class="gl-cap">阶段条画对象要走的流程，时间线画一个对象自己的流转。已完成打勾，进行中加粗，不进行的用虚线并划掉。</p>
+  </section>
+
+  <section aria-labelledby="g-next">
+    <h2 id="g-next">下一步提示条</h2>
+    <div class="wb-next" role="status"><span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>等王卓</strong>确认验收标准</span><span class="wb-next-date">计划 2026-10-25</span><button type="button" class="wb-btn sm">提醒</button></div>
+    <div class="wb-next" role="status"><span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>等你</strong>补充现场照片</span><span class="wb-next-date">计划 2026-10-24</span><button type="button" class="wb-btn sm">去补充</button></div>
+    <p class="gl-cap">标题下方一行，写等谁、做什么、计划日期。等的人是当前用户时写「你」。一页最多一条。</p>
+  </section>
+
+  <section aria-labelledby="g-nums">
+    <h2 id="g-nums">概况数字行</h2>
+    <ul class="wb-nums">
+      <li><a class="wb-num" href="#g-nums"><strong>12</strong><span>场景</span></a></li>
+      <li><a class="wb-num" href="#g-nums"><strong>4</strong><span>待确认</span></a></li>
+      <li><a class="wb-num" href="#g-nums"><strong>9</strong><span>需求</span></a></li>
+      <li><a class="wb-num" href="#g-nums"><strong>0</strong><span>逾期</span></a></li>
+    </ul>
+    <p class="gl-cap">每个数字是链接，点开对应的列表。不加外框和底色。</p>
+  </section>
+
+  <section aria-labelledby="g-fold">
+    <h2 id="g-fold">折叠和单行展开</h2>
+    <details class="wb-fold"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><strong>修改记录</strong><span class="wb-fold-sum">8 条 · 林悦创建 · 最近 10-16</span></summary><div class="wb-fold-body"><div class="wb-activity"><div class="wb-activity-event"><span class="wb-activity-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-edit"/></svg></span><span><strong>王卓</strong> 把发生频次改为「每天」</span><span class="wb-activity-time">· 10-16</span></div></div></div></details>
+    <div class="wb-expand" id="expand-demo" style="--wb-expand-cols:3">
+      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>设备点检记录自动生成</span><span>立项</span><span class="wb-mono">3 / 1</span><span>等陈思</span></summary><div class="wb-expand-body">需求 3 条，验证 1 条。</div></details>
+      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>来料检验报告比对</span><span>判断</span><span class="wb-mono">0 / 0</span><span>等你</span></summary><div class="wb-expand-body">还没有需求。</div></details>
+      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>排产异常提醒</span><span>开发</span><span class="wb-mono">5 / 2</span><span>等王卓</span></summary><div class="wb-expand-body">需求 5 条，验证 2 条。</div></details>
+    </div>
+    <p class="gl-cap">动态、修改记录和版本记录默认折叠在页尾一行。列表同时只展开一行，展开新行时上一行收起。</p>
   </section>
 
   <section aria-labelledby="g-skeleton">
@@ -127,8 +191,11 @@ body{margin:0}
 </main>
 </div>
 <script type="module">
-import { initTheme, initTooltips } from '../aham.js';
+import { initTheme, initTooltips, personHTML, initSingleExpand } from '../aham.js';
 const root = document.querySelector('.aham-workbench');
+root.querySelector('#people-demo').innerHTML = ['林悦', '王卓', '陈思', '李成', ''].map(n => personHTML(n)).join('')
+  + `<span class="wb-people"><span class="wb-people-faces">${['林悦', '王卓', '陈思'].map(n => personHTML(n).match(/<span class="wb-avatar-xs[^>]*>[^<]*<\/span>/)[0].replace('aria-hidden="true"', `title="${n}" aria-hidden="true"`)).join('')}</span><span>林悦、王卓、陈思</span></span>`;
+initSingleExpand(root.querySelector('#expand-demo'));
 initTheme(root);
 initTooltips(root);
 root.querySelectorAll('.wb-seg').forEach(seg => seg.addEventListener('click', e => {

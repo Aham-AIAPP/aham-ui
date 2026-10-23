@@ -1,0 +1,54 @@
+{
+  "slug": "avatar",
+  "name": "头像",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "preview": "examples/controls.html",
+  "intent": "显示一个人：圆形头像加姓名",
+  "specification": "rules/3-控件.md#311-头像",
+  "api": "personHTML(name, { size: 'xs' | 'md', label: '未指定' }) → HTML；avatarCat(name) → 1–6",
+  "classes": [
+    ".wb-person",
+    ".wb-avatar",
+    ".wb-avatar-xs",
+    ".wb-people",
+    ".wb-people-faces"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "size",
+      "values": [
+        "wb-avatar（24px）",
+        "wb-avatar-xs（20px）"
+      ]
+    },
+    {
+      "axis": "state",
+      "values": [
+        "有人员",
+        "is-none（未指定）"
+      ]
+    }
+  ],
+  "markup": {
+    "person": "<span class=\"wb-person\"><span class=\"wb-avatar-xs\" data-cat=\"3\" aria-hidden=\"true\">林</span><span>林悦</span></span>",
+    "none": "<span class=\"wb-person is-none\"><span class=\"wb-avatar-xs is-none\" aria-hidden=\"true\"></span><span>未指定</span></span>",
+    "people": "<span class=\"wb-people\"><span class=\"wb-people-faces\"><span class=\"wb-avatar-xs\" data-cat=\"3\" title=\"林悦\" aria-hidden=\"true\">林</span><span class=\"wb-avatar-xs\" data-cat=\"5\" title=\"王卓\" aria-hidden=\"true\">王</span></span><span>林悦、王卓</span></span>"
+  },
+  "rules": [
+    "负责人、评论人、指派人、提问人、确认人都用这个写法",
+    "头像写姓名第一个字，底色是分类色的 18%，序号由 avatarCat() 从姓名算出",
+    "未指定：虚线空心圆加「未指定」",
+    "多人叠放，姓名用顿号连接，超过 3 人写「等 N 人」"
+  ],
+  "accessibility": [
+    "头像 aria-hidden，姓名写成文字",
+    "只有头像时带 title 写出姓名"
+  ],
+  "doNotInvent": [
+    "随机颜色",
+    "只有头像没有姓名",
+    "方形头像"
+  ]
+}

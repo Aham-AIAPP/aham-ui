@@ -1,0 +1,31 @@
+{
+  "slug": "next-step",
+  "name": "下一步提示条",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/controls.html",
+  "intent": "标题下方一行，写现在等谁、做什么、计划日期",
+  "specification": "rules/3-控件.md#313-下一步提示条",
+  "classes": [
+    ".wb-next",
+    ".wb-next-date"
+  ],
+  "markup": {
+    "next": "<div class=\"wb-next\" role=\"status\"><span class=\"wb-status\" data-tone=\"wait\"><b></b></span><span class=\"wb-grow\"><strong>等王卓</strong>确认验收标准</span><span class=\"wb-next-date\">计划 2026-10-25</span><button type=\"button\" class=\"wb-btn sm\">提醒</button></div>"
+  },
+  "rules": [
+    "写等谁、做什么、计划日期",
+    "等的人是当前用户时写「你」",
+    "最多一个按钮",
+    "没有在等的人时不显示",
+    "一页最多一条"
+  ],
+  "accessibility": [
+    "role=\"status\""
+  ],
+  "doNotInvent": [
+    "「待处理」这类不指明人的说法",
+    "多条下一步叠放",
+    "可关闭的下一步提示条"
+  ]
+}

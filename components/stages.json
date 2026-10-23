@@ -1,0 +1,47 @@
+{
+  "slug": "stages",
+  "name": "阶段条和时间线",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/controls.html",
+  "intent": "阶段条画一个对象要走的多阶段流程；时间线画一个对象自己的流转记录",
+  "specification": "rules/3-控件.md#312-阶段条和时间线",
+  "classes": [
+    ".wb-stages",
+    ".wb-stage-name",
+    ".wb-stage-sub",
+    ".wb-timeline",
+    ".wb-timeline-name",
+    ".wb-timeline-sub"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-state",
+      "values": [
+        "done",
+        "current",
+        "todo",
+        "off"
+      ]
+    }
+  ],
+  "markup": {
+    "stages": "<ol class=\"wb-stages\" aria-label=\"阶段\"><li data-state=\"done\" aria-label=\"收集：已完成，林悦 10-08\"><span class=\"wb-stage-name\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-check\"/></svg>收集</span><span class=\"wb-stage-sub\">林悦 · 10-08</span></li><li data-state=\"current\" aria-label=\"判断：进行中，等王卓\"><span class=\"wb-stage-name\">判断</span><span class=\"wb-stage-sub\">等王卓</span></li><li data-state=\"todo\" aria-label=\"立项：没开始\"><span class=\"wb-stage-name\">立项</span><span class=\"wb-stage-sub\"></span></li></ol>",
+    "timeline": "<ol class=\"wb-timeline\" aria-label=\"进度\"><li data-state=\"done\"><span class=\"wb-timeline-name\">提出</span><span class=\"wb-timeline-sub\">林悦 · 10-12</span></li><li data-state=\"current\"><span class=\"wb-timeline-name\">双方确认</span><span class=\"wb-timeline-sub\">等王卓</span></li><li data-state=\"todo\"><span class=\"wb-timeline-name\">开发</span></li></ol>"
+  },
+  "rules": [
+    "每段写阶段名和一行人和日期",
+    "已完成打勾，进行中加粗加粗线，不进行用虚线并划掉",
+    "只画能走完的阶段，最多 8 段",
+    "时间线竖排，放在右侧属性栏"
+  ],
+  "accessibility": [
+    "每段 aria-label 写「阶段名：状态，说明」",
+    "状态不只靠颜色"
+  ],
+  "doNotInvent": [
+    "箭头形的步骤块",
+    "永远走不完的阶段",
+    "用分类色区分阶段"
+  ]
+}

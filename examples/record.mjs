@@ -1,5 +1,5 @@
 // Record detail sample: composes the Aham UI detail patterns with fictional demo data.
-import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled} from '../aham.js';
+import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './list-model.mjs';
 import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
 
@@ -38,22 +38,27 @@ function renderMain() {
         <li><span class="wb-mono">QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
       </ul>
     </section>
-    <hr class="wb-divider">
     <section class="wb-detail-section" aria-labelledby="activity-title">
-      <div class="wb-section-heading"><h2 id="activity-title">动态</h2></div>
-      <div class="wb-activity" id="activity" role="log" aria-live="polite"></div>
+      <h2 id="activity-title" class="wb-sr-only">动态</h2>
+      <details class="wb-fold" id="activity-fold"><summary>${icon('chevron-right')}<strong>动态</strong><span class="wb-fold-sum" id="activity-sum"></span></summary>
+        <div class="wb-fold-body"><div class="wb-activity" id="activity" role="log" aria-live="polite"></div></div>
+      </details>
       <div id="ai-draft-slot"></div>
       <form class="wb-composer" id="composer" aria-label="写评论">
         <textarea rows="2" aria-label="评论内容" placeholder="写评论…" maxlength="2000"></textarea>
-        <div class="wb-composer-foot"><span>⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
+        <ul class="wb-composer-files" id="composer-files" hidden></ul>
+        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span>⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
+        <input type="file" multiple hidden>
       </form>
     </section>`;
   renderActivity();
 }
 function renderActivity() {
+  const creator = activity.find(a => a.text === '创建了记录')?.who ?? activity[0].who;
+  $('#activity-sum').textContent = `${activity.length} 条 · ${creator}创建 · 最近 ${activity.at(-1).when}`;
   $('#activity').innerHTML = activity.map(a => a.kind === 'event'
     ? `<div class="wb-activity-event"><span class="wb-activity-icon">${icon(a.icon)}</span><span><strong>${esc(a.who)}</strong> ${esc(a.text)}</span><span class="wb-activity-time">· ${esc(a.when)}</span></div>`
-    : `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" aria-hidden="true">${esc(a.who.slice(0, 1))}</span><strong>${esc(a.who)}</strong><span>${esc(a.when)}</span>${a.ai ? `<span class="wb-ai-mark">${icon('ai')}<span>${esc(a.ai)}</span></span>` : ''}</div>${a.text.split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join('')}</article>`).join('');
+    : `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" data-cat="${avatarCat(a.who)}" aria-hidden="true">${esc([...a.who][0])}</span><strong>${esc(a.who)}</strong><span>${esc(a.when)}</span>${a.ai ? `<span class="wb-ai-mark">${icon('ai')}<span>${esc(a.ai)}</span></span>` : ''}</div>${a.text.split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join('')}</article>`).join('');
 }
 function renderMeta() {
   $('.wb-detail-meta').innerHTML = `<span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
@@ -96,7 +101,7 @@ function applyChange(key, value, before, { undoable = true } = {}) {
 }
 const pickers = initPropertyPickers({
   root, container: $('#record-props'),
-  fields: { stage: { label: '阶段', options: STAGES }, owner: { label: '负责人', options: OWNERS, icon: 'user' }, industry: { label: '行业', options: INDUSTRIES } },
+  fields: { stage: { label: '阶段', options: STAGES }, owner: { label: '负责人', options: OWNERS, icon: 'user', person: true }, industry: { label: '行业', options: INDUSTRIES } },
   value: { stage: record.stage, owner: record.owner, industry: record.industry },
   onChange: (key, value, before) => applyChange(key, value, before),
 });
@@ -132,13 +137,35 @@ registerShortcut({ keys: 'escape', label: '关闭最上层的浮层', group: '�
 initComposer($('#composer'), {
   onSubmit: text => {
     const form = $('#composer');
-    activity.push({ kind: 'comment', who: ME, text, when: '刚刚', ai: form.dataset.ai ? `${form.dataset.ai}，${ME} 确认后发送` : null });
+    const attached = files.length ? `\n\n附件：${files.map(f => f.name).join('、')}` : '';
+    activity.push({ kind: 'comment', who: ME, text: text + attached, when: '刚刚', ai: form.dataset.ai ? `${form.dataset.ai}，${ME} 确认后发送` : null });
     delete form.dataset.ai;
+    files.length = 0;
+    renderFiles();
     renderActivity();
+    $('#activity-fold').open = true;
     return true;
   },
 });
 $('#composer textarea').addEventListener('input', e => { if (!e.target.value.trim()) delete $('#composer').dataset.ai; });
+
+// Files and recordings live in the composer box (rules/3-控件.md 3.14). Recording has no reference implementation.
+const files = [];
+function renderFiles() {
+  const list = $('#composer-files');
+  list.hidden = !files.length;
+  list.innerHTML = files.map((f, i) => `<li class="wb-composer-file"><svg class="wb-cat-icon" data-cat="${fileCat(f.name)}" aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span>${esc(f.name)}</span><span class="wb-file-meta">${formatBytes(f.size)}</span><button type="button" class="wb-icon-btn" data-remove="${i}" aria-label="移除 ${esc(f.name)}" data-tooltip="移除">${icon('close')}</button></li>`).join('');
+}
+initDropZone($('#composer'), { maxSize: 20 * 1024 * 1024, onFiles: items => { files.push(...items.filter(i => !i.error)); renderFiles(); } });
+$('#composer-files').addEventListener('click', e => {
+  const b = e.target.closest('[data-remove]');
+  if (!b) return;
+  const [gone] = files.splice(Number(b.dataset.remove), 1);
+  renderFiles();
+  toast(`已移除 ${gone.name}`);
+  $('#composer textarea').focus();
+});
+$('#composer [data-action="record-audio"]').addEventListener('click', () => toast('录音在示例页没有实现：产品保存原始音频，不转文字'));
 
 // ── AI assistance (rules/8-AI协作.md). Texts come from ai-sample.mjs; nothing leaves the page. ────────────────────────
 const aiBlocks = {};

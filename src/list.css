@@ -49,7 +49,7 @@
 :where(.aham-workbench) .wb-chip>:last-child{border-start-end-radius:inherit;border-end-end-radius:inherit}
 /* Worklist row actions (rules/4-页面.md 4.2): text buttons at the row end; a reason for a disabled one sits before it. */
 :where(.aham-workbench) .wb-row-buttons{display:flex;align-items:center;justify-content:flex-end;gap:var(--wb-s2)}
-:where(.aham-workbench) .wb-row-note{color:var(--wb-faint);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+:where(.aham-workbench) .wb-row-note{color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 :where(.aham-workbench) .wb-row-link{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-row-link:hover{text-decoration:underline}
 :where(.aham-workbench) .wb-list-table :is(th,td):first-child:not(.wb-check){padding-inline-start:var(--wb-s4)}

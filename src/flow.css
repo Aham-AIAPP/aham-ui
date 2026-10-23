@@ -1,0 +1,92 @@
+/* People, progress and the outside form (rules/3-控件.md 3.11–3.13, rules/4-页面.md 4.12–4.14). Added in 8.1. */
+/* People: a round avatar with the first character on a category tint, picked from the name by avatarCat(). */
+:where(.aham-workbench) :is(.wb-avatar,.wb-avatar-xs){display:inline-grid;place-items:center;flex:none;border-radius:50%;background:color-mix(in srgb,var(--wb-cat,var(--wb-muted)) 18%,var(--wb-bg));color:var(--wb-ink);font-weight:500;line-height:1}
+:where(.aham-workbench) .wb-avatar{width:var(--wb-avatar);height:var(--wb-avatar);font-size:var(--wb-text-xs)}
+:where(.aham-workbench) .wb-avatar-xs{width:var(--wb-activity-icon);height:var(--wb-activity-icon);font-size:var(--wb-text-xs)}
+:where(.aham-workbench) :is(.wb-avatar,.wb-avatar-xs).is-none{background:transparent;border:1px dashed var(--wb-muted)}
+:where(.aham-workbench) .wb-person{display:inline-flex;align-items:center;gap:var(--wb-s2);min-width:0;white-space:nowrap}
+:where(.aham-workbench) .wb-person.is-none{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-people{display:inline-flex;align-items:center;gap:var(--wb-s2);min-width:0}
+:where(.aham-workbench) .wb-people-faces{display:inline-flex}
+:where(.aham-workbench) .wb-people-faces>*+*{margin-inline-start:calc(-1 * var(--wb-s1));box-shadow:0 0 0 2px var(--wb-bg)}
+/* Stage bar: one segment per stage. Done carries a check, current is bold on a thicker line, skipped is dashed and struck. */
+:where(.aham-workbench) .wb-stages{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--wb-s1);margin:0;padding:0;list-style:none}
+:where(.aham-workbench) .wb-stages>li{display:grid;align-content:start;gap:2px;min-width:0;padding-block-start:var(--wb-s2);border-top:var(--wb-s1) solid var(--wb-line)}
+:where(.aham-workbench) .wb-stage-name{display:flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-stage-name svg{width:var(--wb-s3);height:var(--wb-s3);stroke-width:2}
+:where(.aham-workbench) .wb-stage-sub{color:var(--wb-muted);font-size:var(--wb-text-xs);overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-stages>li[data-state=done]{border-top-color:var(--wb-success)}
+:where(.aham-workbench) .wb-stages>li[data-state=done] .wb-stage-name{color:var(--wb-ink)}
+:where(.aham-workbench) .wb-stages>li[data-state=done] .wb-stage-name svg{color:var(--wb-success)}
+:where(.aham-workbench) .wb-stages>li[data-state=current]{border-top:calc(var(--wb-s1) + 2px) solid var(--wb-info);padding-block-start:calc(var(--wb-s2) - 2px)}
+:where(.aham-workbench) .wb-stages>li[data-state=current] .wb-stage-name{color:var(--wb-ink);font-weight:600}
+:where(.aham-workbench) .wb-stages>li[data-state=off]{border-top-style:dashed}
+:where(.aham-workbench) .wb-stages>li[data-state=off] .wb-stage-name{text-decoration:line-through;text-decoration-thickness:1px}
+/* Next step: one line under the title that says who the page waits for, what, and by when, with the button for that step. */
+:where(.aham-workbench) .wb-next{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s1) var(--wb-s1) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
+:where(.aham-workbench) .wb-next>.wb-grow{flex:1;min-width:0}
+:where(.aham-workbench) .wb-next strong{font-weight:500}
+:where(.aham-workbench) .wb-next-date{color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;white-space:nowrap}
+/* Timeline: the progress of one object, top to bottom, in the side column. */
+:where(.aham-workbench) .wb-timeline{display:grid;margin:0;padding:0;list-style:none}
+:where(.aham-workbench) .wb-timeline>li{position:relative;display:grid;gap:2px;padding:0 0 var(--wb-s4) var(--wb-s5)}
+:where(.aham-workbench) .wb-timeline>li::before{content:'';position:absolute;top:7px;left:0;width:var(--wb-s2);height:var(--wb-s2);border-radius:50%;box-sizing:border-box;border:1.5px solid var(--wb-muted);background:var(--wb-bg)}
+:where(.aham-workbench) .wb-timeline>li:not(:last-child)::after{content:'';position:absolute;top:19px;bottom:3px;left:3.5px;width:1px;background:var(--wb-line)}
+:where(.aham-workbench) .wb-timeline>li[data-state=done]::before{border-color:var(--wb-success);background:var(--wb-success)}
+:where(.aham-workbench) .wb-timeline>li[data-state=current]::before{border-color:var(--wb-info);background:var(--wb-info)}
+:where(.aham-workbench) .wb-timeline>li[data-state=current] .wb-timeline-name{font-weight:600}
+:where(.aham-workbench) .wb-timeline>li[data-state=todo] .wb-timeline-name{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-timeline-sub{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+/* Number row: a few counts that open their lists. No frame, no tile. */
+:where(.aham-workbench) .wb-nums{display:flex;flex-wrap:wrap;gap:var(--wb-s2) var(--wb-s6);margin:0;padding:0;list-style:none}
+:where(.aham-workbench) .wb-num{display:grid;gap:2px;color:inherit;text-decoration:none}
+:where(.aham-workbench) .wb-num strong{font-family:var(--wb-mono);font-feature-settings:normal;font-size:var(--wb-title);font-weight:500;line-height:1.2}
+:where(.aham-workbench) .wb-num span{color:var(--wb-muted)}
+:where(.aham-workbench) a.wb-num:hover span{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
+/* Fold: records (activity, edit history, versions) close into one line at the end of the page. */
+:where(.aham-workbench) .wb-fold{border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-fold>summary{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-row);cursor:pointer;list-style:none;color:var(--wb-ink)}
+:where(.aham-workbench) .wb-fold>summary::-webkit-details-marker{display:none}
+:where(.aham-workbench) .wb-fold>summary>svg{color:var(--wb-muted);transition:transform var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-fold[open]>summary>svg{transform:rotate(90deg)}
+:where(.aham-workbench) .wb-fold>summary strong{font-weight:500}
+:where(.aham-workbench) .wb-fold-sum{color:var(--wb-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+:where(.aham-workbench) .wb-fold-body{padding-block:var(--wb-s1) var(--wb-s3)}
+/* Single-open list: each row is a <details> sharing one name, so opening a row closes the one before. */
+:where(.aham-workbench) .wb-expand{border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-expand>details{border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-expand>details>summary{display:grid;grid-template-columns:var(--wb-s4) minmax(0,2fr) repeat(var(--wb-expand-cols,3),minmax(0,1fr));align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s2);cursor:pointer;list-style:none}
+:where(.aham-workbench) .wb-expand>details>summary::-webkit-details-marker{display:none}
+:where(.aham-workbench) .wb-expand>details>summary:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-expand>details>summary>svg{color:var(--wb-muted);transition:transform var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-expand>details[open]>summary>svg{transform:rotate(90deg)}
+:where(.aham-workbench) .wb-expand>details>summary>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-expand-body{padding:var(--wb-s2) var(--wb-s2) var(--wb-s4) calc(var(--wb-s4) + var(--wb-s5))}
+/* Composer files: text, files and recordings in one box; files can be dropped on it, each piece can be removed. */
+:where(.aham-workbench) .wb-composer[data-drag=over]{box-shadow:0 0 0 2px var(--wb-muted)}
+:where(.aham-workbench) .wb-composer-files{display:flex;flex-wrap:wrap;gap:var(--wb-s2);margin:0;padding:0;list-style:none}
+:where(.aham-workbench) .wb-composer-file{display:inline-flex;align-items:center;gap:var(--wb-s2);max-width:100%;min-height:var(--wb-header-control);padding:0 0 0 var(--wb-s2);border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line)}
+:where(.aham-workbench) .wb-composer-file>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-composer-file>.wb-file-meta{flex:none}
+/* Outside form page: one centred column for people outside the company. No navigation, no internal names. */
+:where(.aham-workbench) .wb-form-page{max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6) var(--wb-s4) var(--wb-s8);display:grid;gap:var(--wb-s5)}
+:where(.aham-workbench) .wb-form-page-brand{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-form-page-title{font-size:var(--wb-detail-title);font-weight:600;line-height:1.35}
+:where(.aham-workbench) .wb-form-progress{display:grid;gap:var(--wb-s2)}
+:where(.aham-workbench) .wb-form-progress>ol{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--wb-s1);margin:0;padding:0;list-style:none}
+:where(.aham-workbench) .wb-form-progress>ol>li{height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line)}
+:where(.aham-workbench) .wb-form-progress>ol>li[data-state=done]{background:var(--wb-ink)}
+:where(.aham-workbench) .wb-form-progress>ol>li[data-state=current]{background:var(--wb-blue)}
+:where(.aham-workbench) .wb-form-progress>p{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-form-page-foot{display:flex;justify-content:space-between;gap:var(--wb-s2);padding-block-start:var(--wb-s4);border-top:var(--wb-hairline) solid var(--wb-line)}
+/* Labelled rail: 72px, icon above a two-character name. It does not expand. */
+:where(.aham-workbench).is-labeled,:where(.aham-workbench).is-labeled.expanded{grid-template-columns:var(--wb-rail-labeled) minmax(0,1fr)}
+:where(.aham-workbench).is-labeled .wb-rail,:where(.aham-workbench).is-labeled.expanded .wb-rail{align-items:center;padding-inline:var(--wb-s1)}
+:where(.aham-workbench).is-labeled .wb-nav-item,:where(.aham-workbench).is-labeled.expanded .wb-nav-item{flex-direction:column;justify-content:center;gap:2px;width:calc(var(--wb-rail-labeled) - var(--wb-s4));height:auto;min-height:var(--wb-s7);padding:var(--wb-s1) 0}
+:where(.aham-workbench).is-labeled .wb-nav-item span,:where(.aham-workbench).is-labeled.expanded .wb-nav-item span{display:block;font-size:var(--wb-text-xs);line-height:1.3}
+:where(.aham-workbench).is-labeled .wb-header [data-action=nav]{display:none}
+:where(.aham-workbench) .wb-composer-foot>span{flex:1;min-width:0}
+:where(.aham-workbench) .wb-form-page .wb-form-grid{grid-template-columns:minmax(0,1fr);max-width:none}
+:where(.aham-workbench) .wb-form-page .wb-form-row>.wb-field{width:100%}
+:where(.aham-workbench) .wb-form-page h2{font-size:var(--wb-text-base);margin-block-end:var(--wb-s3)}
+:where(.aham-workbench) .wb-form-page-foot>.wb-btn.primary{margin-inline-start:auto}

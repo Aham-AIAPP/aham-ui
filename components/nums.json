@@ -1,0 +1,26 @@
+{
+  "slug": "nums",
+  "name": "概况数字行",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/controls.html",
+  "intent": "概况用一行能点的数字",
+  "specification": "rules/4-页面.md#413-概况数字行",
+  "classes": [
+    ".wb-nums",
+    ".wb-num"
+  ],
+  "markup": {
+    "nums": "<ul class=\"wb-nums\"><li><a class=\"wb-num\" href=\"#\"><strong>12</strong><span>场景</span></a></li><li><a class=\"wb-num\" href=\"#\"><strong>4</strong><span>待确认</span></a></li></ul>"
+  },
+  "rules": [
+    "每个数字是链接",
+    "数字在上，名称在下，等宽字体",
+    "0 照常显示"
+  ],
+  "doNotInvent": [
+    "统计卡片",
+    "带外框或底色的数字块",
+    "周报式的趋势箭头"
+  ]
+}

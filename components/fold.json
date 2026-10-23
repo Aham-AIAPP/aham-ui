@@ -1,0 +1,29 @@
+{
+  "slug": "fold",
+  "name": "记录折叠",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/record.html",
+  "intent": "动态、修改记录、版本记录默认折叠在页尾一行",
+  "specification": "rules/4-页面.md#48-记录详情页",
+  "classes": [
+    ".wb-fold",
+    ".wb-fold-sum",
+    ".wb-fold-body"
+  ],
+  "markup": {
+    "fold": "<details class=\"wb-fold\"><summary><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-chevron-right\"/></svg><strong>动态</strong><span class=\"wb-fold-sum\">8 条 · 林悦创建 · 最近 10-16</span></summary><div class=\"wb-fold-body\">…</div></details>"
+  },
+  "rules": [
+    "默认折叠",
+    "折叠行写名称、条数、创建人和最近日期",
+    "评论框不随动态折叠"
+  ],
+  "accessibility": [
+    "用原生 details 和 summary，键盘 Enter 和空格展开"
+  ],
+  "doNotInvent": [
+    "把记录收进抽屉",
+    "把正文内容折叠"
+  ]
+}

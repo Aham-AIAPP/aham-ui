@@ -1,0 +1,31 @@
+{
+  "slug": "expand-list",
+  "name": "单行展开列表",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "preview": "examples/controls.html",
+  "intent": "列表的行可以展开看明细，同时只展开一行",
+  "specification": "rules/4-页面.md#43-列表页",
+  "api": "initSingleExpand(list) → { open(index), destroy() }",
+  "classes": [
+    ".wb-expand",
+    ".wb-expand-body"
+  ],
+  "markup": {
+    "list": "<div class=\"wb-expand\" style=\"--wb-expand-cols:3\"><details name=\"scenes\"><summary><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-chevron-right\"/></svg><span>设备点检记录自动生成</span><span>判断</span><span>3 / 1</span><span>林悦</span></summary><div class=\"wb-expand-body\">…</div></details></div>"
+  },
+  "rules": [
+    "同一列表的行用同一个 name",
+    "收起的行只放 4–5 项",
+    "展开新行时上一行收起"
+  ],
+  "accessibility": [
+    "用原生 details 和 summary",
+    "summary 里的每一项是文字，不放按钮"
+  ],
+  "doNotInvent": [
+    "同时展开多行",
+    "展开后弹出抽屉"
+  ]
+}

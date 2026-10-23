@@ -14,6 +14,7 @@
   "specification": "rules/4-页面.md#41-外框",
   "classes": [
     ".aham-workbench",
+    ".aham-workbench.is-labeled",
     ".wb-rail",
     ".wb-main",
     ".wb-header",
@@ -26,7 +27,9 @@
     "Esc": "关闭最上面一层"
   },
   "rules": [
-    "导航收起 52px、展开 240px",
+    "导航收起 52px、展开 240px；带名称的导航栏（.is-labeled）72px，图标在上、两字名称在下，不展开",
+    "导航项名称字数一致，中文统一两个字",
+    "页眉和导航栏固定，只有内容区滚动",
     "页眉每条 40px",
     "侧面板一次只开一个",
     "1024px 及以下宽面板浮在内容上方"

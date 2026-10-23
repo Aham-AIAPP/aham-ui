@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords,keyStep} from '../aham.js';
+import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords,keyStep,avatarCat,personHTML,fileCat} from '../aham.js';
 
 const fields = [
   { key: 'name', label: '名称', type: 'text' },
@@ -101,4 +101,31 @@ test('key steps use the same names as the reserved table in shortcuts.json', asy
     keyStep(ev('ArrowDown', { shiftKey: true })), keyStep(ev('Escape')), keyStep(ev(' ')), keyStep(ev('k', { ctrlKey: true }))];
   assert.deepEqual(steps, ['up', 'down', 'left', 'right', 'shift+down', 'escape', 'space', 'mod+k']);
   for (const s of steps) assert.ok(reserved.includes(s), `${s} is in the reserved table`);
+});
+
+test('avatarCat gives the same person the same colour, always 1–6', () => {
+  for (const name of ['林悦', '王卓', '周航', '陈思', 'Ada Lovelace', '']) {
+    const c = avatarCat(name);
+    assert.ok(Number.isInteger(c) && c >= 1 && c <= 6, name);
+    assert.equal(avatarCat(name), c);
+    assert.equal(avatarCat(` ${name} `), c, 'surrounding spaces do not change the colour');
+  }
+});
+
+test('personHTML writes the first character, the name and the empty state', () => {
+  const html = personHTML('林悦');
+  assert.ok(html.includes(`data-cat="${avatarCat('林悦')}"`));
+  assert.ok(html.includes('>林</span>') && html.includes('<span>林悦</span>'));
+  assert.ok(personHTML('').includes('is-none') && personHTML('').includes('未指定'));
+  assert.ok(personHTML('<b>').includes('&lt;b&gt;'), 'names are escaped');
+  assert.ok(personHTML('林悦', { size: 'md' }).includes('class="wb-avatar"'));
+});
+
+test('fileCat colours files by type and leaves the rest plain', () => {
+  assert.equal(fileCat('点检表.PDF'), 5);
+  assert.equal(fileCat('月报.xlsx'), 1);
+  assert.equal(fileCat('现场.jpg'), 3);
+  assert.equal(fileCat('夹具.step'), 2);
+  assert.equal(fileCat('说明.txt'), 0);
+  assert.equal(fileCat('README'), 0);
 });

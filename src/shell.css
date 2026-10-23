@@ -9,7 +9,6 @@
 :where(.aham-workbench) .wb-nav-item span{display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-group{display:grid;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-nav-foot{margin-block-start:auto;padding-block-start:var(--wb-s5)}
-:where(.aham-workbench) .wb-avatar{color:var(--wb-muted)}
 :where(.aham-workbench).expanded{grid-template-columns:var(--wb-nav) minmax(0,1fr)}
 :where(.aham-workbench).expanded .wb-rail{align-items:stretch}
 :where(.aham-workbench).expanded .wb-nav-item{justify-content:start;width:100%;padding-inline:var(--wb-s2)}
