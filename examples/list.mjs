@@ -1,6 +1,6 @@
 // List page sample: wires the Aham UI components (aham.js) to fictional demo data.
 // Everything reusable lives in aham.js / aham.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
+import {initShell, initPanels, navCommands, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
 import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -395,8 +395,14 @@ const palette = initPalette({
       { id: 'copy', label: '复制编码', icon: 'copy', run: c => copy(recordOf(c.id).code) },
       { id: 'delete', label: '删除', icon: 'trash', danger: true, run: c => confirmDelete([c.id]) },
     ] }] : []),
+    ...(selected.size ? [{ heading: `勾选的 ${selected.size} 条`, items: [
+      { id: 'mass-edit', label: '批量编辑…', icon: 'edit', run: () => $('[data-action="mass-edit"]').click() },
+      { id: 'export-selected', label: '导出勾选的记录', icon: 'download', run: () => exportRows(cur.rows.filter(r => selected.has(r.id))) },
+      { id: 'delete-selected', label: '删除勾选的记录', icon: 'trash', danger: true, run: () => confirmDelete([...selected]) },
+    ] }] : []),
     { heading: '操作', items: [
       { id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: openCreate },
+      { id: 'export-all', label: '导出当前结果', icon: 'download', run: () => exportRows(cur.rows) },
       { id: 'filter', label: '筛选…', icon: 'filter', run: () => filter.open() },
       { id: 'view', label: '切换视图…', icon: 'eye', children: () => [...Object.entries(VIEWS), ...customViews.map(v => [v.id, v.label])].map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => applyViewSetting(k) })) },
       { id: 'clear', label: '清除筛选', icon: 'close', run: () => { state.filters = []; filter.set([]); narrowResult(); render(); } },
@@ -404,13 +410,10 @@ const palette = initPalette({
       { id: 'peek', label: panels.current() === PEEK ? '关闭预览面板' : '打开预览面板', icon: 'eye', run: () => $('[data-panel-toggle="customer-peek"]').click() },
     ] },
     { heading: '界面', items: [
-      { id: 'nav', label: '展开 / 收起导航', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
+      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
       { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
     ] },
-    { heading: '跳转', items: [
-      { id: 'go-quote', label: '销售报价单', icon: 'file', run: () => { location.href = 'document.html'; } },
-      { id: 'go-shell', label: '工作台外框', icon: 'home', run: () => { location.href = 'shell.html'; } },
-    ] },
+    { heading: '跳转', items: navCommands(root) },
     { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });

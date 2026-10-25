@@ -160,3 +160,15 @@ test('text never uses the faint grey; it is kept for icons and disabled text (ru
 test('the old empty-value word is gone (rules/10-数据格式.md 10.5)', () => {
   for (const f of [...RULES, 'aham.js', 'AGENTS.md', ...files('examples/')]) assert.ok(!read(f).includes('没填'), f);
 });
+
+test('every workbench sample with a sidebar has a command palette (rules/7 7.2, principle 11)', () => {
+  const pages = readdirSync(new URL('../examples/', import.meta.url)).filter(f => f.endsWith('.html'));
+  const missing = [];
+  for (const page of pages) {
+    const html = read(`examples/${page}`);
+    if (!html.includes('class="wb-rail"')) continue;
+    const script = html.match(/<script type="module" src="\.\/([\w-]+\.mjs)"/)?.[1];
+    if (!script || !read(`examples/${script}`).includes('initPalette(')) missing.push(page);
+  }
+  assert.deepEqual(missing, []);
+});

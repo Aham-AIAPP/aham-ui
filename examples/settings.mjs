@@ -1,5 +1,5 @@
 // Settings sample: single-value settings apply immediately and confirm with a toast; reset asks first.
-import {initShell, toast, pushLayer, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled} from '../aham.js';
+import {initShell, initPalette, navCommands, registerShortcut, listShortcuts, toast, pushLayer, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled} from '../aham.js';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -61,3 +61,21 @@ root.addEventListener('click', e => {
 media.addEventListener('change', () => { if (prefs.theme === 'system') applyTheme(); });
 forcedTheme = initShell(root)?.theme?.fromUrl ?? null;
 paint();
+
+// Command palette (rules/7-键盘与命令.md 7.2): the choices on this page are commands too.
+const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
+const setPalette = initPalette({
+  root,
+  groups: () => [
+    { heading: '偏好设置', items: [
+      { id: 'theme', label: '外观…', icon: 'moon', children: () => [['light', '浅色'], ['dark', '深色'], ['system', '跟随系统']].map(([v, l]) => ({ id: v, label: l, current: themeChoice() === v, run: () => commit('外观', () => { forcedTheme = null; prefs.theme = v; }) })) },
+      { id: 'density', label: '列表行高…', icon: 'menu', children: () => [['standard', '标准 44'], ['compact', '紧凑 36']].map(([v, l]) => ({ id: v, label: l, current: prefs.density === v, run: () => commit('列表行高', () => { prefs.density = v; }) })) },
+      { id: 'single-key', label: prefs.singleKey ? '关闭单键快捷键' : '打开单键快捷键', icon: 'settings', run: () => commit('单键快捷键', () => { prefs.singleKey = !prefs.singleKey; }) },
+      { id: 'reset', label: '重置全部偏好…', icon: 'trash', danger: true, run: () => $('[data-action="reset"]').click() },
+    ] },
+    { heading: '界面', items: [{ id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() }] },
+    { heading: '跳转', items: navCommands(root) },
+    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
+  ],
+});
+registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => setPalette.openAt('键盘快捷键', shortcutItems()) });

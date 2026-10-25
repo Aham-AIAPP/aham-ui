@@ -2,7 +2,7 @@
    ⌘/Ctrl+B collapses it to a 52px icon rail. No border, no resting shadow. */
 :where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;gap:var(--wb-s4);min-height:0;overflow-y:auto;padding:var(--wb-s2) var(--wb-s2) var(--wb-s3);background:var(--wb-canvas)}
 :where(.aham-workbench) .wb-rail-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-row);padding:0 var(--wb-s2)}
-:where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);border-radius:var(--wb-radius-sm);background:var(--wb-action);color:var(--wb-on);font-size:var(--wb-text-xs);font-weight:600}
+:where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);border-radius:var(--wb-radius-sm);background:var(--wb-ink);color:var(--wb-bg);font-size:var(--wb-text-xs);font-weight:600}
 :where(.aham-workbench) .wb-brand-name{min-width:0;font-weight:500;color:var(--wb-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-group{display:grid;gap:2px}
 :where(.aham-workbench) .wb-nav-heading{display:block;padding:0 var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

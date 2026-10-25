@@ -3,7 +3,7 @@
 //   退回   asks for a reason first (rules/6-反馈.md 6.3)
 //   批量通过 rows that cannot be approved yet are named before anything runs (rules/6-反馈.md 6.4)
 // A row whose countersign is still open has 通过 disabled with the reason next to it (rules/3-控件.md 3.3).
-import { initShell, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
+import { initShell, initPalette, navCommands, registerShortcut, listShortcuts, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -49,6 +49,8 @@ function render() {
     + (check ? `<td><div class="wb-row-buttons">${r.wait ? `<span class="wb-row-note">${esc(r.wait)}</span>` : ''}<button type="button" class="wb-btn sm" data-approve="${r.id}"${r.wait ? ' disabled' : ''}>通过</button><button type="button" class="wb-btn sm" data-return="${r.id}">退回</button></div></td>`
       : `<td><span class="wb-status" data-tone="${r.result === 'approved' ? 'success' : 'warning'}"><b></b><span>${r.result === 'approved' ? '已通过' : `已退回：${esc(r.reason)}`}</span></span></td>`)
     + '</tr>').join('');
+  // Fixed columns plus 240px for the name; table-layout:fixed would otherwise squeeze the name column to 0 on narrow screens.
+  table.style.minWidth = `calc(${check ? 'var(--wb-check-col) + ' : ''}${152 + 184 + 120 + 104 + 44 + (check ? 340 : 240) + 240}px)`;
   table.innerHTML = `<colgroup>${check ? '<col style="width:var(--wb-check-col)">' : ''}<col style="width:152px"><col><col style="width:184px"><col style="width:120px"><col style="width:104px"><col style="width:44px"><col style="width:${check ? 340 : 240}px"></colgroup>${head}<tbody>${body}</tbody>`;
   const all = $('[data-select-all]');
   if (all) { const n = list.filter(r => selected.has(r.id)).length; all.checked = n > 0 && n === list.length; all.indeterminate = n > 0 && n < list.length; }
@@ -97,3 +99,33 @@ root.addEventListener('click', e => {
 
 initShell(root);
 render();
+
+// Command palette (rules/7-键盘与命令.md 7.2): every button on the page is also a command here.
+const rowOf = () => { const tr = document.activeElement?.closest?.('tr[data-id]'); return tr ? rows.find(r => r.id === Number(tr.dataset.id)) : null; };
+const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
+const palette = initPalette({
+  root,
+  context: () => { const r = rowOf(); return r && !r.result ? { id: r.id, code: r.code, label: r.name } : null; },
+  groups: ctx => [
+    ...(ctx ? [{ heading: '当前报价单', items: [
+      ...(rows.find(r => r.id === ctx.id).wait ? [] : [{ id: 'approve', label: '通过', icon: 'success', run: c => decide([c.id], 'approved') }]),
+      { id: 'return', label: '退回…', icon: 'close', run: c => root.querySelector(`[data-return="${c.id}"]`)?.click() },
+      { id: 'open', label: '打开报价单', icon: 'external', run: () => { location.href = 'document.html'; } },
+    ] }] : []),
+    ...(tab === 'todo' && selected.size ? [{ heading: `勾选的 ${selected.size} 张`, items: [
+      { id: 'approve-selected', label: '通过勾选的报价单', icon: 'success', run: () => approveSelected($('[data-action="approve-selected"]')) },
+      { id: 'clear-selection', label: '清除选择', icon: 'close', run: () => { selected.clear(); render(); } },
+    ] }] : []),
+    { heading: '视图', items: [
+      { id: 'tab-todo', label: '待我审批', icon: 'success', run: () => { tab = 'todo'; selected.clear(); render(); } },
+      { id: 'tab-done', label: '我已处理', icon: 'check', run: () => { tab = 'done'; selected.clear(); render(); } },
+    ] },
+    { heading: '界面', items: [
+      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
+      { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
+    ] },
+    { heading: '跳转', items: navCommands(root) },
+    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
+  ],
+});
+registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });

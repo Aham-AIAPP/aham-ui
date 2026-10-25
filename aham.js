@@ -913,6 +913,12 @@ export function openPicker(anchor, { label, options, current, icon: optionIcon, 
 // an item with `children` opens a sub-list in place (no cascading menus): Esc or Backspace on an empty query goes back.
 // An optional context chip names the record the commands act on; Backspace on an empty query removes it.
 // groups(ctx) → [{ heading, items: [{ id, label, icon?, keys?, run?(ctx), children?(ctx) → items, keywords? }] }]
+// Jump commands for the palette, read from the sidebar items that carry data-go (rules/7-键盘与命令.md 7.2).
+// The sidebar, the G shortcuts and the palette then share one definition. The current page is left out.
+export function navCommands(root) {
+  return [...root.querySelectorAll('.wb-rail [data-go]')].filter(a => a.getAttribute('aria-current') !== 'page')
+    .map(a => ({ id: `go-${a.dataset.go}`, label: [...a.children].find(c => c.tagName === 'SPAN' && !c.classList.contains('wb-nav-count'))?.textContent.trim() ?? a.textContent.trim(), keys: `g ${a.dataset.go}`, run: () => a.click() }));
+}
 export function initPalette({ root, groups, context }) {
   const dialog = document.createElement('dialog');
   dialog.className = 'wb-palette';

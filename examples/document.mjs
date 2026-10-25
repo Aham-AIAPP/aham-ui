@@ -5,7 +5,7 @@
 //   已生效        打印；更多：复制为新报价、作废
 //   已作废        只能查看、打印和复制
 // State lives in this page only. print.html reads the last saved copy from sessionStorage.
-import { initShell, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
+import { initShell, initPalette, navCommands, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
 import { defaults, lineCents, totals, money } from './quotation-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -362,3 +362,20 @@ const page = initObjectPage(doc, {
   draft: { interval: 20000, onDraft: () => new Promise(r => setTimeout(r, 200)), onDiscard: ({ changed }) => { if (changed && !keepDraft) toast('已放弃草稿'); keepDraft = false; } },
 });
 initAnchorBar($('#doc-anchors'), { scroller: doc });
+
+// Command palette (rules/7-键盘与命令.md 7.2): the buttons in the head and the footer are commands too,
+// read when the palette opens so the list follows the mode (display, edit) and the status.
+const pageButtons = () => [...root.querySelectorAll('#doc-actions button, #doc-foot button')]
+  .filter(b => !b.disabled && b.offsetParent && (b.textContent.trim() || b.getAttribute('aria-label')))
+  .map((b, i) => ({ id: `act-${i}`, label: b.textContent.trim() || b.getAttribute('aria-label'), keys: b.dataset.keys, run: () => b.click() }));
+initPalette({
+  root,
+  groups: () => [
+    { heading: '报价单', items: pageButtons() },
+    { heading: '界面', items: [
+      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
+      { id: 'theme', label: '切换深色和浅色', icon: 'moon', run: () => $('[data-action="theme"]').click() },
+    ] },
+    { heading: '跳转', items: navCommands(root) },
+  ],
+});

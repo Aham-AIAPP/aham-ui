@@ -1,5 +1,5 @@
 // Record detail sample: composes the Aham UI detail patterns with fictional demo data.
-import {initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
+import {navCommands, initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './list-model.mjs';
 import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
 
@@ -51,7 +51,7 @@ function renderMain() {
       <form class="wb-composer" id="composer" aria-label="写评论">
         <textarea rows="2" aria-label="评论内容" placeholder="写评论…" maxlength="2000"></textarea>
         <ul class="wb-composer-files" id="composer-files" hidden></ul>
-        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span>⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
+        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span class="wb-composer-hint">⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
         <input type="file" multiple hidden>
       </form>
     </section>`;
@@ -127,6 +127,7 @@ const palette = initPalette({
       { id: 'prev', label: '上一条', icon: 'chevron-up', keys: 'k', run: () => go(-1) },
       { id: 'next', label: '下一条', icon: 'chevron-down', keys: 'j', run: () => go(1) },
       { id: 'back', label: '返回列表', icon: 'arrow-left', run: () => { location.href = $('#back-link').href; } },
+      ...navCommands(root),
     ] },
     { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
