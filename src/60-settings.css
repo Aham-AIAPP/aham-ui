@@ -22,6 +22,8 @@
 :where(.aham-workbench) .wb-setting-control{display:flex;flex:none;align-items:center;gap:var(--wb-s2)}
 /* Controls in one section share one width, so their left edges line up. */
 :where(.aham-workbench) .wb-setting-control>.wb-field{width:var(--wb-setting-control)}
+/* A text button at the end of a setting row moves right by its padding, so its text ends on the control edge. */
+:where(.aham-workbench) .wb-setting-control>.wb-btn.ghost:last-child{margin-inline-end:calc(-1 * var(--wb-s2))}
 /* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
 :where(.aham-workbench) :is(.wb-settings-nav a){transition:var(--wb-state-out)}
 :where(.aham-workbench) :is(.wb-settings-nav a):hover{transition:var(--wb-state-in)}

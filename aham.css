@@ -575,6 +575,7 @@
 /* ---- src/31-list.css ---- */
 /* List page (7.2 P2): filter row, grouped table with sticky headers, bulk mode, pager. */
 :where(.aham-workbench) .wb-list{display:flex;flex-direction:column;min-width:0;min-height:0}
+:where(.aham-workbench) .wb-list>.wb-note{margin:0;padding:var(--wb-s3) var(--wb-s4)}
 :where(.aham-workbench) .wb-list-scroll{flex:1;min-height:0;overflow:auto}
 :where(.aham-workbench) .wb-list-scroll>.wb-note{margin:var(--wb-s4)}
 :where(.aham-workbench) .wb-filter-bar{flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line)}
@@ -1087,6 +1088,8 @@
 :where(.aham-workbench) .wb-setting-control{display:flex;flex:none;align-items:center;gap:var(--wb-s2)}
 /* Controls in one section share one width, so their left edges line up. */
 :where(.aham-workbench) .wb-setting-control>.wb-field{width:var(--wb-setting-control)}
+/* A text button at the end of a setting row moves right by its padding, so its text ends on the control edge. */
+:where(.aham-workbench) .wb-setting-control>.wb-btn.ghost:last-child{margin-inline-end:calc(-1 * var(--wb-s2))}
 /* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
 :where(.aham-workbench) :is(.wb-settings-nav a){transition:var(--wb-state-out)}
 @media (hover: hover) and (pointer: fine){
