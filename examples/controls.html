@@ -6,7 +6,7 @@ body{margin:0}
 /* Page scaffold only. Every control below is styled by aham.css. */
 .gl{max-width:960px;margin:0 auto;padding:var(--wb-s7) var(--wb-page-gutter) var(--wb-s8);display:grid;gap:var(--wb-s7)}
 .gl-head{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--wb-s4)}
-.gl-head h1{font-size:var(--wb-detail-title);font-weight:600}
+.gl-head h1{font-size:var(--wb-title);font-weight:600}
 .gl-head p{margin-block-start:var(--wb-s2);color:var(--wb-muted)}
 .gl section{display:grid;gap:var(--wb-s4)}
 .gl h2{font-size:var(--wb-text-base);font-weight:600}
@@ -52,7 +52,7 @@ body{margin:0}
     <h2 id="g-input">输入</h2>
     <div class="gl-grid">
       <label class="gl-field"><span>客户名称<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" required value="远川精密制造有限公司"></label>
-      <label class="gl-field"><span>报价日期</span><input class="wb-field wb-mono" type="date" value="2026-09-30"></label>
+      <label class="gl-field"><span>报价日期</span><input class="wb-field wb-tnum" type="date" value="2026-09-30"></label>
       <div class="gl-field"><span id="g-amount">预算</span><span class="wb-edit"><input class="wb-field is-number" aria-labelledby="g-amount" inputmode="decimal" value="1,200,000"><span class="wb-unit">元</span></span></div>
       <label class="gl-field"><span>结算币种</span><select class="wb-field"><option>人民币 CNY</option><option>美元 USD</option></select></label>
       <div class="gl-field" data-state="error"><span id="g-err">客户联系人<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" aria-labelledby="g-err" aria-invalid="true" placeholder="姓名 · 部门"><span class="wb-form-hint is-error">必填，未填写</span></div>
@@ -172,9 +172,9 @@ body{margin:0}
     <h2 id="g-fold">折叠和单行展开</h2>
     <details class="wb-fold"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><strong>修改记录</strong><span class="wb-fold-sum">8 条 · 林悦创建 · 最近 10-16</span></summary><div class="wb-fold-body"><div class="wb-activity"><div class="wb-activity-event"><span class="wb-activity-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-edit"/></svg></span><span><strong>王卓</strong> 把发生频次改为「每天」</span><span class="wb-activity-time">· 10-16</span></div></div></div></details>
     <div class="wb-expand" id="expand-demo" style="--wb-expand-cols:3">
-      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>设备点检记录自动生成</span><span>立项</span><span class="wb-mono">3 / 1</span><span>等陈思</span></summary><div class="wb-expand-body">需求 3 条，验证 1 条。</div></details>
-      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>来料检验报告比对</span><span>判断</span><span class="wb-mono">0 / 0</span><span>等你</span></summary><div class="wb-expand-body">还没有需求。</div></details>
-      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>排产异常提醒</span><span>开发</span><span class="wb-mono">5 / 2</span><span>等王卓</span></summary><div class="wb-expand-body">需求 5 条，验证 2 条。</div></details>
+      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>设备点检记录自动生成</span><span>立项</span><span class="wb-tnum">3 / 1</span><span>等陈思</span></summary><div class="wb-expand-body">需求 3 条，验证 1 条。</div></details>
+      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>来料检验报告比对</span><span>判断</span><span class="wb-tnum">0 / 0</span><span>等你</span></summary><div class="wb-expand-body">还没有需求。</div></details>
+      <details name="demo-rows"><summary><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-right"/></svg><span>排产异常提醒</span><span>开发</span><span class="wb-tnum">5 / 2</span><span>等王卓</span></summary><div class="wb-expand-body">需求 5 条，验证 2 条。</div></details>
     </div>
     <p class="gl-cap">动态、修改记录和版本记录默认折叠在页尾一行。列表同时只展开一行，展开新行时上一行收起。</p>
   </section>

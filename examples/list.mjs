@@ -1,12 +1,17 @@
 // List page sample: wires the Aham UI components (aham.js) to fictional demo data.
 // Everything reusable lives in aham.js / aham.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
+import {initShell, initPanels, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
 import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
 const DISPLAY_KEY = 'aham-ui:customer-list:display:v1';
-const WIDTHS = { code: 120, industry: 96, owner: 80, stage: 96, lastContact: 88, created: 88, amountCents: 128 };
+// Single-line rows (rules/4-页面.md 4.3): code, stage icon and name on the left; tag, amount, dates and the owner's avatar on the right.
+const WIDTHS = { code: 112, stage: 28, industry: 112, amountCents: 120, lastContact: 64, created: 64, owner: 40 };
+const ROW_ORDER = ['code', 'stage', 'name', 'industry', 'amountCents', 'lastContact', 'created', 'owner'];
+const LIVE_STAGES = STAGES.filter(s => s !== '已流失');
+const stageIcon = stage => stage === '已流失' ? stageIconHTML({ state: 'off', label: stage }) : stage === '已签约' ? stageIconHTML({ state: 'done', label: stage })
+  : stageIconHTML({ state: 'current', done: LIVE_STAGES.indexOf(stage), total: LIVE_STAGES.length - 1, label: stage });
 const FIRST_DIR = { name: 'asc', code: 'asc', industry: 'asc', owner: 'asc', stage: 'asc', lastContact: 'desc', created: 'desc', amountCents: 'desc' };
 const ICONS = { name: 'file', code: 'bookmark', industry: 'folder', owner: 'user', stage: 'success', lastContact: 'clock', created: 'calendar' };
 
@@ -106,42 +111,48 @@ function render(fallback) {
 }
 function cell(f, r) {
   switch (f.key) {
-    case 'stage': return `<td><button type="button" class="wb-cell-picker" data-cell="stage" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="阶段：${esc(r.stage)}，点击修改"><span class="wb-status"><b></b>${esc(r.stage)}</span></button></td>`;
-    case 'owner': return `<td><button type="button" class="wb-cell-picker" data-cell="owner" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${esc(r.owner)}，点击修改">${esc(r.owner)}</button></td>`;
-    case 'amountCents': return `<td class="number">${money(r.amountCents)}</td>`;
-    case 'code': return `<td class="wb-mono">${esc(r.code)}</td>`;
-    case 'lastContact': case 'created': return `<td class="wb-mono" title="${r[f.key]}">${r[f.key].slice(5)}</td>`;
+    case 'name': return `<td class="wb-cell-name"><button type="button" class="wb-row-link" data-open="${r.id}" title="打开 ${esc(r.name)}">${esc(r.name)}</button></td>`;
+    case 'stage': return `<td class="wb-cell-icon"><button type="button" class="wb-cell-picker is-icon" data-cell="stage" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="阶段：${esc(r.stage)}，点击修改">${stageIcon(r.stage)}</button></td>`;
+    case 'owner': return `<td class="wb-cell-end"><button type="button" class="wb-cell-picker is-icon" data-cell="owner" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${esc(r.owner)}，点击修改">${personHTML(r.owner, { compact: true })}</button></td>`;
+    case 'industry': return `<td class="wb-cell-end"><span class="wb-tag" data-cat="${INDUSTRIES.indexOf(r.industry) % 6 + 1}">${esc(r.industry)}</span></td>`;
+    case 'amountCents': return `<td class="number wb-cell-meta">${money(r.amountCents)}</td>`;
+    case 'code': return `<td class="wb-cell-meta wb-tnum">${esc(r.code)}</td>`;
+    case 'lastContact': case 'created': return `<td class="number wb-cell-meta" title="${f.label} ${r[f.key]}">${r[f.key].slice(5)}</td>`;
     default: return `<td>${esc(r[f.key])}</td>`;
   }
 }
+// The header row stays for screen readers only; sorting lives in 显示 (rules/4-页面.md 4.3, 4.6).
 function header(f) {
   const on = display.sort.field === f.key;
   const sort = on ? ` aria-sort="${display.sort.dir === 'asc' ? 'ascending' : 'descending'}"` : '';
-  return `<th scope="col"${f.type === 'number' ? ' class="number"' : ''}${sort}><button type="button" class="wb-sort" data-sort="${f.key}" title="按${esc(f.label)}排序">${esc(f.label)}${on ? icon(display.sort.dir === 'asc' ? 'chevron-up' : 'chevron-down') : ''}</button></th>`;
+  return `<th scope="col"${sort}>${esc(f.label)}</th>`;
 }
 function renderTable() {
   const table = $('#customer-table'), empty = $('#list-empty'), { rows, pg } = cur;
   table.hidden = !rows.length;
   empty.hidden = Boolean(rows.length);
   if (!rows.length) { table.innerHTML = ''; empty.innerHTML = emptyHtml(); return; }
-  const cols = display.columns.filter(c => c[1]).map(c => field(c[0]));
-  const span = cols.length + 2;
-  const rowHtml = r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td><td><button type="button" class="wb-row-link" data-open="${r.id}" title="打开 ${esc(r.name)}">${esc(r.name)}</button></td>${cols.map(f => cell(f, r)).join('')}</tr>`;
+  const shown = new Set(['name', ...display.columns.filter(c => c[1]).map(c => c[0])]);
+  const cols = ROW_ORDER.filter(k => shown.has(k)).map(field);
+  const span = cols.length + 1;
+  const rowHtml = r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td>${cols.map(f => cell(f, r)).join('')}</tr>`;
   let body = '';
   for (const g of groupRows(pg.rows, display.group)) {
     const shut = g.key !== null && collapsed.has(g.key);
     body += '<tbody>';
     if (g.key !== null) {
       const all = rows.filter(r => r[display.group] === g.key).length;
-      body += `<tr class="wb-group-head"><th colspan="${span}" scope="rowgroup"><button type="button" class="wb-group-toggle" data-group="${esc(g.key)}" aria-expanded="${!shut}">${icon('chevron-down')}${esc(g.label)}<span class="wb-group-count">${g.rows.length === all ? all : `本页 ${g.rows.length} / 共 ${all}`}</span></button></th></tr>`;
+      const mark = display.group === 'stage' ? stageIcon(g.key) : '';
+      body += `<tr class="wb-group-head"><th colspan="${span}" scope="rowgroup"><button type="button" class="wb-group-toggle" data-group="${esc(g.key)}" aria-expanded="${!shut}">${icon('chevron-down')}${mark}${esc(g.label)}<span class="wb-group-count">${g.rows.length === all ? all : `本页 ${g.rows.length} / 共 ${all}`}</span></button></th></tr>`;
     }
     if (!shut) body += g.rows.map(rowHtml).join('');
     body += '</tbody>';
   }
-  table.innerHTML = `<colgroup><col style="width:var(--wb-check-col)"><col>${cols.map(f => `<col style="width:${WIDTHS[f.key]}px">`).join('')}</colgroup><thead><tr><th scope="col" class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select-page="" aria-label="选择本页 ${pg.rows.length} 条"></label></th>${header(field('name'))}${cols.map(header).join('')}</tr></thead>${body}`;
+  table.innerHTML = `<colgroup><col style="width:var(--wb-check-col)">${cols.map(f => f.key === 'name' ? '<col>' : `<col style="width:${WIDTHS[f.key]}px">`).join('')}</colgroup><thead><tr><th scope="col" class="wb-check"><span class="wb-sr-only">选择</span></th>${cols.map(header).join('')}</tr></thead>${body}`;
   const all = $('[data-select-page]'), ids = pg.rows.map(r => r.id), n = ids.filter(id => selected.has(id)).length;
   all.checked = n > 0 && n === ids.length;
   all.indeterminate = n > 0 && n < ids.length;
+  all.setAttribute('aria-label', `选择本页 ${ids.length} 条`);
 }
 function emptyHtml() {
   if (!data.length) return '<strong>示例数据已全部删除</strong><p>刷新页面可以恢复。</p>';
@@ -172,7 +183,7 @@ function renderPreview() {
   const r = data.find(x => x.id === previewId) ?? cur.rows[0];
   if (!r) { panel.innerHTML = '<div class="wb-empty"><strong>没有可预览的记录</strong></div>'; return; }
   previewId = r.id;
-  panel.innerHTML = `<section class="wb-peek"><h2>${esc(r.name)}</h2><span class="wb-status"><b></b>${esc(r.stage)}</span><dl><dt>编码</dt><dd class="wb-mono">${esc(r.code)}</dd><dt>行业</dt><dd>${esc(r.industry)}</dd><dt>负责人</dt><dd>${esc(r.owner)}</dd><dt>最近跟进</dt><dd class="wb-mono">${r.lastContact}</dd><dt>创建日期</dt><dd class="wb-mono">${r.created}</dd><dt>年度金额</dt><dd class="wb-mono">${money(r.amountCents)}</dd></dl></section>`;
+  panel.innerHTML = `<section class="wb-peek"><h2>${esc(r.name)}</h2><span class="wb-status"><b></b>${esc(r.stage)}</span><dl><dt>编码</dt><dd class="wb-tnum">${esc(r.code)}</dd><dt>行业</dt><dd>${esc(r.industry)}</dd><dt>负责人</dt><dd>${esc(r.owner)}</dd><dt>最近跟进</dt><dd class="wb-tnum">${r.lastContact}</dd><dt>创建日期</dt><dd class="wb-tnum">${r.created}</dd><dt>年度金额</dt><dd class="wb-tnum">${money(r.amountCents)}</dd></dl></section>`;
 }
 
 // ── Design-system components ─────────────────────────────────────────────────

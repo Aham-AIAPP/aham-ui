@@ -5,7 +5,7 @@ Aham UI 是一套业务管理系统的界面规范和参考实现。问题和建
 ## 改动顺序
 
 1. **改取值**：只改 [tokens.json](tokens.json)。
-2. **改规则**：改 [rules/](rules/) 里对应的文件。规则变了先改规则，再改实现。
+2. **改规则**：改 [rules/](rules/) 里对应的文件。规则变了先改规则，再改实现。新规则要能说出落实 [设计理念.md](设计理念.md) 的哪条原则；说不出的，先改设计理念或不改。
 3. **改实现**：样式改 `src/*.css`，行为改 `aham.js`，结构变了同步改 `components/*.json`。
 4. **重新生成**：运行 `node scripts/build.mjs` 生成 aham.css。aham.css 不手改。
 5. **同步示例**：规则涉及的示例页一起改。
@@ -16,10 +16,11 @@ Aham UI 是一套业务管理系统的界面规范和参考实现。问题和建
 ```bash
 node scripts/build.mjs --check
 node scripts/lint.mjs
+node scripts/theme.mjs --check
 node --test
 ```
 
-三条都要通过，CI 运行同样的三条。改了视觉的，按 [rules/9-验收.md](rules/9-验收.md) 9.4 截图核对亮色和暗色。
+四条都要通过，CI 运行同样的四条。改了视觉的，按 [rules/9-验收.md](rules/9-验收.md) 9.4 截图核对亮色和暗色。
 
 ## 规则文字的写法
 

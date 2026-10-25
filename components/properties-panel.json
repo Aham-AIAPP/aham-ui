@@ -37,7 +37,7 @@
   },
   "markup": {
     "row": "<div class=\"wb-prop\"><span>阶段</span><button class=\"wb-prop-value\" data-prop=\"stage\">方案评估</button></div>",
-    "readOnly": "<div class=\"wb-prop\"><span>编码</span><span class=\"wb-prop-value wb-mono\">CUS-2026-0033</span></div>"
+    "readOnly": "<div class=\"wb-prop\"><span>编码</span><span class=\"wb-prop-value wb-tnum\">CUS-2026-0033</span></div>"
   },
   "rules": [
     "标签 72px、次级文字色，不可省略",

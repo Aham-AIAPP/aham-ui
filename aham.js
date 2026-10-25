@@ -2,7 +2,7 @@
 // Contract:
 //   root        .aham-workbench (add .wb-bare to use components without the shell, e.g. in previews)
 //   nav toggle  [data-action="nav"] in header row 1, aria-controls = rail id
-//   rail        .wb-rail (52px icon rail; 240px when .expanded)
+//   rail        .wb-rail (220px text sidebar; 52px icons when .collapsed; floats as .expanded on narrow screens)
 //   panels      .wb-panel toggled by [data-panel-toggle="<panel id>"]
 // Esc closes the topmost open layer only (popover → floating panel → nav overlay → search), then focus returns
 // to whatever opened that layer.
@@ -43,8 +43,9 @@ export function initTheme(root = document.querySelector('.aham-workbench')) {
 }
 
 // ── Navigation ───────────────────────────────────────────────────────────────
-// Wide screens: nav pushes content and the choice is remembered.
-// ≤ --wb-bp-context: nav opens as an overlay; the content behind is inert; Esc, scrim or choosing an item closes it.
+// Wide screens: the 220px sidebar is open by default; ⌘/Ctrl+B collapses it to 52px icons and the choice is remembered.
+// ≤ --wb-bp-context: the sidebar starts as icons and opens as an overlay; the content behind is inert; Esc, scrim or choosing an item closes it.
+// Nav items with data-go="c" also answer to the key sequence G then C (rules/7-键盘与命令.md 7.1).
 const NAV_STORE = 'aham-ui:workbench:nav';
 
 export function initShell(root = document.querySelector('.aham-workbench')) {
@@ -54,22 +55,21 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
   const rail = root.querySelector('.wb-rail');
   const main = root.querySelector('.wb-main');
   const narrow = contextBreakpoint(root);
-  let scrim = null, release = null;
+  let scrim = null, release = null, open = true;
 
-  const remembered = () => { try { return localStorage.getItem(NAV_STORE) === 'expanded'; } catch { return false; } };
-  const remember = open => { try { localStorage.setItem(NAV_STORE, open ? 'expanded' : 'collapsed'); } catch { /* storage blocked: keep in-page state only */ } };
-  const isOpen = () => root.classList.contains('expanded');
-  // The labelled rail (.is-labeled, 72px) shows its names already and never expands on wide screens; it still opens as an overlay on narrow ones.
-  const labeled = root.classList.contains('is-labeled');
+  const remembered = () => { try { return localStorage.getItem(NAV_STORE) !== 'collapsed'; } catch { return true; } };
+  const remember = on => { try { localStorage.setItem(NAV_STORE, on ? 'expanded' : 'collapsed'); } catch { /* storage blocked: keep in-page state only */ } };
+  const isOpen = () => open;
 
-  function set(open, { persist = true, restoreFocus = false } = {}) {
-    if (labeled && !narrow.matches) open = false;
-    root.classList.toggle('expanded', open);
+  function set(next, { persist = true, restoreFocus = false } = {}) {
+    open = next;
+    const overlay = narrow.matches && open;
+    root.classList.toggle('collapsed', !open);
+    root.classList.toggle('expanded', overlay);
     if (toggle) {
       toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? '收起导航' : '展开导航');
+      toggle.setAttribute('aria-label', open ? '收起侧栏' : '展开侧栏');
     }
-    const overlay = narrow.matches && open;
     if (main) main.inert = overlay;
     if (overlay && !scrim) {
       scrim = document.createElement('div');
@@ -92,7 +92,14 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
   rail?.addEventListener('click', e => {
     if (narrow.matches && isOpen() && e.target.closest('.wb-nav-item')) set(false, { restoreFocus: true });
   });
-  registerShortcut({ keys: 'mod+b', label: '展开 / 收起导航', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } });
+  // Collapsed items keep their names as tooltips.
+  rail?.querySelectorAll('.wb-nav-item').forEach(item => {
+    const name = item.querySelector('span')?.textContent.trim();
+    if (name && !item.dataset.tooltip) item.dataset.tooltip = name;
+    if (item.dataset.go && !item.dataset.keys) item.dataset.keys = `g ${item.dataset.go}`;
+    if (item.dataset.go) registerShortcut({ keys: `g ${item.dataset.go}`, label: `转到${name}`, group: '转到', run: () => item.click() });
+  });
+  registerShortcut({ keys: 'mod+b', label: '展开 / 收起侧栏', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } });
   narrow.addEventListener('change', () => set(narrow.matches ? false : remembered(), { persist: false }));
 
   set(narrow.matches ? false : remembered(), { persist: false });
@@ -831,11 +838,13 @@ export function initTooltips(root = document.querySelector('.aham-workbench')) {
   root.addEventListener('pointerover', e => {
     const el = e.target.closest?.('[data-tooltip]');
     if (!el || el === owner || coarse.matches || e.pointerType === 'touch') return;
+    // An open sidebar already shows the names; its items only get a tip when collapsed to icons.
+    if (el.matches('.wb-nav-item') && !root.classList.contains('collapsed')) return;
     clearTimeout(timer);
     timer = setTimeout(() => show(el), owner ? 0 : TOOLTIP_DELAY);
   });
   root.addEventListener('pointerout', e => { const el = e.target.closest?.('[data-tooltip]'); if (el && !el.contains(e.relatedTarget)) hide(); });
-  root.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tooltip]'); if (el?.matches(':focus-visible')) show(el); });
+  root.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tooltip]'); if (el?.matches(':focus-visible') && !(el.matches('.wb-nav-item') && !root.classList.contains('collapsed'))) show(el); });
   root.addEventListener('focusout', hide);
   root.addEventListener('pointerdown', hide);
   document.addEventListener('keydown', () => { if (owner) hide(); });
@@ -1432,10 +1441,27 @@ export function avatarCat(name) {
   return (h % 6) + 1;
 }
 // The avatar and the name. An empty name gives the dashed circle and「未指定」(rules/10-数据格式.md 10.5).
-export function personHTML(name, { size = 'xs', label = '未指定' } = {}) {
+// compact: the avatar alone, named by title and aria-label; used in single-line list rows (rules/3-控件.md 3.11).
+export function personHTML(name, { size = 'xs', label = '未指定', compact = false } = {}) {
   const n = String(name ?? '').trim(), cls = size === 'xs' ? 'wb-avatar-xs' : 'wb-avatar';
+  if (compact) {
+    const said = escapeHtml(n || label);
+    return n ? `<span class="${cls}" data-cat="${avatarCat(n)}" role="img" title="${said}" aria-label="${said}">${escapeHtml([...n][0])}</span>` : `<span class="${cls} is-none" role="img" title="${said}" aria-label="${said}"></span>`;
+  }
   if (!n) return `<span class="wb-person is-none"><span class="${cls} is-none" aria-hidden="true"></span><span>${escapeHtml(label)}</span></span>`;
   return `<span class="wb-person"><span class="${cls}" data-cat="${avatarCat(n)}" aria-hidden="true">${escapeHtml([...n][0])}</span><span>${escapeHtml(n)}</span></span>`;
+}
+// Stage icon (rules/3-控件.md 3.15): a 14px circle for where an object stands in its stages, as in Linear's status icons.
+// state: todo | current | done | blocked | off. For current, done / total sets the pie; the label names stage, state and step.
+export const STAGE_STATE_WORDS = { todo: '没开始', current: '进行中', done: '已完成', blocked: '受阻', off: '不进行' };
+export function stageIconHTML({ state = 'todo', done = 0, total = 1, label = '' } = {}) {
+  const st = STAGE_STATE_WORDS[state] ? state : 'todo';
+  const part = Math.max(0, Math.min(1, total > 0 ? done / total : 0));
+  const words = [label, STAGE_STATE_WORDS[st]].filter(Boolean).join('：') + (st === 'current' && total > 1 ? `，第 ${done + 1} 段，共 ${total} 段` : '');
+  // The pie is a stroke on a circle of radius 2.5 whose dash length is the done share of its circumference.
+  const c = 2 * Math.PI * 2.5, pie = st === 'current' ? `<circle class="wb-stage-pie" cx="7" cy="7" r="2.5" stroke-dasharray="${(c * Math.max(part, 0.08)).toFixed(2)} ${c.toFixed(2)}" transform="rotate(-90 7 7)"/>` : '';
+  const mark = { done: '<path d="M4.6 7.2 6.3 8.8 9.4 5.4"/>', blocked: '<path d="M4.5 7h5"/>', off: '<path d="M4.4 9.6 9.6 4.4"/>' }[st] ?? '';
+  return `<span class="wb-stage-icon" data-state="${st}" role="img" title="${escapeHtml(words)}" aria-label="${escapeHtml(words)}"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/>${pie}${mark}</svg></span>`;
 }
 // Category number for a file icon by type: PDF 5, Office 1, image 3, drawing 2. Other types get no colour (0).
 export const FILE_CATS = { 5: ['.pdf'], 1: ['.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.csv'], 3: ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.heic'], 2: ['.dwg', '.dxf', '.step', '.stp', '.iges', '.igs'] };

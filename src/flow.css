@@ -11,22 +11,22 @@
 :where(.aham-workbench) .wb-people-faces>*+*{margin-inline-start:calc(-1 * var(--wb-s1));box-shadow:0 0 0 2px var(--wb-bg)}
 /* Stage bar: one segment per stage. Done carries a check, current is bold on a thicker line, skipped is dashed and struck. */
 :where(.aham-workbench) .wb-stages{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--wb-s1);margin:0;padding:0;list-style:none}
-:where(.aham-workbench) .wb-stages>li{display:grid;align-content:start;gap:2px;min-width:0;padding-block-start:var(--wb-s2);border-top:var(--wb-s1) solid var(--wb-line)}
+:where(.aham-workbench) .wb-stages>li{display:grid;align-content:start;gap:2px;min-width:0;padding-block-start:var(--wb-s2);border-top:2px solid var(--wb-line)}
 :where(.aham-workbench) .wb-stage-name{display:flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-stage-name svg{width:var(--wb-s3);height:var(--wb-s3);stroke-width:2}
 :where(.aham-workbench) .wb-stage-sub{color:var(--wb-muted);font-size:var(--wb-text-xs);overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-stages>li[data-state=done]{border-top-color:var(--wb-success)}
 :where(.aham-workbench) .wb-stages>li[data-state=done] .wb-stage-name{color:var(--wb-ink)}
 :where(.aham-workbench) .wb-stages>li[data-state=done] .wb-stage-name svg{color:var(--wb-success)}
-:where(.aham-workbench) .wb-stages>li[data-state=current]{border-top:calc(var(--wb-s1) + 2px) solid var(--wb-info);padding-block-start:calc(var(--wb-s2) - 2px)}
-:where(.aham-workbench) .wb-stages>li[data-state=current] .wb-stage-name{color:var(--wb-ink);font-weight:600}
+:where(.aham-workbench) .wb-stages>li[data-state=current]{border-top-color:var(--wb-blue)}
+:where(.aham-workbench) .wb-stages>li[data-state=current] .wb-stage-name{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-stages>li[data-state=off]{border-top-style:dashed}
 :where(.aham-workbench) .wb-stages>li[data-state=off] .wb-stage-name{text-decoration:line-through;text-decoration-thickness:1px}
 /* Next step: one line under the title that says who the page waits for, what, and by when, with the button for that step. */
 :where(.aham-workbench) .wb-next{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s1) var(--wb-s1) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
 :where(.aham-workbench) .wb-next>.wb-grow{flex:1;min-width:0}
 :where(.aham-workbench) .wb-next strong{font-weight:500}
-:where(.aham-workbench) .wb-next-date{color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal;white-space:nowrap}
+:where(.aham-workbench) .wb-next-date{color:var(--wb-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* Timeline: the progress of one object, top to bottom, in the side column. */
 :where(.aham-workbench) .wb-timeline{display:grid;margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-timeline>li{position:relative;display:grid;gap:2px;padding:0 0 var(--wb-s4) var(--wb-s5)}
@@ -34,13 +34,13 @@
 :where(.aham-workbench) .wb-timeline>li:not(:last-child)::after{content:'';position:absolute;top:19px;bottom:3px;left:3.5px;width:1px;background:var(--wb-line)}
 :where(.aham-workbench) .wb-timeline>li[data-state=done]::before{border-color:var(--wb-success);background:var(--wb-success)}
 :where(.aham-workbench) .wb-timeline>li[data-state=current]::before{border-color:var(--wb-info);background:var(--wb-info)}
-:where(.aham-workbench) .wb-timeline>li[data-state=current] .wb-timeline-name{font-weight:600}
+:where(.aham-workbench) .wb-timeline>li[data-state=current] .wb-timeline-name{font-weight:500}
 :where(.aham-workbench) .wb-timeline>li[data-state=todo] .wb-timeline-name{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-timeline-sub{color:var(--wb-muted);font-size:var(--wb-text-xs)}
 /* Number row: a few counts that open their lists. No frame, no tile. */
 :where(.aham-workbench) .wb-nums{display:flex;flex-wrap:wrap;gap:var(--wb-s2) var(--wb-s6);margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-num{display:grid;gap:2px;color:inherit;text-decoration:none}
-:where(.aham-workbench) .wb-num strong{font-family:var(--wb-mono);font-feature-settings:normal;font-size:var(--wb-title);font-weight:500;line-height:1.2}
+:where(.aham-workbench) .wb-num strong{font-variant-numeric:tabular-nums;font-size:var(--wb-title);font-weight:500;line-height:1.2}
 :where(.aham-workbench) .wb-num span{color:var(--wb-muted)}
 :where(.aham-workbench) a.wb-num:hover span{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
 /* Fold: records (activity, edit history, versions) close into one line at the end of the page. */
@@ -71,7 +71,7 @@
 /* Outside form page: one centred column for people outside the company. No navigation, no internal names. */
 :where(.aham-workbench) .wb-form-page{max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6) var(--wb-s4) var(--wb-s8);display:grid;gap:var(--wb-s5)}
 :where(.aham-workbench) .wb-form-page-brand{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-form-page-title{font-size:var(--wb-detail-title);font-weight:600;line-height:1.35}
+:where(.aham-workbench) .wb-form-page-title{font-size:var(--wb-title);font-weight:600;line-height:1.35}
 :where(.aham-workbench) .wb-form-progress{display:grid;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-form-progress>ol{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:var(--wb-s1);margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-form-progress>ol>li{height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line)}
@@ -79,12 +79,6 @@
 :where(.aham-workbench) .wb-form-progress>ol>li[data-state=current]{background:var(--wb-blue)}
 :where(.aham-workbench) .wb-form-progress>p{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-form-page-foot{display:flex;justify-content:space-between;gap:var(--wb-s2);padding-block-start:var(--wb-s4);border-top:var(--wb-hairline) solid var(--wb-line)}
-/* Labelled rail: 72px, icon above a two-character name. It does not expand. */
-:where(.aham-workbench).is-labeled,:where(.aham-workbench).is-labeled.expanded{grid-template-columns:var(--wb-rail-labeled) minmax(0,1fr)}
-:where(.aham-workbench).is-labeled .wb-rail,:where(.aham-workbench).is-labeled.expanded .wb-rail{align-items:center;padding-inline:var(--wb-s1)}
-:where(.aham-workbench).is-labeled .wb-nav-item,:where(.aham-workbench).is-labeled.expanded .wb-nav-item{flex-direction:column;justify-content:center;gap:2px;width:calc(var(--wb-rail-labeled) - var(--wb-s4));height:auto;min-height:var(--wb-s7);padding:var(--wb-s1) 0}
-:where(.aham-workbench).is-labeled .wb-nav-item span,:where(.aham-workbench).is-labeled.expanded .wb-nav-item span{display:block;font-size:var(--wb-text-xs);line-height:1.3}
-:where(.aham-workbench).is-labeled .wb-header [data-action=nav]{display:none}
 :where(.aham-workbench) .wb-composer-foot>span{flex:1;min-width:0}
 :where(.aham-workbench) .wb-form-page .wb-form-grid{grid-template-columns:minmax(0,1fr);max-width:none}
 :where(.aham-workbench) .wb-form-page .wb-form-row>.wb-field{width:100%}

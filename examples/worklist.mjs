@@ -44,7 +44,7 @@ function render() {
   const head = `<thead><tr>${check ? `<th scope="col" class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select-all aria-label="选择本页全部"></label></th>` : ''}<th scope="col">报价单</th><th scope="col">单号</th><th scope="col">客户</th><th scope="col" class="number">价税合计（元）</th><th scope="col">提交人</th><th scope="col">提交时间</th><th scope="col">${check ? '<span class="wb-sr-only">处理</span>' : '结果'}</th></tr></thead>`;
   const body = list.map(r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}>`
     + (check ? `<td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td>` : '')
-    + `<td><a class="wb-row-link" href="document.html">${esc(r.name)}</a></td><td class="wb-mono">${esc(r.code)}</td><td>${esc(r.customer)}</td><td class="number">${money(r.cents)}</td><td>${esc(r.by)}</td><td class="wb-mono">${esc(r.at)}</td>`
+    + `<td><a class="wb-row-link" href="document.html">${esc(r.name)}</a></td><td class="wb-tnum">${esc(r.code)}</td><td>${esc(r.customer)}</td><td class="number">${money(r.cents)}</td><td>${esc(r.by)}</td><td class="wb-tnum">${esc(r.at)}</td>`
     + (check ? `<td><div class="wb-row-buttons">${r.wait ? `<span class="wb-row-note">${esc(r.wait)}</span>` : ''}<button type="button" class="wb-btn sm" data-approve="${r.id}"${r.wait ? ' disabled' : ''}>通过</button><button type="button" class="wb-btn sm" data-return="${r.id}">退回</button></div></td>`
       : `<td><span class="wb-status" data-tone="${r.result === 'approved' ? 'success' : 'warning'}"><b></b><span>${r.result === 'approved' ? '已通过' : `已退回：${esc(r.reason)}`}</span></span></td>`)
     + '</tr>').join('');

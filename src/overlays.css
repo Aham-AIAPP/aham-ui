@@ -21,7 +21,7 @@
 :where(.aham-workbench) .wb-command-prefix{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-command-count{margin-inline-start:2px;color:var(--wb-muted);font-size:var(--wb-body);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-command-check{display:inline-grid;place-items:center;flex:none;width:14px;height:14px;border:1px solid var(--wb-muted);border-radius:var(--wb-radius-sm);color:var(--wb-on);opacity:0}
-:where(.aham-workbench) .wb-command-check svg{width:10px;height:10px;stroke-width:2.5}
+:where(.aham-workbench) .wb-command-check svg{width:calc(var(--wb-s3) - 2px);height:calc(var(--wb-s3) - 2px);stroke-width:2.5}
 :where(.aham-workbench) [data-index][data-active] .wb-command-check,:where(.aham-workbench) [aria-checked=true] .wb-command-check{opacity:1}
 :where(.aham-workbench) [aria-checked=true] .wb-command-check{border-color:var(--wb-ink);background:var(--wb-ink)}
 :where(.aham-workbench) .wb-command-sep{height:1px;margin:var(--wb-s1) calc(-1 * var(--wb-s1));background:var(--wb-line)}
@@ -99,7 +99,7 @@
 :where(.aham-workbench) .wb-batch-list{display:grid;max-height:240px;overflow:auto;margin:0 0 var(--wb-s5);padding:0;list-style:none;border-block:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-batch-list li{display:grid;grid-template-columns:16px minmax(0,1fr);gap:2px var(--wb-s2);padding:var(--wb-s2) 0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-batch-list li:last-child{border-bottom:0}
-:where(.aham-workbench) .wb-batch-list svg{width:14px;height:14px;margin-block-start:3px;color:var(--wb-danger)}
+:where(.aham-workbench) .wb-batch-list svg{width:var(--wb-icon);height:var(--wb-icon);margin-block-start:3px;color:var(--wb-danger)}
 :where(.aham-workbench) .wb-batch-list small{grid-column:2;color:var(--wb-muted)}
 /* Skeleton (rules/6-反馈.md 6.6): grey blocks in the shape of the content, pulsing together. */
 :where(.aham-workbench) .wb-skeleton{display:block;height:var(--wb-s3);border-radius:var(--wb-radius-sm);background:var(--wb-fill);animation:wb-skeleton 2s var(--wb-ease) infinite}

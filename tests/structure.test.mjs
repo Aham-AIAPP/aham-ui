@@ -18,14 +18,36 @@ test('lint finds no problems', () => {
   assert.deepEqual(lint(), []);
 });
 
-test('density: 36px rows by default, 32px compact, 44px only for touch', () => {
+test('density: 44px single-line list rows, 36px table rows, 32px compact, 44px for touch', () => {
   const v = k => tokens.size[k].$value;
+  assert.equal(v('list-row'), '44px');
   assert.equal(v('row'), '36px');
   assert.equal(v('row-compact'), '32px');
   assert.equal(v('control'), '32px');
   assert.equal(v('touch'), '44px');
+  assert.equal(v('icon'), '14px');
+  assert.equal(tokens.layout.nav.$value, '220px');
   const css = read('aham.css');
   assert.ok(/@media \(pointer:coarse\)[\s\S]*--wb-row:var\(--wb-touch\)/.test(css), 'touch rows switch to 44px');
+});
+
+test('type scale: two sizes on workbench pages, 12px the smallest (rules/2-视觉.md 2.5)', () => {
+  const px = k => parseInt(tokens.text[k].$value, 10);
+  assert.equal(px('body'), 13);
+  assert.equal(px('text-xs'), 12);
+  assert.equal(px('title'), 20);
+  assert.ok(!('detail-title' in tokens.text), 'detail-title was removed in 9.0');
+  assert.ok(Object.keys(tokens.text).filter(k => !k.startsWith('$')).every(k => px(k) >= 12));
+});
+
+test('theme generator reproduces the hand-tuned colours and its sample themes meet the contrast pairs', async () => {
+  const {generateTheme, checkTheme, deltaE, SAMPLES} = await import('../scripts/theme.mjs');
+  for (const mode of ['light', 'dark']) {
+    const g = generateTheme({ mode });
+    for (const [key, hex] of Object.entries(g)) assert.ok(deltaE(hex, tokens.color[mode][key].$value) <= 3, `${mode} ${key}`);
+    assert.deepEqual(checkTheme(mode, g), []);
+  }
+  for (const s of SAMPLES) assert.deepEqual(checkTheme(s.mode, generateTheme(s)), [], JSON.stringify(s));
 });
 
 test('print always uses the light colours', () => {
@@ -74,12 +96,19 @@ test('document page wires the status gate into initObjectPage', () => {
 const RULES = files('rules/').filter(f => f.endsWith('.md')).sort((a, b) => parseInt(a.slice(6)) - parseInt(b.slice(6)));
 const BANNED = ['承接', '赋能', '沉淀', '落地', '抓手', '闭环', '粒度', '归集', '收敛', '下沉', '对位', '波次', '地基', '命脉', '灰度', '旁路', '水位', '卡位', '颗粒度', '值得注意的是', '需要指出的是', '总而言之', '简而言之'];
 
+test('every rule chapter names the design principles it carries out', () => {
+  for (const f of RULES) assert.ok(/本章落实设计理念的原则 \d/.test(read(f).split('\n').slice(0, 4).join('\n')), f);
+  const philosophy = read('设计理念.md');
+  for (let n = 1; n <= 14; n++) assert.ok(philosophy.includes(`**原则 ${n}　`), `设计理念.md 原则 ${n}`);
+  for (const f of ['README.md', 'AGENTS.md']) assert.ok(read(f).includes('设计理念.md'), `${f} links the philosophy`);
+});
+
 test('rules/ has the ten files in order', () => {
   assert.deepEqual(RULES.map(f => f.replace('rules/', '')), ['1-总则.md', '2-视觉.md', '3-控件.md', '4-页面.md', '5-单据.md', '6-反馈.md', '7-键盘与命令.md', '8-AI协作.md', '9-验收.md', '10-数据格式.md']);
 });
 
 test('rule headings are noun phrases: no question marks, no 你', () => {
-  for (const f of [...RULES, 'README.md', 'AGENTS.md']) {
+  for (const f of [...RULES, 'README.md', 'AGENTS.md', '设计理念.md']) {
     for (const line of read(f).split('\n').filter(l => /^#{1,4} /.test(l))) {
       assert.ok(!/[？?]|你/.test(line), `${f}: ${line}`);
     }
@@ -87,7 +116,7 @@ test('rule headings are noun phrases: no question marks, no 你', () => {
 });
 
 test('rule texts avoid the banned words', () => {
-  for (const f of [...RULES, 'README.md', 'AGENTS.md']) {
+  for (const f of [...RULES, 'README.md', 'AGENTS.md', '设计理念.md']) {
     const text = read(f);
     for (const w of BANNED) assert.ok(!text.includes(w), `${f} contains ${w}`);
   }
@@ -120,7 +149,7 @@ test('navigation names have two characters (rules/4-页面.md 4.1)', () => {
 });
 
 test('text never uses the faint grey; it is kept for icons and disabled text (rules/2-视觉.md 2.1)', () => {
-  const allowed = [/\.wb-field:disabled\{/];
+  const allowed = [/\.wb-field:disabled\{/, /\.wb-stage-icon\{/];
   for (const f of files('src/').filter(f => f.endsWith('.css'))) {
     for (const line of read(f).split('\n').filter(l => /[^-]color:var\(--wb-faint\)/.test(l))) {
       assert.ok(allowed.some(r => r.test(line)), `${f}: ${line.slice(0, 120)}`);

@@ -5,11 +5,11 @@
 :where(.aham-workbench) .wb-table :is(th,td){padding:0 var(--wb-s2);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-table td{height:var(--wb-row);vertical-align:middle;white-space:nowrap}
 :where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-hover)}
-:where(.aham-workbench) .wb-table .number{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-table .number{text-align:end;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-table th.number{font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
 :where(.aham-workbench) .wb-cell-title{display:block;overflow:hidden;text-overflow:ellipsis}
-:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-family:var(--wb-mono);font-feature-settings:normal}
-:where(.aham-workbench) .wb-table input{display:block;text-align:end;font-family:var(--wb-mono);font-feature-settings:normal;border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
+:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-table input{display:block;text-align:end;font-variant-numeric:tabular-nums;border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
 :where(.aham-workbench) .wb-table input::-webkit-inner-spin-button{appearance:none}
 :where(.aham-workbench) .wb-table input:hover{background:var(--wb-bg);border-color:var(--wb-line)}
 :where(.aham-workbench) .wb-table tfoot td{height:var(--wb-header-row);font-weight:500;border-bottom:0}

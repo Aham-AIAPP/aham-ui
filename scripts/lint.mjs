@@ -4,6 +4,8 @@
 //   3. src/ sets no font size in px: sizes come from the text tokens, the smallest of which is 12px.
 //   4. src/ uses no border radius in px except 50% / 0 / 1–2px hairlines: radii come from the radius tokens.
 //   5. Colour pairs used for text, icons and controls reach their contrast minimum in both themes (PAIRS).
+//   6. src/ never colours text with the primary blue: links use the body colour (rules/2-视觉.md 2.2, 9.0).
+//   7. src/ sets no icon size in px: icons take --wb-icon (14px) or a spacing token (rules/2-视觉.md 2.9).
 // Tests import lint() and contrast().
 import {readFileSync, readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
@@ -18,8 +20,8 @@ export const RUNTIME_VARS = ['level', 'cat', 'expand-cols'];
 
 // [foreground, background, minimum, what it is]. 4.5 for text, 3 for icons, focus rings and large text.
 export const PAIRS = [
-  ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和导航栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
-  ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '导航栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'],
+  ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和侧栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
+  ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '侧栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'], ['ink-2', 'canvas', 4.5, '侧栏的导航项'], ['ink', 'nav-selected', 4.5, '侧栏的当前项'], ['ink-2', 'nav-selected', 4.5, '侧栏当前项上的计数'],
   ['faint', 'bg', 3, '图标、禁用文字'], ['faint', 'fill', 3, '小元素底色上的图标'],
   ['line-strong', 'bg', 3, '输入框和按钮的描边'], ['line-strong', 'canvas', 3, '外框上的控件描边'], ['line-strong', 'pop-bg', 3, '弹层里的控件描边'],
   ['on', 'action', 4.5, '主按钮文字'],
@@ -59,6 +61,8 @@ export function lint() {
       if (/\b(rgba?|hsla?)\(/.test(line)) errors.push(`${at}: 写死了颜色，改用 tokens.json 的颜色变量`);
       if (/font(-size)?:[^;}]*\b\d+(\.\d+)?px/.test(line)) errors.push(`${at}: 字号写死成 px，改用 --wb-text-* 变量`);
       for (const r of line.matchAll(/border-radius:([^;}]+)/g)) if (/\b([3-9]|\d{2,})px/.test(r[1])) errors.push(`${at}: 圆角写死成 px，改用 --wb-radius-* 变量`);
+      if (/[{;]color:var\(--wb-blue\)/.test(line) && !line.includes('.wb-stage-icon')) errors.push(`${at}: 文字用了主色。正文链接用正文色加下划线，主色只给主按钮、焦点和当前项标记`);
+      if (/svg[^{]*\{[^}]*\b(width|height):\d+px/.test(line)) errors.push(`${at}: 图标尺寸写死成 px，改用 --wb-icon 或间距变量`);
     });
   }
   for (const theme of ['light', 'dark']) {

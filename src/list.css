@@ -53,3 +53,22 @@
 :where(.aham-workbench) .wb-row-link{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-row-link:hover{text-decoration:underline}
 :where(.aham-workbench) .wb-list-table :is(th,td):first-child:not(.wb-check){padding-inline-start:var(--wb-s4)}
+/* Single-line list (9.0, rules/4-页面.md 4.3): no visible header, 44px rows, 36px group rows on the canvas tier.
+   One object per row: code · stage icon · name on the left; tag, numbers, date and avatar on the right, right edges aligned. */
+:where(.aham-workbench) .wb-list-rows{--wb-row:var(--wb-list-row)}
+:where(.aham-workbench) .wb-list-rows thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-header-row);background:var(--wb-canvas);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2)}
+:where(.aham-workbench) .wb-list-rows .wb-group-toggle>svg:first-child{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row)}
+:where(.aham-workbench) .wb-list-rows .wb-cell-meta{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+:where(.aham-workbench) .wb-list-rows .wb-cell-icon{padding-inline:0;text-align:center}
+:where(.aham-workbench) .wb-list-rows .wb-cell-end{text-align:end}
+:where(.aham-workbench) .wb-list-rows .wb-cell-name{padding-inline-start:var(--wb-s2)}
+:where(.aham-workbench) .wb-list-rows .wb-cell-name .wb-row-link:hover{text-decoration:none}
+/* The checkbox shows on hover, on focus, and while any row is selected. */
+:where(.aham-workbench) .wb-list-rows tbody tr:not(:hover,:focus-within,[data-selected]) .wb-check input{opacity:0}
+:where(.aham-workbench) .wb-list-rows:has(tr[data-selected]) .wb-check input{opacity:1}
+:where(.aham-workbench) .wb-list-rows .wb-cell-picker.is-icon{justify-content:center;width:var(--wb-header-control);margin-inline-start:0;padding:0}
+:where(.aham-workbench) .wb-list-rows .wb-cell-end .wb-cell-picker.is-icon{margin-inline-start:auto}
+:where(.aham-workbench) .wb-list-rows :is(th,td):last-child{padding-inline-end:var(--wb-s3)}

@@ -1,5 +1,5 @@
 // Record detail sample: composes the Aham UI detail patterns with fictional demo data.
-import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
+import {initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './list-model.mjs';
 import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
 
@@ -18,6 +18,10 @@ const id = Number(new URLSearchParams(location.search).get('id'));
 const record = { ...(byId.get(id) ?? data[0]) };
 if (!nav.ids.includes(record.id)) nav.ids = [record.id, ...nav.ids];
 const pos = nav.ids.indexOf(record.id);
+const LIVE_STAGES = STAGES.filter(s => s !== '已流失');
+const stageIcon = stage => stage === '已流失' ? stageIconHTML({ state: 'off', label: stage }) : stage === '已签约' ? stageIconHTML({ state: 'done', label: stage })
+  : stageIconHTML({ state: 'current', done: LIVE_STAGES.indexOf(stage), total: LIVE_STAGES.length - 1, label: stage });
+const metaHtml = () => `<span class="wb-status">${stageIcon(record.stage)}<span>${esc(record.stage)}</span></span><span class="wb-tnum">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
 
 const activity = [
   { kind: 'event', icon: 'edit', who: ME, text: '创建了记录', when: record.created },
@@ -28,14 +32,14 @@ const activity = [
 function renderMain() {
   $('#record-main').innerHTML = `
     <h1 class="wb-detail-title">${esc(record.name)}</h1>
-    <div class="wb-detail-meta"><span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span></div>
+    <div class="wb-detail-meta">${metaHtml()}</div>
     <div id="ai-slot"><button type="button" class="wb-btn sm ghost" data-action="ai-summary">${icon('ai')}<span>生成摘要</span></button></div>
     <div class="wb-detail-body"><p>这是一段虚构的记录说明，用来演示详情页的正文区。正文放在居中的阅读宽度里，长段落按 1.75 行高排版。</p><p>属性放在右侧属性栏，正文只写需要阅读的内容：背景、范围、约定事项。</p></div>
     <section class="wb-detail-section" aria-labelledby="related-title">
       <div class="wb-section-heading"><h2 id="related-title">关联记录<span>2</span></h2></div>
       <ul class="wb-related">
-        <li><span class="wb-mono">OPP-0187</span><span class="wb-grow">MES 一期建设项目</span><span class="wb-status"><b></b>方案评估</span></li>
-        <li><span class="wb-mono">QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
+        <li><span class="wb-tnum">OPP-0187</span><span class="wb-grow">MES 一期建设项目</span><span class="wb-status"><b></b>方案评估</span></li>
+        <li><span class="wb-tnum">QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
       </ul>
     </section>
     <section class="wb-detail-section" aria-labelledby="activity-title">
@@ -61,7 +65,7 @@ function renderActivity() {
     : `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" data-cat="${avatarCat(a.who)}" aria-hidden="true">${esc([...a.who][0])}</span><strong>${esc(a.who)}</strong><span>${esc(a.when)}</span>${a.ai ? `<span class="wb-ai-mark">${icon('ai')}<span>${esc(a.ai)}</span></span>` : ''}</div>${a.text.split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join('')}</article>`).join('');
 }
 function renderMeta() {
-  $('.wb-detail-meta').innerHTML = `<span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
+  $('.wb-detail-meta').innerHTML = metaHtml();
 }
 function renderProps() {
   $('#record-props').innerHTML = `
@@ -71,10 +75,10 @@ function renderProps() {
       <div class="wb-prop"><span>行业</span><button type="button" class="wb-prop-value" data-prop="industry"></button></div>
     </section>
     <section class="wb-props-section" aria-labelledby="props-b"><h2 class="wb-props-title" id="props-b">信息</h2>
-      <div class="wb-prop"><span>编码</span><span class="wb-prop-value wb-mono">${esc(record.code)}</span></div>
-      <div class="wb-prop"><span>年度金额</span><span class="wb-prop-value wb-mono">${money(record.amountCents)}</span></div>
-      <div class="wb-prop"><span>最近跟进</span><span class="wb-prop-value wb-mono">${record.lastContact}</span></div>
-      <div class="wb-prop"><span>创建日期</span><span class="wb-prop-value wb-mono">${record.created}</span></div>
+      <div class="wb-prop"><span>编码</span><span class="wb-prop-value wb-tnum">${esc(record.code)}</span></div>
+      <div class="wb-prop"><span>年度金额</span><span class="wb-prop-value wb-tnum">${money(record.amountCents)}</span></div>
+      <div class="wb-prop"><span>最近跟进</span><span class="wb-prop-value wb-tnum">${record.lastContact}</span></div>
+      <div class="wb-prop"><span>创建日期</span><span class="wb-prop-value wb-tnum">${record.created}</span></div>
     </section>`;
 }
 

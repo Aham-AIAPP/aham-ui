@@ -16,11 +16,11 @@
 :where(.aham-workbench) .wb-context>section{padding-block-end:var(--wb-s5);margin-block-end:var(--wb-s5);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-context>section:last-child{border:0;padding:0;margin:0}
 :where(.aham-workbench) .wb-total-label{color:var(--wb-muted);margin:var(--wb-s4) 0 var(--wb-s2)}
-:where(.aham-workbench) .wb-total{font:500 var(--wb-total)/1.4 var(--wb-mono);overflow-wrap:anywhere}
-:where(.aham-workbench) .wb-context dd{text-align:end;font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-total{font:500 var(--wb-total)/1.4 var(--wb-font);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-context dd{text-align:end;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) :is(.wb-summary-foot,.wb-payment>div){display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);margin-block-start:var(--wb-s3)}
 :where(.aham-workbench) .wb-summary-foot{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-payment strong{font-family:var(--wb-mono);font-feature-settings:normal;font-weight:400}
+:where(.aham-workbench) .wb-payment strong{font-variant-numeric:tabular-nums;font-weight:400}
 :where(.aham-workbench) .wb-approval ol{list-style:none;margin:var(--wb-s3) 0 0;padding:0}
 :where(.aham-workbench) .wb-approval li{display:flex;gap:var(--wb-s3);padding-block-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-step-dot{width:var(--wb-dot);height:var(--wb-dot);border:1px solid var(--wb-muted);border-radius:50%;margin-block-start:var(--wb-s2);flex:none}
@@ -45,7 +45,7 @@
 :where(.aham-workbench) .wb-doc-facts>div{display:grid;gap:2px;min-width:0}
 :where(.aham-workbench) .wb-doc-facts dt{color:var(--wb-muted);font-size:var(--wb-text-xs)}
 :where(.aham-workbench) .wb-doc-facts dd{margin:0;font-weight:500;overflow-wrap:anywhere}
-:where(.aham-workbench) .wb-doc-facts dd.is-amount{font-family:var(--wb-mono);font-feature-settings:normal}
+:where(.aham-workbench) .wb-doc-facts dd.is-amount{font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-doc-head.is-stuck .wb-doc-facts{display:none}
 /* Anchor bar: one button per section under the head; the section on screen is underlined like a tab. */
 :where(.aham-workbench) .wb-anchors{display:flex;gap:var(--wb-s5);overflow-x:auto;scrollbar-width:none}
@@ -61,9 +61,9 @@
 :where(.aham-workbench) [data-mode=edit] .wb-document.is-page,:where(.aham-workbench) .wb-document.is-page[data-mode=edit]{padding-block-end:0}
 :where(.aham-workbench) .wb-doc-head.is-stuck{border-bottom-color:var(--wb-line)}
 :where(.aham-workbench) .wb-doc-title{display:grid;gap:var(--wb-s2);min-width:0}
-:where(.aham-workbench) .wb-doc-title h1{font-size:var(--wb-detail-title);font-weight:600;line-height:1.3;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-doc-title h1{font-size:var(--wb-title);font-weight:600;line-height:1.3;overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-doc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s1) var(--wb-s4);color:var(--wb-muted)}
-:where(.aham-workbench) .wb-doc-meta .wb-mono{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-doc-meta .wb-tnum{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-doc-actions{display:flex;flex:none;align-items:center;gap:var(--wb-s2);padding-block-start:2px}
 :where(.aham-workbench) .wb-doc-actions .wb-mode-note{color:var(--wb-muted);margin-inline-end:var(--wb-s1)}
 :where(.aham-workbench) .wb-mode-note{color:var(--wb-muted)}
@@ -103,7 +103,7 @@
 :where(.aham-workbench) .wb-value.is-empty{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-source{flex:none;width:20px;height:20px;display:inline-grid;place-items:center;border-radius:var(--wb-radius-sm);color:var(--wb-muted);cursor:help}
 :where(.aham-workbench) .wb-source:is(:hover,:focus-visible){background:var(--wb-hover);outline:none}
-:where(.aham-workbench) .wb-source svg{width:14px;height:14px}
+:where(.aham-workbench) .wb-source svg{width:var(--wb-icon);height:var(--wb-icon)}
 /* Edit controls are .wb-field (controls.css). Here only their width inside a form row and a table cell; a unit never wraps. */
 :where(.aham-workbench) .wb-edit{flex:1;min-width:0;display:flex;align-items:center;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-edit.is-groups{flex-wrap:wrap}
@@ -147,7 +147,7 @@
 :where(.aham-workbench) .wb-messages button{display:grid;grid-template-columns:18px minmax(0,1fr);gap:2px var(--wb-s2);width:100%;padding:var(--wb-s1) var(--wb-s3);border:0;background:transparent;text-align:start}
 :where(.aham-workbench) .wb-messages button:is(:hover,:focus-visible){background:var(--wb-hover)}
 :where(.aham-workbench) .wb-messages small{grid-column:2;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-messages button>svg{width:14px;height:14px;margin-block-start:3px}
+:where(.aham-workbench) .wb-messages button>svg{width:var(--wb-icon);height:var(--wb-icon);margin-block-start:3px}
 :where(.aham-workbench) .wb-messages [data-severity=error]>svg{color:var(--wb-danger)}
 :where(.aham-workbench) .wb-messages [data-severity=warning]>svg{color:var(--wb-warning)}
 :where(.aham-workbench) .wb-confirm-text{margin:var(--wb-s2) var(--wb-s3)}

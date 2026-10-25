@@ -30,7 +30,7 @@
 :where(.aham-workbench) .wb-sheet .wb-table thead th{color:var(--wb-ink);border-bottom-color:var(--wb-ink)}
 :where(.aham-workbench) .wb-sheet .wb-table tfoot td{font-weight:600;border-bottom:0}
 :where(.aham-workbench) .wb-sheet-total{display:grid;justify-items:end;gap:var(--wb-s1);margin-block-start:var(--wb-s3)}
-:where(.aham-workbench) .wb-sheet-total strong{font:600 var(--wb-text-base)/1.4 var(--wb-mono)}
+:where(.aham-workbench) .wb-sheet-total strong{font:600 var(--wb-text-base)/1.4 var(--wb-font);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-sheet-sign{display:grid;grid-template-columns:1fr 1fr;gap:var(--wb-s6);margin-block-start:var(--wb-s8)}
 :where(.aham-workbench) .wb-sheet-sign>div{margin-block-start:var(--wb-s7);padding-block-start:var(--wb-s2);border-top:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 /* Paper is A4 with 15mm margins. On screen the sheet draws those margins as padding; on paper the page does. */

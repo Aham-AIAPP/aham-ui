@@ -1,6 +1,6 @@
 /* Opt-in profile. Existing .btn/.table/.track-web styles are untouched.
    Generic workbench classes use the wb- prefix; page-specific styles live next to each example. */
-:where(.aham-workbench){display:grid;grid-template-columns:var(--wb-rail) minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden;background:var(--wb-canvas);color:var(--wb-ink);font:var(--wb-body)/1.55 var(--wb-font);font-feature-settings:var(--wb-font-features);text-align:start;color-scheme:light}
+:where(.aham-workbench){display:grid;grid-template-columns:var(--wb-nav) minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden;background:var(--wb-canvas);color:var(--wb-ink);font:var(--wb-body)/1.55 var(--wb-font);font-feature-settings:var(--wb-font-features);text-align:start;color-scheme:light}
 :where(.aham-workbench) *{box-sizing:border-box}
 :where(.aham-workbench) [hidden]{display:none!important}
 :where(.aham-workbench) :is(h1,h2,h3,p){margin:0}

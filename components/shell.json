@@ -4,7 +4,7 @@
   "implementation": "aham.css",
   "behavior": "aham.js",
   "name": "外框",
-  "intent": "导航栏、页眉、内容区和侧面板",
+  "intent": "侧栏、页眉、内容区和侧面板",
   "api": {
     "initShell": "initShell(root) → { set, isOpen, theme }",
     "initPanels": "initPanels(root) → { show, hide }",
@@ -27,15 +27,15 @@
     "Esc": "关闭最上面一层"
   },
   "rules": [
-    "导航收起 52px、展开 240px；带名称的导航栏（.is-labeled）72px，图标在上、两字名称在下，不展开",
+    "导航收起 52px、展开 240px；带名称的侧栏（.is-labeled）72px，图标在上、两字名称在下，不展开",
     "导航项名称字数一致，中文统一两个字",
-    "页眉和导航栏固定，只有内容区滚动",
+    "页眉和侧栏固定，只有内容区滚动",
     "页眉每条 40px",
     "侧面板一次只开一个",
     "1024px 及以下宽面板浮在内容上方"
   ],
   "accessibility": [
-    "导航开关 aria-controls 指向导航栏，aria-expanded 跟随状态"
+    "导航开关 aria-controls 指向侧栏，aria-expanded 跟随状态"
   ],
   "doNotInvent": [
     "顶部大横幅",

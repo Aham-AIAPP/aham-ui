@@ -137,7 +137,7 @@ export const DEFAULT_DISPLAY = Object.freeze({
   sort: { field: 'lastContact', dir: 'desc' },
   density: 'standard',
   pageSize: 50,
-  columns: [['code', false], ['industry', true], ['owner', true], ['stage', true], ['lastContact', true], ['created', false], ['amountCents', true]],
+  columns: [['code', true], ['industry', true], ['owner', true], ['stage', true], ['lastContact', true], ['created', false], ['amountCents', true]],
 });
 export function normalizeDisplay(raw) {
   const d = structuredClone(DEFAULT_DISPLAY);

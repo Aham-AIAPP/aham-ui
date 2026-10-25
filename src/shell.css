@@ -1,30 +1,44 @@
-/* Shell: navigation sits on the panel tier; the content card is the white tier. No border, no resting shadow. */
-:where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;align-items:center;gap:var(--wb-s5);min-height:0;overflow-y:auto;padding:var(--wb-s4) var(--wb-s2);background:var(--wb-canvas)}
-:where(.aham-workbench) .wb-brand{display:grid;place-items:center;width:var(--wb-s6);height:var(--wb-s6);font-size:var(--wb-title);font-weight:600;color:var(--wb-blue)}
-:where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;justify-content:center;gap:var(--wb-s2);background:transparent;border:0;border-radius:var(--wb-radius);width:var(--wb-nav-item);height:var(--wb-nav-item);color:var(--wb-muted)}
+/* Shell (9.0): a 220px text sidebar on the canvas tier, one shade darker than the white content card.
+   ⌘/Ctrl+B collapses it to a 52px icon rail. No border, no resting shadow. */
+:where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;gap:var(--wb-s4);min-height:0;overflow-y:auto;padding:var(--wb-s2) var(--wb-s2) var(--wb-s3);background:var(--wb-canvas)}
+:where(.aham-workbench) .wb-rail-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-row);padding:0 var(--wb-s2)}
+:where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);border-radius:var(--wb-radius-sm);background:var(--wb-action);color:var(--wb-on);font-size:var(--wb-text-xs);font-weight:600}
+:where(.aham-workbench) .wb-brand-name{min-width:0;font-weight:500;color:var(--wb-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-group{display:grid;gap:2px}
+:where(.aham-workbench) .wb-nav-heading{display:block;padding:0 var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink-2);text-align:start}
 :where(.aham-workbench) a.wb-nav-item{text-decoration:none}
+:where(.aham-workbench) .wb-nav-item svg{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-selected)}
+:where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-nav-selected);color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-nav-item[aria-current=page] svg{color:var(--wb-ink)}
+:where(.aham-workbench) .wb-nav-item>span:not(.wb-avatar-xs,.wb-nav-count){flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-count{flex:none;color:var(--wb-ink-2);font-size:var(--wb-text-xs);font-weight:400;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-nav-user{cursor:default}
+:where(.aham-workbench) .wb-nav-user:hover{background:transparent}
+:where(.aham-workbench) .wb-nav-foot{display:grid;gap:2px;margin-block-start:auto}
 :where(.aham-workbench) .wb-crumbs a{color:inherit;text-decoration:none}
 :where(.aham-workbench) .wb-crumbs a:hover{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
-:where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-selected);color:var(--wb-ink)}
-:where(.aham-workbench) .wb-nav-item span{display:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-:where(.aham-workbench) .wb-nav-group{display:grid;gap:var(--wb-s1)}
-:where(.aham-workbench) .wb-nav-foot{margin-block-start:auto;padding-block-start:var(--wb-s5)}
-:where(.aham-workbench).expanded{grid-template-columns:var(--wb-nav) minmax(0,1fr)}
-:where(.aham-workbench).expanded .wb-rail{align-items:stretch}
-:where(.aham-workbench).expanded .wb-nav-item{justify-content:start;width:100%;padding-inline:var(--wb-s2)}
-:where(.aham-workbench).expanded .wb-nav-item span{display:inline}
+/* Collapsed (⌘/Ctrl+B): 52px of icons; names show in the tooltip. */
+:where(.aham-workbench).collapsed{grid-template-columns:var(--wb-rail) minmax(0,1fr)}
+:where(.aham-workbench).collapsed .wb-rail{align-items:center;padding-inline:var(--wb-s1)}
+:where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
+:where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
+:where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
 :where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
-/* Header: one or two 40px rows. Row 1 = where am I; row 2 = count, filter, panel toggles, display options. */
+/* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
 :where(.aham-workbench) .wb-header{flex:none}
 :where(.aham-workbench) .wb-header-row{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);height:var(--wb-header-row);padding:0 var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 :where(.aham-workbench) :is(.wb-header-lead,.wb-header-trail){display:flex;align-items:center;gap:var(--wb-s2);min-width:0}
 :where(.aham-workbench) .wb-header-lead{flex:1}
-:where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s3);min-width:0;overflow:hidden;white-space:nowrap}
-:where(.aham-workbench) .wb-crumbs strong{font-weight:400;font-family:var(--wb-mono);font-feature-settings:normal}
-:where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink)}
+/* The nav toggle sits in the header only while the sidebar is collapsed or floating. */
+:where(.aham-workbench):not(.collapsed) .wb-header [data-action=nav]{display:none}
+:where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s2);min-width:0;overflow:hidden;white-space:nowrap}
+:where(.aham-workbench) .wb-crumbs strong{font-weight:500;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-count{color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-page-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) :is(.wb-page-head-lead,.wb-page-head-trail){display:flex;align-items:center;gap:var(--wb-s3);flex-wrap:wrap}
-:where(.aham-workbench) h1{font-size:var(--wb-title);font-weight:500}
-:where(.aham-workbench) :is(h2,h3){font-size:var(--wb-body);font-weight:600}
+:where(.aham-workbench) h1{font-size:var(--wb-title);font-weight:600;line-height:1.3}
+:where(.aham-workbench) :is(h2,h3){font-size:var(--wb-body);font-weight:500}

@@ -76,7 +76,6 @@
  .aham-workbench .wb-expand-body {padding-inline-start:var(--wb-s5)}
  .aham-workbench .wb-stages {grid-auto-columns:minmax(var(--wb-s7),1fr);overflow-x:auto}
  .aham-workbench .wb-next {flex-wrap:wrap}
- .aham-workbench.is-labeled .wb-header [data-action=nav] {display:inline-grid}
 }
 @media (pointer:coarse) {
  .aham-workbench button,.aham-workbench input:not([type=checkbox],[type=radio]) {min-height:var(--wb-touch);min-width:var(--wb-touch)}

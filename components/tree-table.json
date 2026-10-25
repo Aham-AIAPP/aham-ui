@@ -48,7 +48,7 @@
     ]
   },
   "markup": {
-    "row": "<tr data-id=\"1.3\" data-level=\"2\"><td class=\"wb-tree-name\" style=\"--wb-level:2\"><span><button type=\"button\" class=\"wb-tree-toggle\" aria-expanded=\"true\" aria-label=\"紧固件组，第 2 层，含 2 项\" tabindex=\"-1\">[chevron-down]</button><span class=\"wb-cell-title\">紧固件组</span></span></td><td class=\"wb-mono\">KIT-0088</td><td class=\"number\">1</td><td class=\"number\">—</td><td class=\"number\">2.52</td></tr>",
+    "row": "<tr data-id=\"1.3\" data-level=\"2\"><td class=\"wb-tree-name\" style=\"--wb-level:2\"><span><button type=\"button\" class=\"wb-tree-toggle\" aria-expanded=\"true\" aria-label=\"紧固件组，第 2 层，含 2 项\" tabindex=\"-1\">[chevron-down]</button><span class=\"wb-cell-title\">紧固件组</span></span></td><td class=\"wb-tnum\">KIT-0088</td><td class=\"number\">1</td><td class=\"number\">—</td><td class=\"number\">2.52</td></tr>",
     "leaf": "<tr data-id=\"1.3.1\" data-level=\"3\"><td class=\"wb-tree-name\" style=\"--wb-level:3\"><span><span class=\"wb-tree-spacer\" aria-hidden=\"true\"></span><span class=\"wb-cell-title\">六角螺栓 M8×20</span><span class=\"wb-sr-only\">，第 3 层</span></span></td>…</tr>"
   },
   "rules": [

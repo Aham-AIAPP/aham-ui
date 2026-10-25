@@ -10,4 +10,5 @@ jobs:
           node-version: '22'
       - run: node scripts/build.mjs --check
       - run: node scripts/lint.mjs
+      - run: node scripts/theme.mjs --check
       - run: node --test

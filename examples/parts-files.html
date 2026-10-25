@@ -235,7 +235,7 @@ $('#pv-tree tbody').innerHTML = BOM.map(r => {
     ? `<button type="button" class="wb-tree-toggle" aria-expanded="true" aria-label="${esc(r.name)}，第 ${lv} 层，含 ${kids} 项" tabindex="-1">${icon('chevron-down')}</button>`
     : `<span class="wb-tree-spacer" aria-hidden="true"></span>`;
   const price = r.price == null ? '—' : r.stale ? `<span class="wb-risk warning">${yuan(r.price)}<span class="wb-sr-only">（单价超过 90 天未更新）</span></span>` : yuan(r.price);
-  return `<tr data-id="${r.id}" data-level="${lv}"><td class="wb-tree-name" style="--wb-level:${lv}"><span>${toggle}<span class="wb-cell-title">${esc(r.name)}</span>${parents.has(r.id) ? '' : `<span class="wb-sr-only">，第 ${lv} 层</span>`}</span></td><td class="wb-mono">${esc(r.code)}</td><td class="number">${r.qty}</td><td class="number">${price}</td><td class="number">${yuan(totals.get(r.id))}</td></tr>`;
+  return `<tr data-id="${r.id}" data-level="${lv}"><td class="wb-tree-name" style="--wb-level:${lv}"><span>${toggle}<span class="wb-cell-title">${esc(r.name)}</span>${parents.has(r.id) ? '' : `<span class="wb-sr-only">，第 ${lv} 层</span>`}</span></td><td class="wb-tnum">${esc(r.code)}</td><td class="number">${r.qty}</td><td class="number">${price}</td><td class="number">${yuan(totals.get(r.id))}</td></tr>`;
 }).join('');
 $('#pv-tree-total').textContent = yuan(BOM.filter(r => !r.parent).reduce((s, r) => s + totals.get(r.id), 0));
 const tree = initTreeTable($('#pv-tree'));
