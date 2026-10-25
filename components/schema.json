@@ -31,6 +31,8 @@
     "itemSchema": { "type": "string" },
     "fieldSchema": { "type": "string" },
     "operators": { "type": "object" },
-    "reserved": { "type": "object" }
+    "reserved": { "type": "object" },
+    "lifecycle": { "type": "array", "description": "状态清单：每个状态能改哪些字段、有哪些操作、下一步提示条怎么写", "items": { "type": "object", "required": ["status", "editable", "actions", "next"], "additionalProperties": false, "properties": { "status": { "type": "string" }, "editable": { "type": ["boolean", "array"] }, "actions": { "type": "array", "items": { "type": "string" } }, "next": { "type": "string" } } } },
+    "visibility": { "type": "object", "description": "多方共用的对象里每个部分的可见范围：both 双方可见，ours 仅我方，ours-until-confirmed 我方确认前仅我方", "additionalProperties": { "type": "string", "enum": ["both", "ours", "ours-until-confirmed"] } }
   }
 }

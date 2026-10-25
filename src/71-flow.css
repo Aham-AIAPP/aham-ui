@@ -25,6 +25,8 @@
 /* Next step: one line under the title that says who the page waits for, what, and by when, with the button for that step. */
 :where(.aham-workbench) .wb-next{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s1) var(--wb-s1) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
 :where(.aham-workbench) .wb-next>.wb-grow{flex:1;min-width:0}
+/* Text that ends the line keeps the same 12px edge as the start; a button ends 4px from the edge. */
+:where(.aham-workbench) .wb-next>:last-child:not(.wb-btn){margin-inline-end:var(--wb-s2)}
 :where(.aham-workbench) .wb-next strong{font-weight:500}
 :where(.aham-workbench) .wb-next-date{color:var(--wb-muted);white-space:nowrap}
 :where(.aham-workbench) .wb-next-date.is-overdue{color:var(--wb-danger)}
@@ -84,6 +86,8 @@
 :where(.aham-workbench) .wb-composer-foot>span{flex:1;min-width:0}
 :where(.aham-workbench) .wb-form-page .wb-form-grid{grid-template-columns:minmax(0,1fr);max-width:none}
 :where(.aham-workbench) .wb-form-page .wb-form-row>.wb-field{width:100%}
+/* The form page asks people outside the company, so its labels read as questions at body size. */
+:where(.aham-workbench) .wb-form-page .wb-form-label{color:var(--wb-ink-2);font-size:var(--wb-body);line-height:var(--wb-leading)}
 :where(.aham-workbench) .wb-form-page h2{font-size:var(--wb-text-base);margin-block-end:var(--wb-s3)}
 :where(.aham-workbench) .wb-form-page-foot>.wb-btn.primary{margin-inline-start:auto}
 /* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */

@@ -11,7 +11,8 @@ const TRADES = [
   ['电子元件', '电子'], ['医疗器械', '医疗器械'], ['纺织', '纺织'], ['新材料', '新材料'],
 ];
 export const OWNERS = ['林悦', '周航', '许宁', '陈默'];
-export const STAGES = ['初次接触', '需求调研', '方案评估', '商务谈判', '已签约', '已流失'];
+// Customers carry a status, not a sales stage: stages belong to opportunities (rules/4-页面.md 4.2).
+export const STATUSES = ['潜在', '跟进中', '已成交', '已流失'];
 export const INDUSTRIES = [...new Set(TRADES.map(t => t[1]))];
 
 function lcg(seed) {
@@ -30,8 +31,8 @@ export function makeCustomers(count = 128, seed = 20260930) {
   for (let i = 0; i < count; i++) {
     const place = PLACES[i % PLACES.length];
     const [trade, industry] = TRADES[Math.floor(i / PLACES.length) % TRADES.length];
-    const stage = STAGES[Math.floor(rnd() * STAGES.length)];
-    const early = stage === '初次接触' || stage === '已流失';
+    const status = STATUSES[Math.floor(rnd() * STATUSES.length)];
+    const early = status === '潜在' || status === '已流失';
     const created = Math.floor(rnd() * 120);
     rows.push({
       id: i + 1,
@@ -39,7 +40,7 @@ export function makeCustomers(count = 128, seed = 20260930) {
       name: `${place}${trade}有限公司`,
       industry,
       owner: OWNERS[Math.floor(rnd() * OWNERS.length)],
-      stage,
+      status,
       amountCents: early ? null : Math.round(80 + rnd() * 1520) * 1000 * 100,
       lastContact: dayOf(Math.min(created, Math.floor(rnd() * 30))),
       created: dayOf(created),
@@ -53,7 +54,7 @@ export const FIELDS = [
   { key: 'code', label: '客户编码', type: 'text' },
   { key: 'industry', label: '行业', type: 'option', options: INDUSTRIES },
   { key: 'owner', label: '负责人', type: 'option', options: OWNERS },
-  { key: 'stage', label: '阶段', type: 'option', options: STAGES },
+  { key: 'status', label: '客户状态', type: 'option', options: STATUSES },
   { key: 'lastContact', label: '最近跟进', type: 'date' },
   { key: 'created', label: '创建日期', type: 'date' },
   { key: 'amountCents', label: '年度金额', type: 'number' },
@@ -78,7 +79,7 @@ export const applySearch = (rows, q) => {
   return t ? rows.filter(r => r.name.toLowerCase().includes(t) || r.code.toLowerCase().includes(t)) : rows;
 };
 
-const ORDER = { stage: STAGES, owner: OWNERS, industry: INDUSTRIES };
+const ORDER = { status: STATUSES, owner: OWNERS, industry: INDUSTRIES };
 const zh = new Intl.Collator('zh-CN', { numeric: true });   // names sort by pinyin, not by code point
 export function sortRows(rows, { field: key, dir }) {
   const sign = dir === 'desc' ? -1 : 1, rank = ORDER[key], text = field(key)?.type === 'text';
@@ -131,18 +132,18 @@ export function decodeState(search) {
 }
 
 // Display options are per viewer and stored locally; the URL does not carry them.
-export const COLUMN_KEYS = ['code', 'industry', 'owner', 'stage', 'lastContact', 'created', 'amountCents'];
+export const COLUMN_KEYS = ['code', 'industry', 'owner', 'status', 'lastContact', 'created', 'amountCents'];
 export const DEFAULT_DISPLAY = Object.freeze({
-  group: 'stage',
+  group: 'status',
   sort: { field: 'lastContact', dir: 'desc' },
   density: 'standard',
   pageSize: 50,
-  columns: [['code', true], ['industry', true], ['owner', true], ['stage', true], ['lastContact', true], ['created', false], ['amountCents', true]],
+  columns: [['code', true], ['industry', true], ['owner', true], ['status', true], ['lastContact', true], ['created', false], ['amountCents', true]],
 });
 export function normalizeDisplay(raw) {
   const d = structuredClone(DEFAULT_DISPLAY);
   if (!raw || typeof raw !== 'object') return d;
-  if (raw.group === null || ['stage', 'owner', 'industry'].includes(raw.group)) d.group = raw.group;
+  if (raw.group === null || ['status', 'owner', 'industry'].includes(raw.group)) d.group = raw.group;
   if (raw.sort && field(raw.sort.field) && ['asc', 'desc'].includes(raw.sort.dir)) d.sort = { field: raw.sort.field, dir: raw.sort.dir };
   if (['standard', 'compact'].includes(raw.density)) d.density = raw.density;
   if (PAGE_SIZES.includes(raw.pageSize)) d.pageSize = raw.pageSize;

@@ -16,7 +16,7 @@
 :where(.aham-workbench) .wb-table-hint{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--wb-s2);color:var(--wb-muted);padding:var(--wb-s1) 0 var(--wb-s4)}
 :where(.aham-workbench) .wb-sort{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:100%;padding:0;border:0;background:transparent;font-weight:inherit;color:inherit}
 :where(.aham-workbench) .wb-sort svg{width:var(--wb-s3);height:var(--wb-s3)}
-:where(.aham-workbench) .wb-row-link{display:block;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-row-link{display:block;color:inherit;text-decoration:none;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :where(.aham-workbench) .wb-row-link:hover{text-decoration:underline;text-underline-offset:3px}
 /* Tree table: indent per level, a 20px toggle, parent subtotals at weight 500. */
 :where(.aham-workbench) .wb-table td.wb-tree-name{padding-inline-start:calc(var(--wb-s2) + (var(--wb-level,1) - 1) * var(--wb-s4))}

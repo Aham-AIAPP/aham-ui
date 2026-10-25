@@ -6,7 +6,7 @@
   "implementation": "aham.css",
   "behavior": "aham.js",
   "preview": "examples/parts-detail.html",
-  "intent": "无明细表的记录详情页：页眉位置与上下条、居中正文、288px 属性栏",
+  "intent": "无明细表的记录详情页：页眉位置与上下条、铺满的主内容、288px 属性栏",
   "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
   "classes": [
@@ -35,6 +35,8 @@
       "main",
       "title",
       "meta",
+      "next-step",
+      "stages",
       "body",
       "related",
       "activity",
@@ -44,7 +46,11 @@
       "header-row",
       "main",
       "properties-panel"
-    ]
+    ],
+    "conditional": {
+      "next-step": "有在等的人时显示（rules/3-控件.md 3.13）",
+      "stages": "对象按阶段推进时显示，例如场景（rules/3-控件.md 3.15）"
+    }
   },
   "markup": {
     "recordNav": "<div class=\"wb-record-nav\"><span>3 / 36</span><button class=\"wb-icon-btn\" aria-label=\"上一条\">[chevron-up]</button><button class=\"wb-icon-btn\" aria-label=\"下一条\">[chevron-down]</button></div>",
@@ -54,7 +60,7 @@
     "页眉只用 1 条；右侧显示「位置 / 总数」与上一条、下一条",
     "位置来自进入详情前的列表顺序，没有上下文时用全部记录",
     "面包屑的列表链接保留原筛选与视图",
-    "正文最宽 640px（--wb-body-width）居中；属性栏 288px（--wb-panel-props）单独滚动；1024px 及以下属性栏移到正文后方",
+    "主内容铺满，边距同单据页（--wb-page-gutter），正文段落限宽 640px（--wb-body-width）；属性栏 288px（--wb-panel-props）单独滚动；1024px 及以下属性栏移到正文后方",
     "标题 20px 字重 600；摘要行放阶段图标加文字、编号、负责人",
     "有明细表和金额的单据用单据页（rules/5-单据.md），不用本页型",
     "动态、修改记录和版本记录默认折叠在页尾一行"

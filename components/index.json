@@ -147,6 +147,13 @@
       "preview": "examples/parts-detail.html"
     },
     {
+      "slug": "shared-object",
+      "name": "多方共用的对象",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#415-多方共用的对象",
+      "preview": "examples/scene.html"
+    },
+    {
       "slug": "properties-panel",
       "name": "属性栏",
       "group": "外框和页面",

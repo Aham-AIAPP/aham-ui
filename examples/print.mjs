@@ -18,7 +18,7 @@ function load() {
 }
 
 const q = load(), f = q.fields, t = totals(q.rows);
-const MARK = { draft: '草稿 · 未生效', review: '审批中 · 未生效', returned: '已退回 · 未生效', voided: '已作废' };
+const MARK = { draft: '草稿 · 未生效', review: '审批中 · 未生效', returned: '已退回 · 未生效', expired: '已过期', voided: '已作废' };
 const mark = MARK[q.status];
 document.querySelector('#print-note').textContent = mark ? `这张单据的状态是「${mark.split(' · ')[0]}」，打印件会带「${mark}」标记` : '';
 

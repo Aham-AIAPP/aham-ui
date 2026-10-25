@@ -41,13 +41,20 @@ Aham UI 覆盖电脑浏览器里的业务管理系统：列表、单据、记录
 
 | 需求 | 页型 | 示例 |
 |---|---|---|
+| 登录后先看今天要关心的事 | 我的工作台 | [examples/home.html](examples/home.html) |
 | 查找、筛选、批量处理 | 列表页 | [examples/list.html](examples/list.html) |
 | 有明细、金额或审批的业务对象 | 单据页 | [examples/document.html](examples/document.html) |
 | 逐条处理分给自己的待办 | 工作清单 | [examples/worklist.html](examples/worklist.html) |
 | 没有审批流程的记录 | 记录详情页 | [examples/record.html](examples/record.html) |
+| 客户和我方共用、按阶段推进的对象 | 共用对象的列表页和详情页 | [examples/scenes.html](examples/scenes.html)、[examples/scene.html](examples/scene.html) |
+| 新建简单的记录：必填字段少于 8 个、没有明细表 | 新建弹窗 | `openCreateDialog()` |
+| 新建单据：有明细表或必填字段 8 个以上 | 单据页的新建态 | — |
+| 新建过程分 3–8 步、前后步骤有依赖 | 向导 | 没有参考实现 |
+| 先输入编号或名称，再打开对应的单据 | 初始页 | 没有参考实现 |
 | 打印单据 | 打印预览页 | [examples/print.html](examples/print.html) |
 | 请公司外部的人填写信息 | 对外填报页 | [examples/form.html](examples/form.html) |
 | 个人或工作区设置 | 设置页 | [examples/settings.html](examples/settings.html) |
+| 成员、角色和权限 | 设置页的成员与角色 | [examples/members.html](examples/members.html) |
 
 完整的选择表见 [rules/4-页面.md](rules/4-页面.md) 4.2。
 
@@ -68,6 +75,7 @@ Aham UI 覆盖电脑浏览器里的业务管理系统：列表、单据、记录
 - 需要读的文字不低于 4.5:1，用 `--wb-muted` 及更深的颜色；`--wb-faint` 只用于图标和禁用文字。
 - 每个元素先答三个问题：谁在什么时候用、不看会不会做错、能不能从别处看到。答不上来就删除，不挪进抽屉或页签。
 - 详情页和属性栏里的人员用 `personHTML()` 显示头像加姓名；有流程的对象在标题下放下一步提示条 `.wb-next`；动态和修改记录折叠在页尾（`.wb-fold`）。
+- 客户方和我方共用的对象，人名后写组织简称，仅我方的内容加 `.wb-scope` 标记，客户方看不到的内容不渲染（[rules/4-页面.md](rules/4-页面.md) 4.15）。字段标签统一 12px、`--wb-muted`。
 - 删除、作废、撤回之前用确认弹窗（`openConfirm()`），按钮写动作名。
 - 界面文字不用「请」「您」「抱歉」，写法见 [rules/6-反馈.md](rules/6-反馈.md) 6.6。
 - 示例数据一律虚构。

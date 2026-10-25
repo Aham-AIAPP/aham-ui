@@ -90,7 +90,8 @@
 :where(.aham-workbench) .wb-form-grid.is-wide{max-width:none;grid-template-columns:repeat(3,minmax(0,1fr))}
 :where(.aham-workbench) .wb-form-row{display:grid;align-content:start;gap:var(--wb-s1);min-width:0}
 :where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
-:where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:var(--wb-leading);overflow-wrap:anywhere}
+/* Field labels: one style wherever a label sits above or beside a value (rules/2-视觉.md 2.5): 12px, muted. */
+:where(.aham-workbench) :is(.wb-form-label,.wb-peek dt){color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs);overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
 :where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
 :where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}

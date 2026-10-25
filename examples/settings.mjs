@@ -41,7 +41,7 @@ root.addEventListener('click', e => {
   if (action === 'placeholder') { e.preventDefault(); toast('示例只做了「常规」这一页'); }
   else if (action === 'save') save();
   else if (action === 'discard') discard();
-  else if (action === 'delete') openConfirm({ root, title: '删除销售工作空间？', text: '所有客户、报价和合同都会删除，不能恢复。', confirm: '删除', danger: true, returnFocus: b, onConfirm: () => toast('示例：不会删除工作区') });
+  else if (action === 'delete') openConfirm({ root, title: '删除业务工作空间？', text: '所有客户、报价和合同都会删除，不能恢复。', confirm: '删除', danger: true, returnFocus: b, onConfirm: () => toast('示例：不会删除工作区') });
 });
 // Leaving with unsaved changes asks first (the browser's own prompt; rules/5-单据.md 5.7 covers in-app navigation).
 addEventListener('beforeunload', e => { if (changed().length) e.preventDefault(); });

@@ -1,9 +1,11 @@
 // Quotation document (rules/5-单据.md). One page for read and edit mode, with the status deciding which actions show.
 // Display mode keeps its actions in the head; edit mode moves 放弃草稿 and 保存 into the footer toolbar, as in SAP Fiori.
 //   草稿 / 已退回  编辑、提交审批；更多：复制为新报价、删除
-//   审批中        撤回；演示用的「通过」「退回」在提示条里
-//   已生效        打印；更多：复制为新报价、作废
-//   已作废        只能查看、打印和复制
+//   审批中        提交人：撤回。审批人：通过、退回（页眉的「提交人 / 审批人」切换只用于演示）
+//   已生效        发给客户；更多：复制为新报价、作废
+//   已发送        客户已接受；过了有效期至自动变成已过期（演示：命令面板「示例」一组）
+//   客户已接受    转为合同
+//   已转合同、已过期、已作废  只能查看、打印和复制
 // State lives in this page only. print.html reads the last saved copy from sessionStorage.
 import { initShell, initPalette, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
 import { defaults, lineCents, totals, money } from './quotation-model.mjs';
@@ -18,8 +20,20 @@ const STATUS = {
   review: { label: '审批中', tone: 'info' },
   returned: { label: '已退回', tone: 'warning' },
   approved: { label: '已生效', tone: 'success' },
+  sent: { label: '已发送', tone: 'info' },
+  accepted: { label: '客户已接受', tone: 'success' },
+  contracted: { label: '已转合同', tone: 'success' },
+  expired: { label: '已过期', tone: '' },
   voided: { label: '已作废', tone: '' },
 };
+// The one forward step of each released status: the head's primary button (rules/5-单据.md 5.8).
+const STEP = {
+  approved: { label: '发给客户', to: 'sent', what: '发给客户', done: '已发给远川 · 张工' },
+  sent: { label: '客户已接受', to: 'accepted', what: '记录客户已接受', done: '已记录客户接受' },
+  accepted: { label: '转为合同', to: 'contracted', what: '转为合同 HT-20261025-003', done: '已生成合同草稿 HT-20261025-003' },
+  expired: { label: '复制为新报价', copy: true },
+};
+const PASSED = ['approved', 'sent', 'accepted', 'contracted', 'expired'];
 const EDITABLE = ['draft', 'returned'];
 
 // Field definitions. `fixed` values are set by the system and stay as text in edit mode.
@@ -67,7 +81,10 @@ const CATALOG = [
 let work = state.rows, nextId = 100;
 
 const now = () => new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
-const canEdit = () => EDITABLE.includes(state.status);
+// Demonstration only: a product decides the role from the signed-in user (rules/5-单据.md 5.9).
+let role = 'owner';
+const approver = () => role === 'approver';
+const canEdit = () => !approver() && EDITABLE.includes(state.status);
 const lowDiscount = rows => rows.some(r => r.discountTenths < 800);
 
 // ── Form rows ────────────────────────────────────────────────────────────────
@@ -181,30 +198,46 @@ function renderStatus() {
   const next = $('#doc-next');
   const missing = [...FIELDS.basic, ...FIELDS.terms].filter(f => f.required && !state.fields[f.key]);
   const due = (() => { const d = new Date(Date.now() + 2 * 864e5); return `计划 ${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })();
-  const nextLine = {
+  const nextLine = approver() ? (state.status === 'review' ? ['等你', '审批', due] : null) : {
     draft: missing.length ? ['等你', `补齐${missing.map(f => esc(f.label)).join('、')}后提交审批`, ''] : ['等你', '提交审批', ''],
     review: ['等王卓', '审批', due],
     returned: ['等你', '按退回意见修改后重新提交', ''],
+    approved: ['等你', '发给客户', ''],
+    sent: ['等远川', '答复', `有效期至 ${state.fields.validTo.slice(5)}`],
+    accepted: ['等你', '转为合同', ''],
   }[state.status];
   next.hidden = !nextLine;
-  if (nextLine) next.innerHTML = `<span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>${nextLine[0]}</strong>${nextLine[1]}</span>${nextLine[2] ? `<span class="wb-next-date">${nextLine[2]}</span>` : ''}`;
+  // Waiting on someone else: 提醒 once a day, then the time it was sent (rules/6-反馈.md 6.11).
+  const remind = state.status === 'review' && !approver()
+    ? (state.remindedAt ? `<span class="wb-meta">已提醒 · ${state.remindedAt}</span>` : '<button type="button" class="wb-btn sm" id="doc-remind">提醒</button>') : '';
+  if (nextLine) next.innerHTML = `<span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>${nextLine[0]}</strong>${nextLine[1]}</span>${nextLine[2] ? `<span class="wb-next-date">${nextLine[2]}</span>` : ''}${remind}`;
 
-  if (state.status === 'review') set('info', 'info', '审批期间不能修改，需要改动时先撤回。<span class="wb-meta">演示：</span><button type="button" class="wb-btn sm" data-demo="approve">通过</button> <button type="button" class="wb-btn sm" data-demo="return">退回</button>');
+  if (state.status === 'review' && !approver()) set('info', 'info', '审批期间不能修改，需要改动时先撤回。');
   if (state.status === 'returned') set('warning', 'warning', `王卓退回：${esc(state.returnReason)}。修改后重新提交。`);
-  if (state.status === 'approved') set('success', 'success', '已生效，可以打印发给客户。生效后不能修改，条件变化时复制为新报价。');
+  if (state.status === 'approved') set('success', 'success', '已生效，不能修改。条件变化时复制为新报价。');
+  if (state.status === 'sent') set('info', 'info', '已发给远川 · 张工，不能修改。过了有效期至自动变成已过期。');
+  if (state.status === 'contracted') set('success', 'success', '已转为合同 <a class="wb-link" href="#" data-action="no-sample">HT-20261025-003</a>，报价单不能再修改。');
+  if (state.status === 'expired') set('', 'info', `有效期至 ${esc(state.fields.validTo)} 已过，客户没有接受。需要时复制为新报价。`);
   if (state.status === 'voided') set('', 'info', `已作废：${esc(state.voidReason)}。只能查看、打印和复制。`);
 
+  // Approvers see 通过 and 退回 on a document under review and nothing that changes it otherwise (rules/5-单据.md 5.9).
+  const reviewing = approver() && state.status === 'review';
+  const step = approver() ? null : STEP[state.status];
   $('#doc-edit').hidden = !canEdit();
-  $('#doc-submit').hidden = !canEdit();
-  $('#doc-submit').textContent = state.status === 'returned' ? '重新提交' : '提交审批';
-  $('#doc-withdraw').hidden = state.status !== 'review';
-  $('#doc-print').classList.toggle('primary', state.status === 'approved');
+  $('#doc-submit').hidden = !canEdit() && !reviewing;
+  $('#doc-submit').textContent = reviewing ? '通过' : state.status === 'returned' ? '重新提交' : '提交审批';
+  $('#doc-return').hidden = !reviewing;
+  $('#doc-withdraw').hidden = approver() || state.status !== 'review';
+  $('#doc-step').hidden = !step;
+  if (step) $('#doc-step').textContent = step.label;
+  $$('#doc-role button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.role === role)));
 
   // Each step names a person and what happened, never 待处理 or 处理中 (设计理念 原则 3).
+  const passed = PASSED.includes(state.status) || (state.status === 'voided');
   const steps = [{ who: '林悦 · 提交', text: state.status === 'draft' ? '未提交' : '已提交', done: state.status !== 'draft' }];
-  steps.push({ who: '王卓 · 销售负责人', done: state.status === 'approved',
-    text: { approved: '已通过', review: '等王卓审批', returned: '已退回' }[state.status] || '未开始' });
-  if (lowDiscount(state.rows)) steps.push({ who: '商务负责人', done: state.status === 'approved', text: state.status === 'approved' ? '已通过' : '未开始 · 折扣低于 8 折时加签' });
+  steps.push({ who: '王卓 · 销售负责人', done: passed,
+    text: passed ? '已通过' : { review: '等王卓审批', returned: '已退回' }[state.status] || '未开始' });
+  if (lowDiscount(state.rows)) steps.push({ who: '商务负责人', done: passed, text: passed ? '已通过' : '未开始 · 折扣低于 8 折时加签' });
   $('#approval').innerHTML = steps.map(st => `<li class="${st.done ? 'done' : ''}"><span class="wb-step-dot"></span><div><strong>${esc(st.who)}</strong><small>${esc(st.text)}</small></div></li>`).join('');
   const first = state.history[state.history.length - 1];
   $('#history-sum').textContent = `${state.history.length} 条 · ${first.who}创建 · 最近 ${last.when}`;
@@ -212,8 +245,9 @@ function renderStatus() {
 }
 function setStatus(next, what) {
   state.status = next;
+  state.remindedAt = '';
   renderForms();
-  state.history.unshift({ who: next === 'approved' || next === 'returned' ? '王卓' : '林悦', what, when: `今天 ${now()}` });
+  state.history.unshift({ who: next === 'approved' || next === 'returned' ? '王卓' : next === 'expired' ? '系统' : '林悦', what, when: `今天 ${now()}` });
   renderLines();
   renderStatus();
   publish();
@@ -263,7 +297,7 @@ function submit() {
 function menuItems() {
   const items = [{ id: 'copy', label: '复制为新报价', icon: 'copy', group: 0 }];
   if (canEdit()) items.push({ id: 'delete', label: '删除', icon: 'trash', danger: true, group: 1 });
-  if (state.status === 'approved') items.push({ id: 'void', label: '作废', icon: 'close', danger: true, group: 1 });
+  if (!approver() && ['approved', 'sent'].includes(state.status)) items.push({ id: 'void', label: '作废', icon: 'close', danger: true, group: 1 });
   return items;
 }
 function openMenu() {
@@ -291,14 +325,31 @@ function removeDocument() {
 root.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
-  if (b.id === 'doc-submit') submit();
+  if (b.id === 'doc-submit') { if (approver()) { setStatus('approved', '审批通过'); toast('已通过'); } else submit(); }
+  else if (b.id === 'doc-return') openConfirm({ root, title: '退回报价单 QT-20260930-018？', text: '退回后林悦修改再重新提交。原因会写进提示条和变更记录。', confirm: '退回', reason: { label: '退回原因' }, returnFocus: b, onConfirm: reason => { state.returnReason = reason; setStatus('returned', '退回报价单'); toast('已退回'); } });
+  else if (b.id === 'doc-step') runStep();
+  else if (b.id === 'doc-remind') { state.remindedAt = now(); state.history.unshift({ who: '林悦', what: '提醒王卓审批', when: `今天 ${state.remindedAt}` }); renderStatus(); toast('已提醒王卓，站内通知和企业微信各发一条'); $('#doc-next').focus?.(); }
+  else if (b.dataset.role) setRole(b.dataset.role);
   else if (b.id === 'doc-more') openMenu();
   else if (b.id === 'doc-withdraw') openConfirm({ root, title: '撤回审批？', text: '撤回后报价单回到草稿，可以继续修改，审批人那边的待办会取消。', confirm: '撤回', returnFocus: b, onConfirm: () => { setStatus('draft', '撤回审批'); toast('已撤回，报价单回到草稿'); } });
-  else if (b.dataset.demo === 'approve') { setStatus('approved', '审批通过'); toast('王卓已通过'); }
-  else if (b.dataset.demo === 'return') openConfirm({ root, title: '退回报价单？', confirm: '退回', reason: { label: '退回原因' }, returnFocus: b, onConfirm: reason => { state.returnReason = reason; setStatus('returned', '退回报价单'); } });
   else if (b.id === 'line-add') addLine(b);
   else if (b.dataset.remove) removeLine(Number(b.dataset.remove));
 });
+
+function runStep() {
+  const step = STEP[state.status];
+  if (step.copy) { runMenuItem({ id: 'copy' }); return; }
+  setStatus(step.to, step.what);
+  toast(step.done);
+}
+function setRole(next) {
+  role = next;
+  if (doc.dataset.mode === 'edit' && approver()) page.cancel();
+  renderForms();
+  renderLines();
+  renderStatus();
+  toast(approver() ? '演示：现在是审批人王卓看到的页面' : '演示：现在是提交人林悦看到的页面');
+}
 
 // A line has three fields to fill, so it is added in a dialog (rules/5-单据.md 5.11); quantity and discount stay
 // editable in the table afterwards. Removing a line in edit mode asks nothing: 放弃草稿 brings it back.
@@ -390,5 +441,9 @@ const palette = initPalette({
   accountItems: () => account.commands(),
   groups: () => [
     { heading: '报价单', items: [...pageButtons().filter(c => c.label !== '更多操作'), ...menuItems().map(it => ({ ...it, run: () => runMenuItem(it) }))] },
+    { heading: '示例', items: [
+      { id: 'role', label: approver() ? '切换到提交人视角' : '切换到审批人视角', icon: 'user', run: () => setRole(approver() ? 'owner' : 'approver') },
+      ...(state.status === 'sent' ? [{ id: 'expire', label: '模拟过了有效期', icon: 'clock', run: () => { setStatus('expired', '有效期已过，报价自动过期'); toast('报价已过期'); } }] : []),
+    ] },
   ],
 });

@@ -549,7 +549,7 @@
 :where(.aham-workbench) .wb-table-hint{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--wb-s2);color:var(--wb-muted);padding:var(--wb-s1) 0 var(--wb-s4)}
 :where(.aham-workbench) .wb-sort{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:100%;padding:0;border:0;background:transparent;font-weight:inherit;color:inherit}
 :where(.aham-workbench) .wb-sort svg{width:var(--wb-s3);height:var(--wb-s3)}
-:where(.aham-workbench) .wb-row-link{display:block;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-row-link{display:block;color:inherit;text-decoration:none;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media (hover: hover) and (pointer: fine){
 :where(.aham-workbench) .wb-row-link:hover{text-decoration:underline;text-underline-offset:3px}
 }
@@ -759,7 +759,8 @@
 :where(.aham-workbench) .wb-form-grid.is-wide{max-width:none;grid-template-columns:repeat(3,minmax(0,1fr))}
 :where(.aham-workbench) .wb-form-row{display:grid;align-content:start;gap:var(--wb-s1);min-width:0}
 :where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
-:where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:var(--wb-leading);overflow-wrap:anywhere}
+/* Field labels: one style wherever a label sits above or beside a value (rules/2-视觉.md 2.5): 12px, muted. */
+:where(.aham-workbench) :is(.wb-form-label,.wb-peek dt){color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs);overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
 :where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
 :where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}
@@ -839,14 +840,15 @@
 :where(.aham-workbench) .wb-detail{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
 :where(.aham-workbench) .wb-detail-scroll{min-height:0;overflow-y:auto}
 /* Centred on whole pixels, so text and lines never sit on a half pixel. */
-:where(.aham-workbench) .wb-detail-main{max-width:calc(var(--wb-body-width) + 2 * var(--wb-s6));margin:0 auto;margin-inline-start:max(0px,round(down,(100% - var(--wb-body-width) - 2 * var(--wb-s6)) / 2,1px));padding:var(--wb-s6)}
+/* The main column fills the work surface with the same edges as a document page; only running text keeps a 640px measure. */
+:where(.aham-workbench) .wb-detail-main{padding:var(--wb-s5) var(--wb-page-gutter) var(--wb-s8)}
 :where(.aham-workbench) .wb-detail-title{font-size:var(--wb-title);font-weight:600;line-height:1.3}
 :where(.aham-workbench) .wb-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3);margin-block-start:var(--wb-s2);color:var(--wb-muted)}
 /* The next-step line sits one step below the meta line; a text button that opens a line in the reading column
    moves left by its own padding so its text lines up with the title. */
 :where(.aham-workbench) .wb-detail-main .wb-next{margin-block:var(--wb-s4) var(--wb-s2)}
 :where(.aham-workbench) .wb-detail-main>div>.wb-btn.ghost:first-child{margin-inline-start:calc(-1 * var(--wb-s2))}
-:where(.aham-workbench) .wb-detail-body{margin-block-start:var(--wb-s5);line-height:1.75}
+:where(.aham-workbench) .wb-detail-body{max-width:var(--wb-body-width);margin-block-start:var(--wb-s5);line-height:1.75}
 :where(.aham-workbench) .wb-detail-body p+p{margin-block-start:var(--wb-s2)}
 :where(.aham-workbench) .wb-detail-section{margin-block-start:var(--wb-s6)}
 :where(.aham-workbench) .wb-section-heading{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);margin-block-end:var(--wb-s2)}
@@ -865,6 +867,26 @@
 }
 :where(.aham-workbench) .wb-related .wb-grow{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :where(.aham-workbench) .wb-divider{height:1px;margin-block:var(--wb-s6) 0;border:0;background:var(--wb-line)}
+/* Problem statement (rules/4-页面.md 4.8): 现在 and 希望 side by side, each headed by a 12px label, plain text below. */
+:where(.aham-workbench) .wb-problem{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s6);margin-block-start:var(--wb-s5)}
+:where(.aham-workbench) .wb-problem h3{margin-block-end:var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:500;line-height:var(--wb-leading-xs)}
+:where(.aham-workbench) .wb-problem p{line-height:1.75}
+:where(.aham-workbench) .wb-problem p+p{margin-block-start:var(--wb-s2)}
+/* Questions with their answers and the files sent for each one (attachments travel with the question they answer). */
+:where(.aham-workbench) .wb-qa{margin:0;padding:0;list-style:none;border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-qa>li{display:grid;gap:var(--wb-s1);padding-block:var(--wb-s3);border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
+:where(.aham-workbench) .wb-qa-q{display:flex;align-items:center;gap:var(--wb-s2);font-weight:500}
+:where(.aham-workbench) .wb-qa-a{color:var(--wb-ink-2);line-height:1.75}
+:where(.aham-workbench) .wb-qa-a.is-empty{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-qa-files{display:flex;flex-wrap:wrap;gap:var(--wb-s1) var(--wb-s4)}
+:where(.aham-workbench) .wb-attach{display:inline-flex;align-items:center;gap:var(--wb-s1);min-width:0;color:var(--wb-ink);text-decoration:none}
+@media (hover: hover) and (pointer: fine){
+:where(.aham-workbench) .wb-attach:hover>span:first-of-type{text-decoration:underline;text-underline-offset:3px}
+}
+:where(.aham-workbench) .wb-attach>span:last-child{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+/* Visibility mark on shared objects (rules/4-页面.md 4.15): content only our side sees carries a lock and 仅我方. */
+:where(.aham-workbench) .wb-scope{display:inline-flex;align-items:center;gap:var(--wb-s1);flex:none;color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:400;line-height:var(--wb-leading-xs);white-space:nowrap}
+:where(.aham-workbench) .wb-scope svg{width:var(--wb-s3);height:var(--wb-s3)}
 /* Properties panel: label + value rows (Aham keeps labels; Circle's project panel uses the same row form). */
 :where(.aham-workbench) .wb-props{display:grid;align-content:start;gap:var(--wb-s5);width:var(--wb-panel-props);padding:var(--wb-s5) var(--wb-s4)}
 :where(.aham-workbench) .wb-props-section{display:grid;gap:var(--wb-s1)}
@@ -1182,6 +1204,8 @@
 /* Next step: one line under the title that says who the page waits for, what, and by when, with the button for that step. */
 :where(.aham-workbench) .wb-next{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s1) var(--wb-s1) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
 :where(.aham-workbench) .wb-next>.wb-grow{flex:1;min-width:0}
+/* Text that ends the line keeps the same 12px edge as the start; a button ends 4px from the edge. */
+:where(.aham-workbench) .wb-next>:last-child:not(.wb-btn){margin-inline-end:var(--wb-s2)}
 :where(.aham-workbench) .wb-next strong{font-weight:500}
 :where(.aham-workbench) .wb-next-date{color:var(--wb-muted);white-space:nowrap}
 :where(.aham-workbench) .wb-next-date.is-overdue{color:var(--wb-danger)}
@@ -1245,6 +1269,8 @@
 :where(.aham-workbench) .wb-composer-foot>span{flex:1;min-width:0}
 :where(.aham-workbench) .wb-form-page .wb-form-grid{grid-template-columns:minmax(0,1fr);max-width:none}
 :where(.aham-workbench) .wb-form-page .wb-form-row>.wb-field{width:100%}
+/* The form page asks people outside the company, so its labels read as questions at body size. */
+:where(.aham-workbench) .wb-form-page .wb-form-label{color:var(--wb-ink-2);font-size:var(--wb-body);line-height:var(--wb-leading)}
 :where(.aham-workbench) .wb-form-page h2{font-size:var(--wb-text-base);margin-block-end:var(--wb-s3)}
 :where(.aham-workbench) .wb-form-page-foot>.wb-btn.primary{margin-inline-start:auto}
 /* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
@@ -1392,6 +1418,7 @@
 .aham-workbench .wb-layout.is-list{display:block;overflow:visible}
 .aham-workbench .wb-detail{overflow:visible}
 .aham-workbench .wb-detail-main{padding:var(--wb-s4)}
+.aham-workbench .wb-problem{grid-template-columns:minmax(0,1fr);gap:var(--wb-s4)}
 .aham-workbench .wb-dialog.is-split{width:100vw;height:100dvh;max-width:none;max-height:none;border-radius:0}
 .aham-workbench .wb-split{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
 .aham-workbench .wb-split>.wb-settings-nav{display:flex;overflow-x:auto;padding:var(--wb-s2);border-inline-end:0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
