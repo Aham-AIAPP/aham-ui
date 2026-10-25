@@ -23,9 +23,15 @@ Aham UI 覆盖电脑浏览器里的业务管理系统：列表、单据、记录
 <link rel="stylesheet" href="aham.css">
 <div class="aham-workbench" data-theme="light">…</div>
 <script type="module">
-  import { initShell, initObjectPage } from './aham.js';
+  import { initShell, initPalette } from './aham.js';
+  const root = document.querySelector('.aham-workbench');
+  initShell(root);
+  initPalette({ root, groups: () => [/* 本页的命令 */], shell: true });
 </script>
 ```
+
+- 每个 `init*` 和 `create*` 返回的句柄都有 `destroy()`。React 里在 `useEffect` 中调用，在清理函数里销毁，写法见 [docs/react.md](docs/react.md)。参数和返回值见 [aham.d.ts](aham.d.ts)。
+- `initPalette({ shell: true })` 自带界面、账户、跳转、帮助四组命令和 ? 快捷键，页面只写本页的命令组。
 
 - aham.css 按相对路径引用 `assets/fonts/` 里的 Inter 字体，复制 aham.css 时一并复制 `assets/`。
 - 根节点 `.aham-workbench` 的 `data-theme` 取 `light`、`dark`，不写时跟随系统。
@@ -68,11 +74,8 @@ Aham UI 覆盖电脑浏览器里的业务管理系统：列表、单据、记录
 
 ## 交付前自查
 
-新设计和改版先按 [rules/9-验收.md](rules/9-验收.md) 9.6 出方案，用户确认后再写代码。交付前逐条核对 9.5 的十二项，改了视觉的再核对 9.7 的风格判据。改了本仓库的文件时，再运行四条检查：
+新设计和改版先按 [rules/9-验收.md](rules/9-验收.md) 9.6 出方案，用户确认后再写代码。交付前逐条核对 9.5 的十二项，改了视觉的再核对 9.7 的风格判据。改了本仓库的文件时，再运行全部检查：
 
 ```bash
-node scripts/build.mjs --check
-node scripts/lint.mjs
-node scripts/theme.mjs --check
-node --test
+npm run check
 ```

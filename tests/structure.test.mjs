@@ -248,3 +248,10 @@ test('contracts match components/schema.json and claim every class (scripts/cont
   const { errors } = await contracts();
   assert.deepEqual(errors, []);
 });
+
+test('rules state the current standard only; version history belongs in CHANGELOG.md', () => {
+  const history = /\d\.(\d|x) ?(起|之前|曾|删除|改深|改成)|\d\.x\b|在 \d\.\d 删除/;
+  const found = files('rules/').filter(f => f.endsWith('.md')).flatMap(f => read(f).split('\n').map((l, i) => [f, i + 1, l]))
+    .filter(([f, , l]) => history.test(l)).map(([f, n]) => `${f}:${n}`);
+  assert.deepEqual(found, []);
+});

@@ -31,14 +31,15 @@ Aham UI 是一套给电脑浏览器里的业务管理系统用的界面规范，
 | [设计理念.md](设计理念.md) | 总体标准、15 条原则、冲突时的取舍次序、借鉴来源 |
 | [tokens.json](tokens.json) | 全部取值：亮色、暗色、增强对比度三套颜色，字号、间距、尺寸、断点 |
 | [rules/](rules/) | 规则正文，十一个文件：总则、视觉、控件、页面、单据、反馈、键盘与命令、AI 协作、验收、数据格式、交互 |
-| [components/](components/) | 契约，写明每个控件和组合的结构、类名、状态和键盘 |
-| [src/](src/) | 样式源文件 |
-| [aham.css](aham.css) | 由 `scripts/build.mjs` 从 tokens.json 和 src/ 生成，页面只引这一个文件 |
-| [aham.js](aham.js) | 行为脚本，ES 模块，没有第三方依赖 |
-| [examples/](examples/) | 示例页，数据全部虚构 |
+| [components/](components/) | 契约，写明每个控件和组合的结构、类名、状态、键盘和调用写法；[schema.json](components/schema.json) 规定契约的字段 |
+| [src/](src/) | 样式源文件，一个组件族一个文件，按编号拼接；状态和响应式写在组件自己的文件里 |
+| [js/](js/) | 行为源文件，一个功能一个文件，按编号拼接 |
+| [aham.css](aham.css)、[aham.js](aham.js) | 由 `scripts/build.mjs` 生成，页面只引这两个文件，不手改 |
+| [aham.d.ts](aham.d.ts) | aham.js 的类型声明 |
+| [examples/](examples/) | 示例页，数据全部虚构；侧栏写在 `_rail.html`，生成时复制进各页 |
 | [assets/](assets/) | Inter 字体（SIL OFL）、Lucide 图标 53 个（ISC）、截图 |
 | [scripts/](scripts/)、[tests/](tests/) | 生成、检查和测试脚本 |
-| [docs/research/](docs/research/) | 调研和规划记录，只作历史参考 |
+| [docs/](docs/) | [React 接入](docs/react.md)；[docs/research/](docs/research/) 调研记录；[docs/decisions/](docs/decisions/) 已完成或作废的计划，只作历史参考 |
 | [AGENTS.md](AGENTS.md) | 给 AI 的读取顺序和硬约束 |
 
 ## 示例页
@@ -71,7 +72,7 @@ Aham UI 是一套给电脑浏览器里的业务管理系统用的界面规范，
 
 **交给 AI**：把仓库地址 `https://github.com/Aham-AIAPP/aham-ui` 发给 AI，要求按 [AGENTS.md](AGENTS.md) 生成界面。
 
-**在页面里引用**：复制 `aham.css`、`aham.js` 和 `assets/` 目录。
+**在页面里引用**：复制 `aham.css`、`aham.js`、`aham.d.ts` 和 `assets/` 目录；用 npm 的项目可以按标签安装：`npm install github:Aham-AIAPP/aham-ui#v9.0.0`，再 `import 'aham-ui/aham.css'`。React 的接法见 [docs/react.md](docs/react.md)。
 
 ```html
 <link rel="stylesheet" href="aham.css">
@@ -87,10 +88,8 @@ Aham UI 是一套给电脑浏览器里的业务管理系统用的界面规范，
 
 ```bash
 python3 -m http.server 8765 --bind 127.0.0.1   # 打开 http://127.0.0.1:8765/
-node scripts/build.mjs --check                  # aham.css 是最新生成的
-node scripts/lint.mjs                           # 变量都有定义、没有写死的值、对比度达标
-node scripts/theme.mjs --check                  # 三值生成的主题仍然达到对比度
-node --test                                     # 计算函数、筛选语义、文件结构
+npm run build                                   # 生成 aham.css、aham.js 和示例页侧栏
+npm run check                                   # 生成检查、lint、契约检查、主题检查和测试
 ```
 
 ## 版本
