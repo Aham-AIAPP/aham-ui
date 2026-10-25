@@ -3,15 +3,16 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync, readdirSync} from 'node:fs';
-import {build, tokens} from '../scripts/build.mjs';
+import {build, buildJS, tokens} from '../scripts/build.mjs';
 import {lint} from '../scripts/lint.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = f => readFileSync(new URL(f, root), 'utf8');
 const files = dir => readdirSync(new URL(dir, root)).map(f => `${dir}${f}`);
 
-test('aham.css is generated from tokens.json and src/', () => {
+test('aham.css and aham.js are generated from tokens.json, src/ and js/', () => {
   assert.equal(read('aham.css'), build(), 'run node scripts/build.mjs');
+  assert.equal(read('aham.js'), buildJS(), 'run node scripts/build.mjs');
 });
 
 test('lint finds no problems', () => {
