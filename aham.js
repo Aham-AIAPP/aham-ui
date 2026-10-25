@@ -14,6 +14,17 @@ export function pushLayer(close) {
   layers.push(entry);
   return () => { const i = layers.indexOf(entry); if (i >= 0) layers.splice(i, 1); };
 }
+// Plays an element's exit transition ([data-leaving] in src/interaction.css, rules/11-交互.md 11.4), then runs done.
+// With reduced motion, or without a transition, done runs at once. Returns a function that cancels the exit.
+export function leave(el, done) {
+  el.dataset.leaving = '';
+  const ms = Math.max(0, ...getComputedStyle(el).transitionDuration.split(',').map(v => parseFloat(v) * (v.trim().endsWith('ms') ? 1 : 1000) || 0));
+  let timer = 0;
+  const stop = () => { clearTimeout(timer); delete el.dataset.leaving; };
+  if (!ms) { stop(); done(); return () => {}; }
+  timer = setTimeout(() => { stop(); done(); }, ms);
+  return stop;
+}
 // Guarded so the pure helpers below (filter operators, URL state) can be imported in Node tests.
 if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   if (e.key !== 'Escape' || e.isComposing || !layers.length) return;
@@ -152,8 +163,10 @@ let openPop = null;
 // point: { x, y } places the popover at a pointer position (context menu); returnFocus overrides where focus goes back.
 export function openPopover(trigger, panel, { align = 'start', onClose, point = null, returnFocus = null } = {}) {
   closePopover('replace');
+  panel._stopLeave?.();
   panel.hidden = false;
-  const expands = el => el.hasAttribute('aria-haspopup');
+  // The trigger keeps its pressed look while the popover is open (rules/11-交互.md 11.2).
+  const expands = el => el.hasAttribute?.('aria-haspopup') || el.matches?.('button, [role=button], summary');
   if (expands(trigger)) trigger.setAttribute('aria-expanded', 'true');
   const place = () => placePopover(api.trigger, panel, align, point);
   const outside = e => { if (!panel.contains(e.target) && !api.trigger.contains(e.target)) api.close('outside'); };
@@ -170,7 +183,8 @@ export function openPopover(trigger, panel, { align = 'start', onClose, point = 
       document.removeEventListener('pointerdown', outside, true);
       removeEventListener('resize', place);
       document.removeEventListener('scroll', place, true);
-      panel.hidden = true;
+      if (reason === 'replace') panel.hidden = true;
+      else panel._stopLeave = leave(panel, () => { panel.hidden = true; panel._stopLeave = null; });
       if (expands(api.trigger)) api.trigger.setAttribute('aria-expanded', 'false');
       const back = returnFocus || api.trigger;
       if ((reason === 'escape' || reason === 'done') && (typeof back.isConnected !== 'boolean' || back.isConnected)) back.focus();
@@ -196,6 +210,8 @@ function placePopover(trigger, panel, align, point) {
   if (top + h > innerHeight - edge && r.top - gap - h > edge) top = r.top - gap - h;
   panel.style.left = `${Math.round(left)}px`;
   panel.style.top = `${Math.round(top)}px`;
+  // Grow out of the trigger's side (rules/11-交互.md 11.4).
+  panel.style.transformOrigin = `${align === 'end' && !point ? 'right' : 'left'} ${top < r.top ? 'bottom' : 'top'}`;
 }
 
 // ── Header search ────────────────────────────────────────────────────────────
@@ -822,11 +838,13 @@ export function initTooltips(root = document.querySelector('.aham-workbench')) {
   root.append(tip);
   root.querySelectorAll('[data-tooltip][data-keys]').forEach(el => el.setAttribute('aria-keyshortcuts', ariaKeys(el.dataset.keys)));
   const coarse = matchMedia('(pointer: coarse)');
-  let timer = 0, owner = null;
+  let timer = 0, owner = null, hiddenAt = 0;
   function show(el) {
     owner = el;
     const keys = el.dataset.keys && (singleKeys || !characterOnly(el.dataset.keys)) ? el.dataset.keys : '';
     tip.innerHTML = `<span>${escapeHtml(el.dataset.tooltip)}</span>${keys ? `<span class="wb-kbd-group">${formatKeys(keys).map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>` : ''}`;
+    // A tip that follows another within 300ms appears without fading in (rules/11-交互.md 11.4).
+    tip.toggleAttribute('data-warm', Date.now() - hiddenAt < 300);
     tip.hidden = false;
     const r = el.getBoundingClientRect(), t = tip.getBoundingClientRect(), gap = 4;
     const top = r.bottom + gap + t.height > innerHeight - gap ? r.top - gap - t.height : r.bottom + gap;
@@ -834,14 +852,14 @@ export function initTooltips(root = document.querySelector('.aham-workbench')) {
     tip.style.top = `${top}px`;
     tip.style.left = `${left}px`;
   }
-  function hide() { clearTimeout(timer); owner = null; tip.hidden = true; }
+  function hide() { clearTimeout(timer); if (!tip.hidden) hiddenAt = Date.now(); owner = null; tip.hidden = true; }
   root.addEventListener('pointerover', e => {
     const el = e.target.closest?.('[data-tooltip]');
     if (!el || el === owner || coarse.matches || e.pointerType === 'touch') return;
     // An open sidebar already shows the names; its items only get a tip when collapsed to icons.
     if (el.matches('.wb-nav-item') && !root.classList.contains('collapsed')) return;
     clearTimeout(timer);
-    timer = setTimeout(() => show(el), owner ? 0 : TOOLTIP_DELAY);
+    timer = setTimeout(() => show(el), owner || Date.now() - hiddenAt < 300 ? 0 : TOOLTIP_DELAY);
   });
   root.addEventListener('pointerout', e => { const el = e.target.closest?.('[data-tooltip]'); if (el && !el.contains(e.relatedTarget)) hide(); });
   root.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tooltip]'); if (el?.matches(':focus-visible') && !(el.matches('.wb-nav-item') && !root.classList.contains('collapsed'))) show(el); });
@@ -873,7 +891,7 @@ export function toast(message, { action, duration = 4000 } = {}) {
   toastHost.append(el);
   while (toastHost.children.length > 3) toastHost.firstElementChild.remove();
   let timer = 0, left = duration, started = Date.now();
-  const dismiss = () => { clearTimeout(timer); el.remove(); };
+  const dismiss = () => { clearTimeout(timer); if (!el.dataset.leaving) leave(el, () => el.remove()); };
   const start = () => { started = Date.now(); timer = setTimeout(dismiss, left); };
   const pause = () => { clearTimeout(timer); left -= Date.now() - started; };
   el.addEventListener('mouseenter', pause); el.addEventListener('mouseleave', start);
@@ -1060,7 +1078,7 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
   });
   const dirty = () => Boolean(name.value.trim() || desc.value.trim());
   let release = null;
-  function finish() { release?.(); dialog.close(); dialog.remove(); (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.(); }
+  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.(); }); }
   function askClose() {
     if (!dirty()) { finish(); return; }
     foot.hidden = true; confirm.hidden = false;
@@ -1114,7 +1132,7 @@ export function openConfirm({ root, title, text = '', confirm = '确认', danger
   dialog.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => { finish(); onChoice?.(choices[Number(b.dataset.choice)].value); }));
   const field = dialog.querySelector('textarea'), err = dialog.querySelector('.wb-value-error');
   let release = null;
-  function finish() { release?.(); dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }
+  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }); }
   dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
   dialog.querySelector('[data-confirm=cancel]').addEventListener('click', finish);
   field?.addEventListener('input', () => { err.textContent = ''; field.removeAttribute('aria-invalid'); });
@@ -1151,7 +1169,7 @@ export function openFormDialog({ root, title, text = '', fields = [], submit = '
   const returnTo = returnFocus || document.activeElement;
   const el = key => form.querySelector(`[name="${CSS.escape(key)}"]`);
   let release = null;
-  function finish() { release?.(); dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }
+  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }); }
   function mark(key, message) {
     const c = el(key), box = dialog.querySelector(`#wb-form-${CSS.escape(key)}-error`);
     if (!c || !box) return;
@@ -1193,7 +1211,7 @@ export function showBatchResult({ root, action, noun, total, failed = [], return
   root.append(dialog);
   const returnTo = returnFocus || document.activeElement;
   let release = null;
-  function finish() { release?.(); dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }
+  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }); }
   dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
   dialog.querySelector('form').addEventListener('submit', e => { e.preventDefault(); finish(); });
   dialog.showModal();

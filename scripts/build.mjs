@@ -7,7 +7,7 @@ const read = f => readFileSync(new URL(f, root), 'utf8');
 export const tokens = JSON.parse(read('tokens.json'));
 
 // Style sources in cascade order. A later file may refine an earlier one, never the reverse.
-export const SOURCES = ['base', 'shell', 'controls', 'table', 'list', 'document', 'detail', 'overlays', 'settings', 'files', 'flow', 'ai', 'print'];
+export const SOURCES = ['base', 'shell', 'controls', 'table', 'list', 'document', 'detail', 'overlays', 'settings', 'files', 'flow', 'ai', 'interaction', 'print'];
 // Groups whose leaves become --wb-* variables on .aham-workbench. color.dark and color.contrast-more are applied separately.
 export const VAR_GROUPS = ['font', 'text', 'space', 'radius', 'shadow', 'size', 'layout', 'breakpoint', 'z', 'motion'];
 
@@ -37,6 +37,14 @@ export function variables() {
 const decl = list => list.map(([n, p]) => `  --wb-${n}: ${resolve(p)};`).join('\n');
 const fill = s => s.replace(/\{\{([^}]+)\}\}/g, (_, p) => resolve(p));
 
+// Hover styles apply only to a mouse or trackpad (rules/11-交互.md 11.3): a tap on a touch screen would otherwise leave the
+// hover colour behind. Each one-line rule whose selector has :hover (and no focus state sharing it) is wrapped in place,
+// so the cascade order does not change.
+const HOVER_MEDIA = '@media (hover: hover) and (pointer: fine)';
+export function hoverOnly(css) {
+  return css.split('\n').map(line => (/^:where\(\.aham-workbench\)[^{]*:hover[^{]*\{[^}]*\}$/.test(line) && !/^[^{]*focus/.test(line) && !/^[^{]*:not\([^)]*:hover/.test(line) ? `${HOVER_MEDIA}{${line}}` : line)).join('\n');
+}
+
 export function build() {
   const vars = variables();
   const fonts = read('assets/fonts/inter.css').replace(/url\('([^']+)'\)/g, "url('assets/fonts/$1')").replace(/\/\*[\s\S]*?\*\/\n?/, '');
@@ -50,7 +58,7 @@ export function build() {
     `@media (prefers-color-scheme: dark) {\n.aham-workbench:not([data-theme="light"]) {\n  color-scheme: dark;\n${dark}\n}\n}`,
     // Paper is always light, whatever theme the screen uses.
     `@media print {\n.aham-workbench:is([data-theme], :not([data-theme])) {\n  color-scheme: light;\n${decl(leaves('color.light'))}\n}\n}`,
-    ...SOURCES.map(name => `/* ---- src/${name}.css ---- */\n${read(`src/${name}.css`).trim()}`),
+    ...SOURCES.map(name => `/* ---- src/${name}.css ---- */\n${hoverOnly(read(`src/${name}.css`).trim())}`),
     `/* ---- src/layout.css.in ---- */\n${fill(read('src/layout.css.in')).trim()}`,
   ];
   return parts.join('\n') + '\n';

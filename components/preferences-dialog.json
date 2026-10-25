@@ -1,0 +1,51 @@
+{
+  "slug": "preferences-dialog",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "examples/account.mjs",
+  "name": "分栏弹窗（偏好设置）",
+  "intent": "只影响自己的偏好：左侧分类，右侧设置行，改了立即生效",
+  "preview": "examples/interaction.html",
+  "reference": "examples/account.mjs",
+  "specification": "rules/11-交互.md#116-容器选用",
+  "classes": [
+    ".wb-dialog.is-split",
+    ".wb-dialog-head",
+    ".wb-split",
+    ".wb-settings-nav",
+    ".wb-split-body",
+    ".wb-setting",
+    ".wb-setting-confirm"
+  ],
+  "markup": {
+    "dialog": "<dialog class=\"wb-dialog is-split\" aria-labelledby=\"t\"><header class=\"wb-dialog-head\"><h2 id=\"t\">偏好设置</h2><button class=\"wb-icon-btn\" aria-label=\"关闭\">…</button></header><div class=\"wb-split\"><nav class=\"wb-settings-nav\">…</nav><div class=\"wb-split-body\" tabindex=\"-1\">…</div></div></dialog>"
+  },
+  "rules": [
+    "宽 880px，最高 640px，左栏 200px；分类栏和内容都是白底，中间一条 --wb-line",
+    "每项改了立即生效并用轻提示确认，没有保存按钮；保存失败恢复原值",
+    "要确认的操作在设置行里原地问，不叠第二个弹窗",
+    "关闭方式：关闭按钮、Esc、点遮罩；关闭后焦点回到打开它的位置",
+    "出现时遮罩淡入，弹窗由 0.97 放大到 1；消失用 --wb-pop",
+    "640px 及以下铺满屏幕，分类栏变成顶部一行"
+  ],
+  "states": [
+    "open",
+    "confirming",
+    "closing"
+  ],
+  "keyboard": {
+    "Tab": "在分类和控件间移动",
+    "Esc": "关闭弹窗",
+    "mod+,": "打开"
+  },
+  "accessibility": [
+    "弹窗 aria-labelledby 指向标题",
+    "分类导航 aria-label「偏好分类」，当前分类 aria-current=page",
+    "每个控件 aria-labelledby 关联行标题"
+  ],
+  "doNotInvent": [
+    "弹窗底部放保存按钮",
+    "工作区设置放进分栏弹窗",
+    "分栏弹窗里再打开确认弹窗"
+  ]
+}

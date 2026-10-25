@@ -1,81 +1,68 @@
-// Settings sample: single-value settings apply immediately and confirm with a toast; reset asks first.
-import {initShell, initPalette, navCommands, registerShortcut, listShortcuts, toast, pushLayer, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled} from '../aham.js';
+// Workspace settings sample (rules/4-页面.md 4.9, rules/11-交互.md 11.6): changes affect everyone, so they wait for 保存.
+// The save bar appears only while something differs from the saved values. Personal preferences live in the account menu.
+import {initShell, initPalette, navCommands, registerShortcut, listShortcuts, toast, openConfirm} from '../aham.js';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
-const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
-const KEY = 'aham-ui:settings-demo:v1';
-const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, open: '进入详情页', theme: 'light', density: 'standard', ai: false, assign: true, digest: false };
-let prefs = { ...DEFAULTS };
-try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY)) }; } catch { /* keep defaults */ }
-// Single-key shortcuts and AI consent are kept by aham.js; show its current choice.
-prefs.singleKey = singleKeyShortcuts();
-prefs.ai = aiEnabled();
-const media = matchMedia('(prefers-color-scheme: dark)');
+const $ = s => root.querySelector(s);
+const form = $('#ws-form'), bar = $('#ws-save'), dirtyText = $('#ws-dirty');
+const read = () => Object.fromEntries([...form.elements].filter(el => el.name).map(el => [el.name, el.type === 'checkbox' ? el.checked : el.value]));
+const write = v => [...form.elements].filter(el => el.name).forEach(el => { if (el.type === 'checkbox') el.checked = v[el.name]; else el.value = v[el.name]; });
+let saved = read();
 
-// A ?theme= parameter (the panorama page passes its theme to embedded samples) wins until the viewer picks one here.
-let forcedTheme = null;
-const themeChoice = () => forcedTheme ?? prefs.theme;
-function applyTheme() {
-  const t = themeChoice(), dark = t === 'dark' || (t === 'system' && media.matches);
-  root.dataset.theme = dark ? 'dark' : 'light';
+function changed() { const now = read(); return Object.keys(saved).filter(k => now[k] !== saved[k]); }
+function paintBar() {
+  const n = changed().length;
+  bar.hidden = n === 0;
+  dirtyText.textContent = n ? `有 ${n} 项修改未保存` : '';
 }
-function paint() {
-  $$('[data-setting]').forEach(el => { if (el.type === 'checkbox') el.checked = Boolean(prefs[el.dataset.setting]); else el.value = prefs[el.dataset.setting]; });
-  $$('[data-theme-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeChoice === themeChoice())));
-  $$('[data-density-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.densityChoice === prefs.density)));
-  applyTheme();
-  setSingleKeyShortcuts(prefs.singleKey);
-  setAIEnabled(prefs.ai);
+function validate() {
+  const name = form.name.value.trim();
+  if (name.length < 2) { form.name.setCustomValidity('工作区名称至少 2 个字'); form.name.reportValidity(); form.name.focus(); return false; }
+  form.name.setCustomValidity('');
+  return true;
 }
-// Apply, persist, confirm. If saving fails, the previous value comes back and the toast says why (rules/4-页面.md 4.8).
-function commit(label, apply, done = `已保存：${label}`) {
-  const before = { ...prefs };
-  apply();
-  try { localStorage.setItem(KEY, JSON.stringify(prefs)); paint(); toast(done); }
-  catch { prefs = before; paint(); toast(`没有保存「${label}」：浏览器不允许写入本地存储`); }
+function save() {
+  if (!validate()) return;
+  const n = changed().length;
+  saved = read();
+  paintBar();
+  toast(`已保存 ${n} 项工作区设置`);
 }
-root.addEventListener('change', e => {
-  const el = e.target.closest('[data-setting]');
-  if (!el) return;
-  const title = el.closest('.wb-setting').querySelector('.wb-setting-title').textContent;
-  commit(title, () => { prefs[el.dataset.setting] = el.type === 'checkbox' ? el.checked : el.value; });
-});
+function discard() { write(saved); paintBar(); toast('已放弃修改'); }
+
+form.addEventListener('input', paintBar);
+form.addEventListener('change', paintBar);
+form.addEventListener('submit', e => { e.preventDefault(); save(); });
 root.addEventListener('click', e => {
   const b = e.target.closest('button, a');
   if (!b) return;
-  if (b.dataset.themeChoice) commit('外观', () => { forcedTheme = null; prefs.theme = b.dataset.themeChoice; });
-  else if (b.dataset.densityChoice) commit('列表行高', () => { prefs.density = b.dataset.densityChoice; });
-  else if (b.dataset.action === 'placeholder') { e.preventDefault(); toast('示例只做了偏好设置这一页'); }
-  else if (b.dataset.action === 'reset') {
-    const dialog = $('#reset-dialog');
-    const release = pushLayer(() => dialog.close('cancel'));
-    dialog.addEventListener('close', () => {
-      release();
-      if (dialog.returnValue !== 'confirm') return;
-      commit('全部偏好', () => { prefs = { ...DEFAULTS }; }, '全部偏好已恢复默认');
-    }, { once: true });
-    dialog.returnValue = '';
-    dialog.showModal();
-  }
+  const action = b.dataset.action;
+  if (action === 'placeholder') { e.preventDefault(); toast('示例只做了「常规」这一页'); }
+  else if (action === 'save') save();
+  else if (action === 'discard') discard();
+  else if (action === 'delete') openConfirm({ root, title: '删除销售工作空间？', text: '所有客户、报价和合同都会删除，不能恢复。', confirm: '删除', danger: true, returnFocus: b, onConfirm: () => toast('示例：不会删除工作区') });
 });
-media.addEventListener('change', () => { if (prefs.theme === 'system') applyTheme(); });
-forcedTheme = initShell(root)?.theme?.fromUrl ?? null;
-paint();
+// Leaving with unsaved changes asks first (the browser's own prompt; rules/5-单据.md 5.7 covers in-app navigation).
+addEventListener('beforeunload', e => { if (changed().length) e.preventDefault(); });
+registerShortcut({ keys: 'mod+s', label: '保存设置', group: '设置', run: () => (changed().length ? save() : toast('没有要保存的修改')) });
+initShell(root);
 
-// Command palette (rules/7-键盘与命令.md 7.2): the choices on this page are commands too.
 const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
-const setPalette = initPalette({
+const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
+// Command palette (rules/7-键盘与命令.md 7.2): the page buttons are commands too.
+const palette = initPalette({
   root,
   groups: () => [
-    { heading: '偏好设置', items: [
-      { id: 'theme', label: '外观…', icon: 'moon', children: () => [['light', '浅色'], ['dark', '深色'], ['system', '跟随系统']].map(([v, l]) => ({ id: v, label: l, current: themeChoice() === v, run: () => commit('外观', () => { forcedTheme = null; prefs.theme = v; }) })) },
-      { id: 'density', label: '列表行高…', icon: 'menu', children: () => [['standard', '标准 44'], ['compact', '紧凑 36']].map(([v, l]) => ({ id: v, label: l, current: prefs.density === v, run: () => commit('列表行高', () => { prefs.density = v; }) })) },
-      { id: 'single-key', label: prefs.singleKey ? '关闭单键快捷键' : '打开单键快捷键', icon: 'settings', run: () => commit('单键快捷键', () => { prefs.singleKey = !prefs.singleKey; }) },
-      { id: 'reset', label: '重置全部偏好…', icon: 'trash', danger: true, run: () => $('[data-action="reset"]').click() },
+    { heading: '工作区设置', items: [
+      { id: 'save', label: '保存设置', icon: 'check', keys: 'mod+s', run: () => $('[data-action="save"]').click() },
+      { id: 'discard', label: '放弃修改', icon: 'refresh', run: discard },
+      { id: 'delete', label: '删除工作区…', icon: 'trash', danger: true, run: () => $('[data-action="delete"]').click() },
     ] },
     { heading: '界面', items: [{ id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() }] },
+    { heading: '账户', items: account.commands() },
     { heading: '跳转', items: navCommands(root) },
     { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => setPalette.openAt('键盘快捷键', shortcutItems()) });
+registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });

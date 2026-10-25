@@ -6,6 +6,7 @@
 //   5. Colour pairs used for text, icons and controls reach their contrast minimum in both themes (PAIRS).
 //   6. src/ never colours text with the primary blue: links use the body colour (rules/2-视觉.md 2.2, 9.0).
 //   7. src/ sets no icon size in px: icons take --wb-icon (14px) or a spacing token (rules/2-视觉.md 2.9).
+//   8. src/ transitions name their properties, never move layout (width, height, position, margin), and take token durations.
 // Tests import lint() and contrast().
 import {readFileSync, readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
@@ -21,10 +22,10 @@ export const RUNTIME_VARS = ['level', 'cat', 'expand-cols'];
 // [foreground, background, minimum, what it is]. 4.5 for text, 3 for icons, focus rings and large text.
 export const PAIRS = [
   ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和侧栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
-  ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '侧栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'], ['ink-2', 'canvas', 4.5, '侧栏的导航项'], ['ink', 'nav-selected', 4.5, '侧栏的当前项'], ['ink-2', 'nav-selected', 4.5, '侧栏当前项上的计数'],
+  ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '侧栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'], ['ink-2', 'canvas', 4.5, '侧栏的导航项'], ['ink', 'nav-selected', 4.5, '侧栏的当前项'], ['ink-2', 'nav-selected', 4.5, '侧栏当前项上的计数'], ['ink-2', 'nav-hover', 4.5, '侧栏悬停项'],
   ['faint', 'bg', 3, '图标、禁用文字'], ['faint', 'fill', 3, '小元素底色上的图标'],
   ['line-strong', 'bg', 3, '输入框和按钮的描边'], ['line-strong', 'canvas', 3, '外框上的控件描边'], ['line-strong', 'pop-bg', 3, '弹层里的控件描边'],
-  ['on', 'action', 4.5, '主按钮文字'],
+  ['on', 'action', 4.5, '主按钮文字'], ['on', 'action-hover', 4.5, '主按钮悬停时的文字'], ['on', 'action-press', 4.5, '主按钮按下时的文字'],
   ['blue', 'bg', 3, '焦点框、链接图标'],
   ['success', 'bg', 4.5, '成功文字'], ['warning', 'bg', 4.5, '警示文字'], ['danger', 'bg', 4.5, '错误文字'], ['info', 'bg', 4.5, '信息文字'],
   ['danger', 'danger-bg', 4.5, '错误提示框里的文字'], ['ink', 'warning-bg', 4.5, '警示提示框里的文字'], ['ink', 'warning-mark', 4.5, '待核对的值'],
@@ -63,6 +64,13 @@ export function lint() {
       for (const r of line.matchAll(/border-radius:([^;}]+)/g)) if (/\b([3-9]|\d{2,})px/.test(r[1])) errors.push(`${at}: 圆角写死成 px，改用 --wb-radius-* 变量`);
       if (/[{;]color:var\(--wb-blue\)/.test(line) && !line.includes('.wb-stage-icon')) errors.push(`${at}: 文字用了主色。正文链接用正文色加下划线，主色只给主按钮、焦点和当前项标记`);
       if (/svg[^{]*\{[^}]*\b(width|height):\d+px/.test(line)) errors.push(`${at}: 图标尺寸写死成 px，改用 --wb-icon 或间距变量`);
+      // Motion (rules/11-交互.md 11.4): name the animated properties, move with transform and opacity only, time with tokens.
+      for (const m of line.matchAll(/transition(?:-property)?:([^;}]+)/g)) {
+        const v = m[1];
+        if (/\ball\b/.test(v)) errors.push(`${at}: transition 写了 all，逐个写出要过渡的属性`);
+        if (/(^|,)\s*(width|height|top|left|right|bottom|margin[a-z-]*|padding[a-z-]*|inset)\b/.test(v)) errors.push(`${at}: 对宽高、位置或边距做了过渡，会引起重新排版，改用 transform`);
+        if (/\b\d*\.?\d+m?s\b/.test(v.replace(/\b0s\b/g, ''))) errors.push(`${at}: 动效时长写死，改用 --wb-instant、--wb-fast、--wb-pop、--wb-base`);
+      }
     });
   }
   for (const theme of ['light', 'dark']) {

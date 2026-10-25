@@ -4,6 +4,7 @@
 //   批量通过 rows that cannot be approved yet are named before anything runs (rules/6-反馈.md 6.4)
 // A row whose countersign is still open has 通过 disabled with the reason next to it (rules/3-控件.md 3.3).
 import { initShell, initPalette, navCommands, registerShortcut, listShortcuts, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -103,6 +104,7 @@ render();
 // Command palette (rules/7-键盘与命令.md 7.2): every button on the page is also a command here.
 const rowOf = () => { const tr = document.activeElement?.closest?.('tr[data-id]'); return tr ? rows.find(r => r.id === Number(tr.dataset.id)) : null; };
 const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
+const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
 const palette = initPalette({
   root,
   context: () => { const r = rowOf(); return r && !r.result ? { id: r.id, code: r.code, label: r.name } : null; },
@@ -124,6 +126,7 @@ const palette = initPalette({
       { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
       { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
     ] },
+    { heading: '账户', items: account.commands() },
     { heading: '跳转', items: navCommands(root) },
     { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],

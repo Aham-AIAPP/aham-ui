@@ -9,13 +9,15 @@
 :where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink-2);text-align:start}
 :where(.aham-workbench) a.wb-nav-item{text-decoration:none}
 :where(.aham-workbench) .wb-nav-item svg{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-selected)}
+:where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-hover)}
 :where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-nav-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-nav-item[aria-current=page] svg{color:var(--wb-ink)}
 :where(.aham-workbench) .wb-nav-item>span:not(.wb-avatar-xs,.wb-nav-count){flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-count{flex:none;color:var(--wb-ink-2);font-size:var(--wb-text-xs);font-weight:400;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-nav-user{cursor:default}
-:where(.aham-workbench) .wb-nav-user:hover{background:transparent}
+:where(.aham-workbench) button.wb-nav-user{cursor:pointer}
+:where(.aham-workbench) .wb-nav-user>svg:last-child{flex:none;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-nav-user:not(button):hover{background:transparent}
 :where(.aham-workbench) .wb-nav-foot{display:grid;gap:2px;margin-block-start:auto}
 :where(.aham-workbench) .wb-crumbs a{color:inherit;text-decoration:none}
 :where(.aham-workbench) .wb-crumbs a:hover{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
@@ -25,7 +27,7 @@
 :where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
 :where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
 :where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
-:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
+:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-edge);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
 /* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
 :where(.aham-workbench) .wb-header{flex:none}

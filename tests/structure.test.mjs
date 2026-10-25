@@ -99,12 +99,12 @@ const BANNED = ['承接', '赋能', '沉淀', '落地', '抓手', '闭环', '粒
 test('every rule chapter names the design principles it carries out', () => {
   for (const f of RULES) assert.ok(/本章落实设计理念的原则 \d/.test(read(f).split('\n').slice(0, 4).join('\n')), f);
   const philosophy = read('设计理念.md');
-  for (let n = 1; n <= 14; n++) assert.ok(philosophy.includes(`**原则 ${n}　`), `设计理念.md 原则 ${n}`);
+  for (let n = 1; n <= 15; n++) assert.ok(philosophy.includes(`**原则 ${n}　`), `设计理念.md 原则 ${n}`);
   for (const f of ['README.md', 'AGENTS.md']) assert.ok(read(f).includes('设计理念.md'), `${f} links the philosophy`);
 });
 
-test('rules/ has the ten files in order', () => {
-  assert.deepEqual(RULES.map(f => f.replace('rules/', '')), ['1-总则.md', '2-视觉.md', '3-控件.md', '4-页面.md', '5-单据.md', '6-反馈.md', '7-键盘与命令.md', '8-AI协作.md', '9-验收.md', '10-数据格式.md']);
+test('rules/ has the eleven files in order', () => {
+  assert.deepEqual(RULES.map(f => f.replace('rules/', '')), ['1-总则.md', '2-视觉.md', '3-控件.md', '4-页面.md', '5-单据.md', '6-反馈.md', '7-键盘与命令.md', '8-AI协作.md', '9-验收.md', '10-数据格式.md', '11-交互.md']);
 });
 
 test('rule headings are noun phrases: no question marks, no 你', () => {
@@ -171,4 +171,23 @@ test('every workbench sample with a sidebar has a command palette (rules/7 7.2, 
     if (!script || !read(`examples/${script}`).includes('initPalette(')) missing.push(page);
   }
   assert.deepEqual(missing, []);
+});
+
+test('hover styles apply only to fine pointers (rules/11-交互.md 11.2)', async () => {
+  const {hoverOnly} = await import('../scripts/build.mjs');
+  const media = '@media (hover: hover) and (pointer: fine)';
+  assert.ok(hoverOnly(':where(.aham-workbench) .a:hover{color:red}').startsWith(media));
+  assert.ok(!hoverOnly(':where(.aham-workbench) .a:hover,:where(.aham-workbench) .a:focus-visible{color:red}').startsWith(media));
+  const bare = read('aham.css').split('\n').filter(l => /^:where\(\.aham-workbench\)[^{]*:hover/.test(l) && !/focus|:not\([^)]*:hover/.test(l.split('{')[0]));
+  assert.deepEqual(bare, []);
+});
+
+test('every sample with a sidebar has the account button (rules/11-交互.md 11.6)', () => {
+  const missing = files('examples/').filter(f => f.endsWith('.html')).filter(f => read(f).includes('class="wb-rail"') && !read(f).includes('data-action="account"'));
+  assert.deepEqual(missing, []);
+});
+
+test('motion uses transitions, not keyframes, except the skeleton (rules/11-交互.md 11.4)', () => {
+  const names = [...read('aham.css').matchAll(/@keyframes\s+([\w-]+)/g)].map(m => m[1]);
+  assert.ok(names.every(n => /skeleton|shimmer/.test(n)), names.join(', '));
 });

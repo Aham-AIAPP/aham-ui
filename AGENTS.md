@@ -8,9 +8,9 @@ Aham UI 覆盖电脑浏览器里的业务管理系统：列表、单据、记录
 
 ## 读取顺序
 
-0. [设计理念.md](设计理念.md)：总体标准、14 条原则和冲突时的取舍次序。规则没写到的情况，按这篇判断。
+0. [设计理念.md](设计理念.md)：总体标准、15 条原则和冲突时的取舍次序。规则没写到的情况，按这篇判断。
 1. [tokens.json](tokens.json)：全部取值。键名就是 CSS 变量名，键 `row` 对应 `--wb-row`。
-2. [rules/](rules/)：十个规则文件，按编号读。至少读 [1-总则.md](rules/1-总则.md)、[2-视觉.md](rules/2-视觉.md)、[3-控件.md](rules/3-控件.md)、[10-数据格式.md](rules/10-数据格式.md)，再按页面类型读 4–8。
+2. [rules/](rules/)：十一个规则文件，按编号读。至少读 [1-总则.md](rules/1-总则.md)、[2-视觉.md](rules/2-视觉.md)、[3-控件.md](rules/3-控件.md)、[10-数据格式.md](rules/10-数据格式.md)，再按页面类型读 4–8。
 3. [components/index.json](components/index.json)：44 份契约，写明每个控件和组合的结构、类名、状态和键盘。
 4. [aham.css](aham.css) 和 [aham.js](aham.js)：样式和行为的参考实现。
 5. [examples/](examples/)：示例页。拿不准的写法以示例页为准。

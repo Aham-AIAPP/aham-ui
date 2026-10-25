@@ -15,7 +15,7 @@
 :where(.aham-workbench) .wb-section-heading h2{font-size:var(--wb-text-sm);font-weight:500}
 :where(.aham-workbench) .wb-section-heading h2 span{margin-inline-start:var(--wb-s1);color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-related{margin:0;padding:0;list-style:none;border-top:var(--wb-hairline) solid var(--wb-line)}
-:where(.aham-workbench) .wb-related li{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:0 var(--wb-s1);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-related li{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:0 var(--wb-s1);border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
 :where(.aham-workbench) .wb-related li:hover{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-related .wb-tnum{flex:none;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-related .wb-grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -41,9 +41,9 @@
 :where(.aham-workbench) .wb-comment-head strong{font-weight:500}
 :where(.aham-workbench) .wb-comment-head span:last-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-comment p{line-height:1.75}
-:where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
+:where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius-lg);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line-strong)}
 :where(.aham-workbench) .wb-composer textarea{display:block;width:100%;min-height:var(--wb-s7);margin:0;padding:0;border:0;background:transparent;resize:vertical;line-height:1.75}
 :where(.aham-workbench) .wb-composer textarea:focus-visible{outline:0}
-:where(.aham-workbench) .wb-composer:focus-within{box-shadow:0 0 0 2px var(--wb-blue)}
+:where(.aham-workbench) .wb-composer:focus-within{box-shadow:inset 0 0 0 1px var(--wb-blue),0 0 0 1px var(--wb-blue)}
 :where(.aham-workbench) .wb-composer-foot>span:first-child{margin-inline-end:auto}
 :where(.aham-workbench) .wb-composer-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);color:var(--wb-muted)}

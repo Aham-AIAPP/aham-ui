@@ -313,6 +313,20 @@
       "group": "AI 协作",
       "specification": "rules/8-AI协作.md#85-改数据之前",
       "preview": "examples/parts-ai.html"
+    },
+    {
+      "slug": "account-menu",
+      "name": "账户菜单",
+      "group": "组合",
+      "specification": "rules/11-交互.md#116-容器选用",
+      "preview": "examples/interaction.html"
+    },
+    {
+      "slug": "preferences-dialog",
+      "name": "分栏弹窗（偏好设置）",
+      "group": "组合",
+      "specification": "rules/11-交互.md#116-容器选用",
+      "preview": "examples/interaction.html"
     }
   ]
 }

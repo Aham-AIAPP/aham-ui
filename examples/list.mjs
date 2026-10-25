@@ -2,6 +2,7 @@
 // Everything reusable lives in aham.js / aham.css; this file only renders rows and keeps demo state.
 import {initShell, initPanels, navCommands, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
 import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -384,6 +385,7 @@ initContextMenu({
 });
 const GROUP_ORDER = ['通用', '列表'];
 const shortcutItems = () => listShortcuts().sort((x, y) => GROUP_ORDER.indexOf(x.group) - GROUP_ORDER.indexOf(y.group)).map((s, i) => ({ id: `k${i}`, label: s.label, keys: s.keys, group: s.group, heading: s.group, keywords: [s.group] }));
+const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
 const palette = initPalette({
   root,
   context: () => { const id = currentRow() ?? (panels.current() === PEEK ? previewId : null); const r = id && recordOf(id); return r ? { id, code: r.code, label: r.name } : null; },
@@ -413,6 +415,7 @@ const palette = initPalette({
       { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
       { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
     ] },
+    { heading: '账户', items: account.commands() },
     { heading: '跳转', items: navCommands(root) },
     { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],

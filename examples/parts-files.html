@@ -135,7 +135,7 @@ function fileRow(f, i) {
   const meta = `${esc(formatBytes(f.size))}${f.path && f.path !== f.name ? ` · ${esc(f.path)}` : ''}`;
   const state = {
     done: `<span class="wb-status"><b></b>已上传</span>${f.note ? `<span class="wb-meta">${esc(f.note)}</span>` : ''}`,
-    uploading: `<span>上传中 ${f.progress}%</span><span class="wb-progress" role="progressbar" aria-label="${esc(f.name)} 上传进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.progress}"><span style="width:${f.progress}%"></span></span>`,
+    uploading: `<span>上传中 ${f.progress}%</span><span class="wb-progress" role="progressbar" aria-label="${esc(f.name)} 上传进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.progress}"><span style="--p:${f.progress / 100}"></span></span>`,
     failed: `<span class="wb-risk">${icon('error')}${esc(f.error)}</span>`,
     rejected: `<span class="wb-risk">${icon('error')}${esc(f.error)}</span>`,
   }[f.state];

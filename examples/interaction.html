@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 交互</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}</style></head>
+<body>
+<div class="aham-workbench" data-theme="light" aria-label="交互样板">
+  <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
+    <div class="wb-rail-head"><span class="wb-brand" aria-hidden="true">A</span><span class="wb-brand-name">销售工作空间</span></div>
+    <div class="wb-nav-group"><a class="wb-nav-item" href="worklist.html" data-go="i"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-success"/></svg><span>待办</span><span class="wb-nav-count" aria-label="3 项待处理">3</span></a></div>
+    <div class="wb-nav-group" role="group" aria-labelledby="nav-biz"><span class="wb-nav-heading" id="nav-biz">业务</span><a class="wb-nav-item" href="list.html" data-go="c"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"/></svg><span>客户</span></a><button type="button" class="wb-nav-item" data-action="placeholder" data-go="o"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-folder"/></svg><span>商机</span></button><a class="wb-nav-item" href="document.html" data-go="q"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span>报价</span></a><button type="button" class="wb-nav-item" data-action="placeholder" data-go="h"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-copy"/></svg><span>合同</span></button></div>
+    <div class="wb-nav-foot"><a class="wb-nav-item" href="settings.html" data-go="s"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-settings"/></svg><span>设置</span></a><button type="button" class="wb-nav-item wb-nav-user" data-action="account" aria-haspopup="menu" aria-expanded="false" aria-label="账户：林悦" data-tooltip="账户"><span class="wb-avatar-xs" data-cat="4" aria-hidden="true">林</span><span>林悦</span><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-down"/></svg></button></div>
+  </nav>
+  <div class="wb-main">
+    <header class="wb-header">
+      <div class="wb-header-row">
+        <div class="wb-header-lead"><button class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开侧栏" data-tooltip="展开 / 收起侧栏" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>样板</span><span>/</span><span aria-current="page">交互</span></nav></div>
+        <div class="wb-header-trail"><button class="wb-btn sm ghost" data-panel-toggle="ix-peek" aria-pressed="false" aria-controls="ix-peek">预览面板</button><button class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button></div>
+      </div>
+    </header>
+    <div class="wb-layout">
+      <main class="wb-document wb-settings-scroll" tabindex="0" aria-label="交互样板内容">
+        <div class="wb-settings">
+          <h1>交互</h1>
+          <p>每个元素都试一下：鼠标移上去、按住、松开、用键盘 Tab 过去。规则见 rules/11-交互.md。</p>
+          <section class="wb-settings-section" aria-labelledby="ix-buttons">
+            <header><div><h2 id="ix-buttons">按钮</h2><p>悬停深一档。按下深两档，独立按钮缩到 0.97。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title">主按钮</div><div class="wb-setting-desc">悬停和按下都变深</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm primary" data-demo="toast" data-text="已保存">保存</button></div></div><div class="wb-setting"><div><div class="wb-setting-title">描边按钮和文字按钮</div><div class="wb-setting-desc">底色从白到浅灰再到深一档灰</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" data-demo="toast" data-text="已取消">取消</button><button type="button" class="wb-btn sm ghost" data-demo="toast" data-text="已导出 128 位客户（示例）">导出</button></div></div><div class="wb-setting"><div><div class="wb-setting-title">图标按钮</div><div class="wb-setting-desc">悬停 500ms 后出现提示，相邻按钮的提示立即出现</div></div><div class="wb-setting-control"><button type="button" class="wb-icon-btn" aria-label="复制链接" data-tooltip="复制链接" data-demo="toast" data-text="已复制链接"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-link"/></svg></button><button type="button" class="wb-icon-btn" aria-label="刷新" data-tooltip="刷新" data-demo="toast" data-text="已刷新"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-refresh"/></svg></button><button type="button" class="wb-icon-btn" aria-label="收藏" data-tooltip="收藏" data-demo="toast" data-text="已收藏"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-star"/></svg></button></div></div><div class="wb-setting"><div><div class="wb-setting-title">危险按钮</div><div class="wb-setting-desc">先弹确认，确认弹窗从中心淡入</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm ghost danger" data-demo="confirm">删除</button></div></div>
+            </div>
+          </section>
+
+          <section class="wb-settings-section" aria-labelledby="ix-open">
+            <header><div><h2 id="ix-open">打开中</h2><p>菜单打开时，触发按钮保持按下的颜色。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title">更多操作</div><div class="wb-setting-desc">菜单从按钮一侧淡入，选完或点外面关闭</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" id="ix-more" aria-haspopup="menu" aria-expanded="false" data-demo="menu">更多操作<svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-down"/></svg></button></div></div><div class="wb-setting"><div><div class="wb-setting-title">账户菜单</div><div class="wb-setting-desc">侧栏底部的头像，和 Claude 客户端一样</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm ghost" data-demo="account">打开账户菜单</button></div></div>
+            </div>
+          </section>
+
+          <section class="wb-settings-section" aria-labelledby="ix-rows">
+            <header><div><h2 id="ix-rows">列表行</h2><p>悬停浅灰，按下和选中深一档。行只变色，不缩放。</p></div></header>
+            <table class="wb-table wb-list-table wb-list-rows" aria-labelledby="ix-rows" style="min-width:0"><colgroup><col style="width:40px"><col><col style="width:96px"></colgroup>
+              <thead><tr><th scope="col">选择</th><th scope="col">客户名称</th><th scope="col">最近跟进</th></tr></thead>
+              <tbody><tr data-id="r0"><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 远川精密制造有限公司"></label></td><td class="wb-cell-name"><span>远川精密制造有限公司</span></td><td class="wb-cell-end wb-cell-meta">10月24日</td></tr><tr data-id="r1" data-selected><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 南桥医疗器械有限公司" checked></label></td><td class="wb-cell-name"><span>南桥医疗器械有限公司</span></td><td class="wb-cell-end wb-cell-meta">10月23日</td></tr><tr data-id="r2"><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 长汀机电设备有限公司"></label></td><td class="wb-cell-name"><span>长汀机电设备有限公司</span></td><td class="wb-cell-end wb-cell-meta">10月21日</td></tr><tr data-id="r3"><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" aria-label="选择 青禾食品科技有限公司"></label></td><td class="wb-cell-name"><span>青禾食品科技有限公司</span></td><td class="wb-cell-end wb-cell-meta">10月18日</td></tr></tbody>
+            </table>
+          </section>
+          <section class="wb-settings-section" aria-labelledby="ix-layers">
+            <header><div><h2 id="ix-layers">浮层和弹窗</h2><p>按容器选用顺序挑一个试：浮层、侧面板、确认弹窗、新建弹窗、分栏弹窗。</p></div></header>
+            <div class="wb-settings-rows">
+              <div class="wb-setting"><div><div class="wb-setting-title">新建弹窗</div><div class="wb-setting-desc">一屏能填完的新建</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" data-demo="create">新建客户</button></div></div><div class="wb-setting"><div><div class="wb-setting-title">分栏弹窗</div><div class="wb-setting-desc">个人偏好，⌘/Ctrl + , 也能打开</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" data-demo="prefs">偏好设置</button></div></div><div class="wb-setting"><div><div class="wb-setting-title">侧面板</div><div class="wb-setting-desc">看一条记录又不离开列表，从右侧滑入 8px</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" data-demo="peek">打开预览面板</button></div></div><div class="wb-setting"><div><div class="wb-setting-title">轻提示</div><div class="wb-setting-desc">右下角上移并淡入，4 秒后淡出</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" data-demo="toast" data-text="已发送提醒">显示轻提示</button></div></div><div class="wb-setting"><div><div class="wb-setting-title">命令面板</div><div class="wb-setting-desc">键盘每天用上百次，不加动效</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm" data-demo="palette">打开命令面板</button></div></div>
+            </div>
+          </section>
+
+          <section class="wb-settings-section" aria-labelledby="ix-motion">
+            <header><div><h2 id="ix-motion">动效时长</h2><p>读自当前页面的样式变量。开启系统的「减少动态效果」后，缩放和位移会去掉。</p></div></header>
+            <div class="wb-settings-rows" id="ix-durations"></div>
+          </section>
+        </div>
+      </main>
+      <aside class="wb-panel" id="ix-peek" data-size="wide" tabindex="0" aria-label="客户预览" hidden>
+        <section class="wb-peek">
+          <h2>远川精密制造有限公司</h2>
+          <dl><dt>负责人</dt><dd>林悦 / 华东销售组</dd><dt>行业</dt><dd>装备制造</dd><dt>最近跟进</dt><dd class="wb-tnum">10月24日</dd></dl>
+          <p class="wb-note">预览面板是非模态的，焦点留在原处。再点一次按钮关闭。</p>
+        </section>
+      </aside>
+    </div>
+  </div>
+  <div class="wb-popover flush menu" id="ix-menu" role="dialog" aria-label="更多操作" hidden><div></div></div>
+</div>
+<script type="module" src="./interaction.mjs"></script>
+</body></html>

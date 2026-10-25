@@ -35,6 +35,11 @@
 }
 /* ≤ mobile breakpoint: normal page flow; the rail is hidden until the header toggle opens it. */
 @media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-dialog.is-split {width:100vw;height:100dvh;max-width:none;max-height:none;border-radius:0}
+ .aham-workbench .wb-split {grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+ .aham-workbench .wb-split>.wb-settings-nav {display:flex;overflow-x:auto;padding:var(--wb-s2);border-inline-end:0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+ .aham-workbench .wb-split>.wb-settings-nav ul {display:flex;flex-wrap:nowrap}
+ .aham-workbench .wb-split-body {padding-inline:var(--wb-s4)}
  .aham-workbench,.aham-workbench.expanded {display:block;height:auto;min-height:100vh;overflow:visible;background:var(--wb-bg)}
  .aham-workbench .wb-rail {display:none}
  .aham-workbench.expanded .wb-rail {display:flex}
@@ -102,7 +107,10 @@
 @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
  .aham-workbench:not([data-theme="light"]) {--wb-line:{{color.contrast-more.line-more-dark}};--wb-line-strong:{{color.contrast-more.line-more-dark}};--wb-muted:{{color.dark.muted}};--wb-faint:{{color.dark.muted}}}
 }
-/* Reduce motion (rules/2-视觉.md): state changes switch without transitions. */
+/* Reduce motion (rules/11-交互.md 11.5): no scaling, sliding or turning; fades and colour changes stay. */
 @media (prefers-reduced-motion: reduce) {
- .aham-workbench *,.aham-workbench *::before,.aham-workbench *::after {transition-duration:0s!important;animation-duration:0s!important}
+ .aham-workbench :is(.wb-btn,.wb-icon-btn):active {transform:none}
+ .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar),.aham-workbench :is(.wb-popover,.wb-dialog,.wb-create)[data-leaving] {transform:none}
+ .aham-workbench :is(.wb-fold>summary>svg,.wb-expand>details>summary>svg,.wb-group-toggle svg,.wb-tree-toggle svg,.wb-switch span::after,.wb-progress>span) {transition:none}
+ .aham-workbench .wb-skeleton {animation:none}
 }

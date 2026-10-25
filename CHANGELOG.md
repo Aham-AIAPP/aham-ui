@@ -39,12 +39,26 @@
 - 第 9 章新增 9.7 风格判据 S1–S12 和截图比例校准；9.5 自查增加第 12 项。
 - lint 新增三类检查：主色用作文字颜色、svg 写死像素尺寸、侧栏的三组对比度。
 
+### 交互层
+- 新增第 11 章《交互》：5 层表面、5 种状态、悬停的过渡、按频次定动效、减少动态效果、容器选用、验收。设计理念新增原则 12「每次操作都有回应，动效只说明来去」，原 12–14 顺延为 13–15。
+- 新增 src/interaction.css：悬停移入立即、移出淡出；按下底色加深，独立按钮缩到 0.97；`aria-expanded="true"` 的触发按钮保持按下色；浮层、悬停提示、弹窗、预览面板、轻提示和保存栏用 `@starting-style` 出现。
+- `aham.js` 新增 `leave(el, done)`：给元素加 `data-leaving`，过渡结束再隐藏或移除。浮层、四种弹窗和轻提示改用它播放消失。浮层的变形原点在触发按钮一侧。悬停提示 300ms 内相邻元素不再延迟。
+- `scripts/build.mjs` 把单行 `:hover` 规则包进 `@media (hover: hover) and (pointer: fine)`，触屏上不留悬停色。
+- 新增颜色变量 `--wb-nav-hover`、`--wb-edge`、`--wb-line-soft`、`--wb-action-press`；`--wb-nav-selected` 亮色改为 `#D5D4D3`；`--wb-scrim` 亮色改为黑色 40%。分隔线分三档：外框交界、分栏、行间。
+- 时长变量改为 `--wb-instant` 100ms、`--wb-fast` 120ms、`--wb-pop` 150ms、`--wb-base` 200ms，删去 `--wb-slow`；新增 `--wb-ease-move`、`--wb-press-scale`、`--wb-tooltip-delay`。
+- 账户菜单和分栏弹窗：侧栏底部的账户按钮打开菜单，「偏好设置…」（⌘/Ctrl + ,）打开分栏弹窗，改了立即生效。组件契约新增 account-menu、preferences-dialog，共 47 份。
+- 设置页改为只放工作区设置，有修改时底部出现保存栏，⌘/Ctrl + S 保存。
+- 评论框改为白底、12px 圆角、1px `--wb-line-strong` 描边，不加阴影。文件上传进度条改用 `transform: scaleX()`。
+- 新增示例页 examples/interaction.html 和调研记录 research/交互层-调研.md。
+- lint 新增检查：不写 `transition: all`，不对宽高和位置做过渡，时长必须用变量。
+
 ### 升级步骤
 1. 全局替换 `wb-mono` 为 `wb-tnum`，`--wb-detail-title` 为 `--wb-title`。
 2. 删去 `is-labeled`；侧栏按 examples/shell.html 的结构改写，收起状态改用 `.collapsed`。
 3. 列表页的 `<table>` 加 `wb-list-rows`，单元格按 4.3 的顺序和类名改写（`wb-cell-meta`、`wb-cell-icon`、`wb-cell-name`、`wb-cell-end`）；人员单元格改用 `personHTML(name, { compact: true })`。
 4. 正文里用主色的链接改为 `.wb-link`。
 5. 跑 `node scripts/lint.mjs`，按提示改掉写死的图标像素和主色文字。
+6. `--wb-slow` 改为 `--wb-base`；侧栏底部的用户名改为账户按钮，按 examples/shell.html 改写；个人偏好从设置页移到 `initAccount()` 的分栏弹窗。
 
 ## [8.1.0] - 2026-10-23
 

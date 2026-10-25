@@ -1,4 +1,5 @@
 import {initShell, initPanels, initPalette, navCommands} from '../aham.js';
+import {initAccount} from './account.mjs';
 const root = document.querySelector('.aham-workbench');
 const feedback = root.querySelector('#shell-feedback');
 initShell(root);
@@ -15,6 +16,7 @@ root.addEventListener('click', e => {
     case 'placeholder': feedback.textContent = '此示例只演示外框与页眉，该入口在后续阶段实现。'; break;
   }
 });
+const account = initAccount(root);
 // Command palette (rules/7-键盘与命令.md 7.2): the header buttons are commands too.
 initPalette({
   root,
@@ -25,6 +27,7 @@ initPalette({
       { id: 'peek', label: '打开或关闭预览面板', icon: 'eye', run: () => root.querySelector('[data-panel-toggle]').click() },
       { id: 'theme', label: '切换深色和浅色', icon: 'moon', run: () => root.querySelector('[data-action="theme"]').click() },
     ] },
+    { heading: '账户', items: account.commands() },
     { heading: '跳转', items: navCommands(root) },
   ],
 });

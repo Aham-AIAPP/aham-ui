@@ -7,6 +7,7 @@
 // State lives in this page only. print.html reads the last saved copy from sessionStorage.
 import { initShell, initPalette, navCommands, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
 import { defaults, lineCents, totals, money } from './quotation-model.mjs';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const doc = root.querySelector('#doc');
@@ -369,6 +370,7 @@ initAnchorBar($('#doc-anchors'), { scroller: doc });
 const pageButtons = () => [...root.querySelectorAll('#doc-actions button, #doc-foot button')]
   .filter(b => !b.disabled && b.offsetParent && (b.textContent.trim() || b.getAttribute('aria-label')))
   .map((b, i) => ({ id: `act-${i}`, label: b.textContent.trim() || b.getAttribute('aria-label'), keys: b.dataset.keys, run: () => b.click() }));
+const account = initAccount(root);
 initPalette({
   root,
   groups: () => [
@@ -377,6 +379,7 @@ initPalette({
       { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
       { id: 'theme', label: '切换深色和浅色', icon: 'moon', run: () => $('[data-action="theme"]').click() },
     ] },
+    { heading: '账户', items: account.commands() },
     { heading: '跳转', items: navCommands(root) },
   ],
 });

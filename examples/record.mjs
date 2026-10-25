@@ -2,6 +2,7 @@
 import {navCommands, initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './list-model.mjs';
 import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s);
@@ -111,6 +112,7 @@ const pickers = initPropertyPickers({
 });
 const options = { stage: STAGES, owner: OWNERS, industry: INDUSTRIES };
 const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys, group: k.group, heading: k.group }));
+const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
 const palette = initPalette({
   root,
   context: () => ({ id: record.id, code: record.code, label: record.name }),
@@ -123,6 +125,7 @@ const palette = initPalette({
       { id: 'ai-draft', label: '起草跟进记录', icon: 'ai', run: aiDraft },
       { id: 'ai-next', label: '建议下一步…', icon: 'ai', run: aiNextStep },
     ] }] : []),
+    { heading: '账户', items: account.commands() },
     { heading: '跳转', items: [
       { id: 'prev', label: '上一条', icon: 'chevron-up', keys: 'k', run: () => go(-1) },
       { id: 'next', label: '下一条', icon: 'chevron-down', keys: 'j', run: () => go(1) },

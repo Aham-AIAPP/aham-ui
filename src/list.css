@@ -59,7 +59,7 @@
 :where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:color-mix(in srgb,var(--wb-fill) 50%,var(--wb-bg));color:var(--wb-ink);border-bottom:0;box-shadow:inset 0 calc(-1 * var(--wb-hairline)) 0 var(--wb-line)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle>svg:first-child{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);line-height:var(--wb-s5)}
+:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);border-bottom-color:var(--wb-line-soft);line-height:var(--wb-s5)}
 /* Compact density: list rows step down to 36px. */
 :where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-rows{--wb-list-row:calc(var(--wb-row) + var(--wb-s1))}
 :where(.aham-workbench) .wb-list-rows .wb-cell-meta{color:var(--wb-muted);font-size:var(--wb-text-xs)}

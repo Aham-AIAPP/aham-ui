@@ -74,6 +74,8 @@
   --wb-dialog-width: 400px;
   --wb-dialog-form: 560px;
   --wb-dialog-wide: 880px;
+  --wb-dialog-split-height: 640px;
+  --wb-dialog-split-nav: 200px;
   --wb-overlay-width: 640px;
   --wb-palette-top: 22vh;
   --wb-create-top: 16vh;
@@ -85,18 +87,24 @@
   --wb-z-scrim: 300;
   --wb-z-nav: 400;
   --wb-z-toast: 500;
-  --wb-instant: 0.06s;
+  --wb-instant: 0.1s;
   --wb-fast: 0.12s;
+  --wb-pop: 0.15s;
   --wb-base: 0.2s;
-  --wb-slow: 0.3s;
   --wb-ease: cubic-bezier(.165,.84,.44,1);
+  --wb-ease-move: cubic-bezier(.65,0,.35,1);
+  --wb-press-scale: 0.97;
+  --wb-tooltip-delay: 500ms;
   --wb-bg: #FFFFFF;
   --wb-canvas: #EDECEB;
   --wb-fill: #F3F3F3;
   --wb-hover: #F3F3F2;
   --wb-selected: #EBEBEA;
-  --wb-nav-selected: #DEDDDB;
+  --wb-nav-hover: #E3E2E0;
+  --wb-nav-selected: #D5D4D3;
   --wb-line: #E5E5E4;
+  --wb-edge: #D6D5D3;
+  --wb-line-soft: #EFEFEE;
   --wb-line-strong: #80807E;
   --wb-pop-bg: #FFFFFF;
   --wb-ink: #151515;
@@ -106,7 +114,8 @@
   --wb-blue: #336EE8;
   --wb-blue-bg: #EDF1FA;
   --wb-action: #164EC3;
-  --wb-action-hover: #336EE8;
+  --wb-action-hover: #1243A8;
+  --wb-action-press: #0F3891;
   --wb-on: #FFFFFF;
   --wb-success: #1F7A4D;
   --wb-success-bg: #EAF4EE;
@@ -123,7 +132,7 @@
   --wb-cat-4: #B25E09;
   --wb-cat-5: #C4421A;
   --wb-cat-6: #6E56CF;
-  --wb-scrim: rgba(24,24,24,0.24);
+  --wb-scrim: rgba(0,0,0,0.4);
 }
 .aham-workbench[data-theme="dark"] {
   color-scheme: dark;
@@ -132,8 +141,11 @@
   --wb-fill: #20201F;
   --wb-hover: #20201F;
   --wb-selected: #2C2C2A;
+  --wb-nav-hover: #191918;
   --wb-nav-selected: #232322;
   --wb-line: #2A2A28;
+  --wb-edge: #343432;
+  --wb-line-soft: #1F1F1E;
   --wb-line-strong: #6E6C66;
   --wb-pop-bg: #1A1A19;
   --wb-ink: #F5F5F3;
@@ -143,7 +155,8 @@
   --wb-blue: #6C97F0;
   --wb-blue-bg: #1F2A40;
   --wb-action: #336EE8;
-  --wb-action-hover: #4A7FEB;
+  --wb-action-hover: #2A62D6;
+  --wb-action-press: #2357C4;
   --wb-on: #FFFFFF;
   --wb-success: #6DBE8F;
   --wb-success-bg: #1C2A22;
@@ -170,8 +183,11 @@
   --wb-fill: #20201F;
   --wb-hover: #20201F;
   --wb-selected: #2C2C2A;
+  --wb-nav-hover: #191918;
   --wb-nav-selected: #232322;
   --wb-line: #2A2A28;
+  --wb-edge: #343432;
+  --wb-line-soft: #1F1F1E;
   --wb-line-strong: #6E6C66;
   --wb-pop-bg: #1A1A19;
   --wb-ink: #F5F5F3;
@@ -181,7 +197,8 @@
   --wb-blue: #6C97F0;
   --wb-blue-bg: #1F2A40;
   --wb-action: #336EE8;
-  --wb-action-hover: #4A7FEB;
+  --wb-action-hover: #2A62D6;
+  --wb-action-press: #2357C4;
   --wb-on: #FFFFFF;
   --wb-success: #6DBE8F;
   --wb-success-bg: #1C2A22;
@@ -209,8 +226,11 @@
   --wb-fill: #F3F3F3;
   --wb-hover: #F3F3F2;
   --wb-selected: #EBEBEA;
-  --wb-nav-selected: #DEDDDB;
+  --wb-nav-hover: #E3E2E0;
+  --wb-nav-selected: #D5D4D3;
   --wb-line: #E5E5E4;
+  --wb-edge: #D6D5D3;
+  --wb-line-soft: #EFEFEE;
   --wb-line-strong: #80807E;
   --wb-pop-bg: #FFFFFF;
   --wb-ink: #151515;
@@ -220,7 +240,8 @@
   --wb-blue: #336EE8;
   --wb-blue-bg: #EDF1FA;
   --wb-action: #164EC3;
-  --wb-action-hover: #336EE8;
+  --wb-action-hover: #1243A8;
+  --wb-action-press: #0F3891;
   --wb-on: #FFFFFF;
   --wb-success: #1F7A4D;
   --wb-success-bg: #EAF4EE;
@@ -237,7 +258,7 @@
   --wb-cat-4: #B25E09;
   --wb-cat-5: #C4421A;
   --wb-cat-6: #6E56CF;
-  --wb-scrim: rgba(24,24,24,0.24);
+  --wb-scrim: rgba(0,0,0,0.4);
 }
 }
 /* ---- src/base.css ---- */
@@ -272,23 +293,25 @@
 :where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink-2);text-align:start}
 :where(.aham-workbench) a.wb-nav-item{text-decoration:none}
 :where(.aham-workbench) .wb-nav-item svg{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-selected)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-hover)}}
 :where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-nav-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-nav-item[aria-current=page] svg{color:var(--wb-ink)}
 :where(.aham-workbench) .wb-nav-item>span:not(.wb-avatar-xs,.wb-nav-count){flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-count{flex:none;color:var(--wb-ink-2);font-size:var(--wb-text-xs);font-weight:400;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-nav-user{cursor:default}
-:where(.aham-workbench) .wb-nav-user:hover{background:transparent}
+:where(.aham-workbench) button.wb-nav-user{cursor:pointer}
+:where(.aham-workbench) .wb-nav-user>svg:last-child{flex:none;color:var(--wb-muted)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-nav-user:not(button):hover{background:transparent}}
 :where(.aham-workbench) .wb-nav-foot{display:grid;gap:2px;margin-block-start:auto}
 :where(.aham-workbench) .wb-crumbs a{color:inherit;text-decoration:none}
-:where(.aham-workbench) .wb-crumbs a:hover{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-crumbs a:hover{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}}
 /* Collapsed (⌘/Ctrl+B): 52px of icons; names show in the tooltip. */
 :where(.aham-workbench).collapsed{grid-template-columns:var(--wb-rail) minmax(0,1fr)}
 :where(.aham-workbench).collapsed .wb-rail{align-items:center;padding-inline:var(--wb-s1)}
 :where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
 :where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
 :where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
-:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
+:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-edge);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
 /* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
 :where(.aham-workbench) .wb-header{flex:none}
@@ -308,7 +331,7 @@
 :where(.aham-workbench) :is(h2,h3){font-size:var(--wb-body);font-weight:500}
 /* ---- src/controls.css ---- */
 :where(.aham-workbench) .wb-icon-btn{display:inline-grid;place-items:center;flex:none;width:var(--wb-header-control);height:var(--wb-header-control);padding:0;border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-icon-btn:hover{background:var(--wb-hover);color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-icon-btn:hover{background:var(--wb-hover);color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-icon-btn[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-status{display:inline-flex;align-items:center;gap:var(--wb-dot);color:var(--wb-ink);white-space:nowrap}
 :where(.aham-workbench) .wb-status b{width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-muted)}
@@ -323,12 +346,12 @@
 :where(.aham-workbench) .wb-btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line-strong);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) a.wb-btn{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
-:where(.aham-workbench) .wb-btn:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-btn:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-btn.ghost{background:transparent;box-shadow:none;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-btn.ghost:hover{background:var(--wb-hover);color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-btn.ghost:hover{background:var(--wb-hover);color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-btn.ghost[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.primary{background:var(--wb-action);box-shadow:none;color:var(--wb-on)}
-:where(.aham-workbench) .wb-btn.primary:hover{background:var(--wb-action-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-btn.primary:hover{background:var(--wb-action-hover)}}
 :where(.aham-workbench) button:disabled{opacity:.4;cursor:not-allowed}
 :where(.aham-workbench) .wb-tabs-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:var(--wb-hairline) solid var(--wb-line);gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-tabs{display:flex;gap:var(--wb-s5)}
@@ -339,16 +362,16 @@
 :where(.aham-workbench) .wb-seg button[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:var(--wb-s1);background:transparent}
 :where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s3);border-radius:var(--wb-radius);color:var(--wb-ink-2)}
-:where(.aham-workbench) .wb-seg.sm button:hover{background:var(--wb-hover);color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-seg.sm button:hover{background:var(--wb-hover);color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-seg.sm button[aria-pressed=true]{background:var(--wb-bg);box-shadow:inset 0 0 0 var(--wb-hairline) var(--wb-line);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-seg button{white-space:nowrap}
 :where(.aham-workbench) .wb-btn.icon-only{padding:0;width:var(--wb-header-control)}
 :where(.aham-workbench) .wb-btn{position:relative}
 :where(.aham-workbench) .wb-dot{position:absolute;top:var(--wb-s1);right:var(--wb-s1);width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.danger{background:var(--wb-bg);color:var(--wb-danger);box-shadow:inset 0 0 0 1px var(--wb-line)}
-:where(.aham-workbench) .wb-btn.danger:hover{background:var(--wb-danger-bg)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-btn.danger:hover{background:var(--wb-danger-bg)}}
 :where(.aham-workbench) .wb-btn.ghost.danger{background:transparent;color:var(--wb-danger);box-shadow:none}
-:where(.aham-workbench) .wb-btn.ghost.danger:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-btn.ghost.danger:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-switch{display:inline-flex;align-items:center;gap:var(--wb-s2);cursor:pointer;color:var(--wb-ink)}
 :where(.aham-workbench) .wb-switch input{position:absolute;opacity:0;width:1px;height:1px}
 :where(.aham-workbench) .wb-switch span{position:relative;width:28px;height:16px;border-radius:var(--wb-radius-pill);background:var(--wb-selected);transition:background var(--wb-fast) var(--wb-ease)}
@@ -396,13 +419,13 @@
 :where(.aham-workbench) .wb-stage-icon[data-state=blocked]{color:var(--wb-warning)}
 /* Links in running text (9.0, rules/2-视觉.md 2.2): body colour with a quiet underline; blue is kept for focus and the primary button. */
 :where(.aham-workbench) .wb-link,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a{padding:0;border:0;background:transparent;color:var(--wb-ink);text-decoration:underline;text-decoration-color:var(--wb-line-strong);text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer}
-:where(.aham-workbench) .wb-link:hover,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a:hover{text-decoration-color:currentColor}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-link:hover,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a:hover{text-decoration-color:currentColor}}
 /* Field: text box, select and textarea share one look, 32px with a 1px line; .sm is 28px for toolbars and popovers. */
 :where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:20px;height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line-strong);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-field.sm{height:var(--wb-header-control)}
 :where(.aham-workbench) select.wb-field{padding-inline-end:var(--wb-s1)}
 :where(.aham-workbench) textarea.wb-field{height:auto;min-height:calc(var(--wb-control) * 2);padding-block:5px;line-height:20px;resize:vertical}
-:where(.aham-workbench) .wb-field:hover{border-color:var(--wb-muted)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-field:hover{border-color:var(--wb-muted)}}
 :where(.aham-workbench) .wb-field:focus{outline:0;border-color:var(--wb-blue);box-shadow:0 0 0 3px var(--wb-blue-bg)}
 :where(.aham-workbench) .wb-field[aria-invalid=true]{outline:0;border-color:var(--wb-danger)}
 :where(.aham-workbench) .wb-field:disabled{background:var(--wb-fill);color:var(--wb-faint);cursor:not-allowed}
@@ -419,25 +442,25 @@
 :where(.aham-workbench) .wb-table th{font-weight:500;color:var(--wb-muted);text-align:start;background:var(--wb-bg);height:var(--wb-row);white-space:nowrap}
 :where(.aham-workbench) .wb-table :is(th,td){padding:0 var(--wb-s2);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-table td{height:var(--wb-row);vertical-align:middle;white-space:nowrap}
-:where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-table .number{text-align:end;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-table th.number{font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
 :where(.aham-workbench) .wb-cell-title{display:block;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-table input{display:block;text-align:end;font-variant-numeric:tabular-nums;border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
 :where(.aham-workbench) .wb-table input::-webkit-inner-spin-button{appearance:none}
-:where(.aham-workbench) .wb-table input:hover{background:var(--wb-bg);border-color:var(--wb-line)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-table input:hover{background:var(--wb-bg);border-color:var(--wb-line)}}
 :where(.aham-workbench) .wb-table tfoot td{height:var(--wb-header-row);font-weight:500;border-bottom:0}
 :where(.aham-workbench) .wb-table-hint{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--wb-s2);color:var(--wb-muted);padding:var(--wb-s1) 0 var(--wb-s4)}
 :where(.aham-workbench) .wb-sort{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:100%;padding:0;border:0;background:transparent;font-weight:inherit;color:inherit}
 :where(.aham-workbench) .wb-sort svg{width:var(--wb-s3);height:var(--wb-s3)}
 :where(.aham-workbench) .wb-row-link{display:block;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline;text-underline-offset:3px}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline;text-underline-offset:3px}}
 /* Tree table: indent per level, a 20px toggle, parent subtotals at weight 500. */
 :where(.aham-workbench) .wb-table td.wb-tree-name{padding-inline-start:calc(var(--wb-s2) + (var(--wb-level,1) - 1) * var(--wb-s4))}
 :where(.aham-workbench) .wb-tree-name>span{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;min-width:0}
 :where(.aham-workbench) .wb-tree-toggle,:where(.aham-workbench) .wb-tree-spacer{display:inline-grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);padding:0;border:0;border-radius:var(--wb-radius-sm);background:transparent;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-tree-toggle:hover{background:var(--wb-hover);color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-tree-toggle:hover{background:var(--wb-hover);color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-tree-toggle svg{width:var(--wb-s3);height:var(--wb-s3);transition:transform var(--wb-fast) var(--wb-ease)}
 :where(.aham-workbench) .wb-tree-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
 :where(.aham-workbench) .wb-tree-table tr:has(.wb-tree-toggle) td{font-weight:500}
@@ -453,7 +476,7 @@
 :where(.aham-workbench) .wb-chip{display:inline-flex;align-items:stretch;max-width:100%;height:var(--wb-header-control);border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line)}
 :where(.aham-workbench) .wb-chip>*{display:inline-flex;align-items:center;gap:var(--wb-s1);min-width:0;padding:0 var(--wb-s2);border:0;background:transparent;white-space:nowrap}
 :where(.aham-workbench) .wb-chip>*+*{box-shadow:inset 1px 0 0 var(--wb-line)}
-:where(.aham-workbench) .wb-chip>button:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-chip>button:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-chip-field{font-weight:500}
 :where(.aham-workbench) .wb-chip-op{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-chip-value span{overflow:hidden;text-overflow:ellipsis;max-width:240px}
@@ -473,7 +496,7 @@
 :where(.aham-workbench) .wb-list-table input[type=checkbox]{display:inline-block;width:auto;height:auto;margin:0;padding:0;border:0;appearance:auto;accent-color:var(--wb-ink);vertical-align:middle}
 :where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-row);z-index:1;height:var(--wb-row);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-group-toggle{display:inline-flex;align-items:center;gap:var(--wb-s2);height:var(--wb-header-control);padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;font-weight:500}
-:where(.aham-workbench) .wb-group-toggle:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-group-toggle:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-group-toggle svg{transition:transform var(--wb-fast) var(--wb-ease)}
 :where(.aham-workbench) .wb-group-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
 :where(.aham-workbench) .wb-group-count{color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
@@ -497,7 +520,7 @@
 :where(.aham-workbench) .wb-row-buttons{display:flex;align-items:center;justify-content:flex-end;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-row-note{color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 :where(.aham-workbench) .wb-row-link{color:var(--wb-ink);text-decoration:none}
-:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline}}
 :where(.aham-workbench) .wb-list-table :is(th,td):first-child:not(.wb-check){padding-inline-start:var(--wb-s4)}
 /* Single-line list (9.0, rules/4-页面.md 4.3): no visible header, 44px rows, 36px group rows on the canvas tier.
    One object per row: code · stage icon · name on the left; tag, numbers, date and avatar on the right, right edges aligned. */
@@ -505,14 +528,14 @@
 :where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:color-mix(in srgb,var(--wb-fill) 50%,var(--wb-bg));color:var(--wb-ink);border-bottom:0;box-shadow:inset 0 calc(-1 * var(--wb-hairline)) 0 var(--wb-line)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle>svg:first-child{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);line-height:var(--wb-s5)}
+:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);border-bottom-color:var(--wb-line-soft);line-height:var(--wb-s5)}
 /* Compact density: list rows step down to 36px. */
 :where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-rows{--wb-list-row:calc(var(--wb-row) + var(--wb-s1))}
 :where(.aham-workbench) .wb-list-rows .wb-cell-meta{color:var(--wb-muted);font-size:var(--wb-text-xs)}
 :where(.aham-workbench) .wb-list-rows .wb-cell-icon{padding-inline:0;text-align:center}
 :where(.aham-workbench) .wb-list-rows .wb-cell-end{text-align:end}
 :where(.aham-workbench) .wb-list-rows .wb-cell-name{padding-inline-start:var(--wb-s2)}
-:where(.aham-workbench) .wb-list-rows .wb-cell-name .wb-row-link:hover{text-decoration:none}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-list-rows .wb-cell-name .wb-row-link:hover{text-decoration:none}}
 /* The checkbox shows on hover, on focus, and while any row is selected. */
 :where(.aham-workbench) .wb-list-rows tbody tr:not(:hover,:focus-within,[data-selected]) .wb-check input{opacity:0}
 :where(.aham-workbench) .wb-list-rows:has(tr[data-selected]) .wb-check input{opacity:1}
@@ -572,7 +595,7 @@
 /* Anchor bar: one button per section under the head; the section on screen is underlined like a tab. */
 :where(.aham-workbench) .wb-anchors{display:flex;gap:var(--wb-s5);overflow-x:auto;scrollbar-width:none}
 :where(.aham-workbench) .wb-anchors button{position:relative;flex:none;height:var(--wb-header-row);padding:0;border:0;background:transparent;color:var(--wb-muted);white-space:nowrap}
-:where(.aham-workbench) .wb-anchors button:hover{color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-anchors button:hover{color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-anchors button[aria-current]{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-anchors button[aria-current]::after{content:'';position:absolute;inset-inline:0;bottom:0;height:2px;background:var(--wb-blue)}
 /* Footer toolbar (Fiori): only in edit and create mode, stuck to the bottom of the page. Message button and draft
@@ -679,7 +702,7 @@
 :where(.aham-workbench) .wb-table-toolbar .wb-btn~.wb-btn{margin-inline-start:0}
 /* ---- src/detail.css ---- */
 :where(.aham-workbench) .wb-related a{color:inherit;text-decoration:none}
-:where(.aham-workbench) .wb-related a:hover{text-decoration:underline;text-underline-offset:3px}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-related a:hover{text-decoration:underline;text-underline-offset:3px}}
 /* Record detail (7.2 P3): centred reading column + properties panel, as in Circle's issue page. */
 :where(.aham-workbench) .wb-record-nav{display:flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-record-nav>span{margin-inline-end:var(--wb-s1)}
@@ -695,8 +718,8 @@
 :where(.aham-workbench) .wb-section-heading h2{font-size:var(--wb-text-sm);font-weight:500}
 :where(.aham-workbench) .wb-section-heading h2 span{margin-inline-start:var(--wb-s1);color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-related{margin:0;padding:0;list-style:none;border-top:var(--wb-hairline) solid var(--wb-line)}
-:where(.aham-workbench) .wb-related li{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:0 var(--wb-s1);border-bottom:var(--wb-hairline) solid var(--wb-line)}
-:where(.aham-workbench) .wb-related li:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-related li{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:0 var(--wb-s1);border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-related li:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-related .wb-tnum{flex:none;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-related .wb-grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :where(.aham-workbench) .wb-divider{height:1px;margin-block:var(--wb-s6) 0;border:0;background:var(--wb-line)}
@@ -707,7 +730,7 @@
 :where(.aham-workbench) .wb-prop{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr);align-items:center;gap:var(--wb-s2);min-height:var(--wb-control)}
 :where(.aham-workbench) .wb-prop>span:first-child{color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap}
 :where(.aham-workbench) .wb-prop-value{display:flex;align-items:center;gap:var(--wb-s1);min-width:0;min-height:var(--wb-header-control);padding:0 var(--wb-s1);margin-inline-start:calc(-1 * var(--wb-s1));border:0;border-radius:var(--wb-radius);background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-:where(.aham-workbench) button.wb-prop-value:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) button.wb-prop-value:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-prop-value.is-empty{color:var(--wb-muted)}
 /* Activity feed: events as quiet lines with a 20px icon disc; comments on the panel tier; composer sends with ⌘/Ctrl+Enter. */
 :where(.aham-workbench) .wb-activity{display:grid}
@@ -721,10 +744,10 @@
 :where(.aham-workbench) .wb-comment-head strong{font-weight:500}
 :where(.aham-workbench) .wb-comment-head span:last-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-comment p{line-height:1.75}
-:where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
+:where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius-lg);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line-strong)}
 :where(.aham-workbench) .wb-composer textarea{display:block;width:100%;min-height:var(--wb-s7);margin:0;padding:0;border:0;background:transparent;resize:vertical;line-height:1.75}
 :where(.aham-workbench) .wb-composer textarea:focus-visible{outline:0}
-:where(.aham-workbench) .wb-composer:focus-within{box-shadow:0 0 0 2px var(--wb-blue)}
+:where(.aham-workbench) .wb-composer:focus-within{box-shadow:inset 0 0 0 1px var(--wb-blue),0 0 0 1px var(--wb-blue)}
 :where(.aham-workbench) .wb-composer-foot>span:first-child{margin-inline-end:auto}
 :where(.aham-workbench) .wb-composer-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);color:var(--wb-muted)}
 /* ---- src/overlays.css ---- */
@@ -797,7 +820,7 @@
 :where(.aham-workbench) .wb-create-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s2) var(--wb-s4);border-top:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-create-actions{display:flex;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-cell-picker{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:var(--wb-header-control);margin-inline-start:calc(-1 * var(--wb-s1));padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;white-space:nowrap}
-:where(.aham-workbench) .wb-cell-picker:hover{background:var(--wb-selected)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-cell-picker:hover{background:var(--wb-selected)}}
 /* Form-type popover sections (display options) */
 :where(.aham-workbench) .wb-pop-title{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-pop-section{display:grid;gap:var(--wb-s2);padding:var(--wb-s3)}
@@ -836,6 +859,23 @@
 @keyframes wb-skeleton{50%{opacity:.6}}
 /* While a footer toolbar shows, toasts sit above it so they never cover 保存. */
 :where(.aham-workbench):has([data-mode=edit] .wb-doc-foot) .wb-toasts{bottom:calc(var(--wb-row-double) + var(--wb-s4) + var(--wb-gutter))}
+/* Split dialog (rules/11-交互.md 11.6): personal preferences. White on white like the Claude client — the category column
+   and the content share one surface and are split by a line; the height stays fixed while categories change. */
+:where(.aham-workbench) .wb-dialog.is-split{width:min(var(--wb-dialog-wide),calc(100vw - var(--wb-s6)));height:min(var(--wb-dialog-split-height),calc(100vh - var(--wb-s7)));padding:0;overflow:hidden}
+:where(.aham-workbench) .wb-dialog.is-split[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+:where(.aham-workbench) .wb-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);height:var(--wb-header-row);padding:0 var(--wb-s2) 0 var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-dialog-head h2{font-size:var(--wb-body);font-weight:500}
+:where(.aham-workbench) .wb-split{display:grid;grid-template-columns:var(--wb-dialog-split-nav) minmax(0,1fr);min-height:0}
+:where(.aham-workbench) .wb-split>.wb-settings-nav{padding:var(--wb-s3) var(--wb-s2)}
+:where(.aham-workbench) .wb-split-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:var(--wb-s2) var(--wb-s5) var(--wb-s6)}
+:where(.aham-workbench) .wb-split-body .wb-settings-section:first-child{margin-block-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-setting-confirm{display:flex;align-items:center;gap:var(--wb-s2);color:var(--wb-muted)}
+/* Account menu: the signed-in person above the commands, like the Claude client. */
+:where(.aham-workbench) .wb-account-head{padding:var(--wb-s2) var(--wb-s3) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Settings save bar (rules/4-页面.md 4.9): appears only while the workspace settings have unsaved changes. */
+:where(.aham-workbench) .wb-save-bar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);min-height:var(--wb-row-double);margin-block-start:var(--wb-s6);padding:0 var(--wb-s5);background:var(--wb-bg);border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-save-bar>span{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-save-bar>div{display:flex;gap:var(--wb-s2)}
 /* ---- src/settings.css ---- */
 /* Settings (7.2 P5): Circle's settings kit — shell, section, rows — with Aham's line-separated rows instead of bordered cards. */
 :where(.aham-workbench) .wb-settings-layout{flex:1;min-height:0;display:grid;grid-template-columns:var(--wb-nav) minmax(0,1fr)}
@@ -843,7 +883,7 @@
 :where(.aham-workbench) .wb-settings-nav h2{padding:var(--wb-s3) var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-settings-nav ul{display:grid;gap:2px;margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-settings-nav a{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-nav-item);padding:0 var(--wb-s2);border-radius:var(--wb-radius);color:var(--wb-muted);text-decoration:none}
-:where(.aham-workbench) .wb-settings-nav a:hover{background:var(--wb-hover);color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-settings-nav a:hover{background:var(--wb-hover);color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-settings-nav a[aria-current=page]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-settings-scroll{min-height:0;overflow-y:auto}
 :where(.aham-workbench) .wb-settings{max-width:calc(var(--wb-body-width) + 2 * var(--wb-s5));margin:0 auto;padding:var(--wb-s6) var(--wb-s5) var(--wb-s8)}
@@ -854,7 +894,7 @@
 :where(.aham-workbench) .wb-settings-section h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-settings-section header p{margin-block-start:2px;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-settings-rows{border-top:var(--wb-hairline) solid var(--wb-line)}
-:where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
 :where(.aham-workbench) .wb-setting>div:first-child{min-width:0}
 :where(.aham-workbench) .wb-setting-title{font-size:var(--wb-text-sm);font-weight:500}
 :where(.aham-workbench) .wb-setting-desc{margin-block-start:2px;color:var(--wb-muted)}
@@ -877,7 +917,7 @@
 :where(.aham-workbench) .wb-file-state{display:grid;gap:var(--wb-s1);min-width:0}
 :where(.aham-workbench) .wb-file-actions{display:flex;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-progress{display:block;height:var(--wb-s1);border-radius:var(--wb-radius-pill);background:var(--wb-line);overflow:hidden}
-:where(.aham-workbench) .wb-progress>span{display:block;height:100%;background:var(--wb-ink);transition:width var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-progress>span{display:block;height:100%;background:var(--wb-ink);transform:scaleX(var(--p,0));transform-origin:left;transition:transform var(--wb-fast) var(--wb-ease)}
 /* Viewer: toolbar row, a scrolling stage on the panel tier, the page on the white tier. The field mark is an ink outline. */
 :where(.aham-workbench) .wb-viewer{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
 :where(.aham-workbench) .wb-viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);height:var(--wb-header-row);padding:0 var(--wb-s3);border-bottom:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
@@ -893,7 +933,7 @@
 :where(.aham-workbench) .wb-viewer-split>.wb-viewer{border-inline-end:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-recognized{display:grid;align-content:start;min-height:0;overflow:auto}
 :where(.aham-workbench) .wb-recognized-row{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr) auto;align-items:center;gap:var(--wb-s2);width:100%;min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s4);border:0;border-bottom:var(--wb-hairline) solid var(--wb-line);background:transparent;text-align:start}
-:where(.aham-workbench) .wb-recognized-row:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-recognized-row:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-recognized-row>span:first-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-recognized-row>span:last-child{color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-recognized-row .wb-risk{grid-column:2 / -1}
@@ -952,7 +992,7 @@
 :where(.aham-workbench) .wb-num{display:grid;gap:2px;color:inherit;text-decoration:none}
 :where(.aham-workbench) .wb-num strong{font-variant-numeric:tabular-nums;font-size:var(--wb-title);font-weight:500;line-height:1.2}
 :where(.aham-workbench) .wb-num span{color:var(--wb-muted)}
-:where(.aham-workbench) a.wb-num:hover span{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) a.wb-num:hover span{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}}
 /* Fold: records (activity, edit history, versions) close into one line at the end of the page. */
 :where(.aham-workbench) .wb-fold{border-top:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-fold>summary{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-row);cursor:pointer;list-style:none;color:var(--wb-ink)}
@@ -967,7 +1007,7 @@
 :where(.aham-workbench) .wb-expand>details{border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-expand>details>summary{display:grid;grid-template-columns:var(--wb-s4) minmax(0,2fr) repeat(var(--wb-expand-cols,3),minmax(0,1fr));align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s2);cursor:pointer;list-style:none}
 :where(.aham-workbench) .wb-expand>details>summary::-webkit-details-marker{display:none}
-:where(.aham-workbench) .wb-expand>details>summary:hover{background:var(--wb-hover)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-expand>details>summary:hover{background:var(--wb-hover)}}
 :where(.aham-workbench) .wb-expand>details>summary>svg{color:var(--wb-muted);transition:transform var(--wb-fast) var(--wb-ease)}
 :where(.aham-workbench) .wb-expand>details[open]>summary>svg{transform:rotate(90deg)}
 :where(.aham-workbench) .wb-expand>details>summary>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1011,7 +1051,7 @@
 :where(.aham-workbench) .wb-ai-error{color:var(--wb-danger)}
 :where(.aham-workbench) .wb-ai-sources{margin:0;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-ai-sources a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-:where(.aham-workbench) .wb-ai-sources a:hover{color:var(--wb-ink)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) .wb-ai-sources a:hover{color:var(--wb-ink)}}
 :where(.aham-workbench) .wb-ai-actions{display:flex;flex-wrap:wrap;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-ai-actions:empty{display:none}
 :where(.aham-workbench) .wb-ai-suggest{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s1) var(--wb-s2);margin-block:var(--wb-s1) var(--wb-s2);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius-sm);background:var(--wb-fill);color:var(--wb-muted)}
@@ -1026,6 +1066,50 @@
 :where(.aham-workbench) .wb-ai-changes li>span:first-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-ai-changes strong{font-weight:500}
 :where(.aham-workbench) .wb-dialog p.wb-ai-note{margin-block:0 var(--wb-s5)}
+/* ---- src/interaction.css ---- */
+/* Interaction layer (rules/11-交互.md): pressed and open states, hover fade-out, enter and exit motion.
+   Hover rules anywhere in src/ are wrapped by scripts/build.mjs in @media (hover: hover) and (pointer: fine), so a tap
+   on a touch screen never leaves a hover colour behind. Motion uses transform and opacity only. */
+/* 11.3 Hover comes in at once and fades out; press feedback takes --wb-instant. */
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-nav-item,.wb-seg button,.wb-chip>button,.wb-toggle-chip,.wb-group-toggle,.wb-tree-toggle,.wb-settings-nav a,.wb-related li,button.wb-prop-value,.wb-source,.wb-messages button,.wb-expand>details>summary,.wb-recognized-row,.wb-cell-picker,.wb-table td){transition:background-color var(--wb-fast) var(--wb-ease),color var(--wb-fast) var(--wb-ease),transform var(--wb-instant) var(--wb-ease)}
+@media (hover: hover) and (pointer: fine){:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-nav-item,.wb-seg button,.wb-chip>button,.wb-toggle-chip,.wb-group-toggle,.wb-tree-toggle,.wb-settings-nav a,.wb-related li,button.wb-prop-value,.wb-source,.wb-messages button,.wb-expand>details>summary,.wb-recognized-row,.wb-cell-picker):hover,:where(.aham-workbench) .wb-table tr:hover td{transition:background-color 0s,color 0s,transform var(--wb-instant) var(--wb-ease)}}
+/* 11.2 Pressed: two shades deeper than rest. Standalone buttons also shrink to --wb-press-scale; rows and items only change colour. */
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn):not(:disabled,[aria-disabled=true]):active{transform:scale(var(--wb-press-scale))}
+:where(.aham-workbench) :is(.wb-btn:not(.primary,.danger),.wb-icon-btn,.wb-seg button,.wb-chip>button,.wb-toggle-chip,.wb-group-toggle,.wb-tree-toggle,.wb-settings-nav a,.wb-related li,button.wb-prop-value,.wb-source,.wb-messages button,.wb-expand>details>summary,.wb-recognized-row):not(:disabled):active{background:var(--wb-selected)}
+:where(.aham-workbench) .wb-table tbody tr[data-id]:active td{background:var(--wb-selected)}
+:where(.aham-workbench) .wb-btn.primary:not(:disabled):active{background:var(--wb-action-press)}
+:where(.aham-workbench) .wb-btn.danger:not(:disabled):active{background:var(--wb-danger-bg)}
+:where(.aham-workbench) .wb-nav-item:is(a,button):active{background:var(--wb-nav-selected)}
+/* 11.2 Open: the trigger of an open popover keeps the pressed shade, so the menu shows where it came from. */
+:where(.aham-workbench) :is(.wb-btn:not(.primary),.wb-icon-btn,.wb-chip>button,.wb-toggle-chip,button.wb-prop-value)[aria-expanded=true]{background:var(--wb-selected);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-nav-item[aria-expanded=true]{background:var(--wb-nav-selected);color:var(--wb-ink)}
+/* 11.4 Enter: popovers grow from the trigger side (origin set by placePopover), dialogs from the centre, toasts rise 8px.
+   The command palette is opened from the keyboard many times a day and has no motion. */
+:where(.aham-workbench) .wb-popover{transition:opacity var(--wb-pop) var(--wb-ease),transform var(--wb-pop) var(--wb-ease)}
+:where(.aham-workbench) .wb-tooltip{transition:opacity var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-tooltip[data-warm]{transition:none}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create){transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)::backdrop{transition:opacity var(--wb-base) var(--wb-ease)}
+:where(.aham-workbench) .wb-toast{transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+:where(.aham-workbench) .wb-panel{transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+@starting-style{
+:where(.aham-workbench) .wb-popover:not([hidden]){opacity:0;transform:scale(var(--wb-press-scale))}
+:where(.aham-workbench) .wb-tooltip:not([hidden],[data-warm]){opacity:0}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[open]{opacity:0;transform:scale(var(--wb-press-scale))}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[open]::backdrop{opacity:0}
+:where(.aham-workbench) .wb-toast{opacity:0;transform:translateY(var(--wb-s2))}
+:where(.aham-workbench) .wb-panel:not([hidden]){opacity:0;transform:translateX(var(--wb-s2))}
+}
+/* 11.4 Exit: leave() in aham.js sets [data-leaving], waits for the transition, then hides or removes the element. */
+:where(.aham-workbench) .wb-popover[data-leaving]{opacity:0;transform:scale(var(--wb-press-scale));transition-duration:var(--wb-instant)}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[data-leaving]{opacity:0;transform:scale(var(--wb-press-scale));transition-duration:var(--wb-pop)}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[data-leaving]::backdrop{opacity:0;transition-duration:var(--wb-pop)}
+:where(.aham-workbench) .wb-toast[data-leaving]{opacity:0;transition-duration:var(--wb-pop)}
+/* Menu and command rows: the pointer highlight is [data-active]; a press deepens it. */
+:where(.aham-workbench) .wb-command-list [data-index]:active{background:var(--wb-selected)}
+/* Settings save bar (rules/4-页面.md 4.9): rises 8px when the first change is made. */
+:where(.aham-workbench) .wb-save-bar{transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+@starting-style{:where(.aham-workbench) .wb-save-bar:not([hidden]){opacity:0;transform:translateY(var(--wb-s2))}}
 /* ---- src/print.css ---- */
 /* Print (rules/5-单据.md 打印). Paper uses the light colours (build.mjs adds them under @media print). Navigation,
    panels and controls are hidden; the document flows on the page; tables repeat their header row; rows never split. */
@@ -1106,6 +1190,11 @@
 }
 /* ≤ mobile breakpoint: normal page flow; the rail is hidden until the header toggle opens it. */
 @media (max-width: 640px) {
+ .aham-workbench .wb-dialog.is-split {width:100vw;height:100dvh;max-width:none;max-height:none;border-radius:0}
+ .aham-workbench .wb-split {grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+ .aham-workbench .wb-split>.wb-settings-nav {display:flex;overflow-x:auto;padding:var(--wb-s2);border-inline-end:0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+ .aham-workbench .wb-split>.wb-settings-nav ul {display:flex;flex-wrap:nowrap}
+ .aham-workbench .wb-split-body {padding-inline:var(--wb-s4)}
  .aham-workbench,.aham-workbench.expanded {display:block;height:auto;min-height:100vh;overflow:visible;background:var(--wb-bg)}
  .aham-workbench .wb-rail {display:none}
  .aham-workbench.expanded .wb-rail {display:flex}
@@ -1173,7 +1262,10 @@
 @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
  .aham-workbench:not([data-theme="light"]) {--wb-line:#7A766F;--wb-line-strong:#7A766F;--wb-muted:#A5A49A;--wb-faint:#A5A49A}
 }
-/* Reduce motion (rules/2-视觉.md): state changes switch without transitions. */
+/* Reduce motion (rules/11-交互.md 11.5): no scaling, sliding or turning; fades and colour changes stay. */
 @media (prefers-reduced-motion: reduce) {
- .aham-workbench *,.aham-workbench *::before,.aham-workbench *::after {transition-duration:0s!important;animation-duration:0s!important}
+ .aham-workbench :is(.wb-btn,.wb-icon-btn):active {transform:none}
+ .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar),.aham-workbench :is(.wb-popover,.wb-dialog,.wb-create)[data-leaving] {transform:none}
+ .aham-workbench :is(.wb-fold>summary>svg,.wb-expand>details>summary>svg,.wb-group-toggle svg,.wb-tree-toggle svg,.wb-switch span::after,.wb-progress>span) {transition:none}
+ .aham-workbench .wb-skeleton {animation:none}
 }

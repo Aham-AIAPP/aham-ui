@@ -106,3 +106,20 @@
 @keyframes wb-skeleton{50%{opacity:.6}}
 /* While a footer toolbar shows, toasts sit above it so they never cover 保存. */
 :where(.aham-workbench):has([data-mode=edit] .wb-doc-foot) .wb-toasts{bottom:calc(var(--wb-row-double) + var(--wb-s4) + var(--wb-gutter))}
+/* Split dialog (rules/11-交互.md 11.6): personal preferences. White on white like the Claude client — the category column
+   and the content share one surface and are split by a line; the height stays fixed while categories change. */
+:where(.aham-workbench) .wb-dialog.is-split{width:min(var(--wb-dialog-wide),calc(100vw - var(--wb-s6)));height:min(var(--wb-dialog-split-height),calc(100vh - var(--wb-s7)));padding:0;overflow:hidden}
+:where(.aham-workbench) .wb-dialog.is-split[open]{display:grid;grid-template-rows:auto minmax(0,1fr)}
+:where(.aham-workbench) .wb-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);height:var(--wb-header-row);padding:0 var(--wb-s2) 0 var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-dialog-head h2{font-size:var(--wb-body);font-weight:500}
+:where(.aham-workbench) .wb-split{display:grid;grid-template-columns:var(--wb-dialog-split-nav) minmax(0,1fr);min-height:0}
+:where(.aham-workbench) .wb-split>.wb-settings-nav{padding:var(--wb-s3) var(--wb-s2)}
+:where(.aham-workbench) .wb-split-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:var(--wb-s2) var(--wb-s5) var(--wb-s6)}
+:where(.aham-workbench) .wb-split-body .wb-settings-section:first-child{margin-block-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-setting-confirm{display:flex;align-items:center;gap:var(--wb-s2);color:var(--wb-muted)}
+/* Account menu: the signed-in person above the commands, like the Claude client. */
+:where(.aham-workbench) .wb-account-head{padding:var(--wb-s2) var(--wb-s3) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Settings save bar (rules/4-页面.md 4.9): appears only while the workspace settings have unsaved changes. */
+:where(.aham-workbench) .wb-save-bar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);min-height:var(--wb-row-double);margin-block-start:var(--wb-s6);padding:0 var(--wb-s5);background:var(--wb-bg);border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-save-bar>span{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-save-bar>div{display:flex;gap:var(--wb-s2)}
