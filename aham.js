@@ -26,6 +26,18 @@ export function leave(el, done) {
   timer = setTimeout(() => { stop(); done(); }, ms);
   return stop;
 }
+// Lifetime of one init* / create* call. Listeners added with on() and clean-ups added with keep() all go on end(),
+// which each component returns as destroy() so a page or framework can unmount it (docs/react.md).
+function scope() {
+  const ac = new AbortController(), undo = [];
+  return {
+    on(target, type, fn, options) {
+      target?.addEventListener(type, fn, { ...(typeof options === 'boolean' ? { capture: options } : options), signal: ac.signal });
+    },
+    keep(fn) { undo.push(fn); return fn; },
+    end() { ac.abort(); undo.splice(0).reverse().forEach(fn => fn()); },
+  };
+}
 // Guarded so the pure helpers below (filter operators, URL state) can be imported in Node tests.
 if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   if (e.key !== 'Escape' || e.isComposing || !layers.length) return;
@@ -48,6 +60,7 @@ export const lastInput = () => inputKind;
 // ?theme=light|dark in the page URL sets the starting theme (the panorama page passes its own theme to embedded samples).
 // A [data-action="theme"] button inside root toggles light / dark and keeps its pressed state and icon in sync.
 export function initTheme(root = document.querySelector('.aham-workbench')) {
+  const life = scope();
   if (!root) return null;
   const button = root.querySelector('[data-action="theme"]');
   function set(theme) {
@@ -59,8 +72,8 @@ export function initTheme(root = document.querySelector('.aham-workbench')) {
   }
   const asked = new URLSearchParams(location.search).get('theme');
   if (asked === 'light' || asked === 'dark') set(asked);
-  button?.addEventListener('click', () => set(root.dataset.theme === 'dark' ? 'light' : 'dark'));
-  return { set, get: () => root.dataset.theme, fromUrl: asked === 'light' || asked === 'dark' ? asked : null };
+  life.on(button, 'click', () => set(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+  return { set, get: () => root.dataset.theme, destroy: life.end, fromUrl: asked === 'light' || asked === 'dark' ? asked : null };
 }
 
 // ── Navigation ───────────────────────────────────────────────────────────────
@@ -70,6 +83,7 @@ export function initTheme(root = document.querySelector('.aham-workbench')) {
 const NAV_STORE = 'aham-ui:workbench:nav';
 
 export function initShell(root = document.querySelector('.aham-workbench')) {
+  const life = scope();
   if (!root) return null;
   const theme = initTheme(root);
   const toggle = root.querySelector('[data-action="nav"]');
@@ -95,7 +109,7 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
     if (overlay && !scrim) {
       scrim = document.createElement('div');
       scrim.className = 'wb-scrim';
-      scrim.addEventListener('click', () => set(false, { restoreFocus: true }));
+      life.on(scrim, 'click', () => set(false, { restoreFocus: true }));
       root.append(scrim);
       release = pushLayer(() => set(false, { restoreFocus: true }));
       rail?.querySelector('button:not([disabled]), a[href], [tabindex="0"]')?.focus();
@@ -109,8 +123,8 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
     if (restoreFocus && !open) toggle?.focus();
   }
 
-  toggle?.addEventListener('click', () => set(!isOpen()));
-  rail?.addEventListener('click', e => {
+  life.on(toggle, 'click', () => set(!isOpen()));
+  life.on(rail, 'click', e => {
     if (narrow.matches && isOpen() && e.target.closest('.wb-nav-item')) set(false, { restoreFocus: true });
   });
   // Collapsed items keep their names as tooltips.
@@ -118,14 +132,15 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
     const name = item.querySelector('span')?.textContent.trim();
     if (name && !item.dataset.tooltip) item.dataset.tooltip = name;
     if (item.dataset.go && !item.dataset.keys) item.dataset.keys = `g ${item.dataset.go}`;
-    if (item.dataset.go) registerShortcut({ keys: `g ${item.dataset.go}`, label: `转到${name}`, group: '转到', run: () => item.click() });
+    if (item.dataset.go) life.keep(registerShortcut({ keys: `g ${item.dataset.go}`, label: `转到${name}`, group: '转到', run: () => item.click() }));
   });
-  registerShortcut({ keys: 'mod+b', label: '展开 / 收起侧栏', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } });
-  narrow.addEventListener('change', () => set(narrow.matches ? false : remembered(), { persist: false }));
+  life.keep(registerShortcut({ keys: 'mod+b', label: '展开 / 收起侧栏', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } }));
+  life.on(narrow, 'change', () => set(narrow.matches ? false : remembered(), { persist: false }));
 
   set(narrow.matches ? false : remembered(), { persist: false });
-  initTooltips(root);
-  return { set, isOpen, theme };
+  const tooltips = initTooltips(root);
+  life.keep(() => { theme?.destroy(); tooltips?.destroy(); scrim?.remove(); release?.(); });
+  return { set, isOpen, theme, destroy: life.end };
 }
 
 // ── Side panels ──────────────────────────────────────────────────────────────
@@ -133,6 +148,7 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
 // take focus when opened and close with Esc. show(id, { layer: true, returnTo }) also lets Esc close an inline panel,
 // e.g. a preview opened with Space from a list row; focus then goes back to `returnTo`.
 export function initPanels(root = document.querySelector('.aham-workbench')) {
+  const life = scope();
   if (!root) return null;
   const toggles = [...root.querySelectorAll('[data-panel-toggle]')];
   const narrow = contextBreakpoint(root);
@@ -157,11 +173,12 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
       if (focus && floating(p)) p.focus();
     }
   }
-  toggles.forEach(t => t.addEventListener('click', () => show(t.getAttribute('aria-pressed') === 'true' ? null : t.dataset.panelToggle, { focus: true })));
-  narrow.addEventListener('change', () => { if (floating(panelOf(current))) show(null); });
+  toggles.forEach(t => life.on(t, 'click', () => show(t.getAttribute('aria-pressed') === 'true' ? null : t.dataset.panelToggle, { focus: true })));
+  life.on(narrow, 'change', () => { if (floating(panelOf(current))) show(null); });
   const initial = toggles.find(t => t.getAttribute('aria-pressed') === 'true');
   show(initial && !floating(panelOf(initial.dataset.panelToggle)) ? initial.dataset.panelToggle : null);
-  return { show, current: () => current };
+  life.keep(() => release?.());
+  return { show, current: () => current, destroy: life.end };
 }
 
 // ── Popover ──────────────────────────────────────────────────────────────────
@@ -229,6 +246,7 @@ function placePopover(trigger, panel, align, point) {
 // ── Header search ────────────────────────────────────────────────────────────
 // Button [data-action="search"] reveals .wb-search. Esc clears the text first, then closes.
 export function initSearch(root, { value = '', onInput } = {}) {
+  const life = scope();
   const button = root.querySelector('[data-action="search"]');
   const box = root.querySelector('.wb-search');
   const input = box?.querySelector('input');
@@ -252,11 +270,12 @@ export function initSearch(root, { value = '', onInput } = {}) {
     if (input.value) { input.value = ''; onInput?.(''); return; }
     close();
   }
-  button.addEventListener('click', () => open());
-  input.addEventListener('input', () => onInput?.(input.value));
-  input.addEventListener('blur', () => { if (!input.value) setTimeout(() => { if (document.activeElement !== input && !input.value && release) { release(); release = null; box.hidden = true; button.hidden = false; } }, 0); });
+  life.on(button, 'click', () => open());
+  life.on(input, 'input', () => onInput?.(input.value));
+  life.on(input, 'blur', () => { if (!input.value) setTimeout(() => { if (document.activeElement !== input && !input.value && release) { release(); release = null; box.hidden = true; button.hidden = false; } }, 0); });
   if (value) open({ focus: false });
-  return { open, close };
+  life.keep(() => release?.());
+  return { open, close, destroy: life.end };
 }
 
 // ── DOM helpers: icons, escaping, ids ────────────────────────────────────────
@@ -273,6 +292,7 @@ let uid = 0;
 // role: 'listbox' (pickers, filters) or 'menu' (context menu actions).
 // `items` may be a function of the query, which is how quick-search results are added under the field list.
 export function createCommand(host, { items, onSelect, onBack, placeholder = '搜索…', empty = '没有匹配项', search = true, label = '', role = 'listbox' }) {
+  const life = scope();
   const id = `wb-cmd-${++uid}`;
   host.classList.add('wb-command');
   host.innerHTML = `${search ? `<div class="wb-command-input">${icon('search')}<input type="text" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-controls="${id}" placeholder="${escapeHtml(placeholder)}" aria-label="${escapeHtml(label || placeholder)}" autocomplete="off"></div>` : ''}<ul class="wb-command-list" role="${role}" id="${id}" aria-label="${escapeHtml(label || placeholder)}" tabindex="${search ? -1 : 0}"></ul><p class="wb-command-empty" hidden>${escapeHtml(empty)}</p>`;
@@ -312,7 +332,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     if (scroll) el?.scrollIntoView({ block: 'nearest' });
   }
   function choose(i) { const it = shown[i]; if (it) onSelect?.(it, api); }
-  keyTarget.addEventListener('keydown', e => {
+  life.on(keyTarget, 'keydown', e => {
     if (e.isComposing) return;
     const n = shown.length;
     if (e.key === 'ArrowDown' && n) { e.preventDefault(); highlight((active + 1) % n); }
@@ -322,11 +342,11 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     else if (e.key === 'Enter') { e.preventDefault(); choose(active); }
     else if ((e.key === 'Backspace' || (e.key === 'ArrowLeft' && !input)) && !input?.value && onBack) { e.preventDefault(); onBack(); }
   });
-  input?.addEventListener('input', () => { active = 0; render(); });
-  list.addEventListener('mousemove', e => { const li = e.target.closest('[data-index]'); if (li && Number(li.dataset.index) !== active) highlight(Number(li.dataset.index), false); });
-  list.addEventListener('mousedown', e => e.preventDefault());       // keep focus in the input
-  list.addEventListener('click', e => { const li = e.target.closest('[data-index]'); if (li) choose(Number(li.dataset.index)); });
-  const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); } };
+  life.on(input, 'input', () => { active = 0; render(); });
+  life.on(list, 'mousemove', e => { const li = e.target.closest('[data-index]'); if (li && Number(li.dataset.index) !== active) highlight(Number(li.dataset.index), false); });
+  life.on(list, 'mousedown', e => e.preventDefault());       // keep focus in the input
+  life.on(list, 'click', e => { const li = e.target.closest('[data-index]'); if (li) choose(Number(li.dataset.index)); });
+  const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); }, destroy: life.end };
   render();
   const start = shown.findIndex(it => it.current);                 // pickers open with the current value highlighted
   if (start > 0) highlight(start);
@@ -433,6 +453,7 @@ function validFilterValue(f, v) {
 // fields: [{ key, label, type, icon?, options?, unit?, parse?(input) → value, format?(value) → text }]
 // counts(key, option, otherFilters) → number shown next to each option (optional).
 export function initFilter({ root, trigger, bar, fields, value = [], counts, onChange }) {
+  const life = scope();
   let filters = value.map(f => ({ ...f, values: [...f.values] }));
   const field = key => fields.find(f => f.key === key);
   const pop = document.createElement('div');
@@ -440,6 +461,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
   pop.hidden = true;
   pop.setAttribute('role', 'dialog');
   root.append(pop);
+  life.keep(() => pop.remove());
   const others = key => filters.filter(f => f.field !== key);
   const fmt = (f, v) => (f.format ? f.format(v) : String(v));
 
@@ -572,9 +594,9 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
       upsert({ field: fd.key, op, values });
       commit();
     };
-    box.addEventListener('input', read);
-    box.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) { e.preventDefault(); closePopover('done'); } else if (e.key === 'Backspace' && back && e.target.matches('input') && !e.target.value && e.target.dataset.v === '0') { e.preventDefault(); back(); } });
-    box.addEventListener('click', e => {
+    life.on(box, 'input', read);
+    life.on(box, 'keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) { e.preventDefault(); closePopover('done'); } else if (e.key === 'Backspace' && back && e.target.matches('input') && !e.target.value && e.target.dataset.v === '0') { e.preventDefault(); back(); } });
+    life.on(box, 'click', e => {
       const b = e.target.closest('button');
       if (!b) return;
       if ('back' in b.dataset) { back(); return; }
@@ -609,8 +631,8 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
     }, `${fd.label}的条件`);
   }
 
-  trigger.addEventListener('click', () => openFields(trigger));
-  bar.addEventListener('click', e => {
+  life.on(trigger, 'click', () => openFields(trigger));
+  life.on(bar, 'click', e => {
     const b = e.target.closest('button');
     if (!b) return;
     const d = b.dataset;
@@ -630,6 +652,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
     get: () => filters.map(f => ({ ...f, values: [...f.values] })),
     set(next) { filters = next.map(f => ({ ...f, values: [...f.values] })); renderTrigger(); renderBar(); },
     open: () => openFields(trigger),
+    destroy: life.end,
   };
 }
 
@@ -638,6 +661,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
 // and 恢复默认. The trigger is a filled small button; a dot (with hidden text) marks settings that differ from default.
 // value / defaults: { group: key|null, sort: { field, dir }, density: 'standard'|'compact', columns: [[key, visible], …] }
 export function initDisplay({ root, trigger, groups, sorts, columns, value, defaults, onChange }) {
+  const life = scope();
   let state = structuredClone(value);
   const pop = document.createElement('div');
   pop.className = 'wb-popover form';
@@ -645,6 +669,7 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
   pop.setAttribute('role', 'dialog');
   pop.setAttribute('aria-label', '显示选项');
   root.append(pop);
+  life.keep(() => pop.remove());
   const pick = s => JSON.stringify({ group: s.group, sort: s.sort, density: s.density, columns: s.columns });
   const changed = () => pick(state) !== pick(defaults);
   const label = key => columns.find(c => c.key === key)?.label ?? key;
@@ -673,12 +698,12 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
     activePopover()?.place();
     onChange?.(structuredClone(state));
   }
-  pop.addEventListener('change', e => {
+  life.on(pop, 'change', e => {
     const t = e.target;
     if (t.dataset.k === 'group') update(s => { s.group = t.value || null; });
     else if (t.dataset.k === 'sort') update(s => { s.sort = { field: t.value, dir: s.sort.dir }; });
   });
-  pop.addEventListener('click', e => {
+  life.on(pop, 'click', e => {
     const b = e.target.closest('button');
     if (!b) return;
     const k = b.dataset.k;
@@ -687,11 +712,12 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
     else if (k === 'col') update(s => { const c = s.columns.find(x => x[0] === b.dataset.col); c[1] = !c[1]; });
     else if (k === 'reset') update(s => Object.assign(s, structuredClone(defaults)));
   });
-  trigger.addEventListener('click', () => { renderPop(); openPopover(trigger, pop, { align: 'end' }); });
+  life.on(trigger, 'click', () => { renderPop(); openPopover(trigger, pop, { align: 'end' }); });
   renderTrigger();
   return {
     get: () => structuredClone(state),
     set(next) { state = structuredClone(next); renderTrigger(); if (!pop.hidden) renderPop(); },
+    destroy: life.end,
   };
 }
 
@@ -701,6 +727,7 @@ export function initDisplay({ root, trigger, groups, sorts, columns, value, defa
 // Keys act only when the row itself has focus, so checkboxes, links and inputs inside the row keep their own keys.
 // Call refresh() after every re-render. The table is not declared an ARIA grid (cells are not individually navigable).
 export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRange }) {
+  const life = scope();
   let current = null, anchor = null;
   const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
   const idOf = tr => tr?.dataset.id ?? null;
@@ -723,7 +750,7 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRan
     tr.scrollIntoView({ block: 'nearest' });
     onMove?.(current);
   }
-  table.addEventListener('keydown', e => {
+  life.on(table, 'keydown', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const list = rows(), i = list.indexOf(tr);
@@ -749,23 +776,24 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRan
     }
   });
   // Shift + click on a row checkbox applies its new state to every row since the last checked one.
-  table.addEventListener('click', e => {
+  life.on(table, 'click', e => {
     const box = e.target.closest?.('input[type=checkbox]'), tr = box?.closest('tr[data-id]');
     if (!tr) return;
     if (e.shiftKey && onRange && anchor && anchor !== idOf(tr)) onRange(between(anchor, idOf(tr)), box.checked);
     anchor = idOf(tr);
   });
-  table.addEventListener('focusin', e => {
+  life.on(table, 'focusin', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (tr && idOf(tr) !== current) { current = idOf(tr); refresh(); }
   });
-  return { refresh, current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id)) ?? rows()[0]) };
+  return { refresh, current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id)) ?? rows()[0]), destroy: life.end };
 }
 
 // ── Property pickers ─────────────────────────────────────────────────────────
 // Properties panel values that open a command menu (Circle's status / assignee pickers). Buttons [data-prop="key"]
 // inside `root`; fields: { key: { label, options, icon? } }. The current value is marked; choosing closes and reports.
 export function initPropertyPickers({ container, fields, value, onChange }) {
+  const life = scope();
   let values = { ...value };
   function paint() {
     container.querySelectorAll('[data-prop]').forEach(b => {
@@ -779,20 +807,21 @@ export function initPropertyPickers({ container, fields, value, onChange }) {
       if (!b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
     });
   }
-  container.addEventListener('click', e => {
+  life.on(container, 'click', e => {
     const b = e.target.closest('[data-prop]');
     if (!b) return;
     const key = b.dataset.prop, f = fields[key];
     openPicker(b, { label: f.label, options: f.options, current: values[key], icon: f.icon, onSelect: (v, before) => { values = { ...values, [key]: v }; paint(); onChange?.(key, v, before); } });
   });
   paint();
-  return { set(next) { values = { ...next }; paint(); }, get: () => ({ ...values }) };
+  return { set(next) { values = { ...next }; paint(); }, get: () => ({ ...values }), destroy: life.end };
 }
 
 // ── Composer ─────────────────────────────────────────────────────────────────
 // Comment box: ⌘/Ctrl+Enter or the send button submits; Enter alone adds a line; nothing is sent while an IME is
 // composing or the text is blank. onSubmit(text) returns true (or a promise of true) when the comment was saved.
 export function initComposer(form, { onSubmit }) {
+  const life = scope();
   const area = form.querySelector('textarea'), send = form.querySelector('[type=submit]');
   const sync = () => { send.disabled = !area.value.trim(); };
   async function submit() {
@@ -806,13 +835,13 @@ export function initComposer(form, { onSubmit }) {
     sync();
     area.focus();
   }
-  area.addEventListener('input', sync);
-  area.addEventListener('keydown', e => {
+  life.on(area, 'input', sync);
+  life.on(area, 'keydown', e => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); }
   });
-  form.addEventListener('submit', e => { e.preventDefault(); submit(); });
+  life.on(form, 'submit', e => { e.preventDefault(); submit(); });
   sync();
-  return { submit };
+  return { submit, destroy: life.end };
 }
 
 // ── Shortcuts ────────────────────────────────────────────────────────────────
@@ -874,9 +903,12 @@ if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
 // [data-tooltip="名称"] plus optional data-keys="mod+b" shows the name and its shortcut after a short hover, or at once
 // on keyboard focus. One at a time; hidden on leave, blur, any key press (Esc included), scroll or click. Coarse pointers get none.
 // The tip is aria-hidden: buttons keep their aria-label, and data-keys is mirrored into aria-keyshortcuts.
-const TOOLTIP_DELAY = 500;
+// The delay is --wb-tooltip-delay (tokens.json motion.tooltip-delay). Calling it again on the same root returns the same handle.
+const tooltipRoots = new WeakMap();
 export function initTooltips(root = document.querySelector('.aham-workbench')) {
-  if (!root || root.querySelector(':scope > .wb-tooltip')) return null;
+  if (!root) return null;
+  if (tooltipRoots.has(root)) return tooltipRoots.get(root);
+  const life = scope();
   const tip = document.createElement('div');
   tip.className = 'wb-tooltip';
   tip.setAttribute('aria-hidden', 'true');
@@ -884,6 +916,7 @@ export function initTooltips(root = document.querySelector('.aham-workbench')) {
   root.append(tip);
   root.querySelectorAll('[data-tooltip][data-keys]').forEach(el => el.setAttribute('aria-keyshortcuts', ariaKeys(el.dataset.keys)));
   const coarse = matchMedia('(pointer: coarse)');
+  const delay = parseFloat(getComputedStyle(root).getPropertyValue('--wb-tooltip-delay')) || 500;
   let timer = 0, owner = null, hiddenAt = 0;
   function show(el) {
     owner = el;
@@ -899,21 +932,24 @@ export function initTooltips(root = document.querySelector('.aham-workbench')) {
     tip.style.left = `${left}px`;
   }
   function hide() { clearTimeout(timer); if (!tip.hidden) hiddenAt = Date.now(); owner = null; tip.hidden = true; }
-  root.addEventListener('pointerover', e => {
+  life.on(root, 'pointerover', e => {
     const el = e.target.closest?.('[data-tooltip]');
     if (!el || el === owner || coarse.matches || e.pointerType === 'touch') return;
     // An open sidebar already shows the names; its items only get a tip when collapsed to icons.
     if (el.matches('.wb-nav-item') && !root.classList.contains('collapsed')) return;
     clearTimeout(timer);
-    timer = setTimeout(() => show(el), owner || Date.now() - hiddenAt < 300 ? 0 : TOOLTIP_DELAY);
+    timer = setTimeout(() => show(el), owner || Date.now() - hiddenAt < 300 ? 0 : delay);
   });
-  root.addEventListener('pointerout', e => { const el = e.target.closest?.('[data-tooltip]'); if (el && !el.contains(e.relatedTarget)) hide(); });
-  root.addEventListener('focusin', e => { const el = e.target.closest?.('[data-tooltip]'); if (el?.matches(':focus-visible') && !(el.matches('.wb-nav-item') && !root.classList.contains('collapsed'))) show(el); });
-  root.addEventListener('focusout', hide);
-  root.addEventListener('pointerdown', hide);
-  document.addEventListener('keydown', () => { if (owner) hide(); });
-  addEventListener('scroll', hide, true);
-  return { hide };
+  life.on(root, 'pointerout', e => { const el = e.target.closest?.('[data-tooltip]'); if (el && !el.contains(e.relatedTarget)) hide(); });
+  life.on(root, 'focusin', e => { const el = e.target.closest?.('[data-tooltip]'); if (el?.matches(':focus-visible') && !(el.matches('.wb-nav-item') && !root.classList.contains('collapsed'))) show(el); });
+  life.on(root, 'focusout', hide);
+  life.on(root, 'pointerdown', hide);
+  life.on(document, 'keydown', () => { if (owner) hide(); });
+  life.on(window, 'scroll', hide, true);
+  life.keep(() => { clearTimeout(timer); tip.remove(); tooltipRoots.delete(root); });
+  const handle = { hide, destroy: life.end };
+  tooltipRoots.set(root, handle);
+  return handle;
 }
 
 // ── Toast ────────────────────────────────────────────────────────────────────
@@ -986,6 +1022,7 @@ export function navCommands(root) {
 // shell: true adds the commands every workbench page has after the page's own groups: 界面 (sidebar, panels, theme),
 // 账户 (accountItems), 跳转 (sidebar items, G + letter) and 帮助 (keyboard shortcuts, also on ?).
 export function initPalette({ root, groups, context, shell = false, accountItems }) {
+  const life = scope();
   const dialog = document.createElement('dialog');
   dialog.className = 'wb-palette';
   dialog.setAttribute('aria-label', '命令面板');
@@ -1026,7 +1063,7 @@ export function initPalette({ root, groups, context, shell = false, accountItems
     chip.hidden = !ctx;
     chip.innerHTML = ctx ? `<span class="wb-palette-chip"><span class="wb-meta">${escapeHtml(ctx.code ?? '')}</span><span>${escapeHtml(ctx.label)}</span><button type="button" tabindex="-1" aria-label="移除上下文">${icon('close')}</button></span>` : '';
   }
-  chip.addEventListener('click', e => { if (e.target.closest('button')) { ctx = null; paintChip(); page(); } });
+  life.on(chip, 'click', e => { if (e.target.closest('button')) { ctx = null; paintChip(); page(); } });
   function open(start) {
     if (dialog.open) return;
     returnTo = document.activeElement;
@@ -1047,12 +1084,13 @@ export function initPalette({ root, groups, context, shell = false, accountItems
     dialog.close();
     if (returnTo?.isConnected) returnTo.focus();
   }
-  dialog.addEventListener('cancel', e => e.preventDefault());           // Esc goes through the layer stack
-  dialog.addEventListener('click', e => { if (e.target === dialog) close(); });
-  registerShortcut({ keys: 'mod+k', label: '打开命令面板', group: '通用', run: () => (dialog.open ? close() : open()) });
+  life.on(dialog, 'cancel', e => e.preventDefault());           // Esc goes through the layer stack
+  life.on(dialog, 'click', e => { if (e.target === dialog) close(); });
+  life.keep(registerShortcut({ keys: 'mod+k', label: '打开命令面板', group: '通用', run: () => (dialog.open ? close() : open()) }));
   function showShortcuts() { open({ label: '键盘快捷键', items: shortcutItems() }); }
-  if (shell) registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: showShortcuts });
-  return { open, close, openAt: (label, items) => open({ label, items }), showShortcuts };
+  if (shell) life.keep(registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: showShortcuts }));
+  life.keep(() => { release?.(); dialog.remove(); });
+  return { open, close, openAt: (label, items) => open({ label, items }), showShortcuts, destroy: life.end };
 }
 
 // Registered shortcuts as palette items, grouped under their group names in the order the groups first appear.
@@ -1088,6 +1126,7 @@ export function shellGroups(root, { accountItems, showShortcuts } = {}) {
 // Items with `children` replace the menu in place (Aham: no cascading popovers); ← or Backspace returns.
 // items(row) → [{ id, label, icon?, keys?, danger?, group?, run?(row), children?(row) → items }]
 export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]', items }) {
+  const life = scope();
   const pop = document.createElement('div');
   pop.className = 'wb-popover flush menu';
   pop.hidden = true;
@@ -1095,6 +1134,7 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
   pop.setAttribute('aria-label', '操作菜单');
   pop.innerHTML = '<div></div>';
   root.append(pop);
+  life.keep(() => pop.remove());
   function open(row, point) {
     const stack = [];
     const show = () => {
@@ -1119,17 +1159,17 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
     openPopover(row, pop, { point: point ?? { x: r.left + 48, y: r.top + r.height / 2 }, returnFocus: row });
     pop.querySelector('[role=menu]').focus();
   }
-  target.addEventListener('contextmenu', e => {
+  life.on(target, 'contextmenu', e => {
     const row = e.target.closest(rowSelector);
     if (!row) return;
     e.preventDefault();
     open(row, { x: e.clientX, y: e.clientY });
   });
-  target.addEventListener('keydown', e => {
+  life.on(target, 'keydown', e => {
     const row = e.target.closest?.(rowSelector);
     if (row && e.target === row && (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10'))) { e.preventDefault(); open(row); }
   });
-  return { open };
+  return { open, destroy: life.end };
 }
 
 // ── Account menu and split dialog (rules/11-交互.md 11.6) ───────────────────────────
@@ -1137,6 +1177,7 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
 // caller's items. A choice closes the menu at once (no exit motion) so the next layer can open in its place.
 //   initAccountMenu({ root, button, account: 'lin.yue@example.com', items: () => [{ id, label, icon, keys?, group }], onSelect })
 export function initAccountMenu({ root, button = root.querySelector('[data-action="account"]'), account = '', items, onSelect }) {
+  const life = scope();
   if (!button) return null;
   const menu = document.createElement('div');
   menu.className = 'wb-popover flush menu';
@@ -1150,9 +1191,9 @@ export function initAccountMenu({ root, button = root.querySelector('[data-actio
     openPopover(button, menu);
     menu.querySelector('[role=menu]').focus();
   }
-  const toggle = () => (menu.hidden ? open() : closePopover());
-  button.addEventListener('click', toggle);
-  return { open, menu, destroy: () => { button.removeEventListener('click', toggle); menu.remove(); } };
+  life.on(button, 'click', () => (menu.hidden ? open() : closePopover()));
+  life.keep(() => menu.remove());
+  return { open, menu, destroy: life.end };
 }
 
 // A modal with a section list on the left and the section's rows on the right: personal preferences. Changes apply at
@@ -1353,6 +1394,7 @@ export function downloadText(name, text, type = 'text/csv;charset=utf-8') {
 // One button per section; a click scrolls the section under the sticky head, scrolling marks the section on screen.
 //   <nav class="wb-anchors" aria-label="分区"><button type="button" data-target="s-basic">基本信息</button>…</nav>
 export function initAnchorBar(nav, { scroller }) {
+  const life = scope();
   const buttons = [...nav.querySelectorAll('[data-target]')];
   const sections = buttons.map(b => document.getElementById(b.dataset.target)?.closest('section') || document.getElementById(b.dataset.target));
   let lock = 0;
@@ -1364,7 +1406,7 @@ export function initAnchorBar(nav, { scroller }) {
     if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) i = sections.length - 1;
     return i;
   }
-  nav.addEventListener('click', e => {
+  life.on(nav, 'click', e => {
     const b = e.target.closest('[data-target]');
     if (!b) return;
     const i = buttons.indexOf(b), s = sections[i];
@@ -1375,9 +1417,9 @@ export function initAnchorBar(nav, { scroller }) {
     s.querySelector('h2')?.focus({ preventScroll: true });
   });
   const onScroll = () => { if (Date.now() > lock) mark(current()); };
-  scroller.addEventListener('scroll', onScroll, { passive: true });
+  life.on(scroller, 'scroll', onScroll, { passive: true });
   mark(0);
-  return { refresh: onScroll };
+  return { refresh: onScroll, destroy: life.end };
 }
 
 // ── Object page (rules/5-单据.md) ─────────────────────────────────────────────
@@ -1399,6 +1441,7 @@ export function initAnchorBar(nav, { scroller }) {
 //             [data-draft-state] shows「草稿已自动保存 16:21」; cancel then asks「放弃这份草稿？」
 const OBJECT_STATE_TEXT = { error: '错误', warning: '提醒' };
 export function initObjectPage(root, { edit, footer, messages, validate = () => [], onSave = async () => {}, saved = '已保存', canEdit = () => true, changed = () => false, draft = null } = {}) {
+  const life = scope();
   const controls = () => [...root.querySelectorAll('.wb-edit :is(input, select, textarea)')];
   const save = footer.querySelector('[data-action=save]'), cancel = footer.querySelector('[data-action=cancel]');
   const msgBtn = footer.querySelector('.wb-msg-btn');
@@ -1460,7 +1503,7 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
       last = g;
       return `${head}<button type="button" data-i="${i}" data-severity="${p.severity}">${icon(p.severity === 'error' ? 'error' : 'warning')}<span>${escapeHtml(nameOf(p.control))}</span><small>${OBJECT_STATE_TEXT[p.severity]}：${escapeHtml(p.message)}</small></button>`;
     }).join('')}</div>`;
-    messages.querySelectorAll('button[data-i]').forEach(b => b.addEventListener('click', () => {
+    messages.querySelectorAll('button[data-i]').forEach(b => life.on(b, 'click', () => {
       const c = sorted[Number(b.dataset.i)].control;
       closePopover('done');
       c.focus({ preventScroll: true });
@@ -1510,38 +1553,37 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     if (!dirty()) { leave(true); draft?.onDiscard?.({ changed: false }); return; }
     const [q, drop] = draft ? ['放弃这份草稿？草稿里的改动都不会保存。', '放弃草稿'] : ['放弃这次的全部改动？', '放弃改动'];
     messages.innerHTML = `<div class="wb-messages"><p class="wb-confirm-text">${q}</p><div class="wb-confirm-actions"><button type="button" class="wb-btn sm" data-keep>继续编辑</button><button type="button" class="wb-btn sm danger" data-drop>${drop}</button></div></div>`;
-    messages.querySelector('[data-keep]').addEventListener('click', () => closePopover('done'));
-    messages.querySelector('[data-drop]').addEventListener('click', () => { closePopover('replace'); leave(true); draft?.onDiscard?.({ changed: true }); });
+    life.on(messages.querySelector('[data-keep]'), 'click', () => closePopover('done'));
+    life.on(messages.querySelector('[data-drop]'), 'click', () => { closePopover('replace'); leave(true); draft?.onDiscard?.({ changed: true }); });
     openPopover(cancel, messages);
   }
-  edit?.addEventListener('click', () => enter());
-  save.addEventListener('click', doSave);
-  cancel.addEventListener('click', doCancel);
-  msgBtn.addEventListener('click', openMessages);
-  root.addEventListener('dblclick', e => {
+  life.on(edit, 'click', () => enter());
+  life.on(save, 'click', doSave);
+  life.on(cancel, 'click', doCancel);
+  life.on(msgBtn, 'click', openMessages);
+  life.on(root, 'dblclick', e => {
     if (mode() !== 'read' || !e.target.closest('.wb-value.is-editable')) return;
     getSelection()?.removeAllRanges();
     enter(e.target.closest('.wb-form-value, td')?.querySelector('.wb-edit :is(input, select, textarea)'));
   });
-  root.addEventListener('keydown', e => {
+  life.on(root, 'keydown', e => {
     if (mode() === 'read' && (e.key === 'Enter' || e.key === 'F2') && e.target.matches('.wb-form-value[tabindex]')) { e.preventDefault(); enter(e.target.querySelector('.wb-edit :is(input, select, textarea)')); }
   });
-  root.addEventListener('input', e => { if (e.target.matches('.wb-edit textarea')) grow(e.target); });
-  root.addEventListener('focusout', e => {
+  life.on(root, 'input', e => { if (e.target.matches('.wb-edit textarea')) grow(e.target); });
+  life.on(root, 'focusout', e => {
     // A control that was wrong is checked again when it loses focus, so a fixed value clears its state at once.
     if (mode() !== 'edit' || !problems.some(p => p.control === e.target)) return;
     problems = (validate(root) || []).filter(p => problems.some(q => q.control === p.control));
     showStates(problems);
   });
-  addEventListener('beforeunload', e => { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
-  const offs = [
-    registerShortcut({ keys: 'e', label: '编辑', group: '单据', when: () => mode() === 'read' && Boolean(edit) && canEdit(), run: () => enter() }),
-    registerShortcut({ keys: 'mod+enter', label: '保存', group: '单据', when: () => mode() === 'edit', run: doSave }),
-  ];
+  life.on(window, 'beforeunload', e => { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
+  life.keep(registerShortcut({ keys: 'e', label: '编辑', group: '单据', when: () => mode() === 'read' && Boolean(edit) && canEdit(), run: () => enter() }));
+  life.keep(registerShortcut({ keys: 'mod+enter', label: '保存', group: '单据', when: () => mode() === 'edit', run: doSave }));
+  life.keep(() => clearInterval(timer));
   msgBtn.hidden = true;
   root.dataset.mode ||= 'read';
   // discard: leave edit mode and throw the changes away without asking (the page asked already, e.g. in a leave dialog).
-  return { enter, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: () => { clearInterval(timer); offs.forEach(off => off()); } };
+  return { enter, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: life.end };
 }
 
 // ── File checks (rules/5-单据.md 5.13, pure) ───────────────────────────────────
@@ -1605,6 +1647,7 @@ export function fileCat(name) {
 // Rows are <details> with one shared name, so the browser closes the open row when another opens. This also does it
 // for browsers without the name attribute, and keeps the opened row in view.
 export function initSingleExpand(list) {
+  const life = scope();
   const rows = () => [...list.querySelectorAll(':scope > details')];
   const onToggle = e => {
     const row = e.target;
@@ -1612,8 +1655,8 @@ export function initSingleExpand(list) {
     for (const other of rows()) if (other !== row && other.open) other.open = false;
     row.scrollIntoView?.({ block: 'nearest' });
   };
-  list.addEventListener('toggle', onToggle, true);
-  return { destroy: () => list.removeEventListener('toggle', onToggle, true), open: i => { const r = rows()[i]; if (r) r.open = true; } };
+  life.on(list, 'toggle', onToggle, true);
+  return { destroy: life.end, open: i => { const r = rows()[i]; if (r) r.open = true; } };
 }
 
 // ── Tree totals and record diff (rules/5-单据.md 5.13, pure) ───────────────────
@@ -1665,6 +1708,7 @@ async function walkEntry(entry, prefix = '') {
   return (await Promise.all(found.map(child => walkEntry(child, `${prefix}${entry.name}/`)))).flat();
 }
 export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles }) {
+  const life = scope();
   const inputs = [...zone.querySelectorAll('input[type=file]')];
   inputs.forEach(input => { if (accept.length && !input.hasAttribute('webkitdirectory')) input.accept = accept.join(','); });
   const deliver = list => {
@@ -1673,10 +1717,10 @@ export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles })
   };
   let depth = 0;
   const over = on => { if (on) zone.dataset.drag = 'over'; else delete zone.dataset.drag; };
-  zone.addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; over(true); });
-  zone.addEventListener('dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
-  zone.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) over(false); });
-  zone.addEventListener('drop', async e => {
+  life.on(zone, 'dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; over(true); });
+  life.on(zone, 'dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+  life.on(zone, 'dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) over(false); });
+  life.on(zone, 'drop', async e => {
     if (!hasFiles(e)) return;
     e.preventDefault();
     depth = 0;
@@ -1686,9 +1730,9 @@ export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles })
     deliver(entries.length ? (await Promise.all(entries.map(entry => walkEntry(entry)))).flat() : [...e.dataTransfer.files].map(file => ({ file })));
   });
   const open = (folder = false) => inputs.find(i => i.hasAttribute('webkitdirectory') === folder)?.click();
-  zone.addEventListener('click', e => { const b = e.target.closest?.('[data-drop]'); if (b) open(b.dataset.drop === 'folder'); });
-  inputs.forEach(input => input.addEventListener('change', () => { deliver([...input.files].map(file => ({ file }))); input.value = ''; }));
-  return { open };
+  life.on(zone, 'click', e => { const b = e.target.closest?.('[data-drop]'); if (b) open(b.dataset.drop === 'folder'); });
+  inputs.forEach(input => life.on(input, 'change', () => { deliver([...input.files].map(file => ({ file }))); input.value = ''; }));
+  return { open, destroy: life.end };
 }
 
 // ── File viewer (rules/5-单据.md 5.13) ─────────────────────────────────────────
@@ -1700,6 +1744,7 @@ export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles })
 // show({ page, x, y, width, height }) outlines a region in natural pixels, e.g. where a recognised field came from.
 const ZOOM_STEPS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
 export function initViewer(root, { pages = 1, page = 1, width, height, onPage, onZoom } = {}) {
+  const life = scope();
   const stage = root.querySelector('.wb-viewer-stage'), canvas = root.querySelector('.wb-viewer-canvas');
   const part = name => root.querySelector(`[data-viewer="${name}"]`);
   const size = { width: width ?? Number(canvas.dataset.width), height: height ?? Number(canvas.dataset.height) };
@@ -1762,36 +1807,36 @@ export function initViewer(root, { pages = 1, page = 1, width, height, onPage, o
     sync();
     if (fitted) fit(); else paint();
   }
-  root.addEventListener('click', e => {
+  life.on(root, 'click', e => {
     const b = e.target.closest?.('button[data-viewer]');
     const act = { prev: () => setPage(page - 1), next: () => setPage(page + 1), 'zoom-in': () => step(1), 'zoom-out': () => step(-1), fit, actual: () => setZoom(1) }[b?.dataset.viewer];
     act?.();
   });
-  part('page')?.addEventListener('change', e => setPage(parseInt(e.target.value, 10)));
-  stage.addEventListener('keydown', e => {
+  life.on(part('page'), 'change', e => setPage(parseInt(e.target.value, 10)));
+  life.on(stage, 'keydown', e => {
     if (e.target !== stage || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const act = { '+': () => step(1), '=': () => step(1), '-': () => step(-1), 0: fit, PageDown: () => setPage(page + 1), PageUp: () => setPage(page - 1) }[e.key];
     if (act) { e.preventDefault(); act(); }
   });
-  stage.addEventListener('wheel', e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); step(e.deltaY < 0 ? 1 : -1); }, { passive: false });
-  stage.addEventListener('pointerdown', e => {
+  life.on(stage, 'wheel', e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); step(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  life.on(stage, 'pointerdown', e => {
     if (e.button !== 0 || stage.dataset.pan !== 'true') return;
     drag = { x: e.clientX, y: e.clientY, left: stage.scrollLeft, top: stage.scrollTop };
     stage.setPointerCapture(e.pointerId);
     stage.dataset.dragging = '';
   });
-  stage.addEventListener('pointermove', e => {
+  life.on(stage, 'pointermove', e => {
     if (!drag) return;
     stage.scrollLeft = drag.left - (e.clientX - drag.x);
     stage.scrollTop = drag.top - (e.clientY - drag.y);
   });
   const endDrag = () => { drag = null; delete stage.dataset.dragging; };
-  stage.addEventListener('pointerup', endDrag);
-  stage.addEventListener('pointercancel', endDrag);
+  life.on(stage, 'pointerup', endDrag);
+  life.on(stage, 'pointercancel', endDrag);
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => (fitted ? fit() : paint())).observe(stage);
   sync();
   fit();
-  return { load, setPage, setZoom, fit, show, hide, page: () => page, zoom: () => zoom };
+  return { load, setPage, setZoom, fit, show, hide, page: () => page, zoom: () => zoom, destroy: life.end };
 }
 
 // ── Tree table (rules/5-单据.md 5.13) ──────────────────────────────────────────
@@ -1800,6 +1845,7 @@ export function initViewer(root, { pages = 1, page = 1, width, height, onPage, o
 // → expands or steps to the first child, ← collapses or steps to the parent, Enter toggles. Keys act only when the row
 // itself has focus. Not declared an ARIA treegrid: cells are not individually navigable. Call refresh() after re-render.
 export function initTreeTable(table, { onToggle, onMove } = {}) {
+  const life = scope();
   let current = null;
   const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
   const level = tr => Number(tr.dataset.level) || 1;
@@ -1839,11 +1885,11 @@ export function initTreeTable(table, { onToggle, onMove } = {}) {
     refresh();
     onToggle?.(idOf(tr), on);
   }
-  table.addEventListener('click', e => {
+  life.on(table, 'click', e => {
     const b = e.target.closest?.('.wb-tree-toggle');
     if (b) { const tr = b.closest('tr'); setExpanded(tr, !expanded(tr)); }
   });
-  table.addEventListener('keydown', e => {
+  life.on(table, 'keydown', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const shown = rows().filter(r => !r.hidden), i = shown.indexOf(tr);
@@ -1858,13 +1904,13 @@ export function initTreeTable(table, { onToggle, onMove } = {}) {
     }[e.key];
     if (act) { e.preventDefault(); act(); }
   });
-  table.addEventListener('focusin', e => {
+  life.on(table, 'focusin', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (tr && idOf(tr) !== current) { current = idOf(tr); rows().forEach(r => { r.tabIndex = r === tr ? 0 : -1; }); }
   });
   const setAll = on => { rows().forEach(tr => toggleOf(tr)?.setAttribute('aria-expanded', String(on))); refresh(); };
   refresh();
-  return { refresh, expandAll: () => setAll(true), collapseAll: () => setAll(false), current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id) && !tr.hidden)) };
+  return { refresh, expandAll: () => setAll(true), collapseAll: () => setAll(false), current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id) && !tr.hidden)), destroy: life.end };
 }
 
 // ── AI assistance (rules/8-AI协作.md) ────────────────────────────────────────────
@@ -1884,6 +1930,7 @@ const AI_STATE = { consent: '需要开启', generating: '生成中', done: 'AI �
 // what arrived. sources: [{ label, href? }]; consent: what is sent and to whom, shown before the first use.
 // needsConsent() decides whether to ask first (default: AI not yet enabled); state previews can pass their own.
 export function createAIOutput(host, { title, sources = [], consent = '会把当前记录的名称、属性和最近动态发送给产品配置的 AI 服务。', needsConsent = () => !aiOn, generate, adoptLabel = '采纳', onAdopt, onEdit, onDiscard }) {
+  const life = scope();
   const box = document.createElement('section');
   box.className = 'wb-ai';
   box.setAttribute('aria-label', `AI：${title}`);
@@ -1946,7 +1993,7 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
     }
   }
   function remove() { if (box.dataset.state === 'generating') controller.abort(); unlayer(); box.remove(); }
-  box.addEventListener('click', e => {
+  life.on(box, 'click', e => {
     const b = e.target.closest('[data-ai]');
     if (!b) return;
     const act = b.dataset.ai;
@@ -1958,7 +2005,7 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
     else if (act === 'discard') { onDiscard?.(); remove(); }
   });
   run();
-  return { run, stop, remove, text: () => text, element: box };
+  return { run, stop, remove, text: () => text, element: box, destroy: life.end };
 }
 
 // One inline suggestion per page, under the field it concerns: value + reason, 采纳 / 忽略. Adopting goes through the

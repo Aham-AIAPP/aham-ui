@@ -6,6 +6,7 @@
 // role: 'listbox' (pickers, filters) or 'menu' (context menu actions).
 // `items` may be a function of the query, which is how quick-search results are added under the field list.
 export function createCommand(host, { items, onSelect, onBack, placeholder = '搜索…', empty = '没有匹配项', search = true, label = '', role = 'listbox' }) {
+  const life = scope();
   const id = `wb-cmd-${++uid}`;
   host.classList.add('wb-command');
   host.innerHTML = `${search ? `<div class="wb-command-input">${icon('search')}<input type="text" role="combobox" aria-expanded="true" aria-autocomplete="list" aria-controls="${id}" placeholder="${escapeHtml(placeholder)}" aria-label="${escapeHtml(label || placeholder)}" autocomplete="off"></div>` : ''}<ul class="wb-command-list" role="${role}" id="${id}" aria-label="${escapeHtml(label || placeholder)}" tabindex="${search ? -1 : 0}"></ul><p class="wb-command-empty" hidden>${escapeHtml(empty)}</p>`;
@@ -45,7 +46,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     if (scroll) el?.scrollIntoView({ block: 'nearest' });
   }
   function choose(i) { const it = shown[i]; if (it) onSelect?.(it, api); }
-  keyTarget.addEventListener('keydown', e => {
+  life.on(keyTarget, 'keydown', e => {
     if (e.isComposing) return;
     const n = shown.length;
     if (e.key === 'ArrowDown' && n) { e.preventDefault(); highlight((active + 1) % n); }
@@ -55,11 +56,11 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     else if (e.key === 'Enter') { e.preventDefault(); choose(active); }
     else if ((e.key === 'Backspace' || (e.key === 'ArrowLeft' && !input)) && !input?.value && onBack) { e.preventDefault(); onBack(); }
   });
-  input?.addEventListener('input', () => { active = 0; render(); });
-  list.addEventListener('mousemove', e => { const li = e.target.closest('[data-index]'); if (li && Number(li.dataset.index) !== active) highlight(Number(li.dataset.index), false); });
-  list.addEventListener('mousedown', e => e.preventDefault());       // keep focus in the input
-  list.addEventListener('click', e => { const li = e.target.closest('[data-index]'); if (li) choose(Number(li.dataset.index)); });
-  const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); } };
+  life.on(input, 'input', () => { active = 0; render(); });
+  life.on(list, 'mousemove', e => { const li = e.target.closest('[data-index]'); if (li && Number(li.dataset.index) !== active) highlight(Number(li.dataset.index), false); });
+  life.on(list, 'mousedown', e => e.preventDefault());       // keep focus in the input
+  life.on(list, 'click', e => { const li = e.target.closest('[data-index]'); if (li) choose(Number(li.dataset.index)); });
+  const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); }, destroy: life.end };
   render();
   const start = shown.findIndex(it => it.current);                 // pickers open with the current value highlighted
   if (start > 0) highlight(start);

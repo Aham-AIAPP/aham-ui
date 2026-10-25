@@ -1,0 +1,21 @@
+{
+  "name": "aham-ui",
+  "version": "9.0.0",
+  "description": "Aham UI：B 端工作台设计系统。tokens、样式、行为脚本和规则，没有第三方依赖。",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": { "types": "./aham.d.ts", "default": "./aham.js" },
+    "./aham.js": { "types": "./aham.d.ts", "default": "./aham.js" },
+    "./aham.css": "./aham.css",
+    "./tokens.json": "./tokens.json",
+    "./assets/*": "./assets/*"
+  },
+  "types": "./aham.d.ts",
+  "files": ["aham.css", "aham.js", "aham.d.ts", "tokens.json", "assets/", "components/", "rules/", "设计理念.md", "AGENTS.md"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check && node scripts/lint.mjs && node scripts/theme.mjs --check && node --test"
+  },
+  "engines": { "node": ">=20" }
+}

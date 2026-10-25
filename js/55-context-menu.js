@@ -3,6 +3,7 @@
 // Items with `children` replace the menu in place (Aham: no cascading popovers); ← or Backspace returns.
 // items(row) → [{ id, label, icon?, keys?, danger?, group?, run?(row), children?(row) → items }]
 export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]', items }) {
+  const life = scope();
   const pop = document.createElement('div');
   pop.className = 'wb-popover flush menu';
   pop.hidden = true;
@@ -10,6 +11,7 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
   pop.setAttribute('aria-label', '操作菜单');
   pop.innerHTML = '<div></div>';
   root.append(pop);
+  life.keep(() => pop.remove());
   function open(row, point) {
     const stack = [];
     const show = () => {
@@ -34,16 +36,16 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
     openPopover(row, pop, { point: point ?? { x: r.left + 48, y: r.top + r.height / 2 }, returnFocus: row });
     pop.querySelector('[role=menu]').focus();
   }
-  target.addEventListener('contextmenu', e => {
+  life.on(target, 'contextmenu', e => {
     const row = e.target.closest(rowSelector);
     if (!row) return;
     e.preventDefault();
     open(row, { x: e.clientX, y: e.clientY });
   });
-  target.addEventListener('keydown', e => {
+  life.on(target, 'keydown', e => {
     const row = e.target.closest?.(rowSelector);
     if (row && e.target === row && (e.key === 'ContextMenu' || (e.shiftKey && e.key === 'F10'))) { e.preventDefault(); open(row); }
   });
-  return { open };
+  return { open, destroy: life.end };
 }
 

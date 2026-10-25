@@ -15,6 +15,7 @@ const AI_STATE = { consent: '需要开启', generating: '生成中', done: 'AI �
 // what arrived. sources: [{ label, href? }]; consent: what is sent and to whom, shown before the first use.
 // needsConsent() decides whether to ask first (default: AI not yet enabled); state previews can pass their own.
 export function createAIOutput(host, { title, sources = [], consent = '会把当前记录的名称、属性和最近动态发送给产品配置的 AI 服务。', needsConsent = () => !aiOn, generate, adoptLabel = '采纳', onAdopt, onEdit, onDiscard }) {
+  const life = scope();
   const box = document.createElement('section');
   box.className = 'wb-ai';
   box.setAttribute('aria-label', `AI：${title}`);
@@ -77,7 +78,7 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
     }
   }
   function remove() { if (box.dataset.state === 'generating') controller.abort(); unlayer(); box.remove(); }
-  box.addEventListener('click', e => {
+  life.on(box, 'click', e => {
     const b = e.target.closest('[data-ai]');
     if (!b) return;
     const act = b.dataset.ai;
@@ -89,7 +90,7 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
     else if (act === 'discard') { onDiscard?.(); remove(); }
   });
   run();
-  return { run, stop, remove, text: () => text, element: box };
+  return { run, stop, remove, text: () => text, element: box, destroy: life.end };
 }
 
 // One inline suggestion per page, under the field it concerns: value + reason, 采纳 / 忽略. Adopting goes through the

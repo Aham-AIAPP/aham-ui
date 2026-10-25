@@ -3,6 +3,7 @@
 // caller's items. A choice closes the menu at once (no exit motion) so the next layer can open in its place.
 //   initAccountMenu({ root, button, account: 'lin.yue@example.com', items: () => [{ id, label, icon, keys?, group }], onSelect })
 export function initAccountMenu({ root, button = root.querySelector('[data-action="account"]'), account = '', items, onSelect }) {
+  const life = scope();
   if (!button) return null;
   const menu = document.createElement('div');
   menu.className = 'wb-popover flush menu';
@@ -16,9 +17,9 @@ export function initAccountMenu({ root, button = root.querySelector('[data-actio
     openPopover(button, menu);
     menu.querySelector('[role=menu]').focus();
   }
-  const toggle = () => (menu.hidden ? open() : closePopover());
-  button.addEventListener('click', toggle);
-  return { open, menu, destroy: () => { button.removeEventListener('click', toggle); menu.remove(); } };
+  life.on(button, 'click', () => (menu.hidden ? open() : closePopover()));
+  life.keep(() => menu.remove());
+  return { open, menu, destroy: life.end };
 }
 
 // A modal with a section list on the left and the section's rows on the right: personal preferences. Changes apply at

@@ -10,6 +10,7 @@ async function walkEntry(entry, prefix = '') {
   return (await Promise.all(found.map(child => walkEntry(child, `${prefix}${entry.name}/`)))).flat();
 }
 export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles }) {
+  const life = scope();
   const inputs = [...zone.querySelectorAll('input[type=file]')];
   inputs.forEach(input => { if (accept.length && !input.hasAttribute('webkitdirectory')) input.accept = accept.join(','); });
   const deliver = list => {
@@ -18,10 +19,10 @@ export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles })
   };
   let depth = 0;
   const over = on => { if (on) zone.dataset.drag = 'over'; else delete zone.dataset.drag; };
-  zone.addEventListener('dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; over(true); });
-  zone.addEventListener('dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
-  zone.addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) over(false); });
-  zone.addEventListener('drop', async e => {
+  life.on(zone, 'dragenter', e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; over(true); });
+  life.on(zone, 'dragover', e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+  life.on(zone, 'dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) over(false); });
+  life.on(zone, 'drop', async e => {
     if (!hasFiles(e)) return;
     e.preventDefault();
     depth = 0;
@@ -31,8 +32,8 @@ export function initDropZone(zone, { accept = [], maxSize = Infinity, onFiles })
     deliver(entries.length ? (await Promise.all(entries.map(entry => walkEntry(entry)))).flat() : [...e.dataTransfer.files].map(file => ({ file })));
   });
   const open = (folder = false) => inputs.find(i => i.hasAttribute('webkitdirectory') === folder)?.click();
-  zone.addEventListener('click', e => { const b = e.target.closest?.('[data-drop]'); if (b) open(b.dataset.drop === 'folder'); });
-  inputs.forEach(input => input.addEventListener('change', () => { deliver([...input.files].map(file => ({ file }))); input.value = ''; }));
-  return { open };
+  life.on(zone, 'click', e => { const b = e.target.closest?.('[data-drop]'); if (b) open(b.dataset.drop === 'folder'); });
+  inputs.forEach(input => life.on(input, 'change', () => { deliver([...input.files].map(file => ({ file }))); input.value = ''; }));
+  return { open, destroy: life.end };
 }
 

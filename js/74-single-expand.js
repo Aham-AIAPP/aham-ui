@@ -2,6 +2,7 @@
 // Rows are <details> with one shared name, so the browser closes the open row when another opens. This also does it
 // for browsers without the name attribute, and keeps the opened row in view.
 export function initSingleExpand(list) {
+  const life = scope();
   const rows = () => [...list.querySelectorAll(':scope > details')];
   const onToggle = e => {
     const row = e.target;
@@ -9,7 +10,7 @@ export function initSingleExpand(list) {
     for (const other of rows()) if (other !== row && other.open) other.open = false;
     row.scrollIntoView?.({ block: 'nearest' });
   };
-  list.addEventListener('toggle', onToggle, true);
-  return { destroy: () => list.removeEventListener('toggle', onToggle, true), open: i => { const r = rows()[i]; if (r) r.open = true; } };
+  life.on(list, 'toggle', onToggle, true);
+  return { destroy: life.end, open: i => { const r = rows()[i]; if (r) r.open = true; } };
 }
 

@@ -4,6 +4,7 @@
 // → expands or steps to the first child, ← collapses or steps to the parent, Enter toggles. Keys act only when the row
 // itself has focus. Not declared an ARIA treegrid: cells are not individually navigable. Call refresh() after re-render.
 export function initTreeTable(table, { onToggle, onMove } = {}) {
+  const life = scope();
   let current = null;
   const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
   const level = tr => Number(tr.dataset.level) || 1;
@@ -43,11 +44,11 @@ export function initTreeTable(table, { onToggle, onMove } = {}) {
     refresh();
     onToggle?.(idOf(tr), on);
   }
-  table.addEventListener('click', e => {
+  life.on(table, 'click', e => {
     const b = e.target.closest?.('.wb-tree-toggle');
     if (b) { const tr = b.closest('tr'); setExpanded(tr, !expanded(tr)); }
   });
-  table.addEventListener('keydown', e => {
+  life.on(table, 'keydown', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const shown = rows().filter(r => !r.hidden), i = shown.indexOf(tr);
@@ -62,12 +63,12 @@ export function initTreeTable(table, { onToggle, onMove } = {}) {
     }[e.key];
     if (act) { e.preventDefault(); act(); }
   });
-  table.addEventListener('focusin', e => {
+  life.on(table, 'focusin', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (tr && idOf(tr) !== current) { current = idOf(tr); rows().forEach(r => { r.tabIndex = r === tr ? 0 : -1; }); }
   });
   const setAll = on => { rows().forEach(tr => toggleOf(tr)?.setAttribute('aria-expanded', String(on))); refresh(); };
   refresh();
-  return { refresh, expandAll: () => setAll(true), collapseAll: () => setAll(false), current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id) && !tr.hidden)) };
+  return { refresh, expandAll: () => setAll(true), collapseAll: () => setAll(false), current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id) && !tr.hidden)), destroy: life.end };
 }
 

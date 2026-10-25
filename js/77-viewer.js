@@ -7,6 +7,7 @@
 // show({ page, x, y, width, height }) outlines a region in natural pixels, e.g. where a recognised field came from.
 const ZOOM_STEPS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 3, 4];
 export function initViewer(root, { pages = 1, page = 1, width, height, onPage, onZoom } = {}) {
+  const life = scope();
   const stage = root.querySelector('.wb-viewer-stage'), canvas = root.querySelector('.wb-viewer-canvas');
   const part = name => root.querySelector(`[data-viewer="${name}"]`);
   const size = { width: width ?? Number(canvas.dataset.width), height: height ?? Number(canvas.dataset.height) };
@@ -69,35 +70,35 @@ export function initViewer(root, { pages = 1, page = 1, width, height, onPage, o
     sync();
     if (fitted) fit(); else paint();
   }
-  root.addEventListener('click', e => {
+  life.on(root, 'click', e => {
     const b = e.target.closest?.('button[data-viewer]');
     const act = { prev: () => setPage(page - 1), next: () => setPage(page + 1), 'zoom-in': () => step(1), 'zoom-out': () => step(-1), fit, actual: () => setZoom(1) }[b?.dataset.viewer];
     act?.();
   });
-  part('page')?.addEventListener('change', e => setPage(parseInt(e.target.value, 10)));
-  stage.addEventListener('keydown', e => {
+  life.on(part('page'), 'change', e => setPage(parseInt(e.target.value, 10)));
+  life.on(stage, 'keydown', e => {
     if (e.target !== stage || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const act = { '+': () => step(1), '=': () => step(1), '-': () => step(-1), 0: fit, PageDown: () => setPage(page + 1), PageUp: () => setPage(page - 1) }[e.key];
     if (act) { e.preventDefault(); act(); }
   });
-  stage.addEventListener('wheel', e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); step(e.deltaY < 0 ? 1 : -1); }, { passive: false });
-  stage.addEventListener('pointerdown', e => {
+  life.on(stage, 'wheel', e => { if (!e.ctrlKey && !e.metaKey) return; e.preventDefault(); step(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+  life.on(stage, 'pointerdown', e => {
     if (e.button !== 0 || stage.dataset.pan !== 'true') return;
     drag = { x: e.clientX, y: e.clientY, left: stage.scrollLeft, top: stage.scrollTop };
     stage.setPointerCapture(e.pointerId);
     stage.dataset.dragging = '';
   });
-  stage.addEventListener('pointermove', e => {
+  life.on(stage, 'pointermove', e => {
     if (!drag) return;
     stage.scrollLeft = drag.left - (e.clientX - drag.x);
     stage.scrollTop = drag.top - (e.clientY - drag.y);
   });
   const endDrag = () => { drag = null; delete stage.dataset.dragging; };
-  stage.addEventListener('pointerup', endDrag);
-  stage.addEventListener('pointercancel', endDrag);
+  life.on(stage, 'pointerup', endDrag);
+  life.on(stage, 'pointercancel', endDrag);
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => (fitted ? fit() : paint())).observe(stage);
   sync();
   fit();
-  return { load, setPage, setZoom, fit, show, hide, page: () => page, zoom: () => zoom };
+  return { load, setPage, setZoom, fit, show, hide, page: () => page, zoom: () => zoom, destroy: life.end };
 }
 

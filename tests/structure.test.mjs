@@ -206,3 +206,39 @@ test('every script in js/ and examples/ parses', () => {
   });
   assert.deepEqual(bad, []);
 });
+
+test('aham.d.ts declares exactly the exports of aham.js', async () => {
+  const exported = Object.keys(await import(new URL('aham.js', root))).sort();
+  const declared = [...read('aham.d.ts').matchAll(/^export (?:function|const) (\w+)/gm)].map(m => m[1]);
+  assert.deepEqual([...new Set(declared)].sort(), exported);
+});
+
+test('every init* and create* handle has destroy (docs/react.md)', () => {
+  const missing = files('js/').filter(f => f.endsWith('.js')).flatMap(f => {
+    const src = read(f);
+    return [...src.matchAll(/^export function ((?:init|create)\w+)/gm)].map(m => m[1]).filter(name => {
+      const body = src.slice(src.indexOf(`export function ${name}`)).split(/\nexport /)[0];
+      return !/destroy: life\.end/.test(body);
+    });
+  });
+  assert.deepEqual(missing, []);
+});
+
+test('one version everywhere: package.json, tokens.json, rules/1 and README', () => {
+  const v = JSON.parse(read('package.json')).version;
+  assert.equal(tokens.$meta.version, v);
+  assert.match(read('rules/1-总则.md'), new RegExp(`^版本 ${v.replace(/\./g, '\\.')}。`, 'm'));
+  assert.match(read('README.md'), new RegExp(`当前版本 ${v.replace(/\./g, '\\.')}。`));
+});
+
+test('the counts written in the docs match the repository', () => {
+  const ruleFiles = files('rules/').filter(f => /\/\d+-.+\.md$/.test(f)).length;
+  const words = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五'];
+  for (const f of ['rules/1-总则.md', 'README.md', 'AGENTS.md']) {
+    for (const m of read(f).matchAll(/(?:本目录|规则正文，)([一二三四五六七八九十]+)个文件|([一二三四五六七八九十]+)个规则文件/g)) {
+      const n = m[1] ?? m[2];
+      assert.equal(words.indexOf(n), ruleFiles, `${f}: ${n}个文件`);
+    }
+    assert.doesNotMatch(read(f), /\d+ 份契约/, `${f}: write no contract count; components/index.json lists them`);
+  }
+});

@@ -12,6 +12,7 @@ export function navCommands(root) {
 // shell: true adds the commands every workbench page has after the page's own groups: 界面 (sidebar, panels, theme),
 // 账户 (accountItems), 跳转 (sidebar items, G + letter) and 帮助 (keyboard shortcuts, also on ?).
 export function initPalette({ root, groups, context, shell = false, accountItems }) {
+  const life = scope();
   const dialog = document.createElement('dialog');
   dialog.className = 'wb-palette';
   dialog.setAttribute('aria-label', '命令面板');
@@ -52,7 +53,7 @@ export function initPalette({ root, groups, context, shell = false, accountItems
     chip.hidden = !ctx;
     chip.innerHTML = ctx ? `<span class="wb-palette-chip"><span class="wb-meta">${escapeHtml(ctx.code ?? '')}</span><span>${escapeHtml(ctx.label)}</span><button type="button" tabindex="-1" aria-label="移除上下文">${icon('close')}</button></span>` : '';
   }
-  chip.addEventListener('click', e => { if (e.target.closest('button')) { ctx = null; paintChip(); page(); } });
+  life.on(chip, 'click', e => { if (e.target.closest('button')) { ctx = null; paintChip(); page(); } });
   function open(start) {
     if (dialog.open) return;
     returnTo = document.activeElement;
@@ -73,12 +74,13 @@ export function initPalette({ root, groups, context, shell = false, accountItems
     dialog.close();
     if (returnTo?.isConnected) returnTo.focus();
   }
-  dialog.addEventListener('cancel', e => e.preventDefault());           // Esc goes through the layer stack
-  dialog.addEventListener('click', e => { if (e.target === dialog) close(); });
-  registerShortcut({ keys: 'mod+k', label: '打开命令面板', group: '通用', run: () => (dialog.open ? close() : open()) });
+  life.on(dialog, 'cancel', e => e.preventDefault());           // Esc goes through the layer stack
+  life.on(dialog, 'click', e => { if (e.target === dialog) close(); });
+  life.keep(registerShortcut({ keys: 'mod+k', label: '打开命令面板', group: '通用', run: () => (dialog.open ? close() : open()) }));
   function showShortcuts() { open({ label: '键盘快捷键', items: shortcutItems() }); }
-  if (shell) registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: showShortcuts });
-  return { open, close, openAt: (label, items) => open({ label, items }), showShortcuts };
+  if (shell) life.keep(registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: showShortcuts }));
+  life.keep(() => { release?.(); dialog.remove(); });
+  return { open, close, openAt: (label, items) => open({ label, items }), showShortcuts, destroy: life.end };
 }
 
 // Registered shortcuts as palette items, grouped under their group names in the order the groups first appear.

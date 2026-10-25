@@ -31,14 +31,14 @@ Aham UI 是一套给电脑浏览器里的业务管理系统用的界面规范，
 | [设计理念.md](设计理念.md) | 总体标准、15 条原则、冲突时的取舍次序、借鉴来源 |
 | [tokens.json](tokens.json) | 全部取值：亮色、暗色、增强对比度三套颜色，字号、间距、尺寸、断点 |
 | [rules/](rules/) | 规则正文，十一个文件：总则、视觉、控件、页面、单据、反馈、键盘与命令、AI 协作、验收、数据格式、交互 |
-| [components/](components/) | 44 份契约，写明每个控件和组合的结构、类名、状态和键盘 |
+| [components/](components/) | 契约，写明每个控件和组合的结构、类名、状态和键盘 |
 | [src/](src/) | 样式源文件 |
 | [aham.css](aham.css) | 由 `scripts/build.mjs` 从 tokens.json 和 src/ 生成，页面只引这一个文件 |
 | [aham.js](aham.js) | 行为脚本，ES 模块，没有第三方依赖 |
 | [examples/](examples/) | 示例页，数据全部虚构 |
 | [assets/](assets/) | Inter 字体（SIL OFL）、Lucide 图标 53 个（ISC）、截图 |
 | [scripts/](scripts/)、[tests/](tests/) | 生成、检查和测试脚本 |
-| [research/](research/) | 调研和规划记录，只作历史参考 |
+| [docs/research/](docs/research/) | 调研和规划记录，只作历史参考 |
 | [AGENTS.md](AGENTS.md) | 给 AI 的读取顺序和硬约束 |
 
 ## 示例页

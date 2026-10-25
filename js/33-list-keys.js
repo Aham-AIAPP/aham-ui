@@ -4,6 +4,7 @@
 // Keys act only when the row itself has focus, so checkboxes, links and inputs inside the row keep their own keys.
 // Call refresh() after every re-render. The table is not declared an ARIA grid (cells are not individually navigable).
 export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRange }) {
+  const life = scope();
   let current = null, anchor = null;
   const rows = () => [...table.querySelectorAll('tbody tr[data-id]')];
   const idOf = tr => tr?.dataset.id ?? null;
@@ -26,7 +27,7 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRan
     tr.scrollIntoView({ block: 'nearest' });
     onMove?.(current);
   }
-  table.addEventListener('keydown', e => {
+  life.on(table, 'keydown', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (!tr || e.target !== tr || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
     const list = rows(), i = list.indexOf(tr);
@@ -52,16 +53,16 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRan
     }
   });
   // Shift + click on a row checkbox applies its new state to every row since the last checked one.
-  table.addEventListener('click', e => {
+  life.on(table, 'click', e => {
     const box = e.target.closest?.('input[type=checkbox]'), tr = box?.closest('tr[data-id]');
     if (!tr) return;
     if (e.shiftKey && onRange && anchor && anchor !== idOf(tr)) onRange(between(anchor, idOf(tr)), box.checked);
     anchor = idOf(tr);
   });
-  table.addEventListener('focusin', e => {
+  life.on(table, 'focusin', e => {
     const tr = e.target.closest?.('tr[data-id]');
     if (tr && idOf(tr) !== current) { current = idOf(tr); refresh(); }
   });
-  return { refresh, current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id)) ?? rows()[0]) };
+  return { refresh, current: () => current, focus: id => focusRow(rows().find(tr => idOf(tr) === String(id)) ?? rows()[0]), destroy: life.end };
 }
 

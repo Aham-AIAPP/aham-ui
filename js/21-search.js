@@ -1,6 +1,7 @@
 // ── Header search ────────────────────────────────────────────────────────────
 // Button [data-action="search"] reveals .wb-search. Esc clears the text first, then closes.
 export function initSearch(root, { value = '', onInput } = {}) {
+  const life = scope();
   const button = root.querySelector('[data-action="search"]');
   const box = root.querySelector('.wb-search');
   const input = box?.querySelector('input');
@@ -24,10 +25,11 @@ export function initSearch(root, { value = '', onInput } = {}) {
     if (input.value) { input.value = ''; onInput?.(''); return; }
     close();
   }
-  button.addEventListener('click', () => open());
-  input.addEventListener('input', () => onInput?.(input.value));
-  input.addEventListener('blur', () => { if (!input.value) setTimeout(() => { if (document.activeElement !== input && !input.value && release) { release(); release = null; box.hidden = true; button.hidden = false; } }, 0); });
+  life.on(button, 'click', () => open());
+  life.on(input, 'input', () => onInput?.(input.value));
+  life.on(input, 'blur', () => { if (!input.value) setTimeout(() => { if (document.activeElement !== input && !input.value && release) { release(); release = null; box.hidden = true; button.hidden = false; } }, 0); });
   if (value) open({ focus: false });
-  return { open, close };
+  life.keep(() => release?.());
+  return { open, close, destroy: life.end };
 }
 

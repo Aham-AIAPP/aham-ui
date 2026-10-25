@@ -3,6 +3,7 @@
 // take focus when opened and close with Esc. show(id, { layer: true, returnTo }) also lets Esc close an inline panel,
 // e.g. a preview opened with Space from a list row; focus then goes back to `returnTo`.
 export function initPanels(root = document.querySelector('.aham-workbench')) {
+  const life = scope();
   if (!root) return null;
   const toggles = [...root.querySelectorAll('[data-panel-toggle]')];
   const narrow = contextBreakpoint(root);
@@ -27,10 +28,11 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
       if (focus && floating(p)) p.focus();
     }
   }
-  toggles.forEach(t => t.addEventListener('click', () => show(t.getAttribute('aria-pressed') === 'true' ? null : t.dataset.panelToggle, { focus: true })));
-  narrow.addEventListener('change', () => { if (floating(panelOf(current))) show(null); });
+  toggles.forEach(t => life.on(t, 'click', () => show(t.getAttribute('aria-pressed') === 'true' ? null : t.dataset.panelToggle, { focus: true })));
+  life.on(narrow, 'change', () => { if (floating(panelOf(current))) show(null); });
   const initial = toggles.find(t => t.getAttribute('aria-pressed') === 'true');
   show(initial && !floating(panelOf(initial.dataset.panelToggle)) ? initial.dataset.panelToggle : null);
-  return { show, current: () => current };
+  life.keep(() => release?.());
+  return { show, current: () => current, destroy: life.end };
 }
 

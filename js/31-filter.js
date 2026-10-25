@@ -6,6 +6,7 @@
 // fields: [{ key, label, type, icon?, options?, unit?, parse?(input) → value, format?(value) → text }]
 // counts(key, option, otherFilters) → number shown next to each option (optional).
 export function initFilter({ root, trigger, bar, fields, value = [], counts, onChange }) {
+  const life = scope();
   let filters = value.map(f => ({ ...f, values: [...f.values] }));
   const field = key => fields.find(f => f.key === key);
   const pop = document.createElement('div');
@@ -13,6 +14,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
   pop.hidden = true;
   pop.setAttribute('role', 'dialog');
   root.append(pop);
+  life.keep(() => pop.remove());
   const others = key => filters.filter(f => f.field !== key);
   const fmt = (f, v) => (f.format ? f.format(v) : String(v));
 
@@ -145,9 +147,9 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
       upsert({ field: fd.key, op, values });
       commit();
     };
-    box.addEventListener('input', read);
-    box.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) { e.preventDefault(); closePopover('done'); } else if (e.key === 'Backspace' && back && e.target.matches('input') && !e.target.value && e.target.dataset.v === '0') { e.preventDefault(); back(); } });
-    box.addEventListener('click', e => {
+    life.on(box, 'input', read);
+    life.on(box, 'keydown', e => { if (e.key === 'Enter' && e.target.matches('input')) { e.preventDefault(); closePopover('done'); } else if (e.key === 'Backspace' && back && e.target.matches('input') && !e.target.value && e.target.dataset.v === '0') { e.preventDefault(); back(); } });
+    life.on(box, 'click', e => {
       const b = e.target.closest('button');
       if (!b) return;
       if ('back' in b.dataset) { back(); return; }
@@ -182,8 +184,8 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
     }, `${fd.label}的条件`);
   }
 
-  trigger.addEventListener('click', () => openFields(trigger));
-  bar.addEventListener('click', e => {
+  life.on(trigger, 'click', () => openFields(trigger));
+  life.on(bar, 'click', e => {
     const b = e.target.closest('button');
     if (!b) return;
     const d = b.dataset;
@@ -203,6 +205,7 @@ export function initFilter({ root, trigger, bar, fields, value = [], counts, onC
     get: () => filters.map(f => ({ ...f, values: [...f.values] })),
     set(next) { filters = next.map(f => ({ ...f, values: [...f.values] })); renderTrigger(); renderBar(); },
     open: () => openFields(trigger),
+    destroy: life.end,
   };
 }
 

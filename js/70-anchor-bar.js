@@ -2,6 +2,7 @@
 // One button per section; a click scrolls the section under the sticky head, scrolling marks the section on screen.
 //   <nav class="wb-anchors" aria-label="分区"><button type="button" data-target="s-basic">基本信息</button>…</nav>
 export function initAnchorBar(nav, { scroller }) {
+  const life = scope();
   const buttons = [...nav.querySelectorAll('[data-target]')];
   const sections = buttons.map(b => document.getElementById(b.dataset.target)?.closest('section') || document.getElementById(b.dataset.target));
   let lock = 0;
@@ -13,7 +14,7 @@ export function initAnchorBar(nav, { scroller }) {
     if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) i = sections.length - 1;
     return i;
   }
-  nav.addEventListener('click', e => {
+  life.on(nav, 'click', e => {
     const b = e.target.closest('[data-target]');
     if (!b) return;
     const i = buttons.indexOf(b), s = sections[i];
@@ -24,8 +25,8 @@ export function initAnchorBar(nav, { scroller }) {
     s.querySelector('h2')?.focus({ preventScroll: true });
   });
   const onScroll = () => { if (Date.now() > lock) mark(current()); };
-  scroller.addEventListener('scroll', onScroll, { passive: true });
+  life.on(scroller, 'scroll', onScroll, { passive: true });
   mark(0);
-  return { refresh: onScroll };
+  return { refresh: onScroll, destroy: life.end };
 }
 

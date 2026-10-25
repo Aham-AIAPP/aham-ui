@@ -5,6 +5,7 @@
 const NAV_STORE = 'aham-ui:workbench:nav';
 
 export function initShell(root = document.querySelector('.aham-workbench')) {
+  const life = scope();
   if (!root) return null;
   const theme = initTheme(root);
   const toggle = root.querySelector('[data-action="nav"]');
@@ -30,7 +31,7 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
     if (overlay && !scrim) {
       scrim = document.createElement('div');
       scrim.className = 'wb-scrim';
-      scrim.addEventListener('click', () => set(false, { restoreFocus: true }));
+      life.on(scrim, 'click', () => set(false, { restoreFocus: true }));
       root.append(scrim);
       release = pushLayer(() => set(false, { restoreFocus: true }));
       rail?.querySelector('button:not([disabled]), a[href], [tabindex="0"]')?.focus();
@@ -44,8 +45,8 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
     if (restoreFocus && !open) toggle?.focus();
   }
 
-  toggle?.addEventListener('click', () => set(!isOpen()));
-  rail?.addEventListener('click', e => {
+  life.on(toggle, 'click', () => set(!isOpen()));
+  life.on(rail, 'click', e => {
     if (narrow.matches && isOpen() && e.target.closest('.wb-nav-item')) set(false, { restoreFocus: true });
   });
   // Collapsed items keep their names as tooltips.
@@ -53,13 +54,14 @@ export function initShell(root = document.querySelector('.aham-workbench')) {
     const name = item.querySelector('span')?.textContent.trim();
     if (name && !item.dataset.tooltip) item.dataset.tooltip = name;
     if (item.dataset.go && !item.dataset.keys) item.dataset.keys = `g ${item.dataset.go}`;
-    if (item.dataset.go) registerShortcut({ keys: `g ${item.dataset.go}`, label: `转到${name}`, group: '转到', run: () => item.click() });
+    if (item.dataset.go) life.keep(registerShortcut({ keys: `g ${item.dataset.go}`, label: `转到${name}`, group: '转到', run: () => item.click() }));
   });
-  registerShortcut({ keys: 'mod+b', label: '展开 / 收起侧栏', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } });
-  narrow.addEventListener('change', () => set(narrow.matches ? false : remembered(), { persist: false }));
+  life.keep(registerShortcut({ keys: 'mod+b', label: '展开 / 收起侧栏', group: '通用', run: e => { if (!(e.target instanceof HTMLElement && e.target.isContentEditable)) set(!isOpen(), { restoreFocus: true }); } }));
+  life.on(narrow, 'change', () => set(narrow.matches ? false : remembered(), { persist: false }));
 
   set(narrow.matches ? false : remembered(), { persist: false });
-  initTooltips(root);
-  return { set, isOpen, theme };
+  const tooltips = initTooltips(root);
+  life.keep(() => { theme?.destroy(); tooltips?.destroy(); scrim?.remove(); release?.(); });
+  return { set, isOpen, theme, destroy: life.end };
 }
 

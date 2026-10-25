@@ -2,6 +2,7 @@
 // Properties panel values that open a command menu (Circle's status / assignee pickers). Buttons [data-prop="key"]
 // inside `root`; fields: { key: { label, options, icon? } }. The current value is marked; choosing closes and reports.
 export function initPropertyPickers({ container, fields, value, onChange }) {
+  const life = scope();
   let values = { ...value };
   function paint() {
     container.querySelectorAll('[data-prop]').forEach(b => {
@@ -15,13 +16,13 @@ export function initPropertyPickers({ container, fields, value, onChange }) {
       if (!b.hasAttribute('aria-expanded')) b.setAttribute('aria-expanded', 'false');
     });
   }
-  container.addEventListener('click', e => {
+  life.on(container, 'click', e => {
     const b = e.target.closest('[data-prop]');
     if (!b) return;
     const key = b.dataset.prop, f = fields[key];
     openPicker(b, { label: f.label, options: f.options, current: values[key], icon: f.icon, onSelect: (v, before) => { values = { ...values, [key]: v }; paint(); onChange?.(key, v, before); } });
   });
   paint();
-  return { set(next) { values = { ...next }; paint(); }, get: () => ({ ...values }) };
+  return { set(next) { values = { ...next }; paint(); }, get: () => ({ ...values }), destroy: life.end };
 }
 

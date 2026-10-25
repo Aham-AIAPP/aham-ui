@@ -25,6 +25,18 @@ export function leave(el, done) {
   timer = setTimeout(() => { stop(); done(); }, ms);
   return stop;
 }
+// Lifetime of one init* / create* call. Listeners added with on() and clean-ups added with keep() all go on end(),
+// which each component returns as destroy() so a page or framework can unmount it (docs/react.md).
+function scope() {
+  const ac = new AbortController(), undo = [];
+  return {
+    on(target, type, fn, options) {
+      target?.addEventListener(type, fn, { ...(typeof options === 'boolean' ? { capture: options } : options), signal: ac.signal });
+    },
+    keep(fn) { undo.push(fn); return fn; },
+    end() { ac.abort(); undo.splice(0).reverse().forEach(fn => fn()); },
+  };
+}
 // Guarded so the pure helpers below (filter operators, URL state) can be imported in Node tests.
 if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
   if (e.key !== 'Escape' || e.isComposing || !layers.length) return;

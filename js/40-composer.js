@@ -2,6 +2,7 @@
 // Comment box: ⌘/Ctrl+Enter or the send button submits; Enter alone adds a line; nothing is sent while an IME is
 // composing or the text is blank. onSubmit(text) returns true (or a promise of true) when the comment was saved.
 export function initComposer(form, { onSubmit }) {
+  const life = scope();
   const area = form.querySelector('textarea'), send = form.querySelector('[type=submit]');
   const sync = () => { send.disabled = !area.value.trim(); };
   async function submit() {
@@ -15,12 +16,12 @@ export function initComposer(form, { onSubmit }) {
     sync();
     area.focus();
   }
-  area.addEventListener('input', sync);
-  area.addEventListener('keydown', e => {
+  life.on(area, 'input', sync);
+  life.on(area, 'keydown', e => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); }
   });
-  form.addEventListener('submit', e => { e.preventDefault(); submit(); });
+  life.on(form, 'submit', e => { e.preventDefault(); submit(); });
   sync();
-  return { submit };
+  return { submit, destroy: life.end };
 }
 
