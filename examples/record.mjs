@@ -22,7 +22,7 @@ const pos = nav.ids.indexOf(record.id);
 const LIVE_STAGES = STAGES.filter(s => s !== '已流失');
 const stageIcon = stage => stage === '已流失' ? stageIconHTML({ state: 'off', label: stage }) : stage === '已签约' ? stageIconHTML({ state: 'done', label: stage })
   : stageIconHTML({ state: 'current', done: LIVE_STAGES.indexOf(stage), total: LIVE_STAGES.length - 1, label: stage });
-const metaHtml = () => `<span class="wb-status">${stageIcon(record.stage)}<span>${esc(record.stage)}</span></span><span class="wb-tnum">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
+const metaHtml = () => `<span class="wb-status">${stageIcon(record.stage)}<span>${esc(record.stage)}</span></span><span>${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
 
 const activity = [
   { kind: 'event', icon: 'edit', who: ME, text: '创建了记录', when: record.created },
@@ -39,8 +39,8 @@ function renderMain() {
     <section class="wb-detail-section" aria-labelledby="related-title">
       <div class="wb-section-heading"><h2 id="related-title">关联记录<span>2</span></h2></div>
       <ul class="wb-related">
-        <li><span class="wb-tnum">OPP-0187</span><span class="wb-grow">MES 一期建设项目</span><span class="wb-status"><b></b>方案评估</span></li>
-        <li><span class="wb-tnum">QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
+        <li><span>OPP-0187</span><span class="wb-grow">MES 一期建设项目</span><span class="wb-status"><b></b>方案评估</span></li>
+        <li><span>QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
       </ul>
     </section>
     <section class="wb-detail-section" aria-labelledby="activity-title">
@@ -76,10 +76,10 @@ function renderProps() {
       <div class="wb-prop"><span>行业</span><button type="button" class="wb-prop-value" data-prop="industry"></button></div>
     </section>
     <section class="wb-props-section" aria-labelledby="props-b"><h2 class="wb-props-title" id="props-b">信息</h2>
-      <div class="wb-prop"><span>编码</span><span class="wb-prop-value wb-tnum">${esc(record.code)}</span></div>
+      <div class="wb-prop"><span>编码</span><span class="wb-prop-value">${esc(record.code)}</span></div>
       <div class="wb-prop"><span>年度金额</span><span class="wb-prop-value wb-tnum">${money(record.amountCents)}</span></div>
-      <div class="wb-prop"><span>最近跟进</span><span class="wb-prop-value wb-tnum">${record.lastContact}</span></div>
-      <div class="wb-prop"><span>创建日期</span><span class="wb-prop-value wb-tnum">${record.created}</span></div>
+      <div class="wb-prop"><span>最近跟进</span><span class="wb-prop-value">${record.lastContact}</span></div>
+      <div class="wb-prop"><span>创建日期</span><span class="wb-prop-value">${record.created}</span></div>
     </section>`;
 }
 

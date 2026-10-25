@@ -3,10 +3,10 @@
    ⌘/Ctrl+B collapses it to a 52px icon rail. No border, no resting shadow. */
 :where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;gap:var(--wb-s4);min-height:0;overflow-y:auto;padding:0 var(--wb-s2) var(--wb-s3);background:var(--wb-canvas)}
 :where(.aham-workbench) .wb-rail-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-row);padding:0 var(--wb-s2)}
-:where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);border-radius:var(--wb-radius-sm);background:var(--wb-ink);color:var(--wb-bg);font-size:var(--wb-text-xs);font-weight:600}
+:where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-activity-icon);height:var(--wb-activity-icon);border-radius:var(--wb-radius-sm);background:var(--wb-nav-selected);color:var(--wb-ink);font-size:var(--wb-text-xs);font-weight:500}
 :where(.aham-workbench) .wb-brand-name{min-width:0;font-weight:500;color:var(--wb-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-group{display:grid;gap:2px}
-:where(.aham-workbench) .wb-nav-heading{display:block;padding:0 var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-heading{display:block;padding:0 var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink-2);text-align:start}
 :where(.aham-workbench) a.wb-nav-item{text-decoration:none}
 :where(.aham-workbench) .wb-nav-item svg{color:var(--wb-muted)}
@@ -28,6 +28,7 @@
 :where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
 :where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
 :where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
+:where(.aham-workbench).collapsed .wb-nav-user>svg:last-child{display:none}
 :where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;border-inline-start:var(--wb-hairline) solid var(--wb-edge);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
 /* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
@@ -39,7 +40,7 @@
 :where(.aham-workbench):not(.collapsed) .wb-header [data-action=nav]{display:none}
 :where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s2);min-width:0;overflow:hidden;white-space:nowrap}
 :where(.aham-workbench) .wb-crumbs+.wb-seg.sm{margin-inline-start:var(--wb-s3)}
-:where(.aham-workbench) .wb-crumbs strong{font-weight:500;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-crumbs strong{font-weight:500}
 :where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-count{color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-page-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line)}
@@ -69,10 +70,10 @@
  .aham-workbench.expanded .wb-rail {display:flex}
  .aham-workbench .wb-main {overflow:visible}
  .aham-workbench .wb-page-head,.aham-workbench .wb-tabs-bar {flex-wrap:wrap}
- .aham-workbench .wb-header-row {height:auto;min-height:var(--wb-header-row);flex-wrap:wrap;padding-block:var(--wb-s1)}
- .aham-workbench .wb-header-lead {flex-wrap:wrap}
- .aham-workbench .wb-crumbs {flex:1 1 calc(100% - var(--wb-touch) - var(--wb-s2));flex-wrap:wrap;white-space:normal}
- .aham-workbench .wb-crumbs>* {white-space:nowrap}
+ .aham-workbench .wb-header-row {height:auto;min-height:var(--wb-header-row);padding-inline:var(--wb-s2)}
+ .aham-workbench .wb-header-lead {overflow-x:auto;scrollbar-width:none}
+ .aham-workbench .wb-header-lead>* {flex:none}
+ .aham-workbench .wb-crumbs {flex:0 1 auto}
  .aham-workbench .wb-seg.sm {height:auto}
 }
 @media (pointer:coarse) {

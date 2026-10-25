@@ -50,7 +50,7 @@ test('theme generator reproduces the hand-tuned colours and its sample themes me
   const {generateTheme, checkTheme, deltaE, SAMPLES} = await import('../scripts/theme.mjs');
   for (const mode of ['light', 'dark']) {
     const g = generateTheme({ mode });
-    for (const [key, hex] of Object.entries(g)) assert.ok(deltaE(hex, tokens.color[mode][key].$value) <= 3, `${mode} ${key}`);
+    for (const [key, hex] of Object.entries(g)) assert.ok(deltaE(hex, resolve(`color.${mode}.${key}`)) <= 3, `${mode} ${key}`);
     assert.deepEqual(checkTheme(mode, g), []);
   }
   for (const s of SAMPLES) assert.deepEqual(checkTheme(s.mode, generateTheme(s)), [], JSON.stringify(s));
@@ -155,7 +155,7 @@ test('navigation names have two characters (rules/4-页面.md 4.1)', () => {
 });
 
 test('text never uses the faint grey; it is kept for icons and disabled text (rules/2-视觉.md 2.1)', () => {
-  const allowed = [/\.wb-field:disabled\{/, /\.wb-stage-icon\{/];
+  const allowed = [/\.wb-field:disabled\{/, /\.wb-btn\.primary:disabled\{/, /\.wb-stage-icon\{/];
   for (const f of files('src/').filter(f => f.endsWith('.css'))) {
     for (const line of read(f).split('\n').filter(l => /[^-]color:var\(--wb-faint\)/.test(l))) {
       assert.ok(allowed.some(r => r.test(line)), `${f}: ${line.slice(0, 120)}`);

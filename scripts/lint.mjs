@@ -26,7 +26,7 @@ export const PAIRS = [
   ['ink', 'bg', 4.5, '正文'], ['ink', 'canvas', 4.5, '外框和侧栏上的正文'], ['ink', 'fill', 4.5, '小元素底色上的正文'], ['ink', 'selected', 4.5, '选中行的正文'],
   ['ink-2', 'bg', 4.5, '字段标签'], ['muted', 'bg', 4.5, '次要文字'], ['muted', 'canvas', 4.5, '侧栏上的次要文字'], ['muted', 'fill', 4.5, '小元素底色上的次要文字'], ['ink-2', 'canvas', 4.5, '侧栏的导航项'], ['ink', 'nav-selected', 4.5, '侧栏的当前项'], ['ink-2', 'nav-selected', 4.5, '侧栏当前项上的计数'], ['ink-2', 'nav-hover', 4.5, '侧栏悬停项'],
   ['faint', 'bg', 3, '图标、禁用文字'], ['faint', 'fill', 3, '小元素底色上的图标'],
-  ['line-strong', 'bg', 3, '输入框和按钮的描边'], ['line-strong', 'canvas', 3, '外框上的控件描边'], ['line-strong', 'pop-bg', 3, '弹层里的控件描边'],
+  ['line-strong', 'bg', 3, '输入框的描边'], ['line-strong', 'pop-bg', 3, '弹层里的输入框描边'],
   ['on', 'action', 4.5, '主按钮文字'], ['on', 'action-hover', 4.5, '主按钮悬停时的文字'], ['on', 'action-press', 4.5, '主按钮按下时的文字'],
   ['blue', 'bg', 3, '焦点框、链接图标'],
   ['success', 'bg', 4.5, '成功文字'], ['warning', 'bg', 4.5, '警示文字'], ['danger', 'bg', 4.5, '错误文字'], ['info', 'bg', 4.5, '信息文字'],

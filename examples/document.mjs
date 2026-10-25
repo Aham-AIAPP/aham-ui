@@ -89,7 +89,7 @@ function control(f) {
 function readValue(f) {
   const v = state.fields[f.key];
   if (!v) return f.required ? '<span class="wb-value is-missing">未填写</span>' : '<span class="wb-value is-empty">–</span>';
-  return `<span class="wb-value${f.type === 'date' ? ' wb-tnum' : ''}${canEdit() ? ' is-editable' : ''}">${esc(v)}</span>`;
+  return `<span class="wb-value${canEdit() ? ' is-editable' : ''}">${esc(v)}</span>`;
 }
 function formRow(f) {
   const label = `<div class="wb-form-label" id="l-${f.key}">${esc(f.label)}${f.required ? '<span class="wb-form-required" aria-hidden="true">*</span>' : ''}</div>`;
@@ -107,7 +107,7 @@ function renderForms() {
 // ── Line items: quantity and discount are editable, the amount follows them ──
 function lineRow(r, i) {
   const editable = canEdit() ? ' is-editable' : '';
-  return `<tr data-id="${r.id}"><td class="wb-tnum wb-meta">${i + 1}</td><td>${esc(r.name)}</td><td class="wb-tnum wb-meta">${esc(r.code.split(' · ')[0])}</td>`
+  return `<tr data-id="${r.id}"><td class="wb-tnum wb-meta">${i + 1}</td><td>${esc(r.name)}</td><td class="wb-meta">${esc(r.code.split(' · ')[0])}</td>`
     + `<td class="number"><span class="wb-read"><span class="wb-value${editable}">${r.qty}</span></span><span class="wb-edit"><input class="wb-field is-number" name="qty-${r.id}" aria-label="第 ${i + 1} 行 ${esc(r.name)} 数量" inputmode="numeric" value="${r.qty}"></span></td>`
     + `<td>${esc(r.unit)}</td><td class="number">${money(r.priceCents)}</td>`
     + `<td class="number"><span class="wb-read"><span class="wb-value${editable}">${(r.discountTenths / 10).toFixed(1)}</span></span><span class="wb-edit"><input class="wb-field is-number" name="disc-${r.id}" aria-label="第 ${i + 1} 行 ${esc(r.name)} 折扣" inputmode="decimal" value="${(r.discountTenths / 10).toFixed(1)}"></span></td>`

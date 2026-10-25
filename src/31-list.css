@@ -24,7 +24,6 @@
 :where(.aham-workbench) .wb-list-table :is(th,td).wb-check{padding:0;text-align:center}
 :where(.aham-workbench) .wb-list-table :is(th,td):last-child{padding-inline-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-check-hit{display:grid;place-items:center;min-height:calc(var(--wb-row) - 1px);cursor:pointer}
-:where(.aham-workbench) .wb-list-table input[type=checkbox]{display:inline-block;width:auto;height:auto;margin:0;padding:0;border:0;appearance:auto;accent-color:var(--wb-ink);vertical-align:middle}
 :where(.aham-workbench) .wb-group-head th{position:sticky;top:var(--wb-row);z-index:1;height:var(--wb-row);background:var(--wb-bg);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-group-toggle{display:inline-flex;align-items:center;gap:var(--wb-s2);height:var(--wb-header-control);padding:0 var(--wb-s1);border:0;border-radius:var(--wb-radius);background:transparent;font-weight:500}
 :where(.aham-workbench) .wb-group-toggle:hover{background:var(--wb-hover)}
@@ -39,7 +38,9 @@
 :where(.aham-workbench) .wb-pager>div{display:flex;align-items:center;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-bulk-count{color:var(--wb-ink);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-search{display:flex;align-items:center;gap:var(--wb-s1);width:var(--wb-search-width);height:var(--wb-header-control);padding:0 var(--wb-s2);border-radius:var(--wb-radius);background:var(--wb-hover)}
-:where(.aham-workbench) .wb-search input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent}
+:where(.aham-workbench) .wb-search input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent;outline:0}
+/* The ring goes round the whole box, magnifier included. */
+:where(.aham-workbench) .wb-search:focus-within{outline:2px solid var(--wb-blue);outline-offset:2px}
 /* List keyboard focus (7.2 P3): one row is in the tab order; ↑↓ move it, Space previews, Enter opens. */
 :where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]{outline:0}
 :where(.aham-workbench) :is(.wb-list-table,.wb-tree-table) tbody tr[data-id]:focus-visible td{background:var(--wb-hover);box-shadow:inset 0 1px 0 var(--wb-blue),inset 0 -1px 0 var(--wb-blue)}
@@ -50,14 +51,15 @@
 /* Worklist row actions (rules/4-页面.md 4.2): text buttons at the row end; a reason for a disabled one sits before it. */
 :where(.aham-workbench) .wb-row-buttons{display:flex;align-items:center;justify-content:flex-end;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-row-note{color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-:where(.aham-workbench) .wb-row-link{color:var(--wb-ink);text-decoration:none}
-:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline}
 :where(.aham-workbench) .wb-list-table :is(th,td):first-child:not(.wb-check){padding-inline-start:var(--wb-s4)}
 /* Single-line list (9.0, rules/4-页面.md 4.3): no visible header, 44px rows, 36px group rows on the canvas tier.
    One object per row: code · stage icon · name on the left; tag, numbers, date and avatar on the right, right edges aligned. */
 :where(.aham-workbench) .wb-list-rows thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:color-mix(in srgb,var(--wb-fill) 50%,var(--wb-bg));color:var(--wb-ink);border-bottom:0;box-shadow:inset 0 calc(-1 * var(--wb-hairline)) 0 var(--wb-line)}
-:where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2)}
+:where(.aham-workbench) .wb-list-rows{--wb-check-col:var(--wb-s4)}
+:where(.aham-workbench) .wb-list-rows .wb-check+td{padding-inline-start:0}
+:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:var(--wb-fill);color:var(--wb-ink);border-bottom:0;box-shadow:inset 0 calc(-1 * var(--wb-hairline)) 0 var(--wb-line)}
+/* The toggle's hover fill reaches into the gutter so that its arrow lines up with the first value of each row. */
+:where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2);margin-inline-start:calc(-1 * var(--wb-s2))}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle>svg:first-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);border-bottom-color:var(--wb-line-soft);line-height:var(--wb-s5)}
 /* Compact density: list rows step down to 36px. */
@@ -72,7 +74,6 @@
 :where(.aham-workbench) .wb-list-rows:has(tr[data-selected]) .wb-check input{opacity:1}
 :where(.aham-workbench) .wb-list-rows .wb-cell-picker.is-icon{justify-content:center;width:var(--wb-header-control);margin-inline-start:0;padding:0}
 :where(.aham-workbench) .wb-list-rows .wb-cell-end .wb-cell-picker.is-icon{margin-inline-start:auto}
-:where(.aham-workbench) .wb-list-rows :is(th,td):last-child{padding-inline-end:var(--wb-s3)}
 /* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
 :where(.aham-workbench) :is(.wb-toggle-chip,.wb-group-toggle){transition:var(--wb-state-out)}
 :where(.aham-workbench) :is(.wb-toggle-chip,.wb-group-toggle):hover{transition:var(--wb-state-in)}
@@ -88,13 +89,13 @@
  .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
  .aham-workbench .wb-list,.aham-workbench .wb-list[data-list-density] {--wb-row:var(--wb-touch)}
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
- .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch)}
+ .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch);--wb-check-col:var(--wb-touch)}
  .aham-workbench .wb-list-rows td button {min-height:calc(var(--wb-touch) - 1px)}
 }
 @media (pointer:coarse) {
  .aham-workbench .wb-list,.aham-workbench .wb-list[data-list-density] {--wb-row:var(--wb-touch)}
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
- .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch)}
+ .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch);--wb-check-col:var(--wb-touch)}
  .aham-workbench .wb-list-rows td button {min-height:calc(var(--wb-touch) - 1px)}
  .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
 }
