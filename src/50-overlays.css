@@ -1,6 +1,6 @@
 /* Popover (workbench): hairline border + one soft shadow. The border is added to the base popover contract because a
    white popover over a white, dense list is not distinguishable by a 6% shadow alone. */
-:where(.aham-workbench) .wb-popover{position:fixed;z-index:var(--wb-z-pop);min-width:var(--wb-pop-min);max-width:min(var(--wb-pop-max),calc(100vw - var(--wb-s4)));max-height:calc(100vh - var(--wb-s6));overflow:auto;padding:var(--wb-s1);border-radius:var(--wb-radius);background:var(--wb-pop-bg);box-shadow:0 0 0 1px var(--wb-line),var(--wb-shadow-pop);color:var(--wb-ink);font-size:var(--wb-text-sm)}
+:where(.aham-workbench) .wb-popover{position:fixed;z-index:var(--wb-z-pop);min-width:var(--wb-pop-min);max-width:min(var(--wb-pop-max),calc(100vw - var(--wb-s4)));max-height:calc(100vh - var(--wb-s6));overflow:auto;padding:var(--wb-s1);border-radius:var(--wb-radius);background:var(--wb-pop-bg);box-shadow:0 0 0 1px var(--wb-line),var(--wb-shadow-pop);color:var(--wb-ink);font-size:var(--wb-body)}
 :where(.aham-workbench) .wb-popover.flush{padding:0}
 :where(.aham-workbench) .wb-popover.form{width:var(--wb-pop-form);padding:0}
 /* Command menu (cmdk pattern): search input, listbox, highlight follows ↑↓ and the pointer. Reused by filters,
@@ -47,7 +47,7 @@
 :where(.aham-workbench) .wb-palette .wb-command-input{height:var(--wb-palette-input);padding:0 var(--wb-s4)}
 :where(.aham-workbench) .wb-palette .wb-command-input input{font-size:var(--wb-text-base)}
 :where(.aham-workbench) .wb-palette .wb-command-list{max-height:384px;padding:var(--wb-s2)}
-:where(.aham-workbench) .wb-palette .wb-command-list [data-index]{min-height:var(--wb-palette-item);font-size:var(--wb-text-sm)}
+:where(.aham-workbench) .wb-palette .wb-command-list [data-index]{min-height:var(--wb-palette-item);font-size:var(--wb-body)}
 :where(.aham-workbench) .wb-palette-context{padding:var(--wb-s3) var(--wb-s3) 0}
 :where(.aham-workbench) .wb-palette-chip{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:var(--wb-header-control);padding:0 var(--wb-s1) 0 var(--wb-s2);border-radius:var(--wb-radius);background:var(--wb-hover)}
 :where(.aham-workbench) .wb-palette-chip>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}

@@ -40,10 +40,10 @@
  .aham-workbench input,.aham-workbench textarea {font-size:var(--wb-touch-input)}
 }
 @media (prefers-contrast: more) {
- .aham-workbench {--wb-line:{{color.contrast-more.line-more}};--wb-line-strong:{{color.contrast-more.line-more}};--wb-muted:{{color.contrast-more.muted-more}};--wb-faint:{{color.contrast-more.muted-more}}}
- .aham-workbench[data-theme="dark"] {--wb-line:{{color.contrast-more.line-more-dark}};--wb-line-strong:{{color.contrast-more.line-more-dark}};--wb-muted:{{color.dark.muted}};--wb-faint:{{color.dark.muted}}}
+ .aham-workbench {--wb-line:{{color.contrast-more.light.line}};--wb-line-strong:{{color.contrast-more.light.line}};--wb-muted:{{color.contrast-more.light.muted}};--wb-faint:{{color.contrast-more.light.muted}}}
+ .aham-workbench[data-theme="dark"] {--wb-line:{{color.contrast-more.dark.line}};--wb-line-strong:{{color.contrast-more.dark.line}};--wb-muted:{{color.contrast-more.dark.muted}};--wb-faint:{{color.contrast-more.dark.muted}}}
  .aham-workbench :focus-visible {outline-width:3px}
 }
 @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
- .aham-workbench:not([data-theme="light"]) {--wb-line:{{color.contrast-more.line-more-dark}};--wb-line-strong:{{color.contrast-more.line-more-dark}};--wb-muted:{{color.dark.muted}};--wb-faint:{{color.dark.muted}}}
+ .aham-workbench:not([data-theme="light"]) {--wb-line:{{color.contrast-more.dark.line}};--wb-line-strong:{{color.contrast-more.dark.line}};--wb-muted:{{color.contrast-more.dark.muted}};--wb-faint:{{color.contrast-more.dark.muted}}}
 }

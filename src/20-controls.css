@@ -43,7 +43,7 @@
 :where(.aham-workbench) .wb-switch{display:inline-flex;align-items:center;gap:var(--wb-s2);cursor:pointer;color:var(--wb-ink)}
 :where(.aham-workbench) .wb-switch input{position:absolute;opacity:0;width:1px;height:1px}
 :where(.aham-workbench) .wb-switch span{position:relative;width:28px;height:16px;border-radius:var(--wb-radius-pill);background:var(--wb-selected);transition:background var(--wb-fast) var(--wb-ease)}
-:where(.aham-workbench) .wb-switch span::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--wb-bg);transition:transform var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-switch span::after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:var(--wb-bg);transition:transform var(--wb-fast) var(--wb-ease-move)}
 :where(.aham-workbench) .wb-switch input:checked+span{background:var(--wb-ink)}
 :where(.aham-workbench) .wb-switch input:checked+span::after{transform:translateX(12px)}
 :where(.aham-workbench) .wb-switch input:focus-visible+span{outline:2px solid var(--wb-blue);outline-offset:2px}

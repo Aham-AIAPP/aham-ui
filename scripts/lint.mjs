@@ -7,6 +7,8 @@
 //   6. src/ never colours text with the primary blue: links use the body colour (rules/2-视觉.md 2.2, 9.0).
 //   7. src/ sets no icon size in px: icons take --wb-icon (14px) or a spacing token (rules/2-视觉.md 2.9).
 //   8. src/ transitions name their properties, never move layout (width, height, position, margin), and take token durations.
+//   9. Every variable tokens.json defines is used somewhere: src/, js/, examples/, index.html or another variable.
+//      A token marked $deprecated is kept for products that still use it, and src/ may not use it.
 // Tests import lint() and contrast().
 import {readFileSync, readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
@@ -48,8 +50,8 @@ export function contrast(a, b) {
 
 export function lint() {
   const errors = [], defined = new Set([...variables().map(([n]) => n), ...RUNTIME_VARS]);
-  const sources = [...list('src/', ['.css', '.css.in'])];
-  const scripts = ['aham.js', ...list('examples/', ['.html', '.mjs', '.js'])];
+  const sources = list('src/', ['.css']);
+  const scripts = [...list('js/', ['.js']), 'index.html', ...list('examples/', ['.html', '.mjs', '.js'])];
 
   for (const f of [...sources, ...scripts]) {
     for (const m of read(f).matchAll(/var\(--wb-([a-z0-9-]+)/g)) if (!defined.has(m[1])) errors.push(`${f}: --wb-${m[1]} 没有定义（tokens.json 里没有这个键）`);
@@ -73,6 +75,13 @@ export function lint() {
       }
     });
   }
+  // An unused token is a value nobody can see change; remove it or use it.
+  const used = new Set([...sources, ...scripts].flatMap(f => [...read(f).matchAll(/--wb-([a-z0-9-]+)/g)].map(m => m[1])));
+  for (const f of sources) for (const m of read(f).matchAll(/\{\{[a-z-]+\.([a-z0-9-]+)\}\}/g)) used.add(m[1]);
+  for (const m of read('aham.css').matchAll(/:\s*[^;{}]*var\(--wb-([a-z0-9-]+)/g)) used.add(m[1]);
+  const deprecated = new Set(variables().filter(([, path]) => path.split('.').reduce((o, k) => o[k], tokens).$deprecated).map(([n]) => n));
+  for (const f of sources) for (const n of deprecated) if (read(f).includes(`--wb-${n})`)) errors.push(`${f}: --wb-${n} 已弃用，改用 tokens.json 里它的 $value 指向的变量`);
+  for (const [name] of variables()) if (!used.has(name) && !deprecated.has(name)) errors.push(`tokens.json: --wb-${name} 没有被使用，删除它或在样式里用上`);
   for (const theme of ['light', 'dark']) {
     const value = Object.fromEntries(leaves(`color.${theme}`).map(([n, p]) => [n, resolve(p)]));
     for (const [fg, bg, min, what] of PAIRS) {
