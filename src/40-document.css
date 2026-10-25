@@ -2,8 +2,6 @@
 :where(.aham-workbench) .wb-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
 :where(.aham-workbench) .wb-layout>.wb-document{min-height:0;overflow:auto}
 :where(.aham-workbench) .wb-document{min-width:0;padding:var(--wb-s4)}
-:where(.aham-workbench) .wb-panel{width:var(--wb-panel-narrow);min-width:0;min-height:0;overflow:auto;background:var(--wb-bg);border-inline-start:var(--wb-hairline) solid var(--wb-line)}
-:where(.aham-workbench) .wb-panel[data-size=wide]{width:var(--wb-panel-wide)}
 :where(.aham-workbench) .wb-peek{display:grid;align-content:start;gap:var(--wb-s3);padding:var(--wb-s4)}
 :where(.aham-workbench) .wb-peek h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-section-head{display:flex;align-items:center;justify-content:space-between;margin-block-end:var(--wb-s3);gap:var(--wb-s2)}
@@ -155,3 +153,24 @@
 :where(.aham-workbench) .wb-table .wb-row-actions{width:var(--wb-check-col);padding-inline:0;text-align:center}
 :where(.aham-workbench) .wb-table-toolbar .wb-btn{margin-inline-start:auto}
 :where(.aham-workbench) .wb-table-toolbar .wb-btn~.wb-btn{margin-inline-start:0}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-source,.wb-messages button){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-source,.wb-messages button):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) :is(.wb-source,.wb-messages button):not(:disabled):active{background:var(--wb-selected)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@container (max-width: {{breakpoint.bp-form}}) {
+ .aham-workbench .wb-form-grid,.aham-workbench .wb-form-grid.is-wide {grid-template-columns:minmax(0,1fr)}
+ .aham-workbench .wb-doc-headline {flex-direction:column;gap:var(--wb-s3)}
+}
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-layout {display:block;overflow:auto}
+ .aham-workbench .wb-layout>.wb-document {overflow:visible}
+ .aham-workbench .wb-context {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s5);border-inline-start:0;border-top:var(--wb-hairline) solid var(--wb-line)}
+ .aham-workbench .wb-layout.is-list {display:grid;overflow:hidden}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-layout {overflow:visible}
+ .aham-workbench .wb-context {grid-template-columns:1fr}
+ .aham-workbench .wb-layout.is-list {display:block;overflow:visible}
+}

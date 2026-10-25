@@ -124,3 +124,47 @@
 :where(.aham-workbench) .wb-save-bar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);min-height:var(--wb-row-double);margin-block-start:var(--wb-s6);padding:0 var(--wb-s5);background:var(--wb-bg);border-top:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-save-bar>span{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-save-bar>div{display:flex;gap:var(--wb-s2)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) .wb-cell-picker{transition:var(--wb-state-out)}
+:where(.aham-workbench) .wb-cell-picker:hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-command-list [data-index]:active{background:var(--wb-selected)}
+/* Enter (11.4): popovers grow from the trigger side (origin set by placePopover), dialogs from the centre, toasts and the
+   save bar rise 8px. The command palette opens from the keyboard many times a day and has no motion. */
+:where(.aham-workbench) .wb-popover{transition:opacity var(--wb-pop) var(--wb-ease),transform var(--wb-pop) var(--wb-ease)}
+:where(.aham-workbench) .wb-tooltip{transition:opacity var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-tooltip[data-warm]{transition:none}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create){transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)::backdrop{transition:opacity var(--wb-base) var(--wb-ease)}
+:where(.aham-workbench) :is(.wb-toast,.wb-save-bar){transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+@starting-style{
+:where(.aham-workbench) .wb-popover:not([hidden]){opacity:0;transform:scale(var(--wb-press-scale))}
+:where(.aham-workbench) .wb-tooltip:not([hidden],[data-warm]){opacity:0}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[open]{opacity:0;transform:scale(var(--wb-press-scale))}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[open]::backdrop{opacity:0}
+:where(.aham-workbench) .wb-toast{opacity:0;transform:translateY(var(--wb-s2))}
+:where(.aham-workbench) .wb-save-bar:not([hidden]){opacity:0;transform:translateY(var(--wb-s2))}
+}
+/* Exit (11.4): leave() in aham.js sets [data-leaving], waits for the transition, then hides or removes the element. */
+:where(.aham-workbench) .wb-popover[data-leaving]{opacity:0;transform:scale(var(--wb-press-scale));transition-duration:var(--wb-instant)}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[data-leaving]{opacity:0;transform:scale(var(--wb-press-scale));transition-duration:var(--wb-pop)}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[data-leaving]::backdrop{opacity:0;transition-duration:var(--wb-pop)}
+:where(.aham-workbench) .wb-toast[data-leaving]{opacity:0;transition-duration:var(--wb-pop)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-settings-nav {overflow:visible;border-inline-end:0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+ .aham-workbench .wb-settings-nav ul {grid-auto-flow:column;grid-auto-columns:max-content;overflow-x:auto}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-dialog.is-split {width:100vw;height:100dvh;max-width:none;max-height:none;border-radius:0}
+ .aham-workbench .wb-split {grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+ .aham-workbench .wb-split>.wb-settings-nav {display:flex;overflow-x:auto;padding:var(--wb-s2);border-inline-end:0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+ .aham-workbench .wb-split>.wb-settings-nav ul {display:flex;flex-wrap:nowrap}
+ .aham-workbench .wb-split-body {padding-inline:var(--wb-s4)}
+ .aham-workbench .wb-toasts {left:var(--wb-s4);right:var(--wb-s4);width:auto}
+ .aham-workbench :is(.wb-palette,.wb-create) {margin-top:var(--wb-s4)}
+}
+@media (prefers-reduced-motion: reduce) {
+ .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar),.aham-workbench :is(.wb-popover,.wb-dialog,.wb-create)[data-leaving] {transform:none}
+ .aham-workbench .wb-skeleton {animation:none}
+}

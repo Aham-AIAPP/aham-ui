@@ -103,3 +103,24 @@
 :where(.aham-workbench) .wb-choice{display:inline-flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-hit);cursor:pointer}
 :where(.aham-workbench) .wb-choices{display:flex;flex-wrap:wrap;gap:0 var(--wb-s5)}
 :where(.aham-workbench) .wb-choices.is-column{flex-direction:column}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-seg button,.wb-chip>button){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-seg button,.wb-chip>button):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn):not(:disabled,[aria-disabled=true]):active{transform:scale(var(--wb-press-scale))}
+:where(.aham-workbench) :is(.wb-btn:not(.primary,.danger),.wb-icon-btn,.wb-seg button,.wb-chip>button):not(:disabled):active{background:var(--wb-selected)}
+:where(.aham-workbench) .wb-btn.primary:not(:disabled):active{background:var(--wb-action-press)}
+:where(.aham-workbench) .wb-btn.danger:not(:disabled):active{background:var(--wb-danger-bg)}
+:where(.aham-workbench) :is(.wb-btn:not(.primary),.wb-icon-btn,.wb-chip>button)[aria-expanded=true]{background:var(--wb-selected);color:var(--wb-ink)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-crumbs-meta {display:none}
+ .aham-workbench .wb-tabs {gap:var(--wb-s3)}
+ .aham-workbench .wb-chip {flex:none;height:var(--wb-touch)}
+}
+@media (pointer:coarse) {
+ .aham-workbench .wb-chip {height:var(--wb-touch)}
+}
+@media (prefers-reduced-motion: reduce) {
+ .aham-workbench :is(.wb-btn,.wb-icon-btn):active {transform:none}
+}

@@ -22,3 +22,17 @@
 :where(.aham-workbench) .wb-setting-control{display:flex;flex:none;align-items:center;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-setting-control .wb-field{min-width:160px}
 :where(.aham-workbench) .wb-settings-section.is-danger h2{color:var(--wb-danger)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-settings-nav a){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-settings-nav a):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-settings-nav a:active{background:var(--wb-selected)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-settings-layout {display:block;overflow:auto}
+ .aham-workbench .wb-settings-scroll {overflow:visible}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-settings {padding:var(--wb-s4) var(--wb-s4) var(--wb-s7)}
+ .aham-workbench .wb-setting {flex-wrap:wrap}
+}

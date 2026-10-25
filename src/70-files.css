@@ -43,3 +43,18 @@
 :where(.aham-workbench) .wb-diff-table td{white-space:normal}
 :where(.aham-workbench) .wb-diff-table .wb-diff-old,:where(.aham-workbench) .wb-diff-table .wb-diff-new{overflow-wrap:anywhere}
 :where(.aham-workbench) [data-viewer=zoom]{min-width:var(--wb-s7);text-align:center;font-variant-numeric:tabular-nums}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-recognized-row){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-recognized-row):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-recognized-row:not(:disabled):active{background:var(--wb-selected)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-viewer-split {grid-template-columns:minmax(0,1fr)}
+ .aham-workbench .wb-viewer-split>.wb-viewer {border-inline-end:0;border-bottom:var(--wb-hairline) solid var(--wb-line)}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-file {grid-template-columns:auto minmax(0,1fr)}
+ .aham-workbench .wb-viewer-bar {height:auto;min-height:var(--wb-header-row);flex-wrap:wrap;padding-block:var(--wb-s1)}
+ .aham-workbench :is(.wb-file-state,.wb-file-actions) {grid-column:2}
+}

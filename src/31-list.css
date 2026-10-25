@@ -73,3 +73,31 @@
 :where(.aham-workbench) .wb-list-rows .wb-cell-picker.is-icon{justify-content:center;width:var(--wb-header-control);margin-inline-start:0;padding:0}
 :where(.aham-workbench) .wb-list-rows .wb-cell-end .wb-cell-picker.is-icon{margin-inline-start:auto}
 :where(.aham-workbench) .wb-list-rows :is(th,td):last-child{padding-inline-end:var(--wb-s3)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-toggle-chip,.wb-group-toggle){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-toggle-chip,.wb-group-toggle):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) :is(.wb-toggle-chip,.wb-group-toggle):not(:disabled):active{background:var(--wb-selected)}
+:where(.aham-workbench) .wb-toggle-chip[aria-expanded=true]{background:var(--wb-selected);color:var(--wb-ink)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-pager {flex-wrap:wrap;padding-block:var(--wb-s2)}
+ .aham-workbench .wb-search {width:auto;flex:1}
+ .aham-workbench .wb-filter-bar {align-items:center}
+ .aham-workbench .wb-filter-chips {flex-wrap:nowrap;overflow-x:auto}
+ .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
+ .aham-workbench .wb-list,.aham-workbench .wb-list[data-list-density] {--wb-row:var(--wb-touch)}
+ .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
+ .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch)}
+ .aham-workbench .wb-list-rows td button {min-height:calc(var(--wb-touch) - 1px)}
+}
+@media (pointer:coarse) {
+ .aham-workbench .wb-list,.aham-workbench .wb-list[data-list-density] {--wb-row:var(--wb-touch)}
+ .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
+ .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch)}
+ .aham-workbench .wb-list-rows td button {min-height:calc(var(--wb-touch) - 1px)}
+ .aham-workbench .wb-chip-remove {width:var(--wb-touch)}
+}
+@media (prefers-contrast: more) {
+ .aham-workbench .wb-search {box-shadow:inset 0 0 0 1px var(--wb-line)}
+}

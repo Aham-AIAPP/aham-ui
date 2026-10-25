@@ -84,3 +84,19 @@
 :where(.aham-workbench) .wb-form-page .wb-form-row>.wb-field{width:100%}
 :where(.aham-workbench) .wb-form-page h2{font-size:var(--wb-text-base);margin-block-end:var(--wb-s3)}
 :where(.aham-workbench) .wb-form-page-foot>.wb-btn.primary{margin-inline-start:auto}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-expand>details>summary){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-expand>details>summary):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-expand>details>summary:active{background:var(--wb-selected)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-expand>details>summary {grid-template-columns:var(--wb-s4) minmax(0,1fr)}
+ .aham-workbench .wb-expand>details>summary>span:nth-child(n+3) {grid-column:2}
+ .aham-workbench .wb-expand-body {padding-inline-start:var(--wb-s5)}
+ .aham-workbench .wb-stages {grid-auto-columns:minmax(var(--wb-s7),1fr);overflow-x:auto}
+ .aham-workbench .wb-next {flex-wrap:wrap}
+}
+@media (prefers-reduced-motion: reduce) {
+ .aham-workbench :is(.wb-fold>summary>svg,.wb-expand>details>summary>svg,.wb-group-toggle svg,.wb-tree-toggle svg,.wb-switch span::after,.wb-progress>span) {transition:none}
+}

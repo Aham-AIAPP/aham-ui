@@ -47,3 +47,19 @@
 :where(.aham-workbench) .wb-composer:focus-within{box-shadow:inset 0 0 0 1px var(--wb-blue),0 0 0 1px var(--wb-blue)}
 :where(.aham-workbench) .wb-composer-foot>span:first-child{margin-inline-end:auto}
 :where(.aham-workbench) .wb-composer-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);color:var(--wb-muted)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-related li,button.wb-prop-value){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-related li,button.wb-prop-value):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) :is(.wb-related li,button.wb-prop-value):not(:disabled):active{background:var(--wb-selected)}
+:where(.aham-workbench) button.wb-prop-value[aria-expanded=true]{background:var(--wb-selected);color:var(--wb-ink)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-detail {display:block;overflow:auto}
+ .aham-workbench .wb-detail-scroll {overflow:visible}
+ .aham-workbench .wb-detail>.wb-panel {border-top:var(--wb-hairline) solid var(--wb-line)}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-detail {overflow:visible}
+ .aham-workbench .wb-detail-main {padding:var(--wb-s4)}
+}

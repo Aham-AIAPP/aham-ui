@@ -28,3 +28,12 @@
 :where(.aham-workbench) .wb-tree-table tr:has(.wb-tree-toggle) td{font-weight:500}
 :where(.aham-workbench) .wb-table tr[data-dimmed]>td{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-table tr[data-dimmed] :is(button,input,select,a){color:var(--wb-ink)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-tree-toggle,.wb-table td){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-tree-toggle:hover,.wb-table tr:hover td){transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-tree-toggle:not(:disabled):active,:where(.aham-workbench) .wb-table tbody tr[data-id]:active td{background:var(--wb-selected)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-table {min-width:calc(var(--wb-table-min) + var(--wb-s8))}
+}

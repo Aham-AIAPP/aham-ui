@@ -175,11 +175,12 @@ test('every workbench sample with a sidebar has a command palette (rules/7 7.2, 
 
 test('hover styles apply only to fine pointers (rules/11-交互.md 11.2)', async () => {
   const {hoverOnly} = await import('../scripts/build.mjs');
-  const media = '@media (hover: hover) and (pointer: fine)';
-  assert.ok(hoverOnly(':where(.aham-workbench) .a:hover{color:red}').startsWith(media));
-  assert.ok(!hoverOnly(':where(.aham-workbench) .a:hover,:where(.aham-workbench) .a:focus-visible{color:red}').startsWith(media));
-  const bare = read('aham.css').split('\n').filter(l => /^:where\(\.aham-workbench\)[^{]*:hover/.test(l) && !/focus|:not\([^)]*:hover/.test(l.split('{')[0]));
-  assert.deepEqual(bare, []);
+  const {parse, rules, selectors} = await import('../scripts/lib/css.mjs');
+  assert.match(hoverOnly(':where(.aham-workbench) .a:hover{color:red}'), /^@media \(hover: hover\) and \(pointer: fine\)/);
+  assert.doesNotMatch(hoverOnly(':where(.aham-workbench) .a:hover,:where(.aham-workbench) .a:focus-visible{color:red}'), /^@media/);
+  assert.match(hoverOnly(':where(.aham-workbench) .a:hover,\n:where(.aham-workbench) .b:hover{color:red}'), /^@media/, 'multi-line selectors are wrapped too');
+  const bare = [...rules(parse(read('aham.css')))].filter(r => !r.context.some(c => c.includes('hover')) && !/focus/.test(r.selector) && selectors(r.selector).every(s => /:hover/.test(s.replace(/:not\([^)]*\)/g, ''))));
+  assert.deepEqual(bare.map(r => r.selector), []);
 });
 
 test('every sample with a sidebar has the account button (rules/11-交互.md 11.6)', () => {
