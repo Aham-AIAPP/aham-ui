@@ -161,7 +161,7 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
 let openPop = null;
 
 // point: { x, y } places the popover at a pointer position (context menu); returnFocus overrides where focus goes back.
-export function openPopover(trigger, panel, { align = 'start', onClose, point = null, returnFocus = null } = {}) {
+export function openPopover(trigger, panel, { align = 'auto', onClose, point = null, returnFocus = null } = {}) {
   closePopover('replace');
   panel._stopLeave?.();
   panel.hidden = false;
@@ -204,14 +204,16 @@ function placePopover(trigger, panel, align, point) {
   panel.style.left = '0px';
   panel.style.top = '0px';
   const w = panel.offsetWidth, h = panel.offsetHeight;
-  let left = align === 'end' ? r.right - w : r.left;
+  // 'auto' lines the panel up with the trigger edge nearer the window edge, so a menu never reaches across the page.
+  const end = !point && (align === 'end' || (align === 'auto' && r.left + r.right > innerWidth));
+  let left = end ? r.right - w : r.left;
   left = Math.max(edge, Math.min(left, innerWidth - w - edge));
   let top = r.bottom + gap;
   if (top + h > innerHeight - edge && r.top - gap - h > edge) top = r.top - gap - h;
   panel.style.left = `${Math.round(left)}px`;
   panel.style.top = `${Math.round(top)}px`;
   // Grow out of the trigger's side (rules/11-交互.md 11.4).
-  panel.style.transformOrigin = `${align === 'end' && !point ? 'right' : 'left'} ${top < r.top ? 'bottom' : 'top'}`;
+  panel.style.transformOrigin = `${end ? 'right' : 'left'} ${top < r.top ? 'bottom' : 'top'}`;
 }
 
 // ── Header search ────────────────────────────────────────────────────────────
