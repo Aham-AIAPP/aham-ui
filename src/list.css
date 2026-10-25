@@ -32,7 +32,7 @@
 :where(.aham-workbench) .wb-group-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
 :where(.aham-workbench) .wb-group-count{color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-empty{display:grid;justify-items:start;gap:var(--wb-s2);padding:var(--wb-s7) var(--wb-s4)}
-:where(.aham-workbench) .wb-empty strong{font-size:var(--wb-text-base);font-weight:500}
+:where(.aham-workbench) .wb-empty strong{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-empty p{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-empty>div{display:flex;flex-wrap:wrap;gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-pager{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);min-height:var(--wb-header-row);padding:0 var(--wb-s4);border-top:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted);font-variant-numeric:tabular-nums}
@@ -55,12 +55,13 @@
 :where(.aham-workbench) .wb-list-table :is(th,td):first-child:not(.wb-check){padding-inline-start:var(--wb-s4)}
 /* Single-line list (9.0, rules/4-页面.md 4.3): no visible header, 44px rows, 36px group rows on the canvas tier.
    One object per row: code · stage icon · name on the left; tag, numbers, date and avatar on the right, right edges aligned. */
-:where(.aham-workbench) .wb-list-rows{--wb-row:var(--wb-list-row)}
 :where(.aham-workbench) .wb-list-rows thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-header-row);background:var(--wb-canvas);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:var(--wb-fill);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle>svg:first-child{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row)}
+:where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);line-height:var(--wb-s5)}
+/* Compact density: list rows step down to 36px. */
+:where(.aham-workbench) .wb-list[data-list-density=compact] .wb-list-rows{--wb-list-row:calc(var(--wb-row) + var(--wb-s1))}
 :where(.aham-workbench) .wb-list-rows .wb-cell-meta{color:var(--wb-muted);font-size:var(--wb-text-xs)}
 :where(.aham-workbench) .wb-list-rows .wb-cell-icon{padding-inline:0;text-align:center}
 :where(.aham-workbench) .wb-list-rows .wb-cell-end{text-align:end}

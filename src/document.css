@@ -5,7 +5,7 @@
 :where(.aham-workbench) .wb-panel{width:var(--wb-panel-narrow);min-width:0;min-height:0;overflow:auto;background:var(--wb-bg);border-inline-start:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-panel[data-size=wide]{width:var(--wb-panel-wide)}
 :where(.aham-workbench) .wb-peek{display:grid;align-content:start;gap:var(--wb-s3);padding:var(--wb-s4)}
-:where(.aham-workbench) .wb-peek h2{font-size:var(--wb-title);font-weight:500}
+:where(.aham-workbench) .wb-peek h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-section-head{display:flex;align-items:center;justify-content:space-between;margin-block-end:var(--wb-s3);gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-section-head>span{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-toolbar{display:flex;justify-content:space-between;align-items:center;padding:var(--wb-s2) 0;color:var(--wb-muted);gap:var(--wb-s2)}
@@ -71,7 +71,7 @@
 :where(.aham-workbench) .wb-doc-section{min-width:0}
 :where(.aham-workbench) .wb-doc-section h2:focus{outline:none}
 :where(.aham-workbench) .wb-doc-section>.wb-section-head{min-height:var(--wb-header-control);margin-block-end:var(--wb-s4)}
-:where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-text-base);font-weight:600}
+:where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill);color:var(--wb-ink);line-height:20px}
 :where(.aham-workbench) .wb-strip>svg{margin-block-start:2px;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-strip[data-tone=info]{background:var(--wb-info-bg)}
@@ -127,7 +127,7 @@
    and scrolls sideways inside the box below its minimum width. */
 :where(.aham-workbench) .wb-table-block{min-width:0}
 :where(.aham-workbench) .wb-table-toolbar{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-control);margin-block-end:var(--wb-s3)}
-:where(.aham-workbench) .wb-table-toolbar h2{font-size:var(--wb-text-base);font-weight:600}
+:where(.aham-workbench) .wb-table-toolbar h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-table-toolbar>.wb-spacer{flex:1}
 :where(.aham-workbench) .wb-table-toolbar .wb-meta{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-table-block>.wb-table-scroll{border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-radius)}

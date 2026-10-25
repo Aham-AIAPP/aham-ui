@@ -29,16 +29,19 @@
     "icon": "<svg class=\"wb-cat-icon\" data-cat=\"2\" aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-users\"/></svg>"
   },
   "rules": [
+    "描边胶囊：高 20px，1px --wb-line 描边，左侧 6px 分类色圆点，文字 12px、--wb-ink-2，不铺底色",
     "同一类别全系统同一个序号",
     "一页最多 6 种分类色",
     "标签不能点击；能点的筛选条件用 .wb-chip",
-    "一个值最多两个标签，多的写「+ N」"
+    "一个值最多两个标签，多的写「+ N」",
+    "列表行里的标签靠右排在日期和人员之前，右边缘对齐"
   ],
   "accessibility": [
     "标签有文字，颜色只是辅助"
   ],
   "doNotInvent": [
     "用分类色表达好坏",
-    "彩色文字"
+    "彩色文字",
+    "铺满分类色底色的标签"
   ]
 }

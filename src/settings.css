@@ -7,12 +7,12 @@
 :where(.aham-workbench) .wb-settings-nav a:hover{background:var(--wb-hover);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-settings-nav a[aria-current=page]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-settings-scroll{min-height:0;overflow-y:auto}
-:where(.aham-workbench) .wb-settings{max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6) var(--wb-s5) var(--wb-s8)}
-:where(.aham-workbench) .wb-settings>h1{font-size:var(--wb-title);font-weight:500}
+:where(.aham-workbench) .wb-settings{max-width:calc(var(--wb-body-width) + 2 * var(--wb-s5));margin:0 auto;padding:var(--wb-s6) var(--wb-s5) var(--wb-s8)}
+:where(.aham-workbench) .wb-settings>h1{font-size:var(--wb-title);font-weight:600}
 :where(.aham-workbench) .wb-settings>p{margin-block-start:var(--wb-s1);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-settings-section{margin-block-start:var(--wb-s6)}
 :where(.aham-workbench) .wb-settings-section>header{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--wb-s4);margin-block-end:var(--wb-s3)}
-:where(.aham-workbench) .wb-settings-section h2{font-size:var(--wb-text-base);font-weight:500}
+:where(.aham-workbench) .wb-settings-section h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-settings-section header p{margin-block-start:2px;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-settings-rows{border-top:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-setting{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s4);min-height:var(--wb-s8);padding:var(--wb-s3) 0;border-bottom:var(--wb-hairline) solid var(--wb-line)}

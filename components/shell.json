@@ -14,8 +14,18 @@
   "specification": "rules/4-页面.md#41-外框",
   "classes": [
     ".aham-workbench",
-    ".aham-workbench.is-labeled",
+    ".aham-workbench.collapsed",
+    ".aham-workbench.expanded",
     ".wb-rail",
+    ".wb-rail-head",
+    ".wb-brand",
+    ".wb-brand-name",
+    ".wb-nav-group",
+    ".wb-nav-heading",
+    ".wb-nav-item",
+    ".wb-nav-count",
+    ".wb-nav-user",
+    ".wb-nav-foot",
     ".wb-main",
     ".wb-header",
     ".wb-header-row",
@@ -23,15 +33,21 @@
     ".wb-panel"
   ],
   "keyboard": {
-    "mod+b": "展开或收起导航",
+    "mod+b": "展开或收起侧栏",
+    "g 加字母": "跳到侧栏里带 data-go 的导航项",
     "Esc": "关闭最上面一层"
   },
   "rules": [
-    "导航收起 52px、展开 240px；带名称的侧栏（.is-labeled）72px，图标在上、两字名称在下，不展开",
-    "导航项名称字数一致，中文统一两个字",
+    "侧栏展开 220px，收起 52px（.collapsed）；1024px 及以下展开时是浮层（.expanded）",
+    "侧栏用 --wb-canvas 底色，比内容区深一档；不画边框",
+    "导航项 28px 高，图标 14px，名称字数一致，中文统一两个字",
+    "当前项用 --wb-nav-selected 底色、--wb-ink 文字和字重 500，不用主色",
+    "计数用 12px、--wb-ink-2、等宽数字，只给需要当前用户处理的数量",
+    "导航项写 data-go 时注册 G 加字母的跳转快捷键",
+    "收起时悬停显示名称和快捷键；展开时不显示提示",
     "页眉和侧栏固定，只有内容区滚动",
-    "页眉每条 40px",
-    "侧面板一次只开一个",
+    "页眉每条 44px，导航开关只在侧栏收起时显示",
+    "侧面板一次只开一个；属性栏 288px，预览 400px",
     "1024px 及以下宽面板浮在内容上方"
   ],
   "accessibility": [
@@ -39,6 +55,13 @@
   ],
   "doNotInvent": [
     "顶部大横幅",
-    "悬浮聊天按钮"
-  ]
+    "悬浮聊天按钮",
+    "当前导航项用主色底",
+    "侧栏和内容区之间画竖线"
+  ],
+  "markup": {
+    "navItem": "<a class=\"wb-nav-item\" href=\"list.html\" data-go=\"c\" aria-current=\"page\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-users\"/></svg><span>客户</span></a>",
+    "navCount": "<span class=\"wb-nav-count\" aria-label=\"3 项待处理\">3</span>",
+    "navGroup": "<div class=\"wb-nav-group\" role=\"group\" aria-labelledby=\"nav-biz\"><span class=\"wb-nav-heading\" id=\"nav-biz\">业务</span>…</div>"
+  }
 }

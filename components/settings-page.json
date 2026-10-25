@@ -51,8 +51,8 @@
     "layout": "<div class=\"wb-settings-layout\"><nav class=\"wb-settings-nav\">…</nav><div class=\"wb-settings-scroll\"><main class=\"wb-settings\">…</main></div></div>"
   },
   "rules": [
-    "设置导航 240px 放在内容区左列，分组排列，当前页灰底；1024px 及以下移到顶部横向滚动",
-    "内容最宽 720px 居中；页标题 24px；分区间距 32px",
+    "设置导航 220px 放在内容区左列，分组排列，当前页灰底；1024px 及以下移到顶部横向滚动",
+    "内容最宽 640px；页标题 20px 字重 600；分区标题 13px 字重 500；分区间距 32px",
     "设置行用横线分隔，不加卡片边框；左标题 + 说明，右控件；最小高 64px",
     "单项修改即时生效并用轻提示确认；失败恢复原值",
     "整体校验或影响他人的配置用整页表单与保存按钮",

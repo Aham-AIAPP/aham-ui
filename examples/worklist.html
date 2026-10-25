@@ -14,19 +14,19 @@
   <div class="wb-main">
     <header class="wb-header">
       <div class="wb-header-row">
-        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开侧栏" data-tooltip="展开 / 收起侧栏" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>销售工作空间</span><span>/</span><span aria-current="page">待我审批</span></nav><div class="wb-seg sm" role="group" aria-label="分类" id="tabs"></div></div>
+        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开侧栏" data-tooltip="展开 / 收起侧栏" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>销售工作空间</span><span>/</span><span aria-current="page">待办</span></nav><div class="wb-seg sm" role="group" aria-label="分类" id="tabs"></div></div>
         <div class="wb-header-trail"><span class="wb-crumbs-meta">演示数据</span><button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button></div>
       </div>
       <div class="wb-header-row">
         <div class="wb-header-lead" data-when="idle"><span class="wb-count" id="count"></span></div>
-        <div class="wb-header-lead" data-when="bulk" hidden><span class="wb-bulk-count" id="bulk-count"></span><button type="button" class="wb-btn sm ghost" data-action="clear-selection">清除选择</button></div>
+        <div class="wb-header-lead" data-when="bulk" hidden><label class="wb-choice"><input type="checkbox" data-select-all=""><span>全选</span></label><span class="wb-bulk-count" id="bulk-count"></span><button type="button" class="wb-btn sm ghost" data-action="clear-selection">清除选择</button></div>
         <div class="wb-header-trail" data-when="bulk" hidden><button type="button" class="wb-btn sm" data-action="approve-selected">通过选中的报价单</button></div>
       </div>
     </header>
     <div class="wb-layout is-list">
       <section class="wb-list" aria-label="待我审批的报价单">
         <div class="wb-list-scroll" tabindex="0" role="region" aria-label="报价单，可横向滚动">
-          <table class="wb-table wb-list-table" id="table"></table>
+          <table class="wb-table wb-list-table wb-list-rows" id="table"></table>
           <div class="wb-empty" id="empty" hidden></div>
           <p class="wb-note">报价单、客户和金额均为虚构示例。通过和退回只改当前页面里的数据，刷新后恢复。</p>
         </div>

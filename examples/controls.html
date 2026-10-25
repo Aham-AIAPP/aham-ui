@@ -25,7 +25,7 @@ body{margin:0}
 <div class="aham-workbench wb-bare" data-theme="light" aria-label="控件总览">
 <main class="gl">
   <header class="gl-head">
-    <div><h1>控件</h1><p>按钮、输入、选择、状态、提示条、人员、阶段、下一步、数字行、折叠和占位加载。行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
+    <div><h1>控件</h1><p>按钮、输入、选择、状态、提示条、人员、阶段、下一步、数字行、折叠和占位加载。单行列表行高 44px，数据表格行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
     <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button>
   </header>
 
@@ -60,7 +60,7 @@ body{margin:0}
       <label class="gl-field" style="grid-column:1/-1"><span>备注</span><textarea class="wb-field" rows="3">设备接口以现场确认清单为准。</textarea></label>
     </div>
     <div class="gl-row"><input class="wb-field sm" placeholder="小号，用在工具栏" aria-label="小号输入框"><select class="wb-field sm" aria-label="小号下拉"><option>按更新时间</option><option>按金额</option></select></div>
-    <p class="gl-cap">标签在上，值在下。必填的星号只在编辑时出现。数字右对齐用等宽字体，单位跟在框外。</p>
+    <p class="gl-cap">标签在上，值在下。必填的星号只在编辑时出现。数字右对齐，用等宽数字，单位跟在框外。</p>
   </section>
 
   <section aria-labelledby="g-choice">
@@ -129,14 +129,14 @@ body{margin:0}
   </section>
 
   <section aria-labelledby="g-stage">
-    <h2 id="g-stage">阶段条和时间线</h2>
+    <h2 id="g-stage">阶段条、时间线和阶段图标</h2>
     <ol class="wb-stages" aria-label="阶段">
       <li data-state="done" aria-label="收集：已完成，林悦 10-08"><span class="wb-stage-name"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-check"/></svg>收集</span><span class="wb-stage-sub">林悦 · 10-08</span></li>
       <li data-state="done" aria-label="判断：已完成，王卓 10-12"><span class="wb-stage-name"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-check"/></svg>判断</span><span class="wb-stage-sub">王卓 · 10-12</span></li>
       <li data-state="current" aria-label="立项：进行中，等陈思确认"><span class="wb-stage-name">立项</span><span class="wb-stage-sub">等陈思确认</span></li>
       <li data-state="todo" aria-label="开发：没开始"><span class="wb-stage-name">开发</span><span class="wb-stage-sub"></span></li>
       <li data-state="todo" aria-label="验证：没开始"><span class="wb-stage-name">验证</span><span class="wb-stage-sub"></span></li>
-      <li data-state="off" aria-label="上线：不进行"><span class="wb-stage-name">上线</span><span class="wb-stage-sub">本期不做</span></li>
+      <li data-state="off" aria-label="上线：不进行，客户不需要"><span class="wb-stage-name">上线</span><span class="wb-stage-sub">客户不需要</span></li>
     </ol>
     <div class="gl-grid">
       <ol class="wb-timeline" aria-label="需求进度">
@@ -147,7 +147,17 @@ body{margin:0}
         <li data-state="todo"><span class="wb-timeline-name">已验证</span></li>
       </ol>
     </div>
-    <p class="gl-cap">阶段条画对象要走的流程，时间线画一个对象自己的流转。已完成打勾，进行中加粗，不进行的用虚线并划掉。</p>
+    <p class="gl-cap">阶段条画对象要走的流程，时间线画一个对象自己的流转。已完成打勾，当前阶段用主色加粗，不进行的用虚线并划掉。</p>
+    <div class="gl-row" aria-label="阶段图标">
+      <span class="wb-status"><span class="wb-stage-icon" data-state="todo" role="img" title="初次接触：没开始" aria-label="初次接触：没开始"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/></svg></span><span>初次接触</span></span>
+      <span class="wb-status"><span class="wb-stage-icon" data-state="current" role="img" title="需求调研：进行中，第 2 段，共 4 段" aria-label="需求调研：进行中，第 2 段，共 4 段"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/><circle class="wb-stage-pie" cx="7" cy="7" r="2.5" stroke-dasharray="3.93 15.71" transform="rotate(-90 7 7)"/></svg></span><span>需求调研</span></span>
+      <span class="wb-status"><span class="wb-stage-icon" data-state="current" role="img" title="方案评估：进行中，第 3 段，共 4 段" aria-label="方案评估：进行中，第 3 段，共 4 段"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/><circle class="wb-stage-pie" cx="7" cy="7" r="2.5" stroke-dasharray="7.85 15.71" transform="rotate(-90 7 7)"/></svg></span><span>方案评估</span></span>
+      <span class="wb-status"><span class="wb-stage-icon" data-state="current" role="img" title="商务谈判：进行中，第 4 段，共 4 段" aria-label="商务谈判：进行中，第 4 段，共 4 段"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/><circle class="wb-stage-pie" cx="7" cy="7" r="2.5" stroke-dasharray="11.78 15.71" transform="rotate(-90 7 7)"/></svg></span><span>商务谈判</span></span>
+      <span class="wb-status"><span class="wb-stage-icon" data-state="done" role="img" title="已签约：已完成" aria-label="已签约：已完成"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/><path d="M4.6 7.2 6.3 8.8 9.4 5.4"/></svg></span><span>已签约</span></span>
+      <span class="wb-status"><span class="wb-stage-icon" data-state="blocked" role="img" title="等客户资料：受阻" aria-label="等客户资料：受阻"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/><path d="M4.5 7h5"/></svg></span><span>等客户资料</span></span>
+      <span class="wb-status"><span class="wb-stage-icon" data-state="off" role="img" title="已流失：不进行" aria-label="已流失：不进行"><svg viewBox="0 0 14 14" aria-hidden="true"><circle class="wb-stage-ring" cx="7" cy="7" r="5.75"/><path d="M4.4 9.6 9.6 4.4"/></svg></span><span>已流失</span></span>
+    </div>
+    <p class="gl-cap">阶段图标放在单行列表和详情页标题下方，14px。虚线圆表示没开始，扇形表示走过的段数，对勾表示完成，横线表示受阻，斜线表示不进行。</p>
   </section>
 
   <section aria-labelledby="g-next">

@@ -3,7 +3,7 @@
 //   退回   asks for a reason first (rules/6-反馈.md 6.3)
 //   批量通过 rows that cannot be approved yet are named before anything runs (rules/6-反馈.md 6.4)
 // A row whose countersign is still open has 通过 disabled with the reason next to it (rules/3-控件.md 3.3).
-import { initShell, openConfirm, toast, escapeHtml as esc } from '../aham.js';
+import { initShell, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -41,14 +41,15 @@ function render() {
     return;
   }
   const check = tab === 'todo';
-  const head = `<thead><tr>${check ? `<th scope="col" class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select-all aria-label="选择本页全部"></label></th>` : ''}<th scope="col">报价单</th><th scope="col">单号</th><th scope="col">客户</th><th scope="col" class="number">价税合计（元）</th><th scope="col">提交人</th><th scope="col">提交时间</th><th scope="col">${check ? '<span class="wb-sr-only">处理</span>' : '结果'}</th></tr></thead>`;
+  // Single-line rows (rules/4-页面.md 4.3): the header row stays for screen readers only.
+  const head = `<thead><tr>${check ? '<th scope="col" class="wb-check"><span class="wb-sr-only">选择</span></th>' : ''}<th scope="col">单号</th><th scope="col">报价单</th><th scope="col">客户</th><th scope="col">价税合计（元）</th><th scope="col">提交时间</th><th scope="col">提交人</th><th scope="col">${check ? '处理' : '结果'}</th></tr></thead>`;
   const body = list.map(r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}>`
     + (check ? `<td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td>` : '')
-    + `<td><a class="wb-row-link" href="document.html">${esc(r.name)}</a></td><td class="wb-tnum">${esc(r.code)}</td><td>${esc(r.customer)}</td><td class="number">${money(r.cents)}</td><td>${esc(r.by)}</td><td class="wb-tnum">${esc(r.at)}</td>`
+    + `<td class="wb-cell-meta wb-tnum">${esc(r.code)}</td><td class="wb-cell-name"><a class="wb-row-link" href="document.html">${esc(r.name)}</a></td><td class="wb-cell-meta">${esc(r.customer)}</td><td class="number">${money(r.cents)}</td><td class="number wb-cell-meta">${esc(r.at)}</td><td class="wb-cell-end">${personHTML(r.by, { compact: true })}</td>`
     + (check ? `<td><div class="wb-row-buttons">${r.wait ? `<span class="wb-row-note">${esc(r.wait)}</span>` : ''}<button type="button" class="wb-btn sm" data-approve="${r.id}"${r.wait ? ' disabled' : ''}>通过</button><button type="button" class="wb-btn sm" data-return="${r.id}">退回</button></div></td>`
       : `<td><span class="wb-status" data-tone="${r.result === 'approved' ? 'success' : 'warning'}"><b></b><span>${r.result === 'approved' ? '已通过' : `已退回：${esc(r.reason)}`}</span></span></td>`)
     + '</tr>').join('');
-  table.innerHTML = `<colgroup>${check ? '<col style="width:var(--wb-check-col)">' : ''}<col><col style="width:148px"><col style="width:184px"><col style="width:140px"><col style="width:72px"><col style="width:96px"><col style="width:${check ? 360 : 240}px"></colgroup>${head}<tbody>${body}</tbody>`;
+  table.innerHTML = `<colgroup>${check ? '<col style="width:var(--wb-check-col)">' : ''}<col style="width:152px"><col><col style="width:184px"><col style="width:120px"><col style="width:104px"><col style="width:44px"><col style="width:${check ? 340 : 240}px"></colgroup>${head}<tbody>${body}</tbody>`;
   const all = $('[data-select-all]');
   if (all) { const n = list.filter(r => selected.has(r.id)).length; all.checked = n > 0 && n === list.length; all.indeterminate = n > 0 && n < list.length; }
 }
