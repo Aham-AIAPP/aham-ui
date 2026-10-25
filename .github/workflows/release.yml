@@ -1,7 +1,9 @@
 name: Release
+# 两种触发：推送标签 v版本号；或在 Actions 页面手动运行（只能从 main 运行，标签按 package.json 的版本生成）。
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
@@ -13,17 +15,29 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/build.mjs --check && node scripts/lint.mjs && node scripts/contracts.mjs && node scripts/theme.mjs --check && node --test
-      - name: Release notes from CHANGELOG
+      - name: Version and release notes from CHANGELOG
         run: |
-          version="${GITHUB_REF_NAME#v}"
+          pkg="$(node -p "require('./package.json').version")"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            test "$GITHUB_REF_NAME" = "main" || { echo "manual release runs only from main"; exit 1; }
+            version="$pkg"
+          else
+            version="${GITHUB_REF_NAME#v}"
+            test "$pkg" = "$version" || { echo "package.json version differs from tag"; exit 1; }
+          fi
           awk -v v="$version" '
             $0 ~ "^## \\[" v "\\]" { on = 1; next }
             on && /^## \[/ { exit }
             on { print }
           ' CHANGELOG.md > notes.md
           test -s notes.md || { echo "CHANGELOG has no section for $version"; exit 1; }
-          test "$(node -p "require('./package.json').version")" = "$version" || { echo "package.json version differs from tag"; exit 1; }
+          echo "TAG=v$version" >> "$GITHUB_ENV"
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md --verify-tag
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            gh release create "$TAG" --title "$TAG" --notes-file notes.md --target "$GITHUB_SHA"
+          else
+            gh release create "$TAG" --title "$TAG" --notes-file notes.md --verify-tag
+          fi
