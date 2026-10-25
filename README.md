@@ -94,7 +94,7 @@ npm run check                                   # 生成检查、lint、契约�
 
 ## 版本
 
-当前版本 9.0.0。9.0 新增《设计理念》，整体风格借鉴 Linear：220px 文字侧栏、无表头的分组单行列表、正文居中加属性栏、两档字号、14px 图标、描边标签、阶段图标、三值生成主题。类名和变量有改动，升级说明见 [CHANGELOG.md](CHANGELOG.md)。
+当前版本 9.0.0。9.0 新增《设计理念》，整体风格借鉴 Linear：220px 文字侧栏、无表头的分组单行列表、铺满的主区加属性栏、两档字号、14px 图标、描边标签、阶段图标、三值生成主题。类名和变量有改动，升级说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md) · [CONTRIBUTING](CONTRIBUTING.md) · [ORIGIN](ORIGIN.md) · [MIT](LICENSE)
 

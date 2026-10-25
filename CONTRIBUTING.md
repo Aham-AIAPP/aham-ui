@@ -38,7 +38,7 @@ npm run check
 
 1. 改 `package.json` 的 `version`，再把 `tokens.json` 的 `$meta.version`、`rules/1-总则.md` 开头和 README 的版本号改成同一个。测试会核对这四处。新增功能升次版本号，修复升修订号，不兼容的改动升主版本号。
 2. 把 CHANGELOG 的 `[Unreleased]` 移到新版本号下，写上日期。
-3. 提交并推送到 main，在 GitHub 上发布 Release。
+3. 提交并合并到 main，再推送标签 `v版本号`。`.github/workflows/release.yml` 会按 CHANGELOG 里这个版本的一节发布 Release。
 
 ## 许可
 
