@@ -14,7 +14,7 @@
 }
 /* ≤ context breakpoint: full-bleed card, one scroll column, summary after the document, nav opens as an overlay. */
 @media (max-width: {{breakpoint.bp-context}}) {
- .aham-workbench .wb-main {margin:0;border-radius:0}
+ .aham-workbench .wb-main {border-inline-start:0}
  .aham-workbench .wb-layout {display:block;overflow:auto}
  .aham-workbench .wb-layout>.wb-document {overflow:visible}
  .aham-workbench .wb-panel {width:auto;overflow:visible;border-inline-start:0}

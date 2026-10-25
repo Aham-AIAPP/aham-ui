@@ -27,7 +27,6 @@
   --wb-radius-sm: 4px;
   --wb-radius: 8px;
   --wb-radius-lg: 12px;
-  --wb-shell-radius: 10px;
   --wb-radius-pill: 999px;
   --wb-shadow-pop: 0 0 0 1px rgba(20,20,20,0.08), 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.10);
   --wb-shadow-float: 0 0 0 1px rgba(20,20,20,0.08), 0 4px 8px rgba(0,0,0,0.06), 0 12px 28px rgba(0,0,0,0.10);
@@ -282,9 +281,10 @@
 :where(.aham-workbench).wb-bare{display:block;height:auto;overflow:visible;background:var(--wb-bg)}
 :where(.aham-workbench) .wb-sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 /* ---- src/shell.css ---- */
-/* Shell (9.0): a 220px text sidebar on the canvas tier, one shade darker than the white content card.
+/* Shell (9.0): a 220px text sidebar on the canvas tier, one shade darker than the white work surface. The work surface
+   runs to the window edges with square corners; one 1px --wb-edge line separates it from the sidebar.
    ⌘/Ctrl+B collapses it to a 52px icon rail. No border, no resting shadow. */
-:where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;gap:var(--wb-s4);min-height:0;overflow-y:auto;padding:var(--wb-s2) var(--wb-s2) var(--wb-s3);background:var(--wb-canvas)}
+:where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;gap:var(--wb-s4);min-height:0;overflow-y:auto;padding:0 var(--wb-s2) var(--wb-s3);background:var(--wb-canvas)}
 :where(.aham-workbench) .wb-rail-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-row);padding:0 var(--wb-s2)}
 :where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);border-radius:var(--wb-radius-sm);background:var(--wb-ink);color:var(--wb-bg);font-size:var(--wb-text-xs);font-weight:600}
 :where(.aham-workbench) .wb-brand-name{min-width:0;font-weight:500;color:var(--wb-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -311,7 +311,7 @@
 :where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
 :where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
 :where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
-:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-edge);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
+:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;border-inline-start:var(--wb-hairline) solid var(--wb-edge);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
 /* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
 :where(.aham-workbench) .wb-header{flex:none}
@@ -675,7 +675,7 @@
 :where(.aham-workbench) .wb-table-toolbar h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-table-toolbar>.wb-spacer{flex:1}
 :where(.aham-workbench) .wb-table-toolbar .wb-meta{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-table-block>.wb-table-scroll{border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-table-block>.wb-table-scroll{border-block:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-table-block .wb-table{min-width:560px}
 :where(.aham-workbench) .wb-table-block .wb-table thead th{background:var(--wb-bg)}
 :where(.aham-workbench) .wb-table-block .wb-table tbody:last-child tr:last-child>td,:where(.aham-workbench) .wb-table-block .wb-table tfoot tr:last-child>td{border-bottom:0}
@@ -1170,7 +1170,7 @@
 }
 /* ≤ context breakpoint: full-bleed card, one scroll column, summary after the document, nav opens as an overlay. */
 @media (max-width: 1024px) {
- .aham-workbench .wb-main {margin:0;border-radius:0}
+ .aham-workbench .wb-main {border-inline-start:0}
  .aham-workbench .wb-layout {display:block;overflow:auto}
  .aham-workbench .wb-layout>.wb-document {overflow:visible}
  .aham-workbench .wb-panel {width:auto;overflow:visible;border-inline-start:0}

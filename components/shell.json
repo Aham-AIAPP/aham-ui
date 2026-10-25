@@ -40,7 +40,7 @@
   "rules": [
     "侧栏展开 220px，收起 52px（.collapsed）；1024px 及以下展开时是浮层（.expanded）",
     "侧栏用 --wb-canvas 底色，比内容区深一档；不画边框",
-    "内容区白底、10px 圆角、1px --wb-edge 描边；上、右、下留 8px，左侧紧贴侧栏",
+    "内容区白底、直角，铺到窗口边缘；和侧栏之间一条 1px --wb-edge 竖线；侧栏第一行和页眉第一行对齐",
     "导航项 28px 高，图标 14px，名称字数一致，中文统一两个字",
     "当前项用 --wb-nav-selected 底色、--wb-ink 文字和字重 500，不用主色",
     "计数用 12px、--wb-ink-2、等宽数字，只给需要当前用户处理的数量",
@@ -60,7 +60,8 @@
     "顶部大横幅",
     "悬浮聊天按钮",
     "当前导航项用主色底",
-    "侧栏和内容区之间画竖线"
+    "侧栏和内容区之间画竖线",
+    "内容区做成留边距的圆角卡片"
   ],
   "markup": {
     "navItem": "<a class=\"wb-nav-item\" href=\"list.html\" data-go=\"c\" aria-current=\"page\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-users\"/></svg><span>客户</span></a>",

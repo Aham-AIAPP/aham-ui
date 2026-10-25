@@ -130,7 +130,7 @@
 :where(.aham-workbench) .wb-table-toolbar h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-table-toolbar>.wb-spacer{flex:1}
 :where(.aham-workbench) .wb-table-toolbar .wb-meta{color:var(--wb-muted)}
-:where(.aham-workbench) .wb-table-block>.wb-table-scroll{border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-table-block>.wb-table-scroll{border-block:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-table-block .wb-table{min-width:560px}
 :where(.aham-workbench) .wb-table-block .wb-table thead th{background:var(--wb-bg)}
 :where(.aham-workbench) .wb-table-block .wb-table tbody:last-child tr:last-child>td,:where(.aham-workbench) .wb-table-block .wb-table tfoot tr:last-child>td{border-bottom:0}
