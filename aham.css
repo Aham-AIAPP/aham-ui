@@ -296,7 +296,7 @@
 :where(.aham-workbench) button{cursor:pointer}
 :where(.aham-workbench) :focus-visible{outline:2px solid var(--wb-blue);outline-offset:2px}
 :where(.aham-workbench) [aria-invalid=true]{outline:2px solid var(--wb-danger);outline-offset:-2px}
-:where(.aham-workbench) svg{width:var(--wb-icon);height:var(--wb-icon);flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+:where(.aham-workbench) svg{width:var(--wb-icon);height:var(--wb-icon);flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 :where(.aham-workbench) dl{margin:var(--wb-s3) 0 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--wb-s2) var(--wb-s3)}
 :where(.aham-workbench) dt{color:var(--wb-muted)}
 :where(.aham-workbench) dd{margin:0}
@@ -1179,6 +1179,7 @@
 :where(.aham-workbench) .wb-next>.wb-grow{flex:1;min-width:0}
 :where(.aham-workbench) .wb-next strong{font-weight:500}
 :where(.aham-workbench) .wb-next-date{color:var(--wb-muted);white-space:nowrap}
+:where(.aham-workbench) .wb-next-date.is-overdue{color:var(--wb-danger)}
 /* Timeline: the progress of one object, top to bottom, in the side column. */
 :where(.aham-workbench) .wb-timeline{display:grid;margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-timeline>li{position:relative;display:grid;gap:2px;padding:0 0 var(--wb-s4) var(--wb-s5)}

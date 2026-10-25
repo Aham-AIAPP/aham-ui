@@ -88,7 +88,9 @@ function control(f) {
 }
 function readValue(f) {
   const v = state.fields[f.key];
-  if (!v) return f.required ? '<span class="wb-value is-missing">未填写</span>' : '<span class="wb-value is-empty">–</span>';
+  // Empty values are written by type (rules/10-数据格式.md 10.5); a required one takes the error colour.
+  const word = f.type === 'select' || f.type === 'radio' ? '未选择' : f.type === 'date' ? '–' : '未填写';
+  if (!v) return `<span class="wb-value ${f.required ? 'is-missing' : 'is-empty'}">${word}</span>`;
   return `<span class="wb-value${canEdit() ? ' is-editable' : ''}">${esc(v)}</span>`;
 }
 function formRow(f) {

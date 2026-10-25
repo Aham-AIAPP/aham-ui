@@ -20,7 +20,7 @@ function load() {
 const q = load(), f = q.fields, t = totals(q.rows);
 const MARK = { draft: '草稿 · 未生效', review: '审批中 · 未生效', returned: '已退回 · 未生效', voided: '已作废' };
 const mark = MARK[q.status];
-document.querySelector('#print-note').textContent = mark ? `这张单据${mark.split(' · ')[0]}，打印件会带「${mark}」标记` : '';
+document.querySelector('#print-note').textContent = mark ? `这张单据的状态是「${mark.split(' · ')[0]}」，打印件会带「${mark}」标记` : '';
 
 document.querySelector('#sheet').innerHTML = `
   <header class="wb-sheet-head">
@@ -30,7 +30,7 @@ document.querySelector('#sheet').innerHTML = `
   <dl>
     <dt>报价单号</dt><dd>QT-20260930-018</dd><dt>报价日期</dt><dd>${esc(f.quoteDate)}</dd>
     <dt>客户</dt><dd>${esc(f.customer)}</dd><dt>有效期至</dt><dd>${esc(f.validTo)}</dd>
-    <dt>联系人</dt><dd>${esc(f.contact || '–')}</dd><dt>币种</dt><dd>${esc(f.currency)}，${esc(f.tax)}</dd>
+    <dt>联系人</dt><dd>${esc(f.contact || '未填写')}</dd><dt>币种</dt><dd>${esc(f.currency)}，${esc(f.tax)}</dd>
     <dt>负责人</dt><dd>${esc(f.owner)}</dd><dt>关联项目</dt><dd>${esc(f.opportunity)}</dd>
   </dl>
   <h2>报价明细</h2>

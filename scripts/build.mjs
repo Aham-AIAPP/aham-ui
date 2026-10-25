@@ -2,6 +2,7 @@
 import {readFileSync, writeFileSync, readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {parse, serialize, selectors} from './lib/css.mjs';
+import {contrastTable} from './lib/contrast.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = f => readFileSync(new URL(f, root), 'utf8');
@@ -143,13 +144,37 @@ export function buildExamples() {
   return out;
 }
 
+// Values quoted in the rules come from tokens.json, so a changed token cannot leave a stale number behind:
+//   `--wb-name` | `#light` | `#dark`   a colour table row: both values are rewritten
+//   `--wb-name` `#light`               an inline mention: the light value is rewritten
+//   <!-- @contrast --> … <!-- /@contrast -->   the contrast table of rules/2-视觉.md 2.3, from scripts/lib/contrast.mjs
+export function buildRules() {
+  const hex = /#[0-9A-Fa-f]{6}\b/;
+  const color = (theme, name) => { try { return resolve(`color.${theme}.${name}`); } catch { return null; } };
+  const out = [];
+  for (const f of readdirSync(new URL('rules/', root)).filter(f => f.endsWith('.md'))) {
+    const text = read(`rules/${f}`)
+      .replace(new RegExp(`\`--wb-([\\w-]+)\` \\| \`(${hex.source})\` \\| \`(${hex.source})\``, 'g'), (m, n, a, b) => {
+        const l = color('light', n), d = color('dark', n);
+        return l && d && hex.test(l) && hex.test(d) ? `\`--wb-${n}\` | \`${l}\` | \`${d}\`` : m;
+      })
+      .replace(new RegExp(`\`--wb-([\\w-]+)\` \`(${hex.source})\``, 'g'), (m, n) => {
+        const l = color('light', n);
+        return l && hex.test(l) ? `\`--wb-${n}\` \`${l}\`` : m;
+      })
+      .replace(/(<!-- @contrast -->\n)[\s\S]*?(\n<!-- \/@contrast -->)/, (_, open, close) => `${open}${contrastTable(resolve)}${close}`);
+    out.push([`rules/${f}`, text]);
+  }
+  return out;
+}
+
 const splitHead = head => { const m = head.match(/^@(\w+)\s+(.*)$/); return { name: m[1], prelude: m[2] }; };
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const outputs = [['aham.css', build()], ['aham.js', buildJS()], ...buildExamples()];
+  const outputs = [['aham.css', build()], ['aham.js', buildJS()], ...buildExamples(), ...buildRules()];
   if (process.argv.includes('--check')) {
     const stale = outputs.filter(([f, text]) => read(f) !== text).map(([f]) => f);
     if (stale.length) { console.error(`${stale.join(', ')} out of date. Run: node scripts/build.mjs`); process.exit(1); }
-    console.log('aham.css, aham.js and the sample sidebars are up to date');
-  } else for (const [f, text] of outputs) { if (read(f) !== text || !f.startsWith('examples/')) { writeFileSync(new URL(f, root), text); console.log(`Wrote ${f} (${text.length} bytes)`); } }
+    console.log('aham.css, aham.js, the sample sidebars and the token values in rules/ are up to date');
+  } else for (const [f, text] of outputs) { if (read(f) !== text || !/^(examples|rules)\//.test(f)) { writeFileSync(new URL(f, root), text); console.log(`Wrote ${f} (${text.length} bytes)`); } }
 }

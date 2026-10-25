@@ -50,7 +50,7 @@
     <div class="pv-label">修改数据前确认 · 静态样式与实际弹窗</div>
     <div class="pv-grid">
       <div class="pv-confirm" id="pv-confirm-static"></div>
-      <div><button type="button" class="wb-btn sm" id="pv-confirm-open">打开确认弹窗</button><span class="pv-cap">确认后才写入，写入后提示条提供撤销</span></div>
+      <div><button type="button" class="wb-btn sm" id="pv-confirm-open">打开确认弹窗</button><span class="pv-cap">确认后才写入，写入后轻提示提供撤销</span></div>
     </div>
   </section>
 
@@ -68,7 +68,7 @@ const root = document.querySelector('.aham-workbench');
 initTheme(root);
 initTooltips(root);
 const $ = s => root.querySelector(s);
-const record = { name: '青禾医疗器械有限公司', stage: '方案评估', owner: '林悦', lastContact: '2026-09-29' };
+const record = { name: '远川精密制造有限公司', stage: '方案评估', owner: '林悦', lastContact: '2026-09-29' };
 const sources = [{ label: 'CUS-2026-0001 的属性' }, { label: '2026-09-29 的跟进评论' }];
 const text = summaryText(record);
 const ready = () => false;

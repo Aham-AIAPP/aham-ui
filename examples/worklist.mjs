@@ -29,6 +29,9 @@ function render() {
   $('#tabs').innerHTML = `<button type="button" data-tab="todo" aria-pressed="${tab === 'todo'}">待我审批 ${t}</button><button type="button" data-tab="done" aria-pressed="${tab === 'done'}">我已处理 ${d}</button>`;
   const list = tab === 'todo' ? todo() : done();
   $('#count').textContent = `${list.length} 张报价单`;
+  // The sidebar count and the 待我审批 tab read the same rows, so handling one row lowers both (rules/4-页面.md 4.1).
+  const navCount = root.querySelector('.wb-rail .wb-nav-count');
+  if (navCount) { navCount.textContent = t; navCount.setAttribute('aria-label', `${t} 项待办`); navCount.hidden = !t; }
   const bulk = tab === 'todo' && selected.size > 0;
   $$('[data-when=idle]').forEach(e => { e.hidden = bulk; });
   $$('[data-when=bulk]').forEach(e => { e.hidden = !bulk; });

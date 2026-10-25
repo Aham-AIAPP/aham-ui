@@ -72,7 +72,7 @@ $('#next').addEventListener('click', () => {
     steps[at].querySelector('input, textarea, h2')?.focus();
     return;
   }
-  $('#form-page').innerHTML = `<p class="wb-form-page-brand">远川精密 · 设备需求填报</p><h1 class="wb-form-page-title">已提交</h1><p>我们会在 2 个工作日内联系 ${esc($('#form').elements.contact.value.trim())}。示例页不保存数据。</p>`;
+  $('#form-page').innerHTML = `<p class="wb-form-page-brand">华岳智造 · 设备需求填报</p><h1 class="wb-form-page-title">已提交</h1><p>编号 REQ-2026-0042</p><div class="wb-next" role="status"><span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>等华岳智造 · 林悦</strong>判断能不能做，并联系 ${esc($('#form').elements.contact.value.trim())}</span><span class="wb-next-date">2 个工作日内</span></div><p><a class="wb-link" href="form.html">查看进度</a></p>`;
 });
 $('#prev').addEventListener('click', () => { at = Math.max(0, at - 1); render(); });
 

@@ -250,8 +250,15 @@ test('contracts match components/schema.json and claim every class (scripts/cont
 });
 
 test('rules state the current standard only; version history belongs in CHANGELOG.md', () => {
-  const history = /\d\.(\d|x) ?(起|之前|曾|删除|改深|改成)|\d\.x\b|在 \d\.\d 删除/;
+  // Earlier major versions are not named at all: 「8.0 没有参考实现」 says nothing about 9.0.
+  const history = /\d\.(\d|x) ?(起|之前|曾|删除|改深|改成)|\d\.x\b|在 \d\.\d 删除|[1-8]\.[01] ?(没有参考实现|的参考实现|参考实现|示例用|的单据示例|的筛选)/;
   const found = files('rules/').filter(f => f.endsWith('.md')).flatMap(f => read(f).split('\n').map((l, i) => [f, i + 1, l]))
     .filter(([f, , l]) => history.test(l)).map(([f, n]) => `${f}:${n}`);
   assert.deepEqual(found, []);
+});
+
+test('the overview page lists every rule file', () => {
+  const page = read('index.html');
+  const missing = files('rules/').filter(f => f.endsWith('.md')).map(f => f.replace(/^rules\/|\.md$/g, '')).filter(n => !page.includes(`'${n}'`));
+  assert.deepEqual(missing, []);
 });
