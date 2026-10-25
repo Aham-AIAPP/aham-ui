@@ -1,6 +1,6 @@
 // Workspace settings sample (rules/4-页面.md 4.9, rules/11-交互.md 11.6): changes affect everyone, so they wait for 保存.
 // The save bar appears only while something differs from the saved values. Personal preferences live in the account menu.
-import {initShell, initPalette, navCommands, registerShortcut, listShortcuts, toast, openConfirm} from '../aham.js';
+import {initShell, initPalette, registerShortcut, toast, openConfirm} from '../aham.js';
 import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -48,21 +48,17 @@ addEventListener('beforeunload', e => { if (changed().length) e.preventDefault()
 registerShortcut({ keys: 'mod+s', label: '保存设置', group: '设置', run: () => (changed().length ? save() : toast('没有要保存的修改')) });
 initShell(root);
 
-const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
-const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
 // Command palette (rules/7-键盘与命令.md 7.2): the page buttons are commands too.
 const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   groups: () => [
     { heading: '工作区设置', items: [
       { id: 'save', label: '保存设置', icon: 'check', keys: 'mod+s', run: () => $('[data-action="save"]').click() },
       { id: 'discard', label: '放弃修改', icon: 'refresh', run: discard },
       { id: 'delete', label: '删除工作区…', icon: 'trash', danger: true, run: () => $('[data-action="delete"]').click() },
     ] },
-    { heading: '界面', items: [{ id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() }] },
-    { heading: '账户', items: account.commands() },
-    { heading: '跳转', items: navCommands(root) },
-    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });

@@ -3,7 +3,7 @@
 //   退回   asks for a reason first (rules/6-反馈.md 6.3)
 //   批量通过 rows that cannot be approved yet are named before anything runs (rules/6-反馈.md 6.4)
 // A row whose countersign is still open has 通过 disabled with the reason next to it (rules/3-控件.md 3.3).
-import { initShell, initPalette, navCommands, registerShortcut, listShortcuts, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
+import { initShell, initPalette, registerShortcut, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
 import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -103,10 +103,11 @@ render();
 
 // Command palette (rules/7-键盘与命令.md 7.2): every button on the page is also a command here.
 const rowOf = () => { const tr = document.activeElement?.closest?.('tr[data-id]'); return tr ? rows.find(r => r.id === Number(tr.dataset.id)) : null; };
-const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
-const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
 const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   context: () => { const r = rowOf(); return r && !r.result ? { id: r.id, code: r.code, label: r.name } : null; },
   groups: ctx => [
     ...(ctx ? [{ heading: '当前报价单', items: [
@@ -122,13 +123,5 @@ const palette = initPalette({
       { id: 'tab-todo', label: '待我审批', icon: 'success', run: () => { tab = 'todo'; selected.clear(); render(); } },
       { id: 'tab-done', label: '我已处理', icon: 'check', run: () => { tab = 'done'; selected.clear(); render(); } },
     ] },
-    { heading: '界面', items: [
-      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
-      { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
-    ] },
-    { heading: '账户', items: account.commands() },
-    { heading: '跳转', items: navCommands(root) },
-    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });

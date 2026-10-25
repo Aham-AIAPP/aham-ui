@@ -5,7 +5,7 @@
 //   已生效        打印；更多：复制为新报价、作废
 //   已作废        只能查看、打印和复制
 // State lives in this page only. print.html reads the last saved copy from sessionStorage.
-import { initShell, initPalette, navCommands, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
+import { initShell, initPalette, initObjectPage, initAnchorBar, openConfirm, openFormDialog, openPopover, closePopover, createCommand, toast, icon, escapeHtml as esc } from '../aham.js';
 import { defaults, lineCents, totals, money } from './quotation-model.mjs';
 import {initAccount} from './account.mjs';
 
@@ -370,16 +370,12 @@ initAnchorBar($('#doc-anchors'), { scroller: doc });
 const pageButtons = () => [...root.querySelectorAll('#doc-actions button, #doc-foot button')]
   .filter(b => !b.disabled && b.offsetParent && (b.textContent.trim() || b.getAttribute('aria-label')))
   .map((b, i) => ({ id: `act-${i}`, label: b.textContent.trim() || b.getAttribute('aria-label'), keys: b.dataset.keys, run: () => b.click() }));
-const account = initAccount(root);
-initPalette({
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
+const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   groups: () => [
     { heading: '报价单', items: [...pageButtons().filter(c => c.label !== '更多操作'), ...menuItems().map(it => ({ ...it, run: () => runMenuItem(it) }))] },
-    { heading: '界面', items: [
-      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
-      { id: 'theme', label: '切换深色和浅色', icon: 'moon', run: () => $('[data-action="theme"]').click() },
-    ] },
-    { heading: '账户', items: account.commands() },
-    { heading: '跳转', items: navCommands(root) },
   ],
 });

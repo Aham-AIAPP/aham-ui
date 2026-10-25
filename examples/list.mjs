@@ -1,6 +1,6 @@
 // List page sample: wires the Aham UI components (aham.js) to fictional demo data.
 // Everything reusable lives in aham.js / aham.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, navCommands, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
+import {initShell, initPanels, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, toast, icon, escapeHtml as esc} from '../aham.js';
 import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
 import {initAccount} from './account.mjs';
 
@@ -383,11 +383,11 @@ initContextMenu({
     ];
   },
 });
-const GROUP_ORDER = ['通用', '列表'];
-const shortcutItems = () => listShortcuts().sort((x, y) => GROUP_ORDER.indexOf(x.group) - GROUP_ORDER.indexOf(y.group)).map((s, i) => ({ id: `k${i}`, label: s.label, keys: s.keys, group: s.group, heading: s.group, keywords: [s.group] }));
-const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
 const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   context: () => { const id = currentRow() ?? (panels.current() === PEEK ? previewId : null); const r = id && recordOf(id); return r ? { id, code: r.code, label: r.name } : null; },
   groups: ctx => [
     ...(ctx ? [{ heading: '当前记录', items: [
@@ -409,15 +409,7 @@ const palette = initPalette({
       { id: 'view', label: '切换视图…', icon: 'eye', children: () => [...Object.entries(VIEWS), ...customViews.map(v => [v.id, v.label])].map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => applyViewSetting(k) })) },
       { id: 'clear', label: '清除筛选', icon: 'close', run: () => { state.filters = []; filter.set([]); narrowResult(); render(); } },
       { id: 'display', label: '显示选项…', icon: 'settings', run: () => $('#display-trigger').click() },
-      { id: 'peek', label: panels.current() === PEEK ? '关闭预览面板' : '打开预览面板', icon: 'eye', run: () => $('[data-panel-toggle="customer-peek"]').click() },
     ] },
-    { heading: '界面', items: [
-      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
-      { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
-    ] },
-    { heading: '账户', items: account.commands() },
-    { heading: '跳转', items: navCommands(root) },
-    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });
 const onRow = () => currentRow() !== null;
@@ -425,7 +417,6 @@ registerShortcut({ keys: 'c', label: '新建记录', group: '列表', run: openC
 registerShortcut({ keys: '/', label: '搜索', group: '列表', run: () => root.querySelector('[data-action="search"]')?.click() });
 registerShortcut({ keys: 's', label: '修改当前行的阶段', group: '列表', when: onRow, run: () => editCell(currentRow(), 'stage') });
 registerShortcut({ keys: 'a', label: '修改当前行的负责人', group: '列表', when: onRow, run: () => editCell(currentRow(), 'owner') });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
 // Keys handled directly by the list and the layer stack, listed here so the help shows them.
 [['up', '上一行'], ['down', '下一行'], ['shift+down', '扩展勾选范围'], ['space', '预览当前行'], ['enter', '打开当前行'], ['x', '勾选当前行'], ['shift+f10', '当前行的操作菜单'], ['escape', '关闭最上层的浮层']].forEach(([keys, label]) => registerShortcut({ keys, label, group: keys === 'escape' ? '通用' : '列表', external: true }));
 

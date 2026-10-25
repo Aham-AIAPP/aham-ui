@@ -3,16 +3,21 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync, readdirSync} from 'node:fs';
-import {build, buildJS, tokens} from '../scripts/build.mjs';
+import {build, buildJS, buildExamples, tokens} from '../scripts/build.mjs';
 import {lint} from '../scripts/lint.mjs';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 
 const root = new URL('../', import.meta.url);
 const read = f => readFileSync(new URL(f, root), 'utf8');
 const files = dir => readdirSync(new URL(dir, root)).map(f => `${dir}${f}`);
+// Sample pages; files starting with _ are partials the build copies into the pages.
+const samples = () => files('examples/').filter(f => f.endsWith('.html') && !f.startsWith('examples/_'));
 
-test('aham.css and aham.js are generated from tokens.json, src/ and js/', () => {
+test('aham.css, aham.js and the sample sidebars are generated from tokens.json, src/, js/ and examples/_rail.html', () => {
   assert.equal(read('aham.css'), build(), 'run node scripts/build.mjs');
   assert.equal(read('aham.js'), buildJS(), 'run node scripts/build.mjs');
+  for (const [f, text] of buildExamples()) assert.equal(read(f), text, `${f}: run node scripts/build.mjs`);
 });
 
 test('lint finds no problems', () => {
@@ -59,7 +64,7 @@ test('print always uses the light colours', () => {
 });
 
 test('every local href and src in examples and index.html resolves', () => {
-  const pages = ['index.html', ...files('examples/').filter(f => f.endsWith('.html'))];
+  const pages = ['index.html', ...samples()];
   for (const page of pages) {
     const html = read(page), base = new URL(page, root);
     for (const [, url] of html.matchAll(/(?:href|src)="([^"#]+)(?:#[^"]*)?"/g)) {
@@ -133,7 +138,7 @@ test('rules name only class names and functions that exist', () => {
 });
 
 test('a button carries text or an icon, never both (rules/3-控件.md 3.2)', () => {
-  const pages = ['index.html', ...files('examples/').filter(f => f.endsWith('.html'))];
+  const pages = ['index.html', ...samples()];
   for (const page of pages) {
     for (const [tag] of read(page).matchAll(/<(?:button|a)\b[^>]*class="wb-btn(?![^"]*icon-only)[^"]*"[^>]*>\s*<svg[\s\S]*?<\/(?:button|a)>/g)) {
       assert.ok(/<\/svg>\s*<\/(?:button|a)>$/.test(tag), `${page}: ${tag.slice(0, 120)}`);
@@ -142,7 +147,7 @@ test('a button carries text or an icon, never both (rules/3-控件.md 3.2)', () 
 });
 
 test('navigation names have two characters (rules/4-页面.md 4.1)', () => {
-  for (const page of files('examples/').filter(f => f.endsWith('.html'))) {
+  for (const page of samples()) {
     for (const [, name] of read(page).matchAll(/class="wb-nav-item"[^>]*>[\s\S]*?<span>([^<]+)<\/span>/g)) {
       assert.equal([...name].length, 2, `${page}: ${name}`);
     }
@@ -163,7 +168,7 @@ test('the old empty-value word is gone (rules/10-数据格式.md 10.5)', () => {
 });
 
 test('every workbench sample with a sidebar has a command palette (rules/7 7.2, principle 11)', () => {
-  const pages = readdirSync(new URL('../examples/', import.meta.url)).filter(f => f.endsWith('.html'));
+  const pages = samples().map(f => f.slice('examples/'.length));
   const missing = [];
   for (const page of pages) {
     const html = read(`examples/${page}`);
@@ -185,11 +190,19 @@ test('hover styles apply only to fine pointers (rules/11-交互.md 11.2)', async
 });
 
 test('every sample with a sidebar has the account button (rules/11-交互.md 11.6)', () => {
-  const missing = files('examples/').filter(f => f.endsWith('.html')).filter(f => read(f).includes('class="wb-rail"') && !read(f).includes('data-action="account"'));
+  const missing = samples().filter(f => read(f).includes('class="wb-rail"') && !read(f).includes('data-action="account"'));
   assert.deepEqual(missing, []);
 });
 
 test('motion uses transitions, not keyframes, except the skeleton (rules/11-交互.md 11.4)', () => {
   const names = [...read('aham.css').matchAll(/@keyframes\s+([\w-]+)/g)].map(m => m[1]);
   assert.ok(names.every(n => /skeleton|shimmer/.test(n)), names.join(', '));
+});
+
+test('every script in js/ and examples/ parses', () => {
+  const bad = [...files('js/'), ...files('examples/')].filter(f => /\.m?js$/.test(f)).filter(f => {
+    const r = spawnSync(process.execPath, ['--check', fileURLToPath(new URL(f, root))], { encoding: 'utf8' });
+    return r.status !== 0;
+  });
+  assert.deepEqual(bad, []);
 });

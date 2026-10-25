@@ -1,5 +1,5 @@
 // Interaction sample (rules/11-交互.md): every state and every motion of the workbench on one page.
-import {initShell, initPanels, initPalette, navCommands, registerShortcut, listShortcuts, openPopover, closePopover, createCommand, openConfirm, openCreateDialog, toast} from '../aham.js';
+import {initShell, initPanels, initPalette, registerShortcut, openPopover, closePopover, createCommand, openConfirm, openCreateDialog, toast} from '../aham.js';
 import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
@@ -26,8 +26,7 @@ function openMenu(trigger) {
   pop.querySelector('[role=menu]').focus();
 }
 
-const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys }));
-const account = initAccount(root, { onShortcuts: () => palette.openAt('键盘快捷键', shortcutItems()) });
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
 root.addEventListener('click', e => {
   const b = e.target.closest('[data-demo]');
   if (!b) return;
@@ -54,15 +53,9 @@ $('#ix-durations').innerHTML = [
 
 const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   groups: () => [
-    { heading: '交互样板', items: [...root.querySelectorAll('[data-demo]')].map((b, i) => ({ id: `demo-${i}`, label: b.textContent.trim() || b.getAttribute('aria-label'), run: () => b.click() })) },
-    { heading: '界面', items: [
-      { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
-      { id: 'theme', label: '切换深色和浅色', icon: 'moon', run: () => $('[data-action="theme"]').click() },
-    ] },
-    { heading: '账户', items: account.commands() },
-    { heading: '跳转', items: navCommands(root) },
-    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
+    { heading: '交互样板', items: [...root.querySelectorAll('[data-demo]:not([data-demo="palette"], [data-demo="peek"])')].map((b, i) => ({ id: `demo-${i}`, label: b.textContent.trim() || b.getAttribute('aria-label'), run: () => b.click() })) },
   ],
 });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
