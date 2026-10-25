@@ -28,10 +28,10 @@
 :where(.aham-workbench) .wb-seg{display:inline-flex;gap:var(--wb-s1);background:var(--wb-fill);padding:var(--wb-s1);border-radius:var(--wb-radius)}
 :where(.aham-workbench) .wb-seg button{background:transparent;border:0;border-radius:var(--wb-radius-sm);padding:var(--wb-s1) var(--wb-s2);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-seg button[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink);font-weight:500}
-:where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:2px;background:transparent}
-:where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s2);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:var(--wb-s1);background:transparent}
+:where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s3);border-radius:var(--wb-radius);color:var(--wb-ink-2)}
 :where(.aham-workbench) .wb-seg.sm button:hover{background:var(--wb-hover);color:var(--wb-ink)}
-:where(.aham-workbench) .wb-seg.sm button[aria-pressed=true]{background:var(--wb-fill);font-weight:500}
+:where(.aham-workbench) .wb-seg.sm button[aria-pressed=true]{background:var(--wb-bg);box-shadow:inset 0 0 0 var(--wb-hairline) var(--wb-line);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-seg button{white-space:nowrap}
 :where(.aham-workbench) .wb-btn.icon-only{padding:0;width:var(--wb-header-control)}
 :where(.aham-workbench) .wb-btn{position:relative}

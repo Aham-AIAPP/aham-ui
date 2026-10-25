@@ -25,7 +25,7 @@
 :where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
 :where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
 :where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
-:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
+:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
 /* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
 :where(.aham-workbench) .wb-header{flex:none}
@@ -35,6 +35,7 @@
 /* The nav toggle sits in the header only while the sidebar is collapsed or floating. */
 :where(.aham-workbench):not(.collapsed) .wb-header [data-action=nav]{display:none}
 :where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s2);min-width:0;overflow:hidden;white-space:nowrap}
+:where(.aham-workbench) .wb-crumbs+.wb-seg.sm{margin-inline-start:var(--wb-s3)}
 :where(.aham-workbench) .wb-crumbs strong{font-weight:500;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-count{color:var(--wb-muted);font-variant-numeric:tabular-nums}

@@ -288,7 +288,7 @@
 :where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
 :where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
 :where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
-:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
+:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;margin:var(--wb-gutter) var(--wb-gutter) var(--wb-gutter) 0;border:var(--wb-hairline) solid var(--wb-line);border-radius:var(--wb-shell-radius);background:var(--wb-bg);overflow:hidden}
 :where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
 /* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
 :where(.aham-workbench) .wb-header{flex:none}
@@ -298,6 +298,7 @@
 /* The nav toggle sits in the header only while the sidebar is collapsed or floating. */
 :where(.aham-workbench):not(.collapsed) .wb-header [data-action=nav]{display:none}
 :where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s2);min-width:0;overflow:hidden;white-space:nowrap}
+:where(.aham-workbench) .wb-crumbs+.wb-seg.sm{margin-inline-start:var(--wb-s3)}
 :where(.aham-workbench) .wb-crumbs strong{font-weight:500;font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-count{color:var(--wb-muted);font-variant-numeric:tabular-nums}
@@ -336,10 +337,10 @@
 :where(.aham-workbench) .wb-seg{display:inline-flex;gap:var(--wb-s1);background:var(--wb-fill);padding:var(--wb-s1);border-radius:var(--wb-radius)}
 :where(.aham-workbench) .wb-seg button{background:transparent;border:0;border-radius:var(--wb-radius-sm);padding:var(--wb-s1) var(--wb-s2);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-seg button[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink);font-weight:500}
-:where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:2px;background:transparent}
-:where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s2);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:var(--wb-s1);background:transparent}
+:where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s3);border-radius:var(--wb-radius);color:var(--wb-ink-2)}
 :where(.aham-workbench) .wb-seg.sm button:hover{background:var(--wb-hover);color:var(--wb-ink)}
-:where(.aham-workbench) .wb-seg.sm button[aria-pressed=true]{background:var(--wb-fill);font-weight:500}
+:where(.aham-workbench) .wb-seg.sm button[aria-pressed=true]{background:var(--wb-bg);box-shadow:inset 0 0 0 var(--wb-hairline) var(--wb-line);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-seg button{white-space:nowrap}
 :where(.aham-workbench) .wb-btn.icon-only{padding:0;width:var(--wb-header-control)}
 :where(.aham-workbench) .wb-btn{position:relative}
@@ -501,7 +502,7 @@
 /* Single-line list (9.0, rules/4-页面.md 4.3): no visible header, 44px rows, 36px group rows on the canvas tier.
    One object per row: code · stage icon · name on the left; tag, numbers, date and avatar on the right, right edges aligned. */
 :where(.aham-workbench) .wb-list-rows thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:var(--wb-fill);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-list-rows .wb-group-head th{top:0;height:var(--wb-row);background:color-mix(in srgb,var(--wb-fill) 50%,var(--wb-bg));color:var(--wb-ink);border-bottom:0;box-shadow:inset 0 calc(-1 * var(--wb-hairline)) 0 var(--wb-line)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle{gap:var(--wb-s2);padding-inline:var(--wb-s2)}
 :where(.aham-workbench) .wb-list-rows .wb-group-toggle>svg:first-child{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-list-rows td{height:var(--wb-list-row);line-height:var(--wb-s5)}
