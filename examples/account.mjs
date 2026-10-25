@@ -38,6 +38,8 @@ const BODIES = {
 
 export function initAccount(root, { onShortcuts } = {}) {
   const button = root.querySelector('[data-action="account"]');
+  // Sidebar entries without a sample page (商机, 合同) say so instead of doing nothing.
+  root.addEventListener('click', e => { if (e.target.closest('.wb-rail [data-action="no-sample"]')) toast('示例没有做这一页'); });
   let prefs = { ...DEFAULTS };
   try { prefs = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY)) }; } catch { /* keep defaults */ }
   prefs.singleKey = singleKeyShortcuts();

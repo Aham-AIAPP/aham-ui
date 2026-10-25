@@ -98,6 +98,21 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     first?.focus({ preventScroll: true });
     first?.select?.();
   }
+  // Checks the form on request, e.g. when a submit finds required fields empty: enters edit mode, marks every
+  // problem, opens the message list and moves focus to the first error (rules/3-控件.md 3.3).
+  function check() {
+    if (mode() !== 'edit') enter();
+    if (mode() !== 'edit') return [];
+    problems = validate(root) || [];
+    showStates(problems);
+    const first = problems.find(p => p.severity === 'error') || problems[0];
+    if (first) {
+      first.control.scrollIntoView({ block: 'center' });
+      openMessages();
+      first.control.focus({ preventScroll: true });
+    }
+    return problems;
+  }
   function leave(restore) {
     if (restore) for (const [c, v] of snapshot) { if (checkable(c)) c.checked = v; else c.value = v; }
     problems = [];
@@ -159,6 +174,6 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
   msgBtn.hidden = true;
   root.dataset.mode ||= 'read';
   // discard: leave edit mode and throw the changes away without asking (the page asked already, e.g. in a leave dialog).
-  return { enter, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: life.end };
+  return { enter, check, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: life.end };
 }
 

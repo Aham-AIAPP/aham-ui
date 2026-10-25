@@ -99,8 +99,10 @@ export function shellGroups(root, { accountItems, showShortcuts } = {}) {
     const name = `${(t.getAttribute('aria-label') || t.textContent.trim() || '侧').replace(/面板$/, '')}面板`;
     ui.push({ id: `panel-${t.dataset.panelToggle}`, label: `${t.getAttribute('aria-pressed') === 'true' ? '关闭' : '打开'}${name}`, icon: 'eye', run: () => t.click() });
   });
-  if (root.querySelector('[data-action="theme"]')) {
-    const dark = root.dataset.theme === 'dark';
+  const themeButton = root.querySelector('[data-action="theme"]');
+  if (themeButton) {
+    // initTheme keeps the button label on the theme a click switches to; the command uses the same words.
+    const dark = themeButton.getAttribute('aria-label') === '切换到浅色';
     ui.push({ id: 'theme', label: dark ? '切换到浅色' : '切换到深色', icon: dark ? 'sun' : 'moon', run: click('[data-action="theme"]') });
   }
   return [

@@ -6,7 +6,7 @@
   "name": "单据页",
   "intent": "查看、修改、提交、审批一张单据",
   "api": {
-    "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit, changed, draft: { interval, onDraft, onDiscard } }) → { enter, save, cancel, discard, saveDraft, values, isDirty, destroy }",
+    "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit, changed, draft: { interval, onDraft, onDiscard } }) → { enter, check, save, cancel, discard, saveDraft, values, isDirty, destroy }",
     "initAnchorBar": "initAnchorBar(nav, { scroller }) → { refresh, destroy }"
   },
   "preview": "examples/document.html",

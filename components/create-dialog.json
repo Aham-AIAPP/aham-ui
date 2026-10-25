@@ -9,7 +9,7 @@
   "intent": "快速新建：无边框标题、说明、属性标签、继续新建",
   "specification": "rules/4-页面.md#42-页型",
   "reference": "examples/list.html",
-  "api": "openCreateDialog({ root, title, scope, fields, onSubmit(values) → boolean, returnFocus? })",
+  "api": "openCreateDialog({ root, title, scope, fields, onSubmit(values) → boolean, returnFocus?, nameLabel?, inputs?, description?, check?(values) → string | null })",
   "classes": [
     "wb-create",
     "wb-create-head",

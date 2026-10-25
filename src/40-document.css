@@ -44,7 +44,7 @@
 :where(.aham-workbench) .wb-doc-facts dt{color:var(--wb-muted);font-size:var(--wb-text-xs)}
 :where(.aham-workbench) .wb-doc-facts dd{margin:0;font-weight:500;overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-doc-facts dd.is-amount{font-variant-numeric:tabular-nums}
-:where(.aham-workbench) .wb-doc-head.is-stuck .wb-doc-facts{display:none}
+:where(.aham-workbench) .wb-doc-head.is-stuck :is(.wb-doc-facts,.wb-next){display:none}
 /* Anchor bar: one button per section under the head; the section on screen is underlined like a tab. */
 :where(.aham-workbench) .wb-anchors{display:flex;gap:var(--wb-s5);overflow-x:auto;scrollbar-width:none}
 :where(.aham-workbench) .wb-anchors button{position:relative;flex:none;height:var(--wb-header-row);padding:0;border:0;background:transparent;color:var(--wb-muted);white-space:nowrap}
@@ -71,7 +71,7 @@
 :where(.aham-workbench) .wb-doc-section h2:focus{outline:none}
 :where(.aham-workbench) .wb-doc-section>.wb-section-head{min-height:var(--wb-header-control);margin-block-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-body);font-weight:500}
-:where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill);color:var(--wb-ink);line-height:20px}
+:where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill);color:var(--wb-ink);line-height:var(--wb-leading)}
 :where(.aham-workbench) .wb-strip>svg{margin-block-start:2px;color:var(--wb-muted)}
 :where(.aham-workbench) .wb-strip[data-tone=info]{background:var(--wb-info-bg)}
 :where(.aham-workbench) .wb-strip[data-tone=info]>svg{color:var(--wb-info)}
@@ -88,14 +88,14 @@
 :where(.aham-workbench) .wb-form-grid.is-wide{max-width:none;grid-template-columns:repeat(3,minmax(0,1fr))}
 :where(.aham-workbench) .wb-form-row{display:grid;align-content:start;gap:var(--wb-s1);min-width:0}
 :where(.aham-workbench) .wb-form-row.is-full{grid-column:1 / -1}
-:where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:20px;overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-form-label{color:var(--wb-ink-2);line-height:var(--wb-leading);overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-form-required{color:var(--wb-danger);margin-inline-start:2px}
 :where(.aham-workbench) .wb-form-hint{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:18px}
 :where(.aham-workbench) .wb-form-hint.is-error{color:var(--wb-danger)}
 :where(.aham-workbench) .wb-form-value{position:relative;display:flex;align-items:center;gap:var(--wb-s1);min-height:var(--wb-control);min-width:0}
 :where(.aham-workbench) [data-mode=read] .wb-form-value{align-items:flex-start;padding-block:6px}
 :where(.aham-workbench) [data-mode=read] .wb-form-value[tabindex]:focus-visible{outline:2px solid var(--wb-blue);outline-offset:2px;border-radius:var(--wb-radius-sm)}
-:where(.aham-workbench) .wb-value{line-height:20px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-value{line-height:var(--wb-leading);overflow-wrap:anywhere}
 :where(.aham-workbench) .wb-value.is-editable{cursor:text}
 :where(.aham-workbench) .wb-value.is-check{background:var(--wb-warning-mark);border-radius:var(--wb-radius-sm);padding-inline:var(--wb-s1);-webkit-box-decoration-break:clone;box-decoration-break:clone}
 :where(.aham-workbench) .wb-value.is-missing{color:var(--wb-danger)}
@@ -118,7 +118,7 @@
 /* Value state: an error has a red line, a warning an amber line; the message floats under the value while it has focus. */
 :where(.aham-workbench) [data-state=error] .wb-field{border-color:var(--wb-danger)}
 :where(.aham-workbench) [data-state=warning] .wb-field{border-color:var(--wb-warning)}
-:where(.aham-workbench) .wb-value-state{display:none;position:absolute;inset-inline-start:0;top:calc(100% + 4px);z-index:var(--wb-z-pop);min-width:240px;max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius);box-shadow:var(--wb-shadow-pop);line-height:20px}
+:where(.aham-workbench) .wb-value-state{display:none;position:absolute;inset-inline-start:0;top:calc(100% + 4px);z-index:var(--wb-z-pop);min-width:240px;max-width:var(--wb-pop-max);padding:var(--wb-s1) var(--wb-s2);border-radius:var(--wb-radius);box-shadow:var(--wb-shadow-pop);line-height:var(--wb-leading)}
 :where(.aham-workbench) [data-state]:focus-within>.wb-value-state{display:block}
 :where(.aham-workbench) [data-state=warning]>.wb-value-state{background:var(--wb-warning-bg);color:var(--wb-ink)}
 :where(.aham-workbench) [data-state=error]>.wb-value-state{background:var(--wb-danger-bg);color:var(--wb-danger)}

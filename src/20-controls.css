@@ -92,10 +92,10 @@
 :where(.aham-workbench) .wb-link,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a{padding:0;border:0;background:transparent;color:var(--wb-ink);text-decoration:underline;text-decoration-color:var(--wb-line-strong);text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer}
 :where(.aham-workbench) .wb-link:hover,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a:hover{text-decoration-color:currentColor}
 /* Field: text box, select and textarea share one look, 32px with a 1px line; .sm is 28px for toolbars and popovers. */
-:where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:20px;height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line-strong);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:var(--wb-leading);height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line-strong);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-field.sm{height:var(--wb-header-control)}
 :where(.aham-workbench) select.wb-field{appearance:none;padding-inline-end:calc(var(--wb-s5) + var(--wb-s1));background-image:linear-gradient(45deg,transparent calc(50% - 0.75px),var(--wb-muted) calc(50% - 0.75px),var(--wb-muted) calc(50% + 0.75px),transparent calc(50% + 0.75px)),linear-gradient(-45deg,transparent calc(50% - 0.75px),var(--wb-muted) calc(50% - 0.75px),var(--wb-muted) calc(50% + 0.75px),transparent calc(50% + 0.75px));background-size:5px 5px;background-repeat:no-repeat;background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%}
-:where(.aham-workbench) textarea.wb-field{height:auto;min-height:calc(var(--wb-control) * 2);padding-block:5px;line-height:20px;resize:vertical}
+:where(.aham-workbench) textarea.wb-field{height:auto;min-height:calc(var(--wb-control) * 2);padding-block:5px;line-height:var(--wb-leading);resize:vertical}
 :where(.aham-workbench) .wb-field:hover{border-color:var(--wb-muted)}
 :where(.aham-workbench) .wb-field:focus{outline:0;border-color:var(--wb-blue);box-shadow:0 0 0 3px var(--wb-blue-bg)}
 :where(.aham-workbench) .wb-field[aria-invalid=true]{outline:0;border-color:var(--wb-danger)}

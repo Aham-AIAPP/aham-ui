@@ -1,5 +1,5 @@
 // Record detail sample: composes the Aham UI detail patterns with fictional demo data.
-import {initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
+import {initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, toast, icon, escapeHtml as esc, personHTML, formatKeys, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
 import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './list-model.mjs';
 import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
 import {initAccount} from './account.mjs';
@@ -22,7 +22,16 @@ const pos = nav.ids.indexOf(record.id);
 const LIVE_STAGES = STAGES.filter(s => s !== '已流失');
 const stageIcon = stage => stage === '已流失' ? stageIconHTML({ state: 'off', label: stage }) : stage === '已签约' ? stageIconHTML({ state: 'done', label: stage })
   : stageIconHTML({ state: 'current', done: LIVE_STAGES.indexOf(stage), total: LIVE_STAGES.length - 1, label: stage });
-const metaHtml = () => `<span class="wb-status">${stageIcon(record.stage)}<span>${esc(record.stage)}</span></span><span>${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
+const metaHtml = () => `<span class="wb-status">${stageIcon(record.stage)}<span>${esc(record.stage)}</span></span><span>${esc(record.code)}</span><span>负责人 ${personHTML(record.owner)}</span>`;
+// A customer has a stage, and each open stage waits for the owner to do one thing (rules/3-控件.md 3.13).
+const NEXT_ACTION = { 初次接触: '约需求调研', 需求调研: '整理调研结论', 方案评估: '提交方案初稿', 商务谈判: '确认合同条款' };
+function nextHtml() {
+  const action = NEXT_ACTION[record.stage];
+  if (!action) return '';
+  const who = record.owner === ME ? '你' : record.owner;
+  const d = new Date(Date.now() + 3 * 864e5), due = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return `<div class="wb-next" role="status"><span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>等${esc(who)}</strong>${action}</span><span class="wb-next-date">计划 ${due}</span></div>`;
+}
 
 const activity = [
   { kind: 'event', icon: 'edit', who: ME, text: '创建了记录', when: record.created },
@@ -34,8 +43,9 @@ function renderMain() {
   $('#record-main').innerHTML = `
     <h1 class="wb-detail-title">${esc(record.name)}</h1>
     <div class="wb-detail-meta">${metaHtml()}</div>
+    <div id="next-slot">${nextHtml()}</div>
     <div id="ai-slot"><button type="button" class="wb-btn sm ghost" data-action="ai-summary">${icon('ai')}<span>生成摘要</span></button></div>
-    <div class="wb-detail-body"><p>这是一段虚构的记录说明，用来演示详情页的正文区。正文放在居中的阅读宽度里，长段落按 1.75 行高排版。</p><p>属性放在右侧属性栏，正文只写需要阅读的内容：背景、范围、约定事项。</p></div>
+    <div class="wb-detail-body"><p>主营精密结构件和汽车零部件加工，两个厂区共 46 台数控设备。现有用友 U8 管财务和库存，车间报工还在用纸质派工单。</p><p>今年关注两件事：设备开动率看不清，客户审核要追溯到批次。双方约定先做一期生产执行，设备接口清单由客户设备科在调研前提供。</p></div>
     <section class="wb-detail-section" aria-labelledby="related-title">
       <div class="wb-section-heading"><h2 id="related-title">关联记录<span>2</span></h2></div>
       <ul class="wb-related">
@@ -52,7 +62,7 @@ function renderMain() {
       <form class="wb-composer" id="composer" aria-label="写评论">
         <textarea rows="2" aria-label="评论内容" placeholder="写评论…" maxlength="2000"></textarea>
         <ul class="wb-composer-files" id="composer-files" hidden></ul>
-        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span class="wb-composer-hint">⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
+        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span class="wb-composer-hint">${formatKeys('mod+enter').join(' ')} 发送</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
         <input type="file" multiple hidden>
       </form>
     </section>`;
@@ -67,6 +77,7 @@ function renderActivity() {
 }
 function renderMeta() {
   $('.wb-detail-meta').innerHTML = metaHtml();
+  $('#next-slot').innerHTML = nextHtml();
 }
 function renderProps() {
   $('#record-props').innerHTML = `

@@ -58,22 +58,36 @@ if (typeof document !== 'undefined') {
 export const lastInput = () => inputKind;
 // ── Theme ────────────────────────────────────────────────────────────────────
 // ?theme=light|dark in the page URL sets the starting theme (the panorama page passes its own theme to embedded samples).
-// A [data-action="theme"] button inside root toggles light / dark and keeps its pressed state and icon in sync.
+// A [data-action="theme"] button inside root toggles light / dark. It is an action button, not a toggle: its icon and
+// label name the theme a click switches to (moon and 切换到深色 on a light page), so it carries no aria-pressed.
 export function initTheme(root = document.querySelector('.aham-workbench')) {
   const life = scope();
   if (!root) return null;
   const button = root.querySelector('[data-action="theme"]');
-  function set(theme) {
-    root.dataset.theme = theme;
+  const media = matchMedia('(prefers-color-scheme: dark)');
+  // Without data-theme the page follows the system; the button names the opposite of what is showing.
+  const current = () => root.dataset.theme === 'dark' || (!root.dataset.theme && media.matches) ? 'dark' : 'light';
+  function paint() {
     if (!button) return;
-    const dark = theme === 'dark';
-    button.setAttribute('aria-pressed', String(dark));
+    const dark = current() === 'dark';
+    const label = dark ? '切换到浅色' : '切换到深色';
+    button.removeAttribute('aria-pressed');
+    button.setAttribute('aria-label', label);
+    if (button.hasAttribute('data-tooltip')) button.dataset.tooltip = label;
     button.innerHTML = icon(dark ? 'sun' : 'moon');
   }
+  function set(theme) { root.dataset.theme = theme; paint(); }
   const asked = new URLSearchParams(location.search).get('theme');
-  if (asked === 'light' || asked === 'dark') set(asked);
-  life.on(button, 'click', () => set(root.dataset.theme === 'dark' ? 'light' : 'dark'));
-  return { set, get: () => root.dataset.theme, destroy: life.end, fromUrl: asked === 'light' || asked === 'dark' ? asked : null };
+  if (asked === 'light' || asked === 'dark') set(asked); else paint();
+  // A preferences dialog or the host app may set data-theme directly; the button follows it and the system setting.
+  if (button) {
+    const watch = new MutationObserver(paint);
+    watch.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    life.keep(() => watch.disconnect());
+    life.on(media, 'change', paint);
+  }
+  life.on(button, 'click', () => set(current() === 'dark' ? 'light' : 'dark'));
+  return { set, get: current, destroy: life.end, fromUrl: asked === 'light' || asked === 'dark' ? asked : null };
 }
 
 // ── Navigation ───────────────────────────────────────────────────────────────
@@ -310,6 +324,10 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     const itemRole = role === 'menu' ? 'menuitem' : 'option';
     let html = '', group;
     const gap = shown.some(it => it.icon) ? '<span class="wb-command-gap" aria-hidden="true"></span>' : '';   // keep labels aligned when only some rows have icons
+    // A command that opens a submenu or asks for more (label ends in …) shows an arrow (rules/7-键盘与命令.md 7.2).
+    // When any row has one, the others keep an empty slot of the same width, so the key column lines up.
+    const arrowed = it => it.arrow || /…$/.test(it.label);
+    const slot = shown.some(arrowed) ? '<span class="wb-command-gap" aria-hidden="true"></span>' : '';
     shown.forEach((it, i) => {
       if (it.heading && it.group !== group) html += `<li class="wb-command-heading" role="presentation">${escapeHtml(it.heading)}</li>`;
       else if (i > 0 && it.group !== group) html += '<li class="wb-command-sep" role="separator"></li>';
@@ -318,7 +336,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
       const prefix = it.prefix ? `<span class="wb-command-prefix">${escapeHtml(it.prefix)}</span>${icon('chevron-right')}` : '';
       const count = it.count === undefined ? '' : `<sup class="wb-command-count">${it.count > 99 ? '99+' : it.count}</sup>`;
       const keys = it.keys ? `<span class="wb-kbd-group" aria-hidden="true">${formatKeys(it.keys).map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>` : '';
-      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${it.arrow ? icon('arrow-right') : ''}</li>`;
+      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${arrowed(it) ? icon('arrow-right') : slot}</li>`;
     });
     list.innerHTML = html;
     emptyEl.hidden = shown.length > 0;
@@ -1109,8 +1127,10 @@ export function shellGroups(root, { accountItems, showShortcuts } = {}) {
     const name = `${(t.getAttribute('aria-label') || t.textContent.trim() || '侧').replace(/面板$/, '')}面板`;
     ui.push({ id: `panel-${t.dataset.panelToggle}`, label: `${t.getAttribute('aria-pressed') === 'true' ? '关闭' : '打开'}${name}`, icon: 'eye', run: () => t.click() });
   });
-  if (root.querySelector('[data-action="theme"]')) {
-    const dark = root.dataset.theme === 'dark';
+  const themeButton = root.querySelector('[data-action="theme"]');
+  if (themeButton) {
+    // initTheme keeps the button label on the theme a click switches to; the command uses the same words.
+    const dark = themeButton.getAttribute('aria-label') === '切换到浅色';
     ui.push({ id: 'theme', label: dark ? '切换到浅色' : '切换到深色', icon: dark ? 'sun' : 'moon', run: click('[data-action="theme"]') });
   }
   return [
@@ -1231,18 +1251,22 @@ export function openSplitDialog({ root, title, sections, render, start = section
 // Quick create, as Circle's new-issue modal: borderless title, description, property chips that open pickers,
 // then 继续新建 and the primary button. ⌘/Ctrl+Enter creates. Closing with unsaved text asks in place
 // (继续编辑 / 放弃 / 创建) instead of stacking a second modal. The title error is shown under the title.
-// fields: [{ key, label, options, icon?, value? }]; onSubmit({ title, description, ...props }) → true when saved.
+// fields: [{ key, label, options, icon?, value? }]; onSubmit({ title, description, ...inputs, ...props }) → true when saved.
+// The first input names the object: nameLabel says what it is (客户全称, not 标题). inputs adds plain text lines under it
+// (统一社会信用代码); description: false drops the free-text box. check(values) returns an error to show under the name,
+// e.g. a duplicate found before the record is created.
 // returnFocus: where focus goes on close when the element that opened the dialog was re-rendered meanwhile.
-export function openCreateDialog({ root, title: heading, scope, fields = [], onSubmit, returnFocus }) {
+export function openCreateDialog({ root, title: heading, scope, fields = [], onSubmit, returnFocus, nameLabel = '标题', inputs = [], description = '补充说明…', check }) {
   const props = Object.fromEntries(fields.map(f => [f.key, f.value ?? '']));
   let confirm = null, foot = null, name = null;
   const keep = () => { foot.hidden = false; confirm.hidden = true; name.focus(); };
   const { dialog, close: finish } = openDialog({ root, className: 'wb-create', labelledBy: 'wb-create-title', returnFocus,
     onEscape: () => (confirm.hidden ? askClose() : keep()), html: `<form method="dialog" novalidate>
     <div class="wb-create-head">${scope ? `<span class="wb-create-scope">${escapeHtml(scope)}</span>${icon('chevron-right')}` : ''}<span id="wb-create-title">${escapeHtml(heading)}</span></div>
-    <input class="wb-create-name" name="title" aria-label="标题" placeholder="标题" maxlength="200" autocomplete="off" aria-describedby="wb-create-error">
+    <input class="wb-create-name" name="title" aria-label="${escapeHtml(nameLabel)}" placeholder="${escapeHtml(nameLabel)}" maxlength="200" autocomplete="off" aria-describedby="wb-create-error">
     <p class="wb-value-error" id="wb-create-error" role="alert"></p>
-    <textarea class="wb-create-desc" name="description" aria-label="说明" placeholder="补充说明…" rows="3" maxlength="2000"></textarea>
+    ${inputs.map(f => `<input class="wb-create-desc" name="${escapeHtml(f.key)}" aria-label="${escapeHtml(f.label)}" placeholder="${escapeHtml(f.placeholder || f.label)}" maxlength="${f.maxlength || 200}" autocomplete="off">`).join('')}
+    ${description === false ? '' : `<textarea class="wb-create-desc" name="description" aria-label="说明" placeholder="${escapeHtml(description)}" rows="3" maxlength="2000"></textarea>`}
     <div class="wb-create-props">${fields.map(f => `<button type="button" class="wb-btn sm" data-create-prop="${escapeHtml(f.key)}" aria-haspopup="dialog" aria-expanded="false"></button>`).join('')}</div>
     <div class="wb-create-foot">
       <label class="wb-switch"><input type="checkbox" name="more"><span aria-hidden="true"></span>继续新建</label>
@@ -1250,8 +1274,8 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     </div>
     <div class="wb-create-foot wb-create-confirm" hidden><span>有未保存的内容。</span><div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="keep">继续编辑</button><button type="button" class="wb-btn sm ghost danger" data-create="discard">放弃</button><button type="button" class="wb-btn sm primary" data-create="save">创建</button></div></div>
   </form>` });
-  const form = dialog.querySelector('form'), desc = form.description, err = dialog.querySelector('#wb-create-error');
-  name = form.title;
+  const form = dialog.querySelector('form'), desc = form.elements.description || { value: '' }, err = dialog.querySelector('#wb-create-error');
+  name = form.elements.title;
   [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
   const paintProps = () => dialog.querySelectorAll('[data-create-prop]').forEach(b => {
     const f = fields.find(x => x.key === b.dataset.createProp), v = props[f.key];
@@ -1259,7 +1283,7 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     b.classList.toggle('is-empty', !v);
     b.setAttribute('aria-label', `${f.label}：${v || '未设置'}`);
   });
-  const dirty = () => Boolean(name.value.trim() || desc.value.trim());
+  const dirty = () => Boolean(name.value.trim() || desc.value.trim() || inputs.some(f => form.elements[f.key].value.trim()));
   function askClose() {
     if (!dirty()) { finish(); return; }
     foot.hidden = true; confirm.hidden = false;
@@ -1267,10 +1291,14 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
   }
   async function submit() {
     const t = name.value.trim();
-    if (!t) { err.textContent = '标题未填写'; name.setAttribute('aria-invalid', 'true'); name.focus(); foot.hidden = false; confirm.hidden = true; return; }
-    const ok = await onSubmit({ title: t, description: desc.value.trim(), ...props });
+    const fail = text => { err.textContent = text; name.setAttribute('aria-invalid', 'true'); name.focus(); foot.hidden = false; confirm.hidden = true; };
+    if (!t) { fail(`${nameLabel}未填写`); return; }
+    const values = { title: t, description: desc.value.trim(), ...Object.fromEntries(inputs.map(f => [f.key, form.elements[f.key].value.trim()])), ...props };
+    const problem = check?.(values);
+    if (problem) { fail(problem); return; }
+    const ok = await onSubmit(values);
     if (!ok) return;
-    if (form.more.checked) { name.value = ''; desc.value = ''; err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
+    if (form.more.checked) { name.value = ''; desc.value = ''; inputs.forEach(f => { form.elements[f.key].value = ''; }); err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
     finish();
   }
   form.addEventListener('submit', e => { e.preventDefault(); submit(); });
@@ -1522,6 +1550,21 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
     first?.focus({ preventScroll: true });
     first?.select?.();
   }
+  // Checks the form on request, e.g. when a submit finds required fields empty: enters edit mode, marks every
+  // problem, opens the message list and moves focus to the first error (rules/3-控件.md 3.3).
+  function check() {
+    if (mode() !== 'edit') enter();
+    if (mode() !== 'edit') return [];
+    problems = validate(root) || [];
+    showStates(problems);
+    const first = problems.find(p => p.severity === 'error') || problems[0];
+    if (first) {
+      first.control.scrollIntoView({ block: 'center' });
+      openMessages();
+      first.control.focus({ preventScroll: true });
+    }
+    return problems;
+  }
   function leave(restore) {
     if (restore) for (const [c, v] of snapshot) { if (checkable(c)) c.checked = v; else c.value = v; }
     problems = [];
@@ -1583,7 +1626,7 @@ export function initObjectPage(root, { edit, footer, messages, validate = () => 
   msgBtn.hidden = true;
   root.dataset.mode ||= 'read';
   // discard: leave edit mode and throw the changes away without asking (the page asked already, e.g. in a leave dialog).
-  return { enter, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: life.end };
+  return { enter, check, save: doSave, cancel: doCancel, discard: () => { const was = dirty(); leave(true); draft?.onDiscard?.({ changed: was }); }, saveDraft, values, isDirty: dirty, destroy: life.end };
 }
 
 // ── File checks (rules/5-单据.md 5.13, pure) ───────────────────────────────────

@@ -158,7 +158,7 @@ doc.addEventListener('input', e => {
 // ── Key facts in the head: four read-only pairs that fold away when the page scrolls ─────────
 function renderFacts(totalCents) {
   const f = state.fields;
-  $('#doc-facts').innerHTML = [['客户', esc(f.customer || '–')], ['价税合计（元）', money(totalCents), 'is-amount'], ['有效期至', esc(f.validTo || '–'), 'is-amount'], ['负责人', esc(f.owner)]]
+  $('#doc-facts').innerHTML = [['客户', esc(f.customer || '–')], ['价税合计（元）', money(totalCents), 'is-amount'], ['有效期至', esc(f.validTo || '–')], ['负责人', esc(f.owner)]]
     .map(([k, v, c]) => `<div><dt>${k}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`).join('');
 }
 
@@ -174,7 +174,19 @@ function renderStatus() {
   const strip = $('#doc-strip');
   const set = (tone, iconName, html) => { strip.hidden = false; strip.dataset.tone = tone; strip.innerHTML = `${icon(iconName)}<span class="wb-grow">${html}</span>`; };
   strip.hidden = true;
-  if (state.status === 'review') set('info', 'info', '已提交，等待销售负责人王卓审批。审批期间不能修改，需要改动时先撤回。<span class="wb-meta">演示：</span><button type="button" class="wb-btn sm" data-demo="approve">通过</button> <button type="button" class="wb-btn sm" data-demo="return">退回</button>');
+  // The next-step line says who the page waits for; the strip says whether the document can change (rules/5-单据.md 5.8).
+  const next = $('#doc-next');
+  const missing = [...FIELDS.basic, ...FIELDS.terms].filter(f => f.required && !state.fields[f.key]);
+  const due = (() => { const d = new Date(Date.now() + 2 * 864e5); return `计划 ${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })();
+  const nextLine = {
+    draft: missing.length ? ['等你', `补齐${missing.map(f => esc(f.label)).join('、')}后提交审批`, ''] : ['等你', '提交审批', ''],
+    review: ['等王卓', '审批', due],
+    returned: ['等你', '按退回意见修改后重新提交', ''],
+  }[state.status];
+  next.hidden = !nextLine;
+  if (nextLine) next.innerHTML = `<span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>${nextLine[0]}</strong>${nextLine[1]}</span>${nextLine[2] ? `<span class="wb-next-date">${nextLine[2]}</span>` : ''}`;
+
+  if (state.status === 'review') set('info', 'info', '审批期间不能修改，需要改动时先撤回。<span class="wb-meta">演示：</span><button type="button" class="wb-btn sm" data-demo="approve">通过</button> <button type="button" class="wb-btn sm" data-demo="return">退回</button>');
   if (state.status === 'returned') set('warning', 'warning', `王卓退回：${esc(state.returnReason)}。修改后重新提交。`);
   if (state.status === 'approved') set('success', 'success', '已生效，可以打印发给客户。生效后不能修改，条件变化时复制为新报价。');
   if (state.status === 'voided') set('', 'info', `已作废：${esc(state.voidReason)}。只能查看、打印和复制。`);
@@ -185,11 +197,15 @@ function renderStatus() {
   $('#doc-withdraw').hidden = state.status !== 'review';
   $('#doc-print').classList.toggle('primary', state.status === 'approved');
 
-  const steps = [{ who: '林悦 · 提交', done: state.status !== 'draft' }];
-  steps.push({ who: '王卓 · 销售负责人', done: state.status === 'approved', current: state.status === 'review', note: state.status === 'returned' ? '已退回' : '' });
-  if (lowDiscount(state.rows)) steps.push({ who: '商务负责人', done: state.status === 'approved', note: '折扣低于 8 折时加签' });
-  $('#approval').innerHTML = steps.map(st => `<li class="${st.done ? 'done' : ''}"><span class="wb-step-dot"></span><div><strong>${esc(st.who)}</strong><small>${st.done ? '已完成' : st.note || (st.current ? '处理中' : '待处理')}</small></div></li>`).join('');
-  $('#history').innerHTML = `<h2>变更记录</h2>${state.history.slice(0, 5).map(h => `<p><strong>${esc(h.who)}</strong> ${esc(h.what)}</p><span>${esc(h.when)}</span>`).join('')}`;
+  // Each step names a person and what happened, never 待处理 or 处理中 (设计理念 原则 3).
+  const steps = [{ who: '林悦 · 提交', text: state.status === 'draft' ? '未提交' : '已提交', done: state.status !== 'draft' }];
+  steps.push({ who: '王卓 · 销售负责人', done: state.status === 'approved',
+    text: { approved: '已通过', review: '等王卓审批', returned: '已退回' }[state.status] || '未开始' });
+  if (lowDiscount(state.rows)) steps.push({ who: '商务负责人', done: state.status === 'approved', text: state.status === 'approved' ? '已通过' : '未开始 · 折扣低于 8 折时加签' });
+  $('#approval').innerHTML = steps.map(st => `<li class="${st.done ? 'done' : ''}"><span class="wb-step-dot"></span><div><strong>${esc(st.who)}</strong><small>${esc(st.text)}</small></div></li>`).join('');
+  const first = state.history[state.history.length - 1];
+  $('#history-sum').textContent = `${state.history.length} 条 · ${first.who}创建 · 最近 ${last.when}`;
+  $('#history').innerHTML = state.history.map(h => `<p><strong>${esc(h.who)}</strong> ${esc(h.what)}</p><span>${esc(h.when)}</span>`).join('');
 }
 function setStatus(next, what) {
   state.status = next;
@@ -231,16 +247,11 @@ async function save(values) {
   publish();
 }
 
-// Submitting checks the saved values: a required field left empty stops it, and the strip names the field.
+// Submitting checks the saved values. A required field left empty stops it: the page enters edit mode, marks each
+// field, opens the message list and moves focus to the first one (rules/3-控件.md 3.3).
 function submit() {
   const missing = [...FIELDS.basic, ...FIELDS.terms].filter(f => f.required && !state.fields[f.key]);
-  if (missing.length) {
-    const strip = $('#doc-strip');
-    strip.hidden = false;
-    strip.dataset.tone = 'danger';
-    strip.innerHTML = `${icon('error')}<span class="wb-grow">还有 ${missing.length} 项必填未填写：${missing.map(f => esc(f.label)).join('、')}。补齐后再提交。</span><button type="button" class="wb-btn sm" data-fill="${missing[0].key}">去填写</button>`;
-    return;
-  }
+  if (missing.length) { page.check(); return; }
   setStatus('review', state.status === 'returned' ? '重新提交审批' : '提交审批');
   toast('已提交审批');
 }
@@ -282,7 +293,6 @@ root.addEventListener('click', e => {
   else if (b.id === 'doc-withdraw') openConfirm({ root, title: '撤回审批？', text: '撤回后报价单回到草稿，可以继续修改，审批人那边的待办会取消。', confirm: '撤回', returnFocus: b, onConfirm: () => { setStatus('draft', '撤回审批'); toast('已撤回，报价单回到草稿'); } });
   else if (b.dataset.demo === 'approve') { setStatus('approved', '审批通过'); toast('王卓已通过'); }
   else if (b.dataset.demo === 'return') openConfirm({ root, title: '退回报价单？', confirm: '退回', reason: { label: '退回原因' }, returnFocus: b, onConfirm: reason => { state.returnReason = reason; setStatus('returned', '退回报价单'); } });
-  else if (b.dataset.fill) { $('#doc-strip').hidden = true; page.enter(doc.querySelector(`[name=${b.dataset.fill}]`)); }
   else if (b.id === 'line-add') addLine(b);
   else if (b.dataset.remove) removeLine(Number(b.dataset.remove));
 });

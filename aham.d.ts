@@ -14,7 +14,7 @@ export function icon(name: string): string;
 export function escapeHtml(value: unknown): string;
 
 // ── Shell ──
-export interface ThemeHandle extends Handle { set(theme: 'light' | 'dark'): void; get(): string | undefined; fromUrl: 'light' | 'dark' | null }
+export interface ThemeHandle extends Handle { set(theme: 'light' | 'dark'): void; get(): 'light' | 'dark'; fromUrl: 'light' | 'dark' | null }
 export function initTheme(root?: Root): ThemeHandle | null;
 export interface ShellHandle extends Handle { set(open: boolean, options?: { persist?: boolean; restoreFocus?: boolean }): void; isOpen(): boolean; theme: ThemeHandle | null }
 export function initShell(root?: Root): ShellHandle | null;
@@ -71,7 +71,8 @@ export function openConfirm(options: {
 }): { close(): void };
 export interface FormField { key: string; label: string; type?: 'text' | 'number' | 'select'; options?: string[]; value?: string; required?: boolean; hint?: string; inputmode?: string }
 export function openFormDialog(options: { root: Root; title: string; text?: string; fields?: FormField[]; submit?: string; onSubmit(values: Record<string, string>): boolean | string | Record<string, string> | Promise<boolean | string | Record<string, string>>; returnFocus?: HTMLElement }): { close(): void; dialog: HTMLDialogElement };
-export function openCreateDialog(options: { root: Root; title: string; scope?: string; fields?: { key: string; label: string; options: string[]; icon?: string; value?: string }[]; onSubmit(values: Record<string, string>): boolean | Promise<boolean>; returnFocus?: HTMLElement }): { close(): void };
+export function openCreateDialog(options: { root: Root; title: string; scope?: string; fields?: { key: string; label: string; options: string[]; icon?: string; value?: string }[]; onSubmit(values: Record<string, string>): boolean | Promise<boolean>; returnFocus?: HTMLElement;
+  nameLabel?: string; inputs?: { key: string; label: string; placeholder?: string; maxlength?: number }[]; description?: string | false; check?(values: Record<string, string>): string | null | undefined }): { close(): void };
 export function showBatchResult(options: { root: Root; action: string; noun: string; total: number; failed?: { name: string; reason: string }[]; returnFocus?: HTMLElement }): { close(): void } | null;
 export function openSplitDialog(options: { root: Root; title: string; sections: { id: string; label: string; icon?: string }[]; render(id: string): string; start?: string; onShow?(id: string, body: HTMLElement): void; returnFocus?: HTMLElement }): DialogHandle & { body: HTMLElement; show(id: string): void; current(): string };
 export function initAccountMenu(options: { root: Root; button?: HTMLElement; account?: string; items(): CommandItem[]; onSelect(item: CommandItem): void }): (Handle & { open(): void; menu: HTMLElement }) | null;
@@ -107,7 +108,7 @@ export function initObjectPage(root: Root, options?: {
   edit?: HTMLElement; footer?: HTMLElement; messages?: HTMLElement; validate?(root: Root): ObjectProblem[];
   onSave?(values: Record<string, string>): Promise<void>; saved?: string; canEdit?(): boolean; changed?(): boolean;
   draft?: { interval?: number; onDraft(values: Record<string, string>): Promise<void>; onDiscard?(info: { changed: boolean }): void } | null;
-}): Handle & { enter(target?: HTMLElement): void; save(): Promise<void>; cancel(): void; discard(): void; saveDraft(): Promise<void>; values(): Record<string, string>; isDirty(): boolean };
+}): Handle & { enter(target?: HTMLElement): void; check(): ObjectProblem[]; save(): Promise<void>; cancel(): void; discard(): void; saveDraft(): Promise<void>; values(): Record<string, string>; isDirty(): boolean };
 export function personHTML(name: string, options?: { size?: 'xs' | 'sm' | 'md'; label?: string; compact?: boolean }): string;
 export function avatarCat(name: string): number;
 export const STAGE_STATE_WORDS: Record<'todo' | 'current' | 'done' | 'blocked' | 'off', string>;

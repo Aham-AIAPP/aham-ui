@@ -24,6 +24,10 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     const itemRole = role === 'menu' ? 'menuitem' : 'option';
     let html = '', group;
     const gap = shown.some(it => it.icon) ? '<span class="wb-command-gap" aria-hidden="true"></span>' : '';   // keep labels aligned when only some rows have icons
+    // A command that opens a submenu or asks for more (label ends in …) shows an arrow (rules/7-键盘与命令.md 7.2).
+    // When any row has one, the others keep an empty slot of the same width, so the key column lines up.
+    const arrowed = it => it.arrow || /…$/.test(it.label);
+    const slot = shown.some(arrowed) ? '<span class="wb-command-gap" aria-hidden="true"></span>' : '';
     shown.forEach((it, i) => {
       if (it.heading && it.group !== group) html += `<li class="wb-command-heading" role="presentation">${escapeHtml(it.heading)}</li>`;
       else if (i > 0 && it.group !== group) html += '<li class="wb-command-sep" role="separator"></li>';
@@ -32,7 +36,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
       const prefix = it.prefix ? `<span class="wb-command-prefix">${escapeHtml(it.prefix)}</span>${icon('chevron-right')}` : '';
       const count = it.count === undefined ? '' : `<sup class="wb-command-count">${it.count > 99 ? '99+' : it.count}</sup>`;
       const keys = it.keys ? `<span class="wb-kbd-group" aria-hidden="true">${formatKeys(it.keys).map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>` : '';
-      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${it.arrow ? icon('arrow-right') : ''}</li>`;
+      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${arrowed(it) ? icon('arrow-right') : slot}</li>`;
     });
     list.innerHTML = html;
     emptyEl.hidden = shown.length > 0;

@@ -26,7 +26,7 @@
 :where(.aham-workbench) .wb-next{display:flex;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);padding:var(--wb-s1) var(--wb-s1) var(--wb-s1) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
 :where(.aham-workbench) .wb-next>.wb-grow{flex:1;min-width:0}
 :where(.aham-workbench) .wb-next strong{font-weight:500}
-:where(.aham-workbench) .wb-next-date{color:var(--wb-muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+:where(.aham-workbench) .wb-next-date{color:var(--wb-muted);white-space:nowrap}
 /* Timeline: the progress of one object, top to bottom, in the side column. */
 :where(.aham-workbench) .wb-timeline{display:grid;margin:0;padding:0;list-style:none}
 :where(.aham-workbench) .wb-timeline>li{position:relative;display:grid;gap:2px;padding:0 0 var(--wb-s4) var(--wb-s5)}
@@ -68,8 +68,9 @@
 :where(.aham-workbench) .wb-composer-file{display:inline-flex;align-items:center;gap:var(--wb-s2);max-width:100%;min-height:var(--wb-header-control);padding:0 0 0 var(--wb-s2);border-radius:var(--wb-radius);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-line)}
 :where(.aham-workbench) .wb-composer-file>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :where(.aham-workbench) .wb-composer-file>.wb-file-meta{flex:none}
-/* Outside form page: one centred column for people outside the company. No navigation, no internal names. */
-:where(.aham-workbench) .wb-form-page{max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6) var(--wb-s4) var(--wb-s8);display:grid;gap:var(--wb-s5)}
+/* Outside form page: one centred column for people outside the company. No navigation, no internal names.
+   Body text is 14px (rules/2-视觉.md 2.5): the people filling it in do not use the system every day. */
+:where(.aham-workbench) .wb-form-page{--wb-body:var(--wb-text-base);font-size:var(--wb-body);max-width:var(--wb-detail-width);margin:0 auto;padding:var(--wb-s6) var(--wb-s4) var(--wb-s8);display:grid;gap:var(--wb-s5)}
 :where(.aham-workbench) .wb-form-page-brand{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-form-page-title{font-size:var(--wb-title);font-weight:600;line-height:1.35}
 :where(.aham-workbench) .wb-form-progress{display:grid;gap:var(--wb-s2)}

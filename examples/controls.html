@@ -9,7 +9,7 @@ body{margin:0}
 .gl-head h1{font-size:var(--wb-title);font-weight:600}
 .gl-head p{margin-block-start:var(--wb-s2);color:var(--wb-muted)}
 .gl section{display:grid;gap:var(--wb-s4)}
-.gl h2{font-size:var(--wb-text-base);font-weight:600}
+.gl h2{font-size:var(--wb-body);font-weight:500}
 .gl-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3) var(--wb-s4)}
 .gl-cap{color:var(--wb-muted);font-size:var(--wb-text-xs)}
 .gl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s4) var(--wb-s5)}
@@ -26,7 +26,7 @@ body{margin:0}
 <main class="gl">
   <header class="gl-head">
     <div><h1>控件</h1><p>按钮、输入、选择、状态、提示条、人员、阶段、下一步、数字行、折叠和占位加载。单行列表行高 44px，数据表格行高 36px，控件高 32px，工具栏和弹层里的小号 28px。</p></div>
-    <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button>
+    <button type="button" class="wb-icon-btn" data-action="theme" aria-label="切换到深色" data-tooltip="切换到深色"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-moon"/></svg></button>
   </header>
 
   <section aria-labelledby="g-btn">
@@ -56,11 +56,12 @@ body{margin:0}
       <div class="gl-field"><span id="g-amount">预算</span><span class="wb-edit"><input class="wb-field is-number" aria-labelledby="g-amount" inputmode="decimal" value="1,200,000"><span class="wb-unit">元</span></span></div>
       <label class="gl-field"><span>结算币种</span><select class="wb-field"><option>人民币 CNY</option><option>美元 USD</option></select></label>
       <div class="gl-field" data-state="error"><span id="g-err">客户联系人<span class="wb-form-required" aria-hidden="true">*</span></span><input class="wb-field" aria-labelledby="g-err" aria-invalid="true" placeholder="姓名 · 部门"><span class="wb-form-hint is-error">必填，未填写</span></div>
-      <label class="gl-field"><span>负责人</span><input class="wb-field" value="林悦 · 华东销售组" disabled></label>
+      <div class="gl-field"><span>负责人</span><span class="wb-value">林悦 · 华东销售组</span></div>
+      <label class="gl-field"><span>联系人</span><select class="wb-field" disabled><option>先选客户</option></select></label>
       <label class="gl-field" style="grid-column:1/-1"><span>备注</span><textarea class="wb-field" rows="3">设备接口以现场确认清单为准。</textarea></label>
     </div>
     <div class="gl-row"><input class="wb-field sm" placeholder="小号，用在工具栏" aria-label="小号输入框"><select class="wb-field sm" aria-label="小号下拉"><option>按更新时间</option><option>按金额</option></select></div>
-    <p class="gl-cap">标签在上，值在下。必填的星号只在编辑时出现。数字右对齐，用等宽数字，单位跟在框外。</p>
+    <p class="gl-cap">标签在上，值在下。必填的星号只在编辑时出现。金额右对齐，用等宽数字，单位跟在框外。系统生成的值显示成文字。暂时不能选的控件禁用，并在框里写明条件。</p>
   </section>
 
   <section aria-labelledby="g-choice">

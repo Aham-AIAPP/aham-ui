@@ -118,7 +118,7 @@ function cell(f, r) {
     case 'industry': return `<td class="wb-cell-end"><span class="wb-tag" data-cat="${INDUSTRIES.indexOf(r.industry) % 6 + 1}">${esc(r.industry)}</span></td>`;
     case 'amountCents': return `<td class="number wb-cell-meta">${r.amountCents === null ? '' : money(r.amountCents)}</td>`;
     case 'code': return `<td class="wb-cell-meta">${esc(r.code)}</td>`;
-    case 'lastContact': case 'created': return `<td class="number wb-cell-meta" title="${f.label} ${r[f.key]}">${r[f.key].slice(5)}</td>`;
+    case 'lastContact': case 'created': return `<td class="wb-cell-end wb-cell-meta" title="${f.label} ${r[f.key]}">${r[f.key].slice(5)}</td>`;
     default: return `<td>${esc(r[f.key])}</td>`;
   }
 }
@@ -163,10 +163,13 @@ function emptyHtml() {
     state.q && '<button type="button" class="wb-btn sm" data-action="clear-search">清除搜索</button>',
     state.view !== 'all' && '<button type="button" class="wb-btn sm" data-action="view-all">查看全部</button>',
   ].filter(Boolean).join('');
-  return `<strong>没有符合条件的记录</strong><p>当前条件：${why}。放宽条件后再看。</p><div>${actions}</div>`;
+  return `<strong>没有符合条件的客户</strong><p>当前条件：${why}。放宽条件后再看。</p><div>${actions}</div>`;
 }
+// With no rows the pager has nothing to page; the empty state says why (rules/4-页面.md 4.3).
 function renderPager() {
   const { rows, pg } = cur;
+  $('#pager').hidden = !rows.length;
+  if (!rows.length) return;
   $('#pager').innerHTML = `<span>${rows.length ? `第 ${pg.from}–${pg.to} 条，共 ${rows.length} 条` : '没有记录'}</span><div><label>每页 <select class="wb-field sm" data-page-size="" aria-label="每页条数">${PAGE_SIZES.map(n => `<option value="${n}"${n === display.pageSize ? ' selected' : ''}>${n}</option>`).join('')}</select></label><button type="button" class="wb-icon-btn" data-page="prev" aria-label="上一页"${pg.page <= 1 ? ' disabled' : ''}>${icon('chevron-left')}</button><span>第 ${pg.page} / ${pg.pages} 页</span><button type="button" class="wb-icon-btn" data-page="next" aria-label="下一页"${pg.page >= pg.pages ? ' disabled' : ''}>${icon('chevron-right')}</button></div>`;
 }
 function renderBulk() {
@@ -356,8 +359,17 @@ function copy(text) { navigator.clipboard?.writeText(text).then(() => toast(`已
 function openCreate() {
   const currentRowBefore = currentRow();
   openCreateDialog({
-    root, title: '新建记录', scope: '客户', returnFocus: { focus: () => (currentRowBefore ? listKeys.focus(currentRowBefore) : $('#create-trigger').focus()) },
+    root, title: '新建客户', scope: '客户', nameLabel: '客户全称', returnFocus: { focus: () => (currentRowBefore ? listKeys.focus(currentRowBefore) : $('#create-trigger').focus()) },
+    inputs: [{ key: 'uscc', label: '统一社会信用代码', placeholder: '统一社会信用代码，18 位', maxlength: 18 }],
+    description: '备注',
     fields: [{ key: 'stage', label: '阶段', options: STAGES, value: '初次接触' }, { key: 'owner', label: '负责人', options: OWNERS, icon: 'user' }, { key: 'industry', label: '行业', options: INDUSTRIES }],
+    // Check for duplicates before creating: the same company entered twice splits its history (rules/4-页面.md 4.2).
+    check: v => {
+      const same = data.find(r => r.name === v.title);
+      if (same) return `已有这家客户：${same.code}。打开那条记录补充信息。`;
+      if (v.uscc && !/^[0-9A-Z]{18}$/.test(v.uscc)) return '统一社会信用代码是 18 位数字和大写字母';
+      return null;
+    },
     onSubmit: v => {
       const id = Math.max(0, ...data.map(r => r.id)) + 1;
       data = [{ id, code: `CUS-2026-${String(id).padStart(4, '0')}`, name: v.title, industry: v.industry || INDUSTRIES[0], owner: v.owner || OWNERS[0], stage: v.stage || STAGES[0], amountCents: null, lastContact: TODAY, created: TODAY }, ...data];
@@ -403,7 +415,7 @@ const palette = initPalette({
       { id: 'delete-selected', label: '删除勾选的记录', icon: 'trash', danger: true, run: () => confirmDelete([...selected]) },
     ] }] : []),
     { heading: '操作', items: [
-      { id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: openCreate },
+      { id: 'create', label: '新建客户', icon: 'plus', keys: 'c', run: openCreate },
       { id: 'export-all', label: '导出当前结果', icon: 'download', run: () => exportRows(cur.rows) },
       { id: 'filter', label: '筛选…', icon: 'filter', run: () => filter.open() },
       { id: 'view', label: '切换视图…', icon: 'eye', children: () => [...Object.entries(VIEWS), ...customViews.map(v => [v.id, v.label])].map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => applyViewSetting(k) })) },
@@ -413,7 +425,7 @@ const palette = initPalette({
   ],
 });
 const onRow = () => currentRow() !== null;
-registerShortcut({ keys: 'c', label: '新建记录', group: '列表', run: openCreate });
+registerShortcut({ keys: 'c', label: '新建客户', group: '列表', run: openCreate });
 registerShortcut({ keys: '/', label: '搜索', group: '列表', run: () => root.querySelector('[data-action="search"]')?.click() });
 registerShortcut({ keys: 's', label: '修改当前行的阶段', group: '列表', when: onRow, run: () => editCell(currentRow(), 'stage') });
 registerShortcut({ keys: 'a', label: '修改当前行的负责人', group: '列表', when: onRow, run: () => editCell(currentRow(), 'owner') });
