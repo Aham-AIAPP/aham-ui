@@ -11,7 +11,13 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRan
   function refresh() {
     const list = rows();
     if (!list.some(tr => idOf(tr) === current)) current = idOf(list[0]);
-    list.forEach(tr => { tr.tabIndex = idOf(tr) === current ? 0 : -1; });
+    // Controls inside the rows (checkbox, pickers, the name link) join the tab order only in the current row,
+    // so Tab leaves a 50-row list in a few presses (rules/7-键盘与命令.md 7.6).
+    list.forEach(tr => {
+      const on = idOf(tr) === current;
+      tr.tabIndex = on ? 0 : -1;
+      tr.querySelectorAll('a[href], button, input, select, textarea').forEach(el => { el.tabIndex = on ? 0 : -1; });
+    });
   }
   // Ids of the rows from a to b inclusive, in list order.
   function between(a, b) {

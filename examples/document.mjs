@@ -26,8 +26,9 @@ const EDITABLE = ['draft', 'returned'];
 const FIELDS = {
   basic: [
     { key: 'customer', label: '客户', required: true, type: 'select', options: ['远川精密制造有限公司', '临港智能装备有限公司', '华东精工集团'] },
-    { key: 'opportunity', label: '关联商机', required: true },
-    { key: 'contact', label: '客户联系人', required: true },
+    { key: 'opportunity', label: '关联商机', required: true, type: 'select', options: ['MES 一期建设项目', '设备联网改造'] },
+    // Contacts come from the chosen customer, so the value links to a real person (rules/3-控件.md 3.6).
+    { key: 'contact', label: '客户联系人', required: true, type: 'select', placeholder: '选择联系人', options: ['张工 · 设备科', '李敏 · 采购部', '王强 · 生产部'] },
     { key: 'owner', label: '负责人', fixed: true },
     { key: 'quoteDate', label: '报价日期', required: true, type: 'date' },
     { key: 'validTo', label: '有效期至', required: true, type: 'date' },
@@ -80,7 +81,7 @@ const lowDiscount = rows => rows.some(r => r.discountTenths < 800);
 //   </div>
 function control(f) {
   const v = state.fields[f.key], attrs = `name="${f.key}" aria-labelledby="l-${f.key}"${f.required ? ' required' : ''}`;
-  if (f.type === 'select') return `<select class="wb-field" ${attrs}>${f.options.map(o => `<option${o === v ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+  if (f.type === 'select') return `<select class="wb-field" ${attrs}>${f.placeholder ? `<option value=""${v ? '' : ' selected'}>${esc(f.placeholder)}</option>` : ''}${f.options.map(o => `<option${o === v ? ' selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
   if (f.type === 'radio') return `<span class="wb-choices" role="radiogroup" aria-labelledby="l-${f.key}">${f.options.map(o => `<label class="wb-choice"><input type="radio" name="${f.key}" value="${esc(o)}"${o === v ? ' checked' : ''}>${esc(o)}</label>`).join('')}</span>`;
   if (f.type === 'textarea') return `<textarea class="wb-field" rows="1" maxlength="500" ${attrs}>${esc(v)}</textarea>`;
   if (f.type === 'date') return `<input class="wb-field wb-tnum" type="date" ${attrs} value="${esc(v)}">`;

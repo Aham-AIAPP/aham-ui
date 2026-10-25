@@ -44,7 +44,7 @@
 ### 交互层
 - 内容区改为直角，铺到窗口边缘，和侧栏之间一条 1px `--wb-edge` 竖线；删去 `--wb-shell-radius`。侧栏去掉上内边距，第一行和页眉第一行对齐。明细表改为上下两条线，不画外框和圆角。依据是 Claude 客户端和 Linear 截图的量取：两者的区域都没有圆角。
 - 新增第 11 章《交互》：5 层表面、5 种状态、悬停的过渡、按频次定动效、减少动态效果、容器选用、验收。设计理念新增原则 12「每次操作都有回应，动效只说明来去」，原 12–14 顺延为 13–15。
-- 新增 src/interaction.css：悬停移入立即、移出淡出；按下底色加深，独立按钮缩到 0.97；`aria-expanded="true"` 的触发按钮保持按下色；浮层、悬停提示、弹窗、预览面板、轻提示和保存栏用 `@starting-style` 出现。
+- 交互状态写在各组件自己的样式文件末尾：悬停移入立即、移出淡出；按下底色加深，独立按钮缩到 0.97；`aria-expanded="true"` 的触发按钮保持按下色；浮层、悬停提示、弹窗、预览面板、轻提示和保存栏用 `@starting-style` 出现。
 - `aham.js` 新增 `leave(el, done)`：给元素加 `data-leaving`，过渡结束再隐藏或移除。浮层、四种弹窗和轻提示改用它播放消失。浮层的变形原点在触发按钮一侧。悬停提示 300ms 内相邻元素不再延迟。
 - `scripts/build.mjs` 把单行 `:hover` 规则包进 `@media (hover: hover) and (pointer: fine)`，触屏上不留悬停色。
 - 新增颜色变量 `--wb-nav-hover`、`--wb-edge`、`--wb-line-soft`、`--wb-action-press`；`--wb-nav-selected` 亮色改为 `#D5D4D3`；`--wb-scrim` 亮色改为黑色 40%。分隔线分三档：外框交界、分栏、行间。
@@ -55,13 +55,42 @@
 - 新增示例页 examples/interaction.html 和调研记录 research/交互层-调研.md。
 - lint 新增检查：不写 `transition: all`，不对宽高和位置做过渡，时长必须用变量。
 
+### 仓库结构
+- 样式源文件按组件族拆成 `src/NN-名称.css`（基础、外框、控件、表格、列表、单据、详情、浮层、设置、文件、流程、打印），编号决定合并顺序。屏幕尺寸、指针、对比度和动效的覆盖写在组件旁边，构建时按 `ENVIRONMENTS` 的顺序合并成每个条件一段；没登记的条件让构建失败。
+- 行为脚本拆成 `js/NN-名称.js`，构建合成一个 `aham.js`，导出名只增不减（共 69 个）。
+- 每个 `init*` 和 `create*` 返回 `destroy()`，由 `scope()` 统一移除监听、快捷键和元素，可以在 React 的 `useEffect` 里挂载和卸载，见 docs/react.md。测试检查每个导出函数都返回它。
+- 新增类型声明 aham.d.ts，测试检查它和导出一致；package.json 写明名称、版本、导出和类型，无依赖。
+- 示例页的侧栏只写一份（examples/_rail.html），构建写进各页。命令面板的界面、账户、跳转和帮助分组由 `initPalette({ shell: true })` 统一生成。
+- 组件契约有了 schema（components/schema.json）和检查脚本 scripts/contracts.mjs：类名要在 aham.css 里存在，API 要是 aham.js 的导出，规则锚点和样板文件要存在，aham.css 的每个类名都要有契约认领。
+- 规则里引用的颜色值和 2.3 对比度表由构建从 tokens.json 写入，`--check` 发现规则落后于取值时失败。对比度色对移到 scripts/lib/contrast.mjs。
+- lint 检查扩到 js/、examples/ 和 index.html，报告没用到的变量和 src/ 里用到的已废弃变量。
+- 调研和方案移到 docs/research 和 docs/decisions；删去 shots/。`npm run check` 跑构建检查、lint、契约、主题和测试五步，CI 相同。
+
+### 审计改动
+三位审阅者（界面、美学、产品）共提出 107 条，逐条处理结果见 docs/research/9.0-样板自查记录.md。主要改动：
+
+- 次要按钮改为无描边的底色按钮（新变量 `--wb-button`、`--wb-button-hover`、`--wb-button-press`），危险按钮按下用 `--wb-danger-press`。
+- 浮层、菜单、轻提示和弹窗的外缘改由阴影变量里的 1px `--wb-pop-edge` 线画出，不再另画边框。
+- 亮色主按钮底 `--wb-action` 改为和主色同值 `#336EE8`；`--wb-line-strong` 亮色 `#8C8B89`；暗色的线、次要文字和图标色重新取值。`--wb-hover` 改为 `--wb-fill` 的别名。
+- 行高改用像素：新变量 `--wb-leading`（20px）和 `--wb-leading-xs`（12px 文字用 16px）。分隔线固定 1px，不再在 2 倍屏上用 0.5px。
+- 勾选框、单选框和下拉框由 Aham 自己画；图标描边从 1.5 改为 1.75（24 网格）。
+- 等宽数字只用于金额、数量、单价和就地变化的计数，编号和日期不用。`.wb-value` 不再默认等宽。
+- 新增 `initObjectPage().check()`：提交时发现必填项未填，进入编辑态、标出全部问题、打开消息列表并聚焦第一个错误。
+- `openCreateDialog()` 新增 `nameLabel`、`inputs`、`description`、`check`：新建弹窗按对象命名首个字段并在创建前查重。
+- `initTheme()` 的按钮写成「切换到深色 / 浅色」，不再带 `aria-pressed`，并跟随别处设置的 `data-theme` 和系统主题。
+- 命令列表里带「…」的命令显示箭头，没有箭头的行留出同宽空位，键位列对齐。
+- 弹层表单改为标签列加 176px 控件列（新变量 `--wb-pop-control`）。新增 `--wb-related-code`、`--wb-setting-control`，`.wb-next-date.is-overdue`。
+- 对外填报页正文 14px；页头写发起方公司名，提交后显示编号和下一步提示条。
+- 样板：单据页和记录详情页加下一步提示条；单据的变更记录折叠在页尾；审批步骤写清等谁；空值按类型写；侧栏待办计数和工作清单同步；G 加字母改为英文首字母（合同 N）。
+
 ### 升级步骤
 1. 全局替换 `wb-mono` 为 `wb-tnum`，`--wb-detail-title` 为 `--wb-title`。
 2. 删去 `is-labeled`；侧栏按 examples/shell.html 的结构改写，收起状态改用 `.collapsed`。
 3. 列表页的 `<table>` 加 `wb-list-rows`，单元格按 4.3 的顺序和类名改写（`wb-cell-meta`、`wb-cell-icon`、`wb-cell-name`、`wb-cell-end`）；人员单元格改用 `personHTML(name, { compact: true })`。
 4. 正文里用主色的链接改为 `.wb-link`。
 5. 跑 `node scripts/lint.mjs`，按提示改掉写死的图标像素和主色文字。
-6. `--wb-slow` 改为 `--wb-base`；侧栏底部的用户名改为账户按钮，按 examples/shell.html 改写；个人偏好从设置页移到 `initAccount()` 的分栏弹窗。
+6. 次要按钮去掉自己写的描边，改用 `--wb-button` 底色；列表和表单里的编号、日期去掉 `.wb-tnum`。
+7. `--wb-slow` 改为 `--wb-base`；侧栏底部的用户名改为账户按钮，按 examples/shell.html 改写；个人偏好从设置页移到 `initAccount()` 的分栏弹窗。
 
 ## [8.1.0] - 2026-10-23
 

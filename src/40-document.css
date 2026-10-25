@@ -72,7 +72,9 @@
 :where(.aham-workbench) .wb-doc-section>.wb-section-head{min-height:var(--wb-header-control);margin-block-end:var(--wb-s4)}
 :where(.aham-workbench) .wb-doc-section h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-strip{display:flex;align-items:flex-start;gap:var(--wb-s2);padding:var(--wb-s2) var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill);color:var(--wb-ink);line-height:var(--wb-leading)}
-:where(.aham-workbench) .wb-strip>svg{margin-block-start:2px;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-strip>svg{margin-block-start:calc((var(--wb-leading) - var(--wb-icon)) / 2);color:var(--wb-muted)}
+/* Icon, text and a small button share the first text line; the strip stays 36px high with a button in it. */
+:where(.aham-workbench) .wb-strip>.wb-btn{flex:none;margin-block:calc((var(--wb-leading) - var(--wb-header-control)) / 2)}
 :where(.aham-workbench) .wb-strip[data-tone=info]{background:var(--wb-info-bg)}
 :where(.aham-workbench) .wb-strip[data-tone=info]>svg{color:var(--wb-info)}
 :where(.aham-workbench) .wb-strip[data-tone=success]{background:var(--wb-success-bg)}
