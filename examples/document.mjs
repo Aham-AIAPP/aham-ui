@@ -255,15 +255,16 @@ function openMenu() {
   const pop = $('#doc-menu'), more = $('#doc-more');
   createCommand(pop.firstElementChild, {
     role: 'menu', search: false, label: '更多操作', items: menuItems(),
-    onSelect: it => {
-      closePopover('replace');
-      if (it.id === 'copy') toast('已复制为新报价 QT-20261017-001（示例：不会打开新单据）');
-      if (it.id === 'delete') openConfirm({ root, title: '删除报价单 QT-20260930-018？', text: '删除后不能恢复。已发给客户的报价请改用作废。', confirm: '删除', danger: true, returnFocus: more, onConfirm: removeDocument });
-      if (it.id === 'void') openConfirm({ root, title: '作废报价单 QT-20260930-018？', text: '作废后客户手里的报价失效，单据保留可查。', confirm: '作废', danger: true, reason: { label: '作废原因' }, returnFocus: more, onConfirm: reason => { state.voidReason = reason; setStatus('voided', '作废报价单'); toast('已作废'); } });
-    },
+    onSelect: it => { closePopover('replace'); runMenuItem(it); },
   });
   openPopover(more, pop, { align: 'end' });
   pop.querySelector('[role=menu]').focus();
+}
+function runMenuItem(it) {
+  const more = $('#doc-more');
+  if (it.id === 'copy') toast('已复制为新报价 QT-20261017-001（示例：不会打开新单据）');
+  if (it.id === 'delete') openConfirm({ root, title: '删除报价单 QT-20260930-018？', text: '删除后不能恢复。已发给客户的报价请改用作废。', confirm: '删除', danger: true, returnFocus: more, onConfirm: removeDocument });
+  if (it.id === 'void') openConfirm({ root, title: '作废报价单 QT-20260930-018？', text: '作废后客户手里的报价失效，单据保留可查。', confirm: '作废', danger: true, reason: { label: '作废原因' }, returnFocus: more, onConfirm: reason => { state.voidReason = reason; setStatus('voided', '作废报价单'); toast('已作废'); } });
 }
 function removeDocument() {
   doc.innerHTML = '<div class="wb-doc-body"><div class="wb-empty"><strong>报价单 QT-20260930-018 已删除</strong><p>删除的单据不进回收站。</p><a class="wb-btn" href="list.html">返回列表</a></div></div>';
@@ -371,7 +372,7 @@ const pageButtons = () => [...root.querySelectorAll('#doc-actions button, #doc-f
 initPalette({
   root,
   groups: () => [
-    { heading: '报价单', items: pageButtons() },
+    { heading: '报价单', items: [...pageButtons().filter(c => c.label !== '更多操作'), ...menuItems().map(it => ({ ...it, run: () => runMenuItem(it) }))] },
     { heading: '界面', items: [
       { id: 'nav', label: '展开或收起侧栏', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
       { id: 'theme', label: '切换深色和浅色', icon: 'moon', run: () => $('[data-action="theme"]').click() },

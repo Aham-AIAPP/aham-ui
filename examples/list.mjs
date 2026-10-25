@@ -115,7 +115,7 @@ function cell(f, r) {
     case 'stage': return `<td class="wb-cell-icon"><button type="button" class="wb-cell-picker is-icon" data-cell="stage" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="阶段：${esc(r.stage)}，点击修改">${stageIcon(r.stage)}</button></td>`;
     case 'owner': return `<td class="wb-cell-end"><button type="button" class="wb-cell-picker is-icon" data-cell="owner" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${esc(r.owner)}，点击修改">${personHTML(r.owner, { compact: true })}</button></td>`;
     case 'industry': return `<td class="wb-cell-end"><span class="wb-tag" data-cat="${INDUSTRIES.indexOf(r.industry) % 6 + 1}">${esc(r.industry)}</span></td>`;
-    case 'amountCents': return `<td class="number wb-cell-meta">${money(r.amountCents)}</td>`;
+    case 'amountCents': return `<td class="number wb-cell-meta">${r.amountCents === null ? '' : money(r.amountCents)}</td>`;
     case 'code': return `<td class="wb-cell-meta wb-tnum">${esc(r.code)}</td>`;
     case 'lastContact': case 'created': return `<td class="number wb-cell-meta" title="${f.label} ${r[f.key]}">${r[f.key].slice(5)}</td>`;
     default: return `<td>${esc(r[f.key])}</td>`;
@@ -183,7 +183,7 @@ function renderPreview() {
   const r = data.find(x => x.id === previewId) ?? cur.rows[0];
   if (!r) { panel.innerHTML = '<div class="wb-empty"><strong>没有可预览的记录</strong></div>'; return; }
   previewId = r.id;
-  panel.innerHTML = `<section class="wb-peek"><h2>${esc(r.name)}</h2><span class="wb-status"><b></b>${esc(r.stage)}</span><dl><dt>编码</dt><dd class="wb-tnum">${esc(r.code)}</dd><dt>行业</dt><dd>${esc(r.industry)}</dd><dt>负责人</dt><dd>${esc(r.owner)}</dd><dt>最近跟进</dt><dd class="wb-tnum">${r.lastContact}</dd><dt>创建日期</dt><dd class="wb-tnum">${r.created}</dd><dt>年度金额</dt><dd class="wb-tnum">${money(r.amountCents)}</dd></dl></section>`;
+  panel.innerHTML = `<section class="wb-peek"><h2>${esc(r.name)}</h2><span class="wb-status">${stageIcon(r.stage)}<span>${esc(r.stage)}</span></span><dl><dt>编码</dt><dd class="wb-tnum">${esc(r.code)}</dd><dt>行业</dt><dd>${esc(r.industry)}</dd><dt>负责人</dt><dd>${esc(r.owner)}</dd><dt>最近跟进</dt><dd class="wb-tnum">${r.lastContact}</dd><dt>创建日期</dt><dd class="wb-tnum">${r.created}</dd><dt>年度金额</dt><dd class="wb-tnum">${money(r.amountCents)}</dd></dl></section>`;
 }
 
 // ── Design-system components ─────────────────────────────────────────────────
