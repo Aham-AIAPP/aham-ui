@@ -867,6 +867,7 @@
 :where(.aham-workbench) .wb-dialog-head h2{font-size:var(--wb-body);font-weight:500}
 :where(.aham-workbench) .wb-split{display:grid;grid-template-columns:var(--wb-dialog-split-nav) minmax(0,1fr);min-height:0}
 :where(.aham-workbench) .wb-split>.wb-settings-nav{padding:var(--wb-s3) var(--wb-s2)}
+:where(.aham-workbench) .wb-split-body:focus{outline:none}
 :where(.aham-workbench) .wb-split-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:var(--wb-s2) var(--wb-s5) var(--wb-s6)}
 :where(.aham-workbench) .wb-split-body .wb-settings-section:first-child{margin-block-start:var(--wb-s3)}
 :where(.aham-workbench) .wb-setting-confirm{display:flex;align-items:center;gap:var(--wb-s2);color:var(--wb-muted)}

@@ -1,7 +1,7 @@
 // Account menu and preferences dialog, shared by every sample with a sidebar (rules/11-交互.md 11.6).
 // The account button at the foot of the sidebar opens a menu; 偏好设置… opens a split dialog. Personal preferences
 // apply at once and confirm with a toast; workspace configuration stays on the settings page with a save button.
-import {openPopover, closePopover, createCommand, toast, pushLayer, leave, registerShortcut, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled, icon} from '../aham.js';
+import {openPopover, closePopover, createCommand, toast, pushLayer, leave, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled, icon} from '../aham.js';
 
 const KEY = 'aham-ui:settings-demo:v1';
 const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, open: '进入详情页', theme: 'light', density: 'standard', ai: false, assign: true, digest: false };
@@ -36,6 +36,10 @@ const BODIES = {
   </div></section>`,
 };
 
+let lastInput = 'pointer';
+addEventListener('pointerdown', () => { lastInput = 'pointer'; }, true);
+addEventListener('keydown', () => { lastInput = 'key'; }, true);
+
 export function initAccount(root, { onShortcuts } = {}) {
   const button = root.querySelector('[data-action="account"]');
   let prefs = { ...DEFAULTS };
@@ -59,7 +63,7 @@ export function initAccount(root, { onShortcuts } = {}) {
   menu.innerHTML = '<div class="wb-account-head">lin.yue@example.com</div><div></div>';
   root.append(menu);
   const items = () => [
-    { id: 'prefs', label: '偏好设置…', icon: 'settings', keys: 'mod+,', group: 0 },
+    { id: 'prefs', label: '偏好设置…', icon: 'settings', group: 0 },
     ...(onShortcuts ? [{ id: 'keys', label: '键盘快捷键', icon: 'help', keys: '?', group: 0 }] : []),
     { id: 'workspace', label: '工作区设置', icon: 'users', group: 0 },
     { id: 'logout', label: '退出登录', icon: 'log-out', group: 1 },
@@ -138,16 +142,17 @@ export function initAccount(root, { onShortcuts } = {}) {
     dialog.showModal();
     release = pushLayer(close);
     show(start);
-    dialog.querySelector(`[data-section="${start}"]`).focus();
+    // Pointer opens put focus on the content without a ring (Safari shows one on programmatic focus); keyboard opens land on the current section.
+    if (lastInput === 'key') dialog.querySelector(`[data-section="${start}"]`).focus();
+    else dialog.querySelector('.wb-split-body').focus({ focusVisible: false });
   }
   // A second modal on top of this one is not allowed (rules/6-反馈.md 6.3): the reset row asks in place.
   function askReset(b) {
     b.closest('.wb-setting-control').innerHTML = '<span class="wb-setting-confirm">恢复全部默认值？<button type="button" class="wb-btn sm" data-pref="reset-cancel">取消</button><button type="button" class="wb-btn sm danger" data-pref="reset-confirm">重置</button></span>';
     dialog.querySelector('[data-pref="reset-cancel"]').focus();
   }
-  registerShortcut({ keys: 'mod+,', label: '打开偏好设置', group: '通用', run: () => openPreferences() });
   const commands = () => [
-    { id: 'prefs', label: '偏好设置…', icon: 'settings', keys: 'mod+,', run: () => openPreferences() },
+    { id: 'prefs', label: '偏好设置…', icon: 'settings', run: () => openPreferences() },
     { id: 'theme-pref', label: '外观…', icon: 'moon', children: () => [['light', '浅色'], ['dark', '深色'], ['system', '跟随系统']].map(([v, l]) => ({ id: v, label: l, current: themeChoice() === v, run: () => commit('外观', () => { prefs.theme = v; }) })) },
   ];
   return { openPreferences, openMenu, commands };

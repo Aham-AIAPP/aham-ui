@@ -46,7 +46,7 @@
 - `scripts/build.mjs` 把单行 `:hover` 规则包进 `@media (hover: hover) and (pointer: fine)`，触屏上不留悬停色。
 - 新增颜色变量 `--wb-nav-hover`、`--wb-edge`、`--wb-line-soft`、`--wb-action-press`；`--wb-nav-selected` 亮色改为 `#D5D4D3`；`--wb-scrim` 亮色改为黑色 40%。分隔线分三档：外框交界、分栏、行间。
 - 时长变量改为 `--wb-instant` 100ms、`--wb-fast` 120ms、`--wb-pop` 150ms、`--wb-base` 200ms，删去 `--wb-slow`；新增 `--wb-ease-move`、`--wb-press-scale`、`--wb-tooltip-delay`。
-- 账户菜单和分栏弹窗：侧栏底部的账户按钮打开菜单，「偏好设置…」（⌘/Ctrl + ,）打开分栏弹窗，改了立即生效。组件契约新增 account-menu、preferences-dialog，共 47 份。
+- 账户菜单和分栏弹窗：侧栏底部的账户按钮打开菜单，「偏好设置…」打开分栏弹窗，命令面板里也有同名命令，改了立即生效。组件契约新增 account-menu、preferences-dialog，共 47 份。
 - 设置页改为只放工作区设置，有修改时底部出现保存栏，⌘/Ctrl + S 保存。
 - 评论框改为白底、12px 圆角、1px `--wb-line-strong` 描边，不加阴影。文件上传进度条改用 `transform: scaleX()`。
 - 新增示例页 examples/interaction.html 和调研记录 research/交互层-调研.md。
