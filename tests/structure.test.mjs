@@ -3,7 +3,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, existsSync, readdirSync} from 'node:fs';
-import {build, buildJS, buildExamples, tokens} from '../scripts/build.mjs';
+import {build, buildJS, buildExamples, tokens, resolve} from '../scripts/build.mjs';
 import {lint} from '../scripts/lint.mjs';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -38,7 +38,7 @@ test('density: 44px single-line list rows, 36px table rows, 32px compact, 44px f
 });
 
 test('type scale: two sizes on workbench pages, 12px the smallest (rules/2-视觉.md 2.5)', () => {
-  const px = k => parseInt(tokens.text[k].$value, 10);
+  const px = k => parseInt(resolve(`text.${k}`), 10);
   assert.equal(px('body'), 13);
   assert.equal(px('text-xs'), 12);
   assert.equal(px('title'), 20);
