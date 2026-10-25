@@ -6,8 +6,8 @@
   "name": "单据页",
   "intent": "查看、修改、提交、审批一张单据",
   "api": {
-    "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit, changed, draft: { interval, onDraft, onDiscard } }) → { enter, save, cancel, discard, saveDraft, values, isDirty, destroy }",
-    "initAnchorBar": "initAnchorBar(nav, { scroller }) → { refresh }"
+    "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit, changed, draft: { interval, onDraft, onDiscard } }) → { enter, check, save, cancel, discard, saveDraft, values, isDirty, destroy }",
+    "initAnchorBar": "initAnchorBar(nav, { scroller }) → { refresh, destroy }"
   },
   "preview": "examples/document.html",
   "specification": "rules/5-单据.md",
@@ -36,7 +36,23 @@
     ".wb-draft-state",
     ".wb-msg-btn",
     ".wb-messages",
-    ".wb-context"
+    ".wb-context",
+    "wb-section-head",
+    "wb-toolbar",
+    "wb-sep",
+    "wb-find",
+    "wb-total-label",
+    "wb-total",
+    "wb-summary-foot",
+    "wb-payment",
+    "wb-approval",
+    "wb-step-dot",
+    "wb-history",
+    "wb-feedback",
+    "wb-source",
+    "wb-edit-group",
+    "wb-value-state",
+    "wb-doc-group"
   ],
   "variantDimensions": [
     {
@@ -53,6 +69,10 @@
         "审批中",
         "已退回",
         "已生效",
+        "已发送",
+        "客户已接受",
+        "已转合同",
+        "已过期",
         "已作废"
       ]
     }
@@ -102,5 +122,85 @@
     "分区标题前的色条",
     "保存按钮放在会随内容滚走的位置",
     "关键信息里放输入框"
+  ],
+  "lifecycle": [
+    {
+      "status": "草稿",
+      "editable": true,
+      "actions": [
+        "编辑",
+        "提交审批",
+        "删除"
+      ],
+      "next": "等你提交审批"
+    },
+    {
+      "status": "审批中",
+      "editable": false,
+      "actions": [
+        "提醒",
+        "撤回"
+      ],
+      "next": "等陈思审批；审批人看到「等你审批」，操作为通过和退回"
+    },
+    {
+      "status": "已退回",
+      "editable": true,
+      "actions": [
+        "编辑",
+        "重新提交"
+      ],
+      "next": "等你按退回原因修改"
+    },
+    {
+      "status": "已生效",
+      "editable": false,
+      "actions": [
+        "发给客户",
+        "作废"
+      ],
+      "next": "等你发给客户"
+    },
+    {
+      "status": "已发送",
+      "editable": false,
+      "actions": [
+        "客户已接受",
+        "作废"
+      ],
+      "next": "等远川答复，写有效期"
+    },
+    {
+      "status": "客户已接受",
+      "editable": false,
+      "actions": [
+        "转为合同"
+      ],
+      "next": "等你转为合同"
+    },
+    {
+      "status": "已转合同",
+      "editable": false,
+      "actions": [
+        "打开合同"
+      ],
+      "next": "不显示"
+    },
+    {
+      "status": "已过期",
+      "editable": false,
+      "actions": [
+        "复制为新报价"
+      ],
+      "next": "不显示；提示条写过期日期"
+    },
+    {
+      "status": "已作废",
+      "editable": false,
+      "actions": [
+        "复制为新报价"
+      ],
+      "next": "不显示"
+    }
   ]
 }

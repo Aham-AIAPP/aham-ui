@@ -3,82 +3,61 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 设置</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}</style></head>
 <body>
 <div class="aham-workbench" data-theme="light" aria-label="设置页示例">
+  <!-- @rail current="s" — generated from examples/_rail.html by scripts/build.mjs -->
   <nav class="wb-rail" id="wb-nav" aria-label="工作空间导航">
-    <span class="wb-brand" aria-label="Aham CRM">A</span>
-    <div class="wb-nav-group"><a class="wb-nav-item" href="list.html" aria-label="客户"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"/></svg><span>客户</span></a><a class="wb-nav-item" href="document.html" aria-label="报价"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span>报价</span></a></div>
-    <div class="wb-nav-foot"><a class="wb-nav-item" href="settings.html" aria-label="设置" aria-current="page"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-settings"/></svg><span>设置</span></a></div>
+    <div class="wb-rail-head"><span class="wb-brand" aria-hidden="true">A</span><span class="wb-brand-name">业务工作空间</span></div>
+    <div class="wb-nav-group"><a class="wb-nav-item" href="home.html" data-go="h"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-home"/></svg><span>首页</span></a><a class="wb-nav-item" href="worklist.html" data-go="i"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-success"/></svg><span>待办</span><span class="wb-nav-count" aria-label="7 项待办">7</span></a></div>
+    <div class="wb-nav-group" role="group" aria-labelledby="nav-biz"><span class="wb-nav-heading" id="nav-biz">业务</span><a class="wb-nav-item" href="list.html" data-go="c"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"/></svg><span>客户</span></a><button type="button" class="wb-nav-item" data-action="no-sample" data-go="o"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-folder"/></svg><span>商机</span></button><a class="wb-nav-item" href="document.html" data-go="q"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-file"/></svg><span>报价</span></a><button type="button" class="wb-nav-item" data-action="no-sample" data-go="n"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-copy"/></svg><span>合同</span></button></div>
+    <div class="wb-nav-group" role="group" aria-labelledby="nav-fde"><span class="wb-nav-heading" id="nav-fde">实施</span><a class="wb-nav-item" href="scenes.html" data-go="e"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-star"/></svg><span>场景</span></a></div>
+    <div class="wb-nav-foot"><a class="wb-nav-item" href="settings.html" data-go="s" aria-current="page"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-settings"/></svg><span>设置</span></a><button type="button" class="wb-nav-item wb-nav-user" data-action="account" aria-haspopup="menu" aria-expanded="false" aria-label="账户：林悦" data-tooltip="账户"><span class="wb-avatar-xs" data-cat="4" aria-hidden="true">林</span><span>林悦</span><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-chevron-down"/></svg></button></div>
   </nav>
+  <!-- /@rail -->
   <div class="wb-main">
     <header class="wb-header">
       <div class="wb-header-row">
-        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开导航" data-tooltip="展开 / 收起导航" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>设置</span><span>/</span><span aria-current="page">偏好设置</span></nav></div>
-        <div class="wb-header-trail"><span class="wb-meta">修改即时生效</span></div>
+        <div class="wb-header-lead"><button type="button" class="wb-icon-btn" data-action="nav" aria-controls="wb-nav" aria-expanded="false" aria-label="展开侧栏" data-tooltip="展开 / 收起侧栏" data-keys="mod+b"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-menu"/></svg></button><nav class="wb-crumbs" aria-label="当前位置"><span>设置</span><span>/</span><span aria-current="page">常规</span></nav></div>
       </div>
     </header>
     <div class="wb-settings-layout">
       <nav class="wb-settings-nav" aria-label="设置分类">
-        <h2>个人</h2>
-        <ul><li><a href="settings.html" aria-current="page">偏好设置</a></li><li><a href="#" data-action="placeholder">通知</a></li><li><a href="#" data-action="placeholder">账户与安全</a></li></ul>
         <h2>工作区</h2>
-        <ul><li><a href="#" data-action="placeholder">成员与角色</a></li><li><a href="#" data-action="placeholder">字段与标签</a></li><li><a href="#" data-action="placeholder">审批流程</a></li></ul>
+        <ul><li><a href="settings.html" aria-current="page">常规</a></li><li><a href="members.html">成员与角色</a></li><li><a href="#" data-action="placeholder">字段与标签</a></li><li><a href="#" data-action="placeholder">审批流程</a></li></ul>
         <h2>集成</h2>
         <ul><li><a href="#" data-action="placeholder">外部系统</a></li><li><a href="#" data-action="placeholder">接口密钥</a></li></ul>
       </nav>
-      <div class="wb-settings-scroll" tabindex="0" role="region" aria-label="偏好设置内容">
-        <main class="wb-settings">
-          <h1>偏好设置</h1>
-          <p>这些设置只影响你自己，修改后立即生效并保存在当前浏览器（示例）。</p>
+      <div class="wb-settings-scroll" tabindex="0" role="region" aria-label="工作区设置内容">
+        <form class="wb-settings" id="ws-form" novalidate>
+          <h1>常规</h1>
+          <p>这些设置影响工作区里的所有人，改完点「保存」。个人偏好在侧栏底部的账户菜单里。</p>
 
-          <section class="wb-settings-section" aria-labelledby="s-general">
-            <header><div><h2 id="s-general">常规</h2><p>打开应用时的默认行为。</p></div></header>
+          <section class="wb-settings-section" aria-labelledby="s-basic">
+            <header><div><h2 id="s-basic">基本信息</h2><p>显示在页眉、导出文件和发给客户的单据上。</p></div></header>
             <div class="wb-settings-rows">
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-home">默认首页</div><div class="wb-setting-desc">登录后先打开的页面</div></div><div class="wb-setting-control"><select class="wb-field sm" data-setting="home" aria-labelledby="l-home"><option>客户列表</option><option>我负责的</option><option>最近访问</option></select></div></div>
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-week">每周第一天</div><div class="wb-setting-desc">用于日期选择和按周统计</div></div><div class="wb-setting-control"><select class="wb-field sm" data-setting="week" aria-labelledby="l-week"><option>星期一</option><option>星期日</option></select></div></div>
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-singlekey">单键快捷键</div><div class="wb-setting-desc">按 C、/、J、K 等单个字母直接执行操作；关闭后 ⌘ / Ctrl 组合键和列表里的方向键仍可用</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" data-setting="singleKey" checked aria-labelledby="l-singlekey"><span aria-hidden="true"></span></label></div></div>
+              <div class="wb-setting"><div><label class="wb-setting-title" for="ws-name">工作区名称</label><div class="wb-setting-desc">2–30 个字</div></div><div class="wb-setting-control"><input class="wb-field sm" id="ws-name" name="name" value="业务工作空间" maxlength="30" required></div></div>
+              <div class="wb-setting"><div><label class="wb-setting-title" for="ws-currency">默认币种</label><div class="wb-setting-desc">新建报价和合同时的币种</div></div><div class="wb-setting-control"><select class="wb-field sm" id="ws-currency" name="currency"><option>人民币</option><option>美元</option><option>欧元</option></select></div></div>
+              <div class="wb-setting"><div><label class="wb-setting-title" for="ws-fiscal">财年开始</label><div class="wb-setting-desc">用于按财年统计业绩</div></div><div class="wb-setting-control"><select class="wb-field sm" id="ws-fiscal" name="fiscal"><option>1 月</option><option>4 月</option><option>7 月</option><option>10 月</option></select></div></div>
             </div>
           </section>
 
-          <section class="wb-settings-section" aria-labelledby="s-ui">
-            <header><div><h2 id="s-ui">界面与主题</h2><p>外观、列表疏密与打开记录的方式。</p></div></header>
+          <section class="wb-settings-section" aria-labelledby="s-number">
+            <header><div><h2 id="s-number">编号规则</h2><p>只影响之后新建的单据，已有编号不变。</p></div></header>
             <div class="wb-settings-rows">
-              <div class="wb-setting"><div><div class="wb-setting-title">外观</div><div class="wb-setting-desc">跟随系统时，按系统的浅色 / 深色切换</div></div><div class="wb-setting-control"><div class="wb-seg sm" role="group" aria-label="外观"><button type="button" data-theme-choice="light" aria-pressed="true">浅色</button><button type="button" data-theme-choice="dark" aria-pressed="false">深色</button><button type="button" data-theme-choice="system" aria-pressed="false">跟随系统</button></div></div></div>
-              <div class="wb-setting"><div><div class="wb-setting-title">列表行高</div><div class="wb-setting-desc">新打开的列表默认用这个行高，列表里的「显示」可以单独调整</div></div><div class="wb-setting-control"><div class="wb-seg sm" role="group" aria-label="列表行高"><button type="button" data-density-choice="standard" aria-pressed="true">标准 36</button><button type="button" data-density-choice="compact" aria-pressed="false">紧凑 32</button></div></div></div>
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-open">打开记录</div><div class="wb-setting-desc">点击列表里的名称时</div></div><div class="wb-setting-control"><select class="wb-field sm" data-setting="open" aria-labelledby="l-open"><option>进入详情页</option><option>在预览面板打开</option></select></div></div>
-            </div>
-          </section>
-
-          <section class="wb-settings-section" aria-labelledby="s-ai">
-            <header><div><h2 id="s-ai">AI 助手</h2><p>总结、起草和建议下一步。结果都要你确认后才会保存。</p></div></header>
-            <div class="wb-settings-rows">
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-ai">使用 AI 助手</div><div class="wb-setting-desc">开启后，会把当前记录的名称、属性和最近动态发送给产品配置的 AI 服务；示例只在本地模拟，不发送数据</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" data-setting="ai" aria-labelledby="l-ai"><span aria-hidden="true"></span></label></div></div>
-            </div>
-          </section>
-
-          <section class="wb-settings-section" aria-labelledby="s-notify">
-            <header><div><h2 id="s-notify">通知</h2><p>哪些变化需要提醒你。</p></div></header>
-            <div class="wb-settings-rows">
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-assign">分配给我时</div><div class="wb-setting-desc">记录的负责人改成你</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" data-setting="assign" checked aria-labelledby="l-assign"><span aria-hidden="true"></span></label></div></div>
-              <div class="wb-setting"><div><div class="wb-setting-title" id="l-digest">每日摘要邮件</div><div class="wb-setting-desc">每天 8:30 汇总前一天的变化</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" data-setting="digest" aria-labelledby="l-digest"><span aria-hidden="true"></span></label></div></div>
+              <div class="wb-setting"><div><label class="wb-setting-title" for="ws-quote">报价单编号</label><div class="wb-setting-desc">例：QT-20261025-001</div></div><div class="wb-setting-control"><select class="wb-field sm" id="ws-quote" name="quote"><option>QT-年月日-序号</option><option>QT-年-序号</option></select></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title" id="l-yearly">每年重新编号</div><div class="wb-setting-desc">每年 1 月 1 日序号从 001 开始</div></div><div class="wb-setting-control"><label class="wb-switch"><input type="checkbox" name="yearly" checked aria-labelledby="l-yearly"><span aria-hidden="true"></span></label></div></div>
             </div>
           </section>
 
           <section class="wb-settings-section is-danger" aria-labelledby="s-danger">
-            <header><div><h2 id="s-danger">重置</h2><p>恢复为系统默认，不影响其他人。</p></div></header>
+            <header><div><h2 id="s-danger">删除工作区</h2><p>删除后所有客户、报价和合同都不能恢复。</p></div></header>
             <div class="wb-settings-rows">
-              <div class="wb-setting"><div><div class="wb-setting-title">重置全部偏好</div><div class="wb-setting-desc">以上所有设置恢复默认值</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm ghost danger" data-action="reset">重置</button></div></div>
+              <div class="wb-setting"><div><div class="wb-setting-title">删除业务工作空间</div><div class="wb-setting-desc">只有工作区所有者能删除</div></div><div class="wb-setting-control"><button type="button" class="wb-btn sm ghost danger" data-action="delete">删除工作区</button></div></div>
             </div>
           </section>
-        </main>
+        </form>
+        <div class="wb-save-bar" id="ws-save" hidden><span id="ws-dirty" role="status"></span><div><button type="button" class="wb-btn sm" data-action="discard">放弃修改</button><button type="button" class="wb-btn sm primary" data-action="save">保存</button></div></div>
       </div>
     </div>
   </div>
-  <dialog class="wb-dialog" id="reset-dialog" aria-labelledby="reset-title" aria-describedby="reset-desc">
-    <form method="dialog">
-      <h2 id="reset-title">重置全部偏好</h2>
-      <p id="reset-desc">外观、默认首页、通知等设置会恢复默认值。</p>
-      <div class="wb-dialog-foot"><button class="wb-btn" value="cancel" autofocus>取消</button><button class="wb-btn danger" value="confirm">重置</button></div>
-    </form>
-  </dialog>
 </div>
 <script type="module" src="./settings.mjs"></script>
 </body></html>

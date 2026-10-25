@@ -9,7 +9,12 @@
   "intent": "⌘K 命令面板：带上下文的分组命令，子列表原地替换",
   "specification": "rules/7-键盘与命令.md#72-命令面板",
   "reference": "examples/list.html",
-  "api": "initPalette({ root, groups(ctx), context() }) → { open, close, openAt(label, items) }",
+  "api": "initPalette({ root, groups(ctx), context(), shell, accountItems() }) → { open, close, openAt(label, items), showShortcuts, destroy }。shell: true 时追加界面、账户、跳转、帮助四组并注册 ?；shellGroups(root) 和 shortcutItems() 可单独用；navCommands(root) → 跳转组的命令，取自侧栏带 data-go 的导航项",
+  "classes": [
+    "wb-palette",
+    "wb-palette-context",
+    "wb-palette-chip"
+  ],
   "variantDimensions": [
     {
       "axis": "context",
@@ -49,7 +54,8 @@
     "组顺序：当前记录 → AI → 操作 → 界面 → 跳转 → 帮助（rules/7-键盘与命令.md 7.2）",
     "带「…」的命令进入子列表，原地替换；Esc 或空搜索框退格返回",
     "上下文标签可用退格或 ✕ 移除",
-    "执行后关闭并还焦点，用轻提示确认结果"
+    "执行后关闭并还焦点，用轻提示确认结果",
+    "每个工作台页面都有命令面板；页面上的按钮都能在面板里搜到"
   ],
   "states": [
     "root",

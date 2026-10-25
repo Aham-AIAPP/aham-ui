@@ -3,7 +3,8 @@
 //   退回   asks for a reason first (rules/6-反馈.md 6.3)
 //   批量通过 rows that cannot be approved yet are named before anything runs (rules/6-反馈.md 6.4)
 // A row whose countersign is still open has 通过 disabled with the reason next to it (rules/3-控件.md 3.3).
-import { initShell, openConfirm, toast, escapeHtml as esc } from '../aham.js';
+import { initShell, initPalette, registerShortcut, openConfirm, toast, personHTML, escapeHtml as esc } from '../aham.js';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
@@ -28,6 +29,9 @@ function render() {
   $('#tabs').innerHTML = `<button type="button" data-tab="todo" aria-pressed="${tab === 'todo'}">待我审批 ${t}</button><button type="button" data-tab="done" aria-pressed="${tab === 'done'}">我已处理 ${d}</button>`;
   const list = tab === 'todo' ? todo() : done();
   $('#count').textContent = `${list.length} 张报价单`;
+  // The sidebar count and the 待我审批 tab read the same rows, so handling one row lowers both (rules/4-页面.md 4.1).
+  const navCount = root.querySelector('.wb-rail .wb-nav-count');
+  if (navCount) { navCount.textContent = t; navCount.setAttribute('aria-label', `${t} 项待办`); navCount.hidden = !t; }
   const bulk = tab === 'todo' && selected.size > 0;
   $$('[data-when=idle]').forEach(e => { e.hidden = bulk; });
   $$('[data-when=bulk]').forEach(e => { e.hidden = !bulk; });
@@ -41,14 +45,17 @@ function render() {
     return;
   }
   const check = tab === 'todo';
-  const head = `<thead><tr>${check ? `<th scope="col" class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select-all aria-label="选择本页全部"></label></th>` : ''}<th scope="col">报价单</th><th scope="col">单号</th><th scope="col">客户</th><th scope="col" class="number">价税合计（元）</th><th scope="col">提交人</th><th scope="col">提交时间</th><th scope="col">${check ? '<span class="wb-sr-only">处理</span>' : '结果'}</th></tr></thead>`;
+  // Single-line rows (rules/4-页面.md 4.3): the header row stays for screen readers only.
+  const head = `<thead><tr>${check ? '<th scope="col" class="wb-check"><span class="wb-sr-only">选择</span></th>' : ''}<th scope="col">单号</th><th scope="col">报价单</th><th scope="col">客户</th><th scope="col">价税合计（元）</th><th scope="col">提交时间</th><th scope="col">提交人</th><th scope="col">${check ? '处理' : '结果'}</th></tr></thead>`;
   const body = list.map(r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}>`
     + (check ? `<td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td>` : '')
-    + `<td><a class="wb-row-link" href="document.html">${esc(r.name)}</a></td><td class="wb-mono">${esc(r.code)}</td><td>${esc(r.customer)}</td><td class="number">${money(r.cents)}</td><td>${esc(r.by)}</td><td class="wb-mono">${esc(r.at)}</td>`
+    + `<td class="wb-cell-meta">${esc(r.code)}</td><td class="wb-cell-name"><a class="wb-row-link" href="document.html">${esc(r.name)}</a></td><td class="wb-cell-meta">${esc(r.customer)}</td><td class="number">${money(r.cents)}</td><td class="number wb-cell-meta">${esc(r.at)}</td><td class="wb-cell-end">${personHTML(r.by, { compact: true })}</td>`
     + (check ? `<td><div class="wb-row-buttons">${r.wait ? `<span class="wb-row-note">${esc(r.wait)}</span>` : ''}<button type="button" class="wb-btn sm" data-approve="${r.id}"${r.wait ? ' disabled' : ''}>通过</button><button type="button" class="wb-btn sm" data-return="${r.id}">退回</button></div></td>`
       : `<td><span class="wb-status" data-tone="${r.result === 'approved' ? 'success' : 'warning'}"><b></b><span>${r.result === 'approved' ? '已通过' : `已退回：${esc(r.reason)}`}</span></span></td>`)
     + '</tr>').join('');
-  table.innerHTML = `<colgroup>${check ? '<col style="width:var(--wb-check-col)">' : ''}<col><col style="width:148px"><col style="width:184px"><col style="width:140px"><col style="width:72px"><col style="width:96px"><col style="width:${check ? 360 : 240}px"></colgroup>${head}<tbody>${body}</tbody>`;
+  // Fixed columns plus 240px for the name; table-layout:fixed would otherwise squeeze the name column to 0 on narrow screens.
+  table.style.minWidth = `calc(${check ? 'var(--wb-check-col) + ' : ''}${152 + 184 + 120 + 104 + 44 + (check ? 340 : 240) + 240}px)`;
+  table.innerHTML = `<colgroup>${check ? '<col style="width:var(--wb-check-col)">' : ''}<col style="width:152px"><col><col style="width:184px"><col style="width:120px"><col style="width:104px"><col style="width:44px"><col style="width:${check ? 340 : 240}px"></colgroup>${head}<tbody>${body}</tbody>`;
   const all = $('[data-select-all]');
   if (all) { const n = list.filter(r => selected.has(r.id)).length; all.checked = n > 0 && n === list.length; all.indeterminate = n > 0 && n < list.length; }
 }
@@ -96,3 +103,28 @@ root.addEventListener('click', e => {
 
 initShell(root);
 render();
+
+// Command palette (rules/7-键盘与命令.md 7.2): every button on the page is also a command here.
+const rowOf = () => { const tr = document.activeElement?.closest?.('tr[data-id]'); return tr ? rows.find(r => r.id === Number(tr.dataset.id)) : null; };
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
+const palette = initPalette({
+  root,
+  shell: true,
+  accountItems: () => account.commands(),
+  context: () => { const r = rowOf(); return r && !r.result ? { id: r.id, code: r.code, label: r.name } : null; },
+  groups: ctx => [
+    ...(ctx ? [{ heading: '当前报价单', items: [
+      ...(rows.find(r => r.id === ctx.id).wait ? [] : [{ id: 'approve', label: '通过', icon: 'success', run: c => decide([c.id], 'approved') }]),
+      { id: 'return', label: '退回…', icon: 'close', run: c => root.querySelector(`[data-return="${c.id}"]`)?.click() },
+      { id: 'open', label: '打开报价单', icon: 'external', run: () => { location.href = 'document.html'; } },
+    ] }] : []),
+    ...(tab === 'todo' && selected.size ? [{ heading: `勾选的 ${selected.size} 张`, items: [
+      { id: 'approve-selected', label: '通过勾选的报价单', icon: 'success', run: () => approveSelected($('[data-action="approve-selected"]')) },
+      { id: 'clear-selection', label: '清除选择', icon: 'close', run: () => { selected.clear(); render(); } },
+    ] }] : []),
+    { heading: '视图', items: [
+      { id: 'tab-todo', label: '待我审批', icon: 'success', run: () => { tab = 'todo'; selected.clear(); render(); } },
+      { id: 'tab-done', label: '我已处理', icon: 'check', run: () => { tab = 'done'; selected.clear(); render(); } },
+    ] },
+  ],
+});

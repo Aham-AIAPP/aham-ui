@@ -72,6 +72,13 @@
       "preview": "examples/controls.html"
     },
     {
+      "slug": "stage-icon",
+      "name": "阶段图标",
+      "group": "控件",
+      "specification": "rules/3-控件.md#315-阶段图标",
+      "preview": "examples/controls.html"
+    },
+    {
       "slug": "next-step",
       "name": "下一步提示条",
       "group": "控件",
@@ -138,6 +145,13 @@
       "group": "外框和页面",
       "specification": "rules/4-页面.md#48-记录详情页",
       "preview": "examples/parts-detail.html"
+    },
+    {
+      "slug": "shared-object",
+      "name": "多方共用的对象",
+      "group": "外框和页面",
+      "specification": "rules/4-页面.md#415-多方共用的对象",
+      "preview": "examples/scene.html"
     },
     {
       "slug": "properties-panel",
@@ -253,7 +267,7 @@
     },
     {
       "slug": "confirm-dialog",
-      "name": "确认弹窗",
+      "name": "确认弹窗和消息框",
       "group": "反馈",
       "specification": "rules/6-反馈.md#63-确认弹窗和消息框",
       "preview": "examples/document.html"
@@ -306,6 +320,34 @@
       "group": "AI 协作",
       "specification": "rules/8-AI协作.md#85-改数据之前",
       "preview": "examples/parts-ai.html"
+    },
+    {
+      "slug": "account-menu",
+      "name": "账户菜单",
+      "group": "组合",
+      "specification": "rules/11-交互.md#116-容器选用",
+      "preview": "examples/interaction.html"
+    },
+    {
+      "slug": "preferences-dialog",
+      "name": "分栏弹窗（偏好设置）",
+      "group": "组合",
+      "specification": "rules/11-交互.md#116-容器选用",
+      "preview": "examples/interaction.html"
+    },
+    {
+      "slug": "text",
+      "name": "次要文字和链接",
+      "group": "控件",
+      "specification": "rules/2-视觉.md#22-主色状态色和分类色",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "skeleton",
+      "name": "占位加载",
+      "group": "反馈",
+      "specification": "rules/6-反馈.md#68-忙碌和占位加载",
+      "preview": "examples/controls.html"
     }
   ]
 }

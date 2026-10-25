@@ -5,16 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aham UI · 部件：附件和版本</title>
   <link rel="stylesheet" href="../aham.css">
+  <link rel="stylesheet" href="_preview.css">
   <style>
-body { margin: 0; }
-/* Preview scaffold only; component styles come from aham.css. */
-.pv { max-width: 1120px; margin: 0 auto; padding: 32px 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 40px; }
-.pv h1 { font-size: 20px; font-weight: 500; }
-.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
-.pv-story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0; }
-.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
-.pv-cap { color: var(--wb-muted); font-size: 12px; }
-.pv-frame { border-radius: 12px; box-shadow: 0 0 0 1px var(--wb-line); overflow: hidden; min-width: 0; }
 .pv-viewer { height: 520px; }
 .pv-viewer > .wb-viewer-split { height: 100%; }
 .pv-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
@@ -135,7 +127,7 @@ function fileRow(f, i) {
   const meta = `${esc(formatBytes(f.size))}${f.path && f.path !== f.name ? ` · ${esc(f.path)}` : ''}`;
   const state = {
     done: `<span class="wb-status"><b></b>已上传</span>${f.note ? `<span class="wb-meta">${esc(f.note)}</span>` : ''}`,
-    uploading: `<span>上传中 ${f.progress}%</span><span class="wb-progress" role="progressbar" aria-label="${esc(f.name)} 上传进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.progress}"><span style="width:${f.progress}%"></span></span>`,
+    uploading: `<span>上传中 ${f.progress}%</span><span class="wb-progress" role="progressbar" aria-label="${esc(f.name)} 上传进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${f.progress}"><span style="--p:${f.progress / 100}"></span></span>`,
     failed: `<span class="wb-risk">${icon('error')}${esc(f.error)}</span>`,
     rejected: `<span class="wb-risk">${icon('error')}${esc(f.error)}</span>`,
   }[f.state];
@@ -235,7 +227,7 @@ $('#pv-tree tbody').innerHTML = BOM.map(r => {
     ? `<button type="button" class="wb-tree-toggle" aria-expanded="true" aria-label="${esc(r.name)}，第 ${lv} 层，含 ${kids} 项" tabindex="-1">${icon('chevron-down')}</button>`
     : `<span class="wb-tree-spacer" aria-hidden="true"></span>`;
   const price = r.price == null ? '—' : r.stale ? `<span class="wb-risk warning">${yuan(r.price)}<span class="wb-sr-only">（单价超过 90 天未更新）</span></span>` : yuan(r.price);
-  return `<tr data-id="${r.id}" data-level="${lv}"><td class="wb-tree-name" style="--wb-level:${lv}"><span>${toggle}<span class="wb-cell-title">${esc(r.name)}</span>${parents.has(r.id) ? '' : `<span class="wb-sr-only">，第 ${lv} 层</span>`}</span></td><td class="wb-mono">${esc(r.code)}</td><td class="number">${r.qty}</td><td class="number">${price}</td><td class="number">${yuan(totals.get(r.id))}</td></tr>`;
+  return `<tr data-id="${r.id}" data-level="${lv}"><td class="wb-tree-name" style="--wb-level:${lv}"><span>${toggle}<span class="wb-cell-title">${esc(r.name)}</span>${parents.has(r.id) ? '' : `<span class="wb-sr-only">，第 ${lv} 层</span>`}</span></td><td>${esc(r.code)}</td><td class="number">${r.qty}</td><td class="number">${price}</td><td class="number">${yuan(totals.get(r.id))}</td></tr>`;
 }).join('');
 $('#pv-tree-total').textContent = yuan(BOM.filter(r => !r.parent).reduce((s, r) => s + totals.get(r.id), 0));
 const tree = initTreeTable($('#pv-tree'));

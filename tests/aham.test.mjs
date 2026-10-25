@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords,keyStep,avatarCat,personHTML,fileCat} from '../aham.js';
+import {FILTER_OPERATORS,operatorLabel,fitOperator,filterComplete,matchesFilter,filtersToParam,paramToFilters,checkFile,formatBytes,treeTotals,diffRecords,keyStep,avatarCat,personHTML,stageIconHTML,fileCat} from '../aham.js';
 
 const fields = [
   { key: 'name', label: '名称', type: 'text' },
@@ -128,4 +128,23 @@ test('fileCat colours files by type and leaves the rest plain', () => {
   assert.equal(fileCat('夹具.step'), 2);
   assert.equal(fileCat('说明.txt'), 0);
   assert.equal(fileCat('README'), 0);
+});
+
+test('compact person: the avatar alone, named for hover and screen readers (rules/3-控件.md 3.11)', () => {
+  const html = personHTML('林悦', { compact: true });
+  assert.ok(html.startsWith('<span class="wb-avatar-xs"'));
+  assert.ok(html.includes('title="林悦"') && html.includes('aria-label="林悦"') && html.includes('role="img"'));
+  assert.ok(!html.includes('wb-person'));
+  assert.ok(personHTML('', { compact: true }).includes('aria-label="未指定"'));
+});
+
+test('stage icon: state, pie share and spoken label (rules/3-控件.md 3.15)', () => {
+  const cur = stageIconHTML({ state: 'current', done: 2, total: 5, label: '方案评估' });
+  assert.ok(cur.includes('data-state="current"'));
+  assert.ok(cur.includes('aria-label="方案评估：进行中，第 3 段，共 5 段"'));
+  const dash = Number(cur.match(/stroke-dasharray="([\d.]+) ([\d.]+)"/)[1]), whole = 2 * Math.PI * 2.5;
+  assert.ok(Math.abs(dash - whole * 0.4) < 0.01, 'pie covers 2 of 5');
+  assert.ok(stageIconHTML({ state: 'done', label: '已签约' }).includes('aria-label="已签约：已完成"'));
+  assert.ok(stageIconHTML({ state: 'bogus' }).includes('data-state="todo"'));
+  assert.ok(!stageIconHTML({ state: 'done' }).includes('wb-stage-pie'));
 });

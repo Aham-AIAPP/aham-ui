@@ -5,21 +5,27 @@ Aham UI 是一套业务管理系统的界面规范和参考实现。问题和建
 ## 改动顺序
 
 1. **改取值**：只改 [tokens.json](tokens.json)。
-2. **改规则**：改 [rules/](rules/) 里对应的文件。规则变了先改规则，再改实现。
-3. **改实现**：样式改 `src/*.css`，行为改 `aham.js`，结构变了同步改 `components/*.json`。
-4. **重新生成**：运行 `node scripts/build.mjs` 生成 aham.css。aham.css 不手改。
+2. **改规则**：改 [rules/](rules/) 里对应的文件。规则变了先改规则，再改实现。新规则要能说出落实 [设计理念.md](设计理念.md) 的哪条原则；说不出的，先改设计理念或不改。
+3. **改实现**：样式改 `src/*.css`，行为改 `js/*.js`，结构变了同步改 `components/*.json`，导出变了同步改 `aham.d.ts`。
+4. **重新生成**：运行 `npm run build`，生成 aham.css、aham.js 和示例页的侧栏。这三样不手改。
 5. **同步示例**：规则涉及的示例页一起改。
 6. **记录**：在 [CHANGELOG.md](CHANGELOG.md) 的 `[Unreleased]` 下写本次改动。
+
+## 新增一个组件
+
+1. 样式写在 `src/` 里所属组件族的文件；新的组件族新建 `src/NN-名称.css`，编号决定拼接顺序。结构、变体、状态、响应式按这个顺序写在同一个文件里，`@media` 和 `@container` 块由构建移到产物末尾。
+2. 可点的元素在过渡上用 `var(--wb-state-out)`，悬停和按下时用 `var(--wb-state-in)`，不另写过渡清单。
+3. 行为写在 `js/NN-名称.js`。函数开头调用 `scope()`，监听用 `life.on()`，返回值带 `destroy: life.end`。
+4. 新增 `components/名称.json` 并登记到 `components/index.json`。aham.css 里的每个类名都要写进某份契约。
+5. 在 `aham.d.ts` 里写新导出的类型。
 
 ## 提交前检查
 
 ```bash
-node scripts/build.mjs --check
-node scripts/lint.mjs
-node --test
+npm run check
 ```
 
-三条都要通过，CI 运行同样的三条。改了视觉的，按 [rules/9-验收.md](rules/9-验收.md) 9.4 截图核对亮色和暗色。
+它依次运行生成检查、lint、契约检查、主题检查和测试，CI 运行同样的五步。改了视觉的，按 [rules/9-验收.md](rules/9-验收.md) 9.4 截图核对亮色和暗色。
 
 ## 规则文字的写法
 
@@ -30,7 +36,7 @@ node --test
 
 ## 发版
 
-1. 改 `tokens.json` 的 `$meta.version` 和 `rules/1-总则.md` 开头的版本号。新增功能升次版本号，修复升修订号，不兼容的改动升主版本号。
+1. 改 `package.json` 的 `version`，再把 `tokens.json` 的 `$meta.version`、`rules/1-总则.md` 开头和 README 的版本号改成同一个。测试会核对这四处。新增功能升次版本号，修复升修订号，不兼容的改动升主版本号。
 2. 把 CHANGELOG 的 `[Unreleased]` 移到新版本号下，写上日期。
 3. 提交并推送到 main，在 GitHub 上发布 Release。
 

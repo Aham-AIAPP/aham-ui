@@ -1,17 +1,30 @@
 // List page sample: wires the Aham UI components (aham.js) to fictional demo data.
 // Everything reusable lives in aham.js / aham.css; this file only renders rows and keeps demo state.
-import {initShell, initPanels, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc} from '../aham.js';
-import {makeCustomers, FIELDS, field, OWNERS, STAGES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
+import {initShell, initPanels, stageIconHTML, personHTML, initSearch, initFilter, initDisplay, initListKeys, initPalette, initContextMenu, openCreateDialog, openConfirm, openFormDialog, showBatchResult, toCSV, downloadText, openPicker, registerShortcut, toast, icon, escapeHtml as esc} from '../aham.js';
+import {makeCustomers, FIELDS, field, OWNERS, STATUSES, INDUSTRIES, TODAY, VIEWS, PAGE_SIZES, applyFilters, applyView, applySearch, arrange, groupRows, paginate, encodeState, decodeState, normalizeDisplay, money} from './list-model.mjs';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s), $$ = s => [...root.querySelectorAll(s)];
 const DISPLAY_KEY = 'aham-ui:customer-list:display:v1';
-const WIDTHS = { code: 120, industry: 96, owner: 80, stage: 96, lastContact: 88, created: 88, amountCents: 128 };
-const FIRST_DIR = { name: 'asc', code: 'asc', industry: 'asc', owner: 'asc', stage: 'asc', lastContact: 'desc', created: 'desc', amountCents: 'desc' };
-const ICONS = { name: 'file', code: 'bookmark', industry: 'folder', owner: 'user', stage: 'success', lastContact: 'clock', created: 'calendar' };
+// Single-line rows (rules/4-页面.md 4.3): code, status icon and name on the left; tag, amount, dates and the owner's avatar on the right.
+const WIDTHS = { code: 112, status: 28, industry: 112, amountCents: 120, lastContact: 64, created: 64, owner: 40 };
+const ROW_ORDER = ['code', 'status', 'name', 'industry', 'amountCents', 'lastContact', 'created', 'owner'];
+const stageIcon = status => status === '已流失' ? stageIconHTML({ state: 'off', label: status }) : status === '已成交' ? stageIconHTML({ state: 'done', label: status })
+  : status === '潜在' ? stageIconHTML({ state: 'todo', label: status }) : stageIconHTML({ state: 'current', done: 1, total: 2, label: status });
+const FIRST_DIR = { name: 'asc', code: 'asc', industry: 'asc', owner: 'asc', status: 'asc', lastContact: 'desc', created: 'desc', amountCents: 'desc' };
+const ICONS = { name: 'file', code: 'bookmark', industry: 'folder', owner: 'user', status: 'success', lastContact: 'clock', created: 'calendar' };
 
 let data = makeCustomers();
 const fromUrl = decodeState(location.search);
+// Page states for the samples (rules/6-反馈.md 6.8, 6.10): ?state=loading shows grey rows for 2 seconds, ?state=error the
+// failure with 重试. The command palette's 示例 group switches between them.
+let pageState = ['loading', 'error'].includes(new URLSearchParams(location.search).get('state')) ? new URLSearchParams(location.search).get('state') : null;
+function showState(next) {
+  pageState = next;
+  render();
+  if (next === 'loading') setTimeout(() => { if (pageState === 'loading') { pageState = null; render(); } }, 2000);
+}
 const state = { view: fromUrl.view, q: fromUrl.q, filters: fromUrl.filters, page: fromUrl.page };
 let display = loadDisplay();
 const selected = new Set(), collapsed = new Set();
@@ -92,7 +105,7 @@ function render(fallback) {
   const active = document.activeElement, token = focusToken(active);
   compute();
   renderViews();
-  $('#list-count').textContent = cur.rows.length === data.length ? `共 ${data.length} 条` : `${cur.rows.length} / ${data.length} 条`;
+  $('#list-count').textContent = pageState ? '' : cur.rows.length === data.length ? `共 ${data.length} 条` : `${cur.rows.length} / ${data.length} 条`;
   $('#customer-list').dataset.listDensity = display.density;
   renderTable(); renderPager(); renderBulk(); renderPreview();
   listKeys?.refresh();
@@ -106,42 +119,60 @@ function render(fallback) {
 }
 function cell(f, r) {
   switch (f.key) {
-    case 'stage': return `<td><button type="button" class="wb-cell-picker" data-cell="stage" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="阶段：${esc(r.stage)}，点击修改"><span class="wb-status"><b></b>${esc(r.stage)}</span></button></td>`;
-    case 'owner': return `<td><button type="button" class="wb-cell-picker" data-cell="owner" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${esc(r.owner)}，点击修改">${esc(r.owner)}</button></td>`;
-    case 'amountCents': return `<td class="number">${money(r.amountCents)}</td>`;
-    case 'code': return `<td class="wb-mono">${esc(r.code)}</td>`;
-    case 'lastContact': case 'created': return `<td class="wb-mono" title="${r[f.key]}">${r[f.key].slice(5)}</td>`;
+    case 'name': return `<td class="wb-cell-name"><button type="button" class="wb-row-link" data-open="${r.id}" title="打开 ${esc(r.name)}">${esc(r.name)}</button></td>`;
+    case 'status': return `<td class="wb-cell-icon"><button type="button" class="wb-cell-picker is-icon" data-cell="status" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="客户状态：${esc(r.status)}，点击修改">${stageIcon(r.status)}</button></td>`;
+    case 'owner': return `<td class="wb-cell-end"><button type="button" class="wb-cell-picker is-icon" data-cell="owner" data-row="${r.id}" aria-haspopup="dialog" aria-expanded="false" aria-label="负责人：${esc(r.owner)}，点击修改">${personHTML(r.owner, { compact: true })}</button></td>`;
+    case 'industry': return `<td class="wb-cell-end"><span class="wb-tag" data-cat="${INDUSTRIES.indexOf(r.industry) % 6 + 1}">${esc(r.industry)}</span></td>`;
+    case 'amountCents': return `<td class="number wb-cell-meta">${r.amountCents === null ? '' : money(r.amountCents)}</td>`;
+    case 'code': return `<td class="wb-cell-meta">${esc(r.code)}</td>`;
+    case 'lastContact': case 'created': return `<td class="wb-cell-end wb-cell-meta" title="${f.label} ${r[f.key]}">${r[f.key].slice(5)}</td>`;
     default: return `<td>${esc(r[f.key])}</td>`;
   }
 }
+// The header row stays for screen readers only; sorting lives in 显示 (rules/4-页面.md 4.3, 4.6).
 function header(f) {
   const on = display.sort.field === f.key;
   const sort = on ? ` aria-sort="${display.sort.dir === 'asc' ? 'ascending' : 'descending'}"` : '';
-  return `<th scope="col"${f.type === 'number' ? ' class="number"' : ''}${sort}><button type="button" class="wb-sort" data-sort="${f.key}" title="按${esc(f.label)}排序">${esc(f.label)}${on ? icon(display.sort.dir === 'asc' ? 'chevron-up' : 'chevron-down') : ''}</button></th>`;
+  return `<th scope="col"${sort}>${esc(f.label)}</th>`;
 }
 function renderTable() {
   const table = $('#customer-table'), empty = $('#list-empty'), { rows, pg } = cur;
+  table.toggleAttribute('aria-busy', pageState === 'loading');
+  if (pageState === 'loading') {
+    table.hidden = false; empty.hidden = true;
+    const widths = [46, 38, 52, 30, 44, 36, 50, 40];
+    table.innerHTML = `<tbody>${widths.concat(widths).map(w => `<tr aria-hidden="true"><td class="wb-check"></td><td><span class="wb-skeleton" style="width:${w}%"></span></td></tr>`).join('')}</tbody>`;
+    return;
+  }
+  if (pageState === 'error') {
+    table.hidden = true; empty.hidden = false; table.innerHTML = '';
+    empty.innerHTML = '<strong>客户列表没有加载出来</strong><p>网络连接中断（示例模拟）。侧栏和其他页面照常可用。</p><div><button type="button" class="wb-btn sm" data-action="retry">重试</button></div>';
+    return;
+  }
   table.hidden = !rows.length;
   empty.hidden = Boolean(rows.length);
   if (!rows.length) { table.innerHTML = ''; empty.innerHTML = emptyHtml(); return; }
-  const cols = display.columns.filter(c => c[1]).map(c => field(c[0]));
-  const span = cols.length + 2;
-  const rowHtml = r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td><td><button type="button" class="wb-row-link" data-open="${r.id}" title="打开 ${esc(r.name)}">${esc(r.name)}</button></td>${cols.map(f => cell(f, r)).join('')}</tr>`;
+  const shown = new Set(['name', ...display.columns.filter(c => c[1]).map(c => c[0])]);
+  const cols = ROW_ORDER.filter(k => shown.has(k)).map(field);
+  const span = cols.length + 1;
+  const rowHtml = r => `<tr data-id="${r.id}"${selected.has(r.id) ? ' data-selected' : ''}><td class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select="${r.id}"${selected.has(r.id) ? ' checked' : ''} aria-label="选择 ${esc(r.name)}"></label></td>${cols.map(f => cell(f, r)).join('')}</tr>`;
   let body = '';
   for (const g of groupRows(pg.rows, display.group)) {
     const shut = g.key !== null && collapsed.has(g.key);
     body += '<tbody>';
     if (g.key !== null) {
       const all = rows.filter(r => r[display.group] === g.key).length;
-      body += `<tr class="wb-group-head"><th colspan="${span}" scope="rowgroup"><button type="button" class="wb-group-toggle" data-group="${esc(g.key)}" aria-expanded="${!shut}">${icon('chevron-down')}${esc(g.label)}<span class="wb-group-count">${g.rows.length === all ? all : `本页 ${g.rows.length} / 共 ${all}`}</span></button></th></tr>`;
+      const mark = display.group === 'status' ? stageIcon(g.key) : '';
+      body += `<tr class="wb-group-head"><th colspan="${span}" scope="rowgroup"><button type="button" class="wb-group-toggle" data-group="${esc(g.key)}" aria-expanded="${!shut}">${icon('chevron-down')}${mark}${esc(g.label)}<span class="wb-group-count">${g.rows.length === all ? all : `本页 ${g.rows.length} / 共 ${all}`}</span></button></th></tr>`;
     }
     if (!shut) body += g.rows.map(rowHtml).join('');
     body += '</tbody>';
   }
-  table.innerHTML = `<colgroup><col style="width:var(--wb-check-col)"><col>${cols.map(f => `<col style="width:${WIDTHS[f.key]}px">`).join('')}</colgroup><thead><tr><th scope="col" class="wb-check"><label class="wb-check-hit"><input type="checkbox" data-select-page="" aria-label="选择本页 ${pg.rows.length} 条"></label></th>${header(field('name'))}${cols.map(header).join('')}</tr></thead>${body}`;
+  table.innerHTML = `<colgroup><col style="width:var(--wb-check-col)">${cols.map(f => f.key === 'name' ? '<col>' : `<col style="width:${WIDTHS[f.key]}px">`).join('')}</colgroup><thead><tr><th scope="col" class="wb-check"><span class="wb-sr-only">选择</span></th>${cols.map(header).join('')}</tr></thead>${body}`;
   const all = $('[data-select-page]'), ids = pg.rows.map(r => r.id), n = ids.filter(id => selected.has(id)).length;
   all.checked = n > 0 && n === ids.length;
   all.indeterminate = n > 0 && n < ids.length;
+  all.setAttribute('aria-label', `选择本页 ${ids.length} 条`);
 }
 function emptyHtml() {
   if (!data.length) return '<strong>示例数据已全部删除</strong><p>刷新页面可以恢复。</p>';
@@ -151,10 +182,13 @@ function emptyHtml() {
     state.q && '<button type="button" class="wb-btn sm" data-action="clear-search">清除搜索</button>',
     state.view !== 'all' && '<button type="button" class="wb-btn sm" data-action="view-all">查看全部</button>',
   ].filter(Boolean).join('');
-  return `<strong>没有符合条件的记录</strong><p>当前条件：${why}。放宽条件后再看。</p><div>${actions}</div>`;
+  return `<strong>没有符合条件的客户</strong><p>当前条件：${why}。放宽条件后再看。</p><div>${actions}</div>`;
 }
+// With no rows the pager has nothing to page; the empty state says why (rules/4-页面.md 4.3).
 function renderPager() {
   const { rows, pg } = cur;
+  $('#pager').hidden = !rows.length || Boolean(pageState);
+  if (!rows.length || pageState) return;
   $('#pager').innerHTML = `<span>${rows.length ? `第 ${pg.from}–${pg.to} 条，共 ${rows.length} 条` : '没有记录'}</span><div><label>每页 <select class="wb-field sm" data-page-size="" aria-label="每页条数">${PAGE_SIZES.map(n => `<option value="${n}"${n === display.pageSize ? ' selected' : ''}>${n}</option>`).join('')}</select></label><button type="button" class="wb-icon-btn" data-page="prev" aria-label="上一页"${pg.page <= 1 ? ' disabled' : ''}>${icon('chevron-left')}</button><span>第 ${pg.page} / ${pg.pages} 页</span><button type="button" class="wb-icon-btn" data-page="next" aria-label="下一页"${pg.page >= pg.pages ? ' disabled' : ''}>${icon('chevron-right')}</button></div>`;
 }
 function renderBulk() {
@@ -172,7 +206,7 @@ function renderPreview() {
   const r = data.find(x => x.id === previewId) ?? cur.rows[0];
   if (!r) { panel.innerHTML = '<div class="wb-empty"><strong>没有可预览的记录</strong></div>'; return; }
   previewId = r.id;
-  panel.innerHTML = `<section class="wb-peek"><h2>${esc(r.name)}</h2><span class="wb-status"><b></b>${esc(r.stage)}</span><dl><dt>编码</dt><dd class="wb-mono">${esc(r.code)}</dd><dt>行业</dt><dd>${esc(r.industry)}</dd><dt>负责人</dt><dd>${esc(r.owner)}</dd><dt>最近跟进</dt><dd class="wb-mono">${r.lastContact}</dd><dt>创建日期</dt><dd class="wb-mono">${r.created}</dd><dt>年度金额</dt><dd class="wb-mono">${money(r.amountCents)}</dd></dl></section>`;
+  panel.innerHTML = `<section class="wb-peek"><h2>${esc(r.name)}</h2><span class="wb-status">${stageIcon(r.status)}<span>${esc(r.status)}</span></span><dl><dt>编码</dt><dd>${esc(r.code)}</dd><dt>行业</dt><dd>${esc(r.industry)}</dd><dt>负责人</dt><dd>${esc(r.owner)}</dd><dt>最近跟进</dt><dd>${r.lastContact}</dd><dt>创建日期</dt><dd>${r.created}</dd><dt>年度金额</dt><dd class="wb-tnum">${money(r.amountCents)}</dd></dl></section>`;
 }
 
 // ── Design-system components ─────────────────────────────────────────────────
@@ -187,7 +221,7 @@ const filter = initFilter({
 });
 const displayCtl = initDisplay({
   root, trigger: $('#display-trigger'),
-  groups: [['stage', '阶段'], ['owner', '负责人'], ['industry', '行业']],
+  groups: [['status', '客户状态'], ['owner', '负责人'], ['industry', '行业']],
   sorts: FIELDS.map(f => [f.key, f.label]),
   columns: FIELDS.filter(f => f.key !== 'name').map(f => ({ key: f.key, label: f.label })),
   value: display, defaults: normalizeDisplay(null),
@@ -209,13 +243,13 @@ function massEdit() {
     return { value: same ?? KEEP, options: [{ value: KEEP, label: '保留原值' }, ...(required ? [] : [{ value: BLANK, label: '留空' }]), ...options.map(o => ({ value: o, label: o }))] };
   };
   const fields = [
-    { key: 'stage', label: '阶段', type: 'select', ...opts('stage', STAGES, true) },
+    { key: 'status', label: '客户状态', type: 'select', ...opts('status', STATUSES, true) },
     { key: 'owner', label: '负责人', type: 'select', ...opts('owner', OWNERS, true) },
     { key: 'industry', label: '行业', type: 'select', ...opts('industry', INDUSTRIES, false) },
   ];
   openFormDialog({
     root, title: `批量编辑 ${rows.length} 个客户`, submit: '保存', returnFocus: $('[data-action="mass-edit"]'),
-    text: '只改这里选了新值的字段。阶段和负责人是必填，没有「留空」。',
+    text: '只改这里选了新值的字段。客户状态和负责人是必填，没有「留空」。',
     fields,
     onSubmit: v => {
       const patch = Object.fromEntries(Object.entries(v).filter(([, x]) => x !== KEEP).map(([k, x]) => [k, x === BLANK ? '' : x]));
@@ -235,7 +269,7 @@ function exportRows(rows) {
   downloadText(`客户-${TODAY}.csv`, toCSV(ordered, cols));
   toast(`已导出 ${rows.length} 条，文件 客户-${TODAY}.csv`);
 }
-// Delete: 已签约 customers fail on the server in this demonstration, so the result dialog can be seen.
+// Delete: 已成交 customers fail on the server in this demonstration, so the result dialog can be seen.
 function confirmDelete(ids = [...selected], returnFocus) {
   const n = ids.length, one = n === 1 ? recordOf(ids[0]) : null;
   openConfirm({
@@ -243,7 +277,7 @@ function confirmDelete(ids = [...selected], returnFocus) {
     title: one ? `删除客户 ${one.name}？` : `删除选中的 ${n} 个客户？`,
     text: '删除后不能恢复。客户的联系人和跟进记录一起删除。',
     onConfirm: () => {
-      const failed = ids.map(recordOf).filter(r => r.stage === '已签约').map(r => ({ id: r.id, name: r.name, reason: '有已签约的合同，先在合同里处理' }));
+      const failed = ids.map(recordOf).filter(r => r.status === '已成交').map(r => ({ id: r.id, name: r.name, reason: '有已成交的合同，先在合同里处理' }));
       const gone = new Set(ids.filter(id => !failed.some(f => f.id === id)));
       data = data.filter(r => !gone.has(r.id));
       gone.forEach(id => selected.delete(id));
@@ -310,6 +344,7 @@ root.addEventListener('click', e => {
   if (d.cell) { editCell(Number(d.row), d.cell, b); return; }
   if (b.id === 'create-trigger') { openCreate(); return; }
   switch (d.action) {
+    case 'retry': showState('loading'); break;
     case 'clear-filters': state.filters = []; filter.set([]); narrowResult(); render(); $('#filter-trigger').focus(); break;
     case 'clear-search': state.q = ''; search?.close(); narrowResult(); render(); break;
     case 'view-all': applyViewSetting('all'); break;
@@ -324,7 +359,7 @@ root.addEventListener('click', e => {
 });
 
 // ── One action, four entrances: cell picker, context menu, ⌘K palette, shortcut ──
-const EDITABLE = { stage: { label: '阶段', options: STAGES }, owner: { label: '负责人', options: OWNERS, icon: 'user' } };
+const EDITABLE = { status: { label: '客户状态', options: STATUSES }, owner: { label: '负责人', options: OWNERS, icon: 'user' } };
 const recordOf = id => data.find(r => r.id === id);
 function setField(id, key, value, before) {
   data = data.map(r => (r.id === id ? { ...r, [key]: value } : r));
@@ -344,11 +379,20 @@ function copy(text) { navigator.clipboard?.writeText(text).then(() => toast(`已
 function openCreate() {
   const currentRowBefore = currentRow();
   openCreateDialog({
-    root, title: '新建记录', scope: '客户', returnFocus: { focus: () => (currentRowBefore ? listKeys.focus(currentRowBefore) : $('#create-trigger').focus()) },
-    fields: [{ key: 'stage', label: '阶段', options: STAGES, value: '初次接触' }, { key: 'owner', label: '负责人', options: OWNERS, icon: 'user' }, { key: 'industry', label: '行业', options: INDUSTRIES }],
+    root, title: '新建客户', scope: '客户', nameLabel: '客户全称', returnFocus: { focus: () => (currentRowBefore ? listKeys.focus(currentRowBefore) : $('#create-trigger').focus()) },
+    inputs: [{ key: 'uscc', label: '统一社会信用代码', placeholder: '统一社会信用代码，18 位', maxlength: 18 }],
+    description: '备注',
+    fields: [{ key: 'status', label: '客户状态', options: STATUSES, value: '潜在' }, { key: 'owner', label: '负责人', options: OWNERS, icon: 'user' }, { key: 'industry', label: '行业', options: INDUSTRIES }],
+    // Check for duplicates before creating: the same company entered twice splits its history (rules/4-页面.md 4.2).
+    check: v => {
+      const same = data.find(r => r.name === v.title);
+      if (same) return `已有这家客户：${same.code}。打开那条记录补充信息。`;
+      if (v.uscc && !/^[0-9A-Z]{18}$/.test(v.uscc)) return '统一社会信用代码是 18 位数字和大写字母';
+      return null;
+    },
     onSubmit: v => {
       const id = Math.max(0, ...data.map(r => r.id)) + 1;
-      data = [{ id, code: `CUS-2026-${String(id).padStart(4, '0')}`, name: v.title, industry: v.industry || INDUSTRIES[0], owner: v.owner || OWNERS[0], stage: v.stage || STAGES[0], amountCents: null, lastContact: TODAY, created: TODAY }, ...data];
+      data = [{ id, code: `CUS-2026-${String(id).padStart(4, '0')}`, name: v.title, industry: v.industry || INDUSTRIES[0], owner: v.owner || OWNERS[0], status: v.status || STATUSES[0], amountCents: null, lastContact: TODAY, created: TODAY }, ...data];
       render();
       toast(`已创建「${v.title}」`, { action: { label: '打开', run: () => openRecord(id) } });
       return true;
@@ -361,7 +405,7 @@ initContextMenu({
     const id = Number(row.dataset.id), r = recordOf(id);
     const pick = key => EDITABLE[key].options.map(o => ({ id: o, label: o, icon: EDITABLE[key].icon, current: o === r[key], run: () => { if (o !== r[key]) setField(id, key, o, r[key]); } }));
     return [
-      { id: 'stage', label: '阶段', icon: 'success', keys: 's', group: 0, children: () => pick('stage') },
+      { id: 'status', label: '客户状态', icon: 'success', keys: 's', group: 0, children: () => pick('status') },
       { id: 'owner', label: '负责人', icon: 'user', keys: 'a', group: 0, children: () => pick('owner') },
       { id: 'open', label: '打开', icon: 'external', keys: 'enter', group: 1, run: () => openRecord(id) },
       { id: 'peek', label: '预览', icon: 'eye', keys: 'space', group: 1, run: () => preview(id) },
@@ -371,44 +415,44 @@ initContextMenu({
     ];
   },
 });
-const GROUP_ORDER = ['通用', '列表'];
-const shortcutItems = () => listShortcuts().sort((x, y) => GROUP_ORDER.indexOf(x.group) - GROUP_ORDER.indexOf(y.group)).map((s, i) => ({ id: `k${i}`, label: s.label, keys: s.keys, group: s.group, heading: s.group, keywords: [s.group] }));
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
 const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   context: () => { const id = currentRow() ?? (panels.current() === PEEK ? previewId : null); const r = id && recordOf(id); return r ? { id, code: r.code, label: r.name } : null; },
   groups: ctx => [
     ...(ctx ? [{ heading: '当前记录', items: [
-      { id: 'stage', label: '修改阶段…', icon: 'success', keys: 's', children: c => STAGES.map(o => ({ id: o, label: o, current: o === recordOf(c.id).stage, run: () => { const r = recordOf(c.id); if (o !== r.stage) setField(c.id, 'stage', o, r.stage); } })) },
+      { id: 'status', label: '修改客户状态…', icon: 'success', keys: 's', children: c => STATUSES.map(o => ({ id: o, label: o, current: o === recordOf(c.id).status, run: () => { const r = recordOf(c.id); if (o !== r.status) setField(c.id, 'status', o, r.status); } })) },
       { id: 'owner', label: '分配给…', icon: 'user', keys: 'a', children: c => OWNERS.map(o => ({ id: o, label: o, icon: 'user', current: o === recordOf(c.id).owner, run: () => { const r = recordOf(c.id); if (o !== r.owner) setField(c.id, 'owner', o, r.owner); } })) },
       { id: 'open', label: '打开详情', icon: 'external', run: c => openRecord(c.id) },
       { id: 'copy', label: '复制编码', icon: 'copy', run: c => copy(recordOf(c.id).code) },
       { id: 'delete', label: '删除', icon: 'trash', danger: true, run: c => confirmDelete([c.id]) },
     ] }] : []),
+    ...(selected.size ? [{ heading: `勾选的 ${selected.size} 条`, items: [
+      { id: 'mass-edit', label: '批量编辑…', icon: 'edit', run: () => $('[data-action="mass-edit"]').click() },
+      { id: 'export-selected', label: '导出勾选的记录', icon: 'download', run: () => exportRows(cur.rows.filter(r => selected.has(r.id))) },
+      { id: 'delete-selected', label: '删除勾选的记录', icon: 'trash', danger: true, run: () => confirmDelete([...selected]) },
+    ] }] : []),
     { heading: '操作', items: [
-      { id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: openCreate },
+      { id: 'create', label: '新建客户', icon: 'plus', keys: 'c', run: openCreate },
+      { id: 'export-all', label: '导出当前结果', icon: 'download', run: () => exportRows(cur.rows) },
       { id: 'filter', label: '筛选…', icon: 'filter', run: () => filter.open() },
       { id: 'view', label: '切换视图…', icon: 'eye', children: () => [...Object.entries(VIEWS), ...customViews.map(v => [v.id, v.label])].map(([k, l]) => ({ id: k, label: l, current: k === state.view, run: () => applyViewSetting(k) })) },
       { id: 'clear', label: '清除筛选', icon: 'close', run: () => { state.filters = []; filter.set([]); narrowResult(); render(); } },
       { id: 'display', label: '显示选项…', icon: 'settings', run: () => $('#display-trigger').click() },
-      { id: 'peek', label: panels.current() === PEEK ? '关闭预览面板' : '打开预览面板', icon: 'eye', run: () => $('[data-panel-toggle="customer-peek"]').click() },
     ] },
-    { heading: '界面', items: [
-      { id: 'nav', label: '展开 / 收起导航', icon: 'menu', keys: 'mod+b', run: () => $('[data-action="nav"]').click() },
-      { id: 'theme', label: root.dataset.theme === 'dark' ? '切换到浅色' : '切换到深色', icon: root.dataset.theme === 'dark' ? 'sun' : 'moon', run: () => $('[data-action="theme"]').click() },
+    { heading: '示例', items: [
+      { id: 'state-loading', label: '显示首次加载', icon: 'refresh', run: () => showState('loading') },
+      { id: 'state-error', label: '显示加载失败', icon: 'warning', run: () => showState('error') },
     ] },
-    { heading: '跳转', items: [
-      { id: 'go-quote', label: '销售报价单', icon: 'file', run: () => { location.href = 'document.html'; } },
-      { id: 'go-shell', label: '工作台外框', icon: 'home', run: () => { location.href = 'shell.html'; } },
-    ] },
-    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });
 const onRow = () => currentRow() !== null;
-registerShortcut({ keys: 'c', label: '新建记录', group: '列表', run: openCreate });
+registerShortcut({ keys: 'c', label: '新建客户', group: '列表', run: openCreate });
 registerShortcut({ keys: '/', label: '搜索', group: '列表', run: () => root.querySelector('[data-action="search"]')?.click() });
-registerShortcut({ keys: 's', label: '修改当前行的阶段', group: '列表', when: onRow, run: () => editCell(currentRow(), 'stage') });
+registerShortcut({ keys: 's', label: '修改当前行的客户状态', group: '列表', when: onRow, run: () => editCell(currentRow(), 'status') });
 registerShortcut({ keys: 'a', label: '修改当前行的负责人', group: '列表', when: onRow, run: () => editCell(currentRow(), 'owner') });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
 // Keys handled directly by the list and the layer stack, listed here so the help shows them.
 [['up', '上一行'], ['down', '下一行'], ['shift+down', '扩展勾选范围'], ['space', '预览当前行'], ['enter', '打开当前行'], ['x', '勾选当前行'], ['shift+f10', '当前行的操作菜单'], ['escape', '关闭最上层的浮层']].forEach(([keys, label]) => registerShortcut({ keys, label, group: keys === 'escape' ? '通用' : '列表', external: true }));
 
@@ -417,3 +461,4 @@ const panels = initPanels(root);
 const search = initSearch(root, { value: state.q, onInput: v => { state.q = v; narrowResult(); render(); } });
 if (fromUrl.dropped) feedback(`网址里有 ${fromUrl.dropped} 个筛选条件无法识别，已忽略。`);
 render();
+if (pageState === 'loading') setTimeout(() => { if (pageState === 'loading') { pageState = null; render(); } }, 2000);

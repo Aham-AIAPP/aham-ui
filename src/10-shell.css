@@ -1,0 +1,81 @@
+/* Shell (9.0): a 220px text sidebar on the canvas tier, one shade darker than the white work surface. The work surface
+   runs to the window edges with square corners; one 1px --wb-edge line separates it from the sidebar.
+   ⌘/Ctrl+B collapses it to a 52px icon rail. No border, no resting shadow. */
+:where(.aham-workbench) .wb-rail{display:flex;flex-direction:column;gap:var(--wb-s4);min-height:0;overflow-y:auto;padding:0 var(--wb-s2) var(--wb-s3);background:var(--wb-canvas)}
+:where(.aham-workbench) .wb-rail-head{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-header-row);padding:0 var(--wb-s2)}
+:where(.aham-workbench) .wb-brand{display:grid;place-items:center;flex:none;width:var(--wb-activity-icon);height:var(--wb-activity-icon);border-radius:var(--wb-radius-sm);background:var(--wb-nav-selected);color:var(--wb-ink);font-size:var(--wb-text-xs);font-weight:500}
+:where(.aham-workbench) .wb-brand-name{min-width:0;font-weight:500;color:var(--wb-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-group{display:grid;gap:2px}
+:where(.aham-workbench) .wb-nav-heading{display:block;padding:0 var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink-2);text-align:start}
+:where(.aham-workbench) a.wb-nav-item{text-decoration:none}
+:where(.aham-workbench) .wb-nav-item svg{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-hover)}
+:where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-nav-selected);color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-nav-item[aria-current=page] svg{color:var(--wb-ink)}
+:where(.aham-workbench) .wb-nav-item>span:not(.wb-avatar-xs,.wb-nav-count){flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-nav-count{flex:none;color:var(--wb-ink-2);font-size:var(--wb-text-xs);font-weight:400;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-nav-user{cursor:default}
+:where(.aham-workbench) button.wb-nav-user{cursor:pointer}
+:where(.aham-workbench) .wb-nav-user>svg:last-child{flex:none;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-nav-user:not(button):hover{background:transparent}
+:where(.aham-workbench) .wb-nav-foot{display:grid;gap:2px;margin-block-start:auto}
+:where(.aham-workbench) .wb-crumbs a{color:inherit;text-decoration:none}
+:where(.aham-workbench) .wb-crumbs a:hover{color:var(--wb-ink);text-decoration:underline;text-underline-offset:3px}
+/* Collapsed (⌘/Ctrl+B): 52px of icons; names show in the tooltip. */
+:where(.aham-workbench).collapsed{grid-template-columns:var(--wb-rail) minmax(0,1fr)}
+:where(.aham-workbench).collapsed .wb-rail{align-items:center;padding-inline:var(--wb-s1)}
+:where(.aham-workbench).collapsed :is(.wb-brand-name,.wb-nav-heading,.wb-nav-item>span:not(.wb-avatar-xs),.wb-nav-count){display:none}
+:where(.aham-workbench).collapsed .wb-nav-item{justify-content:center;width:var(--wb-hit);padding:0}
+:where(.aham-workbench).collapsed .wb-rail-head{justify-content:center;padding:0}
+:where(.aham-workbench).collapsed .wb-nav-user>svg:last-child{display:none}
+:where(.aham-workbench) .wb-main{grid-column:2;display:flex;flex-direction:column;min-width:0;min-height:0;border-inline-start:var(--wb-hairline) solid var(--wb-edge);background:var(--wb-bg);overflow:hidden}
+:where(.aham-workbench) .wb-scrim{position:fixed;inset:0;z-index:var(--wb-z-scrim);background:var(--wb-scrim)}
+/* Header: one or two 44px rows. Row 1 = page name or crumbs, view tabs, global actions; row 2 = count, filter, panel toggles, display. */
+:where(.aham-workbench) .wb-header{flex:none}
+:where(.aham-workbench) .wb-header-row{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);height:var(--wb-header-row);padding:0 var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
+:where(.aham-workbench) :is(.wb-header-lead,.wb-header-trail){display:flex;align-items:center;gap:var(--wb-s2);min-width:0}
+:where(.aham-workbench) .wb-header-lead{flex:1}
+/* The nav toggle sits in the header only while the sidebar is collapsed or floating. */
+:where(.aham-workbench):not(.collapsed) .wb-header [data-action=nav]{display:none}
+:where(.aham-workbench) .wb-crumbs{display:flex;align-items:center;gap:var(--wb-s2);min-width:0;overflow:hidden;white-space:nowrap}
+:where(.aham-workbench) .wb-crumbs+.wb-seg.sm{margin-inline-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-crumbs strong{font-weight:500}
+:where(.aham-workbench) .wb-crumbs [aria-current=page]{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-count{color:var(--wb-muted);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-page-head{flex:none;display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s3);padding:var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) :is(.wb-page-head-lead,.wb-page-head-trail){display:flex;align-items:center;gap:var(--wb-s3);flex-wrap:wrap}
+:where(.aham-workbench) h1{font-size:var(--wb-title);font-weight:600;line-height:1.3}
+:where(.aham-workbench) :is(h2,h3){font-size:var(--wb-body);font-weight:500}
+/* Side panel: properties (288px), preview (400px); one open at a time (rules/4-页面.md 4.1). */
+:where(.aham-workbench) .wb-panel{width:var(--wb-panel-narrow);min-width:0;min-height:0;overflow:auto;background:var(--wb-bg);border-inline-start:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-panel[data-size=wide]{width:var(--wb-panel-wide)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-nav-item){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-nav-item):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-nav-item:is(a,button):active{background:var(--wb-nav-selected)}
+:where(.aham-workbench) .wb-nav-item[aria-expanded=true]{background:var(--wb-nav-selected);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-panel{transition:opacity var(--wb-base) var(--wb-ease),transform var(--wb-base) var(--wb-ease)}
+@starting-style{:where(.aham-workbench) .wb-panel:not([hidden]){opacity:0;transform:translateX(var(--wb-s2))}}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-main {border-inline-start:0}
+ .aham-workbench .wb-panel {width:auto;overflow:visible;border-inline-start:0}
+ .aham-workbench.expanded .wb-rail {position:fixed;inset-block:0;inset-inline-start:0;z-index:var(--wb-z-nav);width:var(--wb-nav);box-shadow:var(--wb-shadow-float)}
+ .aham-workbench .wb-panel[data-size=wide] {position:fixed;inset-block:0;inset-inline-end:0;z-index:var(--wb-z-nav);width:min(var(--wb-panel-wide),100vw);overflow:auto;box-shadow:var(--wb-shadow-float)}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-rail {display:none}
+ .aham-workbench.expanded .wb-rail {display:flex}
+ .aham-workbench .wb-main {overflow:visible}
+ .aham-workbench .wb-page-head,.aham-workbench .wb-tabs-bar {flex-wrap:wrap}
+ .aham-workbench .wb-header-row {height:auto;min-height:var(--wb-header-row);padding-inline:var(--wb-s2)}
+ .aham-workbench .wb-header-lead {overflow-x:auto;scrollbar-width:none}
+ .aham-workbench .wb-header-lead>* {flex:none}
+ .aham-workbench .wb-crumbs {flex:0 1 auto}
+ .aham-workbench .wb-seg.sm {height:auto}
+}
+@media (pointer:coarse) {
+ .aham-workbench .wb-seg.sm {height:auto}
+}

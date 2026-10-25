@@ -1,0 +1,41 @@
+/* Print (rules/5-单据.md 打印). Paper uses the light colours (build.mjs adds them under @media print). Navigation,
+   panels and controls are hidden; the document flows on the page; tables repeat their header row; rows never split. */
+@media print {
+  .aham-workbench{display:block;height:auto;overflow:visible;background:var(--wb-bg)}
+  .aham-workbench :is(.wb-rail,.wb-header,.wb-doc-actions,.wb-doc-foot,.wb-anchors,.wb-panel,.wb-toasts,.wb-msg-btn,.wb-print-bar,[data-print=hide]){display:none!important}
+  .aham-workbench :is(.wb-main,.wb-layout,.wb-document){display:block;margin:0;overflow:visible;border-radius:0;height:auto}
+  .aham-workbench .wb-doc-head{position:static;padding-inline:0}
+  .aham-workbench .wb-doc-body{padding-inline:0}
+  .aham-workbench .wb-document.is-page{container-type:normal}
+  .aham-workbench .wb-table{min-width:0;table-layout:auto}
+  .aham-workbench .wb-table td{white-space:normal}
+  .aham-workbench .wb-table thead{display:table-header-group}
+  .aham-workbench .wb-table tr{break-inside:avoid}
+  .aham-workbench :is(h2,h3){break-after:avoid}
+}
+/* Print preview: a toolbar above an A4 sheet at real size. The sheet is the printed output; nothing on it is interactive. */
+:where(.aham-workbench.wb-print-preview){display:block;height:auto;min-height:100vh;overflow:visible;background:var(--wb-canvas)}
+:where(.aham-workbench) .wb-print-bar{position:sticky;top:0;z-index:var(--wb-z-pop);display:flex;align-items:center;gap:var(--wb-s3);height:var(--wb-header-row);padding:0 var(--wb-s4);background:var(--wb-bg);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-print-bar>.wb-spacer{flex:1}
+:where(.aham-workbench) .wb-sheet{box-sizing:border-box;width:210mm;min-height:297mm;margin:var(--wb-s6) auto;padding:15mm;background:var(--wb-bg);color:var(--wb-ink);box-shadow:0 0 0 1px var(--wb-line);font-size:var(--wb-body);line-height:var(--wb-leading)}
+:where(.aham-workbench) .wb-sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--wb-s5);padding-block-end:var(--wb-s4);border-bottom:1px solid var(--wb-ink)}
+:where(.aham-workbench) .wb-sheet-head h1{font-size:var(--wb-title);font-weight:600;line-height:1.3}
+:where(.aham-workbench) .wb-sheet-head p{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-sheet-mark{padding:0 var(--wb-s2);border:1px solid var(--wb-danger);border-radius:var(--wb-radius-sm);color:var(--wb-danger);font-weight:600;white-space:nowrap}
+:where(.aham-workbench) .wb-sheet dl{display:grid;grid-template-columns:auto minmax(0,1fr) auto minmax(0,1fr);gap:var(--wb-s1) var(--wb-s4);margin:var(--wb-s4) 0}
+:where(.aham-workbench) .wb-sheet dt{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-sheet h2{margin:var(--wb-s5) 0 var(--wb-s2);font-size:var(--wb-body);font-weight:600}
+:where(.aham-workbench) .wb-sheet .wb-table{min-width:0;font-size:var(--wb-text-xs)}
+:where(.aham-workbench) .wb-sheet .wb-table :is(th,td){height:28px;padding-inline:var(--wb-s1);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-sheet .wb-table thead th{color:var(--wb-ink);border-bottom-color:var(--wb-ink)}
+:where(.aham-workbench) .wb-sheet .wb-table tfoot td{font-weight:600;border-bottom:0}
+:where(.aham-workbench) .wb-sheet-total{display:grid;justify-items:end;gap:var(--wb-s1);margin-block-start:var(--wb-s3)}
+:where(.aham-workbench) .wb-sheet-total strong{font:600 var(--wb-text-base)/1.4 var(--wb-font);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-sheet-sign{display:grid;grid-template-columns:1fr 1fr;gap:var(--wb-s6);margin-block-start:var(--wb-s8)}
+:where(.aham-workbench) .wb-sheet-sign>div{margin-block-start:var(--wb-s7);padding-block-start:var(--wb-s2);border-top:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
+/* Paper is A4 with 15mm margins. On screen the sheet draws those margins as padding; on paper the page does. */
+@page{size:A4;margin:15mm}
+@media print {
+  .aham-workbench.wb-print-preview{background:var(--wb-bg)}
+  .aham-workbench .wb-sheet{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}
+}

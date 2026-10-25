@@ -6,10 +6,13 @@
   "name": "按钮提示",
   "intent": "悬停或聚焦时显示按钮名称和快捷键",
   "api": {
-    "initTooltips": "initTooltips(root)"
+    "initTooltips": "initTooltips(root) → { hide, destroy }。同一个 root 再次调用时返回同一个句柄"
   },
   "preview": "examples/parts-actions.html",
   "specification": "rules/7-键盘与命令.md#75-按钮提示",
+  "classes": [
+    "wb-tooltip"
+  ],
   "markup": {
     "button": "<button class=\"wb-icon-btn\" aria-label=\"展开导航\" data-tooltip=\"展开 / 收起导航\" data-keys=\"mod+b\">…</button>"
   },

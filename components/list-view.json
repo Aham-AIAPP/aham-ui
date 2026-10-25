@@ -7,13 +7,29 @@
   "reference": "examples/list.html",
   "implementation": "aham.css",
   "behavior": "aham.js",
-  "intent": "工作台列表页：分组表格、吸顶表头、翻页与空结果",
+  "intent": "工作台列表页：单行列表、分组、翻页与空结果",
+  "classes": [
+    "wb-table-scroll",
+    "wb-cell-sub",
+    "wb-table-hint",
+    "wb-sort",
+    "wb-list",
+    "wb-list-scroll",
+    "wb-toggle-chips",
+    "wb-check-hit",
+    "wb-group-head",
+    "wb-group-toggle",
+    "wb-group-count",
+    "wb-empty",
+    "wb-pager",
+    "wb-peek"
+  ],
   "variantDimensions": [
     {
       "axis": "density",
       "values": [
-        "standard",
-        "compact"
+        "standard（44px）",
+        "compact（36px）"
       ]
     },
     {
@@ -32,6 +48,7 @@
       "list-scroll",
       "table",
       "group-head",
+      "row",
       "empty",
       "pager",
       "panel"
@@ -44,9 +61,12 @@
     ]
   },
   "rules": [
-    "列表默认行高 36px（--wb-row），显示选项可切到 32px；触屏或 ≤640px 为 44px",
+    "单行列表（.wb-list-rows）数据行 44px（--wb-list-row），紧凑 36px；分组行 36px，底色取 --wb-fill 和 --wb-bg 各半，底边 1px --wb-line；一行只放一行字，不折行",
+    "一行从左到右：勾选框（悬停或已有勾选时显示）→ 编号 → 阶段图标或状态 → 名称 → 标签 → 数字 → 日期 → 人员头像",
+    "编号、数字、日期 12px、--wb-muted、等宽数字；单行列表的空值留空，数据表格的空值写「–」；同一项右边缘对齐",
+    "本页全选放在批量条里",
     "分组时先按分组顺序排列、组内按排序字段排序，再分页；分组跨页时组头显示「本页 x / 共 y」",
-    "表头和分组标题在列表滚动区内吸顶；表头行高等于数据行高",
+    "单行列表的表头视觉隐藏，保留给读屏；排序和列放进「显示」选项。需要逐列比较数字时用带表头的数据表格（.wb-table，36px 行，表头吸顶）",
     "条数放页眉第 2 条左侧，不放底部；翻页区只显示当前范围和翻页控件",
     "筛选、搜索或视图变化时回到第 1 页并清空勾选",
     "空结果说明当前条件，并给出清除筛选 / 清除搜索 / 查看全部三种恢复入口中适用的几个",
@@ -79,10 +99,16 @@
     "彩色状态胶囊或整行状态底色",
     "蓝色选中行",
     "底部结果计数",
-    "无限滚动替代翻页（数据量未知时）"
+    "无限滚动替代翻页（数据量未知时）",
+    "数据行折成两行",
+    "列表行里写负责人姓名"
   ],
   "api": {
     "toCSV": "toCSV(rows, columns: [{ key, label, value?(row) }]) → string",
     "downloadText": "downloadText(name, text, type?)"
+  },
+  "markup": {
+    "table": "<table class=\"wb-table wb-list-table wb-list-rows\">…<thead>（视觉隐藏，保留给读屏）</thead>…</table>",
+    "row": "<tr><td class=\"wb-check\">…</td><td class=\"wb-cell-meta wb-tnum\">CUS-0033</td><td class=\"wb-cell-icon\">[stageIconHTML]</td><td class=\"wb-cell-name\">远川精密制造有限公司</td><td class=\"wb-cell-end\"><span class=\"wb-tag\" data-cat=\"1\">装备制造</span></td><td class=\"number wb-cell-meta\">780,800.00</td><td class=\"number wb-cell-meta\">09-30</td><td class=\"wb-cell-end\">[personHTML compact]</td></tr>"
   }
 }

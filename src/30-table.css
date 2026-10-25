@@ -1,0 +1,39 @@
+/* position:relative keeps visually hidden text inside table cells within the scroll area. */
+:where(.aham-workbench) .wb-table-scroll{position:relative;overflow-x:auto;max-width:100%}
+:where(.aham-workbench) .wb-table{width:100%;min-width:var(--wb-table-min);border-collapse:collapse;table-layout:fixed}
+:where(.aham-workbench) .wb-table th{font-weight:500;color:var(--wb-muted);text-align:start;background:var(--wb-bg);height:var(--wb-row);white-space:nowrap}
+:where(.aham-workbench) .wb-table :is(th,td){padding:0 var(--wb-s2);border-bottom:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-table td{height:var(--wb-row);vertical-align:middle;white-space:nowrap}
+:where(.aham-workbench) .wb-table tr:hover td{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-table .number{text-align:end;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-table th.number{font-family:var(--wb-font);font-feature-settings:var(--wb-font-features)}
+:where(.aham-workbench) .wb-cell-title{display:block;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-cell-sub{display:none;color:var(--wb-muted);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-table input{display:block;text-align:end;font-variant-numeric:tabular-nums;border:1px solid transparent;border-radius:var(--wb-radius-sm);width:100%;height:var(--wb-field);padding:0 var(--wb-s1);background:transparent;appearance:textfield}
+:where(.aham-workbench) .wb-table input::-webkit-inner-spin-button{appearance:none}
+:where(.aham-workbench) .wb-table input:hover{background:var(--wb-bg);border-color:var(--wb-line)}
+:where(.aham-workbench) .wb-table tfoot td{height:var(--wb-header-row);font-weight:500;border-bottom:0}
+:where(.aham-workbench) .wb-table-hint{display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--wb-s2);color:var(--wb-muted);padding:var(--wb-s1) 0 var(--wb-s4)}
+:where(.aham-workbench) .wb-sort{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;height:100%;padding:0;border:0;background:transparent;font-weight:inherit;color:inherit}
+:where(.aham-workbench) .wb-sort svg{width:var(--wb-s3);height:var(--wb-s3)}
+:where(.aham-workbench) .wb-row-link{display:block;color:inherit;text-decoration:none;max-width:100%;padding:0;border:0;background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-row-link:hover{text-decoration:underline;text-underline-offset:3px}
+/* Tree table: indent per level, a 20px toggle, parent subtotals at weight 500. */
+:where(.aham-workbench) .wb-table td.wb-tree-name{padding-inline-start:calc(var(--wb-s2) + (var(--wb-level,1) - 1) * var(--wb-s4))}
+:where(.aham-workbench) .wb-tree-name>span{display:inline-flex;align-items:center;gap:var(--wb-s1);max-width:100%;min-width:0}
+:where(.aham-workbench) .wb-tree-toggle,:where(.aham-workbench) .wb-tree-spacer{display:inline-grid;place-items:center;flex:none;width:var(--wb-s5);height:var(--wb-s5);padding:0;border:0;border-radius:var(--wb-radius-sm);background:transparent;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-tree-toggle:hover{background:var(--wb-hover);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-tree-toggle svg{width:var(--wb-s3);height:var(--wb-s3);transition:transform var(--wb-fast) var(--wb-ease)}
+:where(.aham-workbench) .wb-tree-toggle[aria-expanded=false] svg{transform:rotate(-90deg)}
+:where(.aham-workbench) .wb-tree-table tr:has(.wb-tree-toggle) td{font-weight:500}
+:where(.aham-workbench) .wb-table tr[data-dimmed]>td{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-table tr[data-dimmed] :is(button,input,select,a){color:var(--wb-ink)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-tree-toggle,.wb-table td){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-tree-toggle:hover,.wb-table tr:hover td){transition:var(--wb-state-in)}
+:where(.aham-workbench) .wb-tree-toggle:not(:disabled):active,:where(.aham-workbench) .wb-table tbody tr[data-id]:active td{background:var(--wb-selected)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-table {min-width:calc(var(--wb-table-min) + var(--wb-s8))}
+}

@@ -22,24 +22,26 @@ export async function* holdStream(text, { signal } = {}) {
   await new Promise(resolve => signal?.addEventListener('abort', resolve, { once: true }));
 }
 
-export const nextStage = (stages, current) => stages[Math.min(stages.indexOf(current) + 1, stages.length - 2)] ?? current;
+// A customer moves from 潜在 to 跟进中 once a visit is agreed; 已成交 and 已流失 follow contracts, not AI advice.
+export const nextStatus = current => current === '潜在' ? '跟进中' : current;
 
 export function summaryText(record) {
-  return `${record.name}目前处于「${record.stage}」阶段，负责人${record.owner}。\n\n最近一次跟进在 ${record.lastContact}：已约好下周二现场调研，需要先确认设备接口清单。\n\n可以先发送接口清单模板，并在调研前两天确认参会人员。`;
+  return `${record.name}客户状态是「${record.status}」，负责人${record.owner}。\n\n最近一次跟进在 ${record.lastContact}：已约好下周二现场调研，需要先确认设备接口清单。\n\n可以先发送接口清单模板，并在调研前两天确认参会人员。`;
 }
 
 export function draftText() {
   return '今天与客户确认了现场调研安排，约定下周二上门。\n\n待办：发送设备接口清单模板，确认参会人员和会议室。';
 }
 
-export function nextStepPlan(record, stages) {
-  const to = nextStage(stages, record.stage);
-  return {
-    text: `最近一次跟进已约定现场调研，客户在准备设备接口清单。\n\n可以把阶段推进到「${to}」，并新建一个任务跟进接口清单。`,
+export function nextStepPlan(record) {
+  const to = nextStatus(record.status), task = { key: 'task', target: '新建任务', to: '发送设备接口清单模板 · 截止 2026-10-06' };
+  return to === record.status ? {
+    text: '最近一次跟进已约定现场调研，客户在准备设备接口清单。\n\n可以新建一个任务跟进接口清单。',
     reason: '最近一次跟进已约定现场调研。',
-    changes: [
-      { key: 'stage', target: '阶段', from: record.stage, to },
-      { key: 'task', target: '新建任务', to: '发送设备接口清单模板 · 截止 2026-10-06' },
-    ],
+    changes: [task],
+  } : {
+    text: `最近一次跟进已约定现场调研，客户在准备设备接口清单。\n\n可以把客户状态改为「${to}」，并新建一个任务跟进接口清单。`,
+    reason: '最近一次跟进已约定现场调研。',
+    changes: [{ key: 'status', target: '客户状态', from: record.status, to }, task],
   };
 }

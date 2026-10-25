@@ -12,9 +12,9 @@ body{margin:0}
    so this page never needs regenerating. */
 .hm{max-width:1040px;margin:0 auto;padding:var(--wb-s7) var(--wb-page-gutter) var(--wb-s8);display:grid;gap:var(--wb-s8)}
 .hm-head{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--wb-s4)}
-.hm-head h1{font-size:var(--wb-detail-title);font-weight:600}
+.hm-head h1{font-size:var(--wb-title);font-weight:600}
 .hm-head p{margin-block-start:var(--wb-s2);color:var(--wb-muted);max-width:640px}
-.hm-ver{font-family:var(--wb-mono);font-size:var(--wb-text-xs);color:var(--wb-muted);margin-inline-start:var(--wb-s2);font-weight:400}
+.hm-ver{font-variant-numeric:tabular-nums;font-size:var(--wb-text-xs);color:var(--wb-muted);margin-inline-start:var(--wb-s2);font-weight:400}
 .hm section{display:grid;gap:var(--wb-s4)}
 .hm h2{font-size:var(--wb-text-base);font-weight:600}
 .hm-cap{color:var(--wb-muted);font-size:var(--wb-text-xs)}
@@ -42,7 +42,7 @@ body{margin:0}
       <h1>Aham UI<span class="hm-ver" id="hm-ver"></span></h1>
       <p>业务管理系统的界面规范：取值、规则、样式、脚本和示例页。中性色和细节参考 Claude 客户端，页型、单据、消息和数据格式参考 SAP Fiori，键盘操作参考 Linear。示例数据全部虚构。</p>
     </div>
-    <button type="button" class="wb-icon-btn" data-action="theme" aria-pressed="false" aria-label="深色模式" data-tooltip="深色模式"><svg aria-hidden="true"><use href="assets/icons/aham-icons.svg#i-moon"/></svg></button>
+    <button type="button" class="wb-icon-btn" data-action="theme" aria-label="切换到深色" data-tooltip="切换到深色"><svg aria-hidden="true"><use href="assets/icons/aham-icons.svg#i-moon"/></svg></button>
   </header>
 
   <section aria-labelledby="hm-pages">
@@ -54,9 +54,10 @@ body{margin:0}
       <a href="examples/worklist.html"><b>工作清单</b><span>待审批的报价单，行内通过和退回</span></a>
       <a href="examples/record.html"><b>记录详情页</b><span>属性栏、折叠的动态、带附件的评论、AI 摘要</span></a>
       <a href="examples/form.html"><b>对外填报页</b><span>单栏居中、分段进度、附件跟随问题</span></a>
-      <a href="examples/settings.html"><b>设置页</b><span>分区设置、立即生效、危险操作</span></a>
+      <a href="examples/settings.html"><b>设置页</b><span>工作区设置、保存栏、危险操作</span></a>
       <a href="examples/controls.html"><b>控件总览</b><span>按钮、输入、状态、人员、阶段条、下一步、数字行、折叠</span></a>
-      <a href="examples/shell.html"><b>外框</b><span>导航栏、页眉、侧面板</span></a>
+      <a href="examples/shell.html"><b>外框</b><span>侧栏、页眉、侧面板</span></a>
+      <a href="examples/interaction.html"><b>交互</b><span>状态、动效、账户菜单、分栏弹窗、容器选用</span></a>
       <a href="examples/parts-filter.html"><b>部件：筛选</b><span>四段式条件标签</span></a>
       <a href="examples/parts-detail.html"><b>部件：列表键盘和详情</b><span>当前行、预览、上一条和下一条</span></a>
       <a href="examples/parts-actions.html"><b>部件：快速操作</b><span>命令面板、右键菜单、快捷键</span></a>
@@ -94,7 +95,7 @@ const RULES = [['1-总则', '范围、原则、视觉来源、术语、文件分
   ['3-控件', '按钮、控件状态、工具栏、输入框、选择控件、值帮助弹窗'], ['4-页面', '页型、工作清单、列表、筛选、视图、批量编辑、导出'],
   ['5-单据', '关键信息、锚点栏、编辑流程、页脚保存、草稿、状态、打印'], ['6-反馈', '消息框、批量结果、文案、空状态、忙碌和占位加载'],
   ['7-键盘与命令', '快捷键、命令面板、选择菜单、右键菜单、焦点'], ['8-AI协作', '入口、标记、生成过程、字段建议、隐私'],
-  ['9-验收', '自动检查、无障碍、页面情况、截图核对、自查'], ['10-数据格式', '日期、时间、数字、金额、单位、换行和截断']];
+  ['9-验收', '自动检查、无障碍、页面情况、截图核对、自查'], ['10-数据格式', '日期、时间、数字、金额、单位、换行和截断'], ['11-交互', '表面层级、状态、过渡、动效、容器选用']];
 document.getElementById('hm-rule-list').innerHTML = RULES.map(([f, d]) =>
   `<a href="${REPO}rules/${encodeURIComponent(f)}.md"><b>${esc(f)}</b><span>${esc(d)}</span></a>`).join('');
 

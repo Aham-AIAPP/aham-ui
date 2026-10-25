@@ -1,0 +1,47 @@
+/* Opt-in profile. Existing .btn/.table/.track-web styles are untouched.
+   Generic workbench classes use the wb- prefix; page-specific styles live next to each example. */
+:where(.aham-workbench){display:grid;grid-template-columns:var(--wb-nav) minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden;background:var(--wb-canvas);color:var(--wb-ink);font:var(--wb-body)/var(--wb-leading) var(--wb-font);font-feature-settings:var(--wb-font-features);text-align:start;color-scheme:light}
+:where(.aham-workbench) *{box-sizing:border-box}
+:where(.aham-workbench) [hidden]{display:none!important}
+:where(.aham-workbench) :is(h1,h2,h3,p){margin:0}
+:where(.aham-workbench) :is(button,input,textarea,select){font:inherit;color:inherit}
+:where(.aham-workbench) button{cursor:pointer}
+:where(.aham-workbench) :focus-visible{outline:2px solid var(--wb-blue);outline-offset:2px}
+:where(.aham-workbench) [aria-invalid=true]{outline:2px solid var(--wb-danger);outline-offset:-2px}
+:where(.aham-workbench) svg{width:var(--wb-icon);height:var(--wb-icon);flex:none;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+:where(.aham-workbench) dl{margin:var(--wb-s3) 0 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--wb-s2) var(--wb-s3)}
+:where(.aham-workbench) dt{color:var(--wb-muted)}
+:where(.aham-workbench) dd{margin:0}
+:where(.aham-workbench) textarea{display:block;resize:vertical;min-height:var(--wb-s8);width:100%;border:0;background:var(--wb-fill);border-radius:var(--wb-radius);padding:var(--wb-s2);margin-block-start:var(--wb-s2);line-height:1.75}
+:where(.aham-workbench) small{font-size:inherit;color:var(--wb-muted)}
+:where(.aham-workbench) :is(b,strong){font-weight:500}
+/* Utilities */
+:where(.aham-workbench).wb-bare{display:block;height:auto;overflow:visible;background:var(--wb-bg)}
+:where(.aham-workbench) .wb-sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (min-width: {{breakpoint.bp-wide}}) {
+ .aham-workbench {--wb-page-gutter:var(--wb-page-gutter-wide)}
+}
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench.expanded {grid-template-columns:var(--wb-rail) minmax(0,1fr)}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench,.aham-workbench.expanded {display:block;height:auto;min-height:100vh;overflow:visible;background:var(--wb-bg)}
+ .aham-workbench :is(button,.wb-btn),.aham-workbench :is(input:not([type=checkbox],[type=radio]),select) {min-height:var(--wb-touch)}
+ .aham-workbench :is(input,select,textarea) {font-size:var(--wb-touch-input)}
+ .aham-workbench {--wb-check-col:var(--wb-touch)}
+ .aham-workbench .wb-composer-hint {display:none}
+}
+@media (pointer:coarse) {
+ .aham-workbench :is(button,.wb-btn),.aham-workbench :is(input:not([type=checkbox],[type=radio]),select) {min-height:var(--wb-touch);min-width:var(--wb-touch)}
+ .aham-workbench {--wb-check-col:var(--wb-touch)}
+ .aham-workbench :is(input,select,textarea) {font-size:var(--wb-touch-input)}
+}
+@media (prefers-contrast: more) {
+ .aham-workbench {--wb-line:{{color.contrast-more.light.line}};--wb-line-strong:{{color.contrast-more.light.line}};--wb-muted:{{color.contrast-more.light.muted}};--wb-faint:{{color.contrast-more.light.muted}}}
+ .aham-workbench[data-theme="dark"] {--wb-line:{{color.contrast-more.dark.line}};--wb-line-strong:{{color.contrast-more.dark.line}};--wb-muted:{{color.contrast-more.dark.muted}};--wb-faint:{{color.contrast-more.dark.muted}}}
+ .aham-workbench :focus-visible {outline-width:3px}
+}
+@media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+ .aham-workbench:not([data-theme="light"]) {--wb-line:{{color.contrast-more.dark.line}};--wb-line-strong:{{color.contrast-more.dark.line}};--wb-muted:{{color.contrast-more.dark.muted}};--wb-faint:{{color.contrast-more.dark.muted}}}
+}

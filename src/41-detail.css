@@ -1,0 +1,91 @@
+/* Record detail (7.2 P3): centred reading column + properties panel, as in Circle's issue page. */
+:where(.aham-workbench) .wb-record-nav{display:flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-record-nav>span{margin-inline-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-detail{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
+:where(.aham-workbench) .wb-detail-scroll{min-height:0;overflow-y:auto}
+/* Centred on whole pixels, so text and lines never sit on a half pixel. */
+/* The main column fills the work surface with the same edges as a document page; only running text keeps a 640px measure. */
+:where(.aham-workbench) .wb-detail-main{padding:var(--wb-s5) var(--wb-page-gutter) var(--wb-s8)}
+:where(.aham-workbench) .wb-detail-title{font-size:var(--wb-title);font-weight:600;line-height:1.3}
+:where(.aham-workbench) .wb-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3);margin-block-start:var(--wb-s2);color:var(--wb-muted)}
+/* The next-step line sits one step below the meta line; a text button that opens a line in the reading column
+   moves left by its own padding so its text lines up with the title. */
+:where(.aham-workbench) .wb-detail-main .wb-next{margin-block:var(--wb-s4) var(--wb-s2)}
+:where(.aham-workbench) .wb-detail-main>div>.wb-btn.ghost:first-child{margin-inline-start:calc(-1 * var(--wb-s2))}
+:where(.aham-workbench) .wb-detail-body{max-width:var(--wb-body-width);margin-block-start:var(--wb-s5);line-height:1.75}
+:where(.aham-workbench) .wb-detail-body p+p{margin-block-start:var(--wb-s2)}
+:where(.aham-workbench) .wb-detail-section{margin-block-start:var(--wb-s6)}
+:where(.aham-workbench) .wb-section-heading{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);margin-block-end:var(--wb-s2)}
+:where(.aham-workbench) .wb-section-heading h2{font-size:var(--wb-body);font-weight:500}
+:where(.aham-workbench) .wb-section-heading h2 span{margin-inline-start:var(--wb-s1);color:var(--wb-muted);font-weight:400;font-variant-numeric:tabular-nums}
+:where(.aham-workbench) .wb-related{margin:0;padding:0;list-style:none;border-top:var(--wb-hairline) solid var(--wb-line)}
+/* Related records: code, name and state in fixed columns; the hover fill reaches 4px past the text on both sides. */
+:where(.aham-workbench) .wb-related li{display:grid;grid-template-columns:var(--wb-related-code) minmax(0,1fr) auto;align-items:center;gap:var(--wb-s3);min-height:var(--wb-row);border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
+:where(.aham-workbench) .wb-related li:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-related li>:first-child{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-related a{color:inherit;text-decoration:none}
+:where(.aham-workbench) .wb-related a:hover{text-decoration:underline;text-underline-offset:3px}
+:where(.aham-workbench) .wb-related .wb-grow{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) .wb-divider{height:1px;margin-block:var(--wb-s6) 0;border:0;background:var(--wb-line)}
+/* Problem statement (rules/4-页面.md 4.8): 现在 and 希望 side by side, each headed by a 12px label, plain text below. */
+:where(.aham-workbench) .wb-problem{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s6);margin-block-start:var(--wb-s5)}
+:where(.aham-workbench) .wb-problem h3{margin-block-end:var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:500;line-height:var(--wb-leading-xs)}
+:where(.aham-workbench) .wb-problem p{line-height:1.75}
+:where(.aham-workbench) .wb-problem p+p{margin-block-start:var(--wb-s2)}
+/* Questions with their answers and the files sent for each one (attachments travel with the question they answer). */
+:where(.aham-workbench) .wb-qa{margin:0;padding:0;list-style:none;border-top:var(--wb-hairline) solid var(--wb-line)}
+:where(.aham-workbench) .wb-qa>li{display:grid;gap:var(--wb-s1);padding-block:var(--wb-s3);border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
+:where(.aham-workbench) .wb-qa-q{display:flex;align-items:center;gap:var(--wb-s2);font-weight:500}
+:where(.aham-workbench) .wb-qa-a{color:var(--wb-ink-2);line-height:1.75}
+:where(.aham-workbench) .wb-qa-a.is-empty{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-qa-files{display:flex;flex-wrap:wrap;gap:var(--wb-s1) var(--wb-s4)}
+:where(.aham-workbench) .wb-attach{display:inline-flex;align-items:center;gap:var(--wb-s1);min-width:0;color:var(--wb-ink);text-decoration:none}
+:where(.aham-workbench) .wb-attach:hover>span:first-of-type{text-decoration:underline;text-underline-offset:3px}
+:where(.aham-workbench) .wb-attach>span:last-child{color:var(--wb-muted);font-size:var(--wb-text-xs)}
+/* Visibility mark on shared objects (rules/4-页面.md 4.15): content only our side sees carries a lock and 仅我方. */
+:where(.aham-workbench) .wb-scope{display:inline-flex;align-items:center;gap:var(--wb-s1);flex:none;color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:400;line-height:var(--wb-leading-xs);white-space:nowrap}
+:where(.aham-workbench) .wb-scope svg{width:var(--wb-s3);height:var(--wb-s3)}
+/* Properties panel: label + value rows (Aham keeps labels; Circle's project panel uses the same row form). */
+:where(.aham-workbench) .wb-props{display:grid;align-content:start;gap:var(--wb-s5);width:var(--wb-panel-props);padding:var(--wb-s5) var(--wb-s4)}
+:where(.aham-workbench) .wb-props-section{display:grid;gap:var(--wb-s1)}
+:where(.aham-workbench) .wb-props-title{margin-block-end:var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:500}
+:where(.aham-workbench) .wb-prop{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr);align-items:center;gap:var(--wb-s2);min-height:var(--wb-control)}
+:where(.aham-workbench) .wb-prop>span:first-child{color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap}
+:where(.aham-workbench) .wb-prop-value{display:flex;align-items:center;gap:var(--wb-s1);min-width:0;min-height:var(--wb-header-control);padding:0 var(--wb-s1);margin-inline-start:calc(-1 * var(--wb-s1));border:0;border-radius:var(--wb-radius);background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+:where(.aham-workbench) button.wb-prop-value:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-prop-value.is-empty{color:var(--wb-muted)}
+/* Activity feed: events as quiet lines with a 20px icon disc; comments on the panel tier; composer sends with ⌘/Ctrl+Enter. */
+:where(.aham-workbench) .wb-activity{display:grid}
+:where(.aham-workbench) .wb-activity-event{display:flex;align-items:center;gap:var(--wb-s2);padding-block:var(--wb-s1);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-activity-event strong{color:var(--wb-ink);font-weight:500}
+:where(.aham-workbench) .wb-activity-icon{display:inline-grid;place-items:center;flex:none;width:var(--wb-activity-icon);height:var(--wb-activity-icon);border-radius:50%;background:var(--wb-fill);color:var(--wb-muted)}
+:where(.aham-workbench) .wb-activity-icon svg{width:var(--wb-s3);height:var(--wb-s3)}
+:where(.aham-workbench) .wb-activity-time{flex:none}
+:where(.aham-workbench) .wb-comment{margin-block:var(--wb-s2);padding:var(--wb-s3);border-radius:var(--wb-radius);background:var(--wb-fill)}
+:where(.aham-workbench) .wb-comment-head{display:flex;align-items:center;gap:var(--wb-s2);margin-block-end:var(--wb-s1)}
+:where(.aham-workbench) .wb-comment-head strong{font-weight:500}
+:where(.aham-workbench) .wb-comment-head span:last-child{color:var(--wb-muted)}
+:where(.aham-workbench) .wb-comment p{line-height:1.75}
+:where(.aham-workbench) .wb-composer{display:grid;gap:var(--wb-s2);margin-block-start:var(--wb-s3);padding:var(--wb-s3);border-radius:var(--wb-radius-lg);background:var(--wb-bg);box-shadow:inset 0 0 0 1px var(--wb-edge)}
+:where(.aham-workbench) .wb-composer textarea{display:block;width:100%;min-height:var(--wb-s7);margin:0;padding:0;border:0;background:transparent;resize:none;field-sizing:content;line-height:1.75}
+:where(.aham-workbench) .wb-composer textarea:focus-visible{outline:0}
+:where(.aham-workbench) .wb-composer:focus-within{box-shadow:inset 0 0 0 1px var(--wb-blue),0 0 0 1px var(--wb-blue)}
+:where(.aham-workbench) .wb-composer-foot>span:first-child{margin-inline-end:auto}
+:where(.aham-workbench) .wb-composer-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--wb-s2);color:var(--wb-muted)}
+/* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
+:where(.aham-workbench) :is(.wb-related li,button.wb-prop-value){transition:var(--wb-state-out)}
+:where(.aham-workbench) :is(.wb-related li,button.wb-prop-value):hover{transition:var(--wb-state-in)}
+:where(.aham-workbench) :is(.wb-related li,button.wb-prop-value):not(:disabled):active{background:var(--wb-selected)}
+:where(.aham-workbench) button.wb-prop-value[aria-expanded=true]{background:var(--wb-selected);color:var(--wb-ink)}
+
+/* Environment overrides: screen size, pointer, contrast and motion preferences. */
+@media (max-width: {{breakpoint.bp-context}}) {
+ .aham-workbench .wb-detail {display:block;overflow:auto}
+ .aham-workbench .wb-detail-scroll {overflow:visible}
+ .aham-workbench .wb-detail>.wb-panel {border-top:var(--wb-hairline) solid var(--wb-line)}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-detail {overflow:visible}
+ .aham-workbench .wb-detail-main {padding:var(--wb-s4)}
+ .aham-workbench .wb-problem {grid-template-columns:minmax(0,1fr);gap:var(--wb-s4)}
+}

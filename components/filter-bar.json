@@ -9,7 +9,12 @@
   "specification": "rules/4-页面.md#44-筛选",
   "preview": "examples/parts-filter.html",
   "reference": "examples/list.html",
-  "api": "initFilter({ root, trigger, bar, fields, value, counts, onChange })",
+  "api": "initFilter({ root, trigger, bar, fields, value, counts, onChange }) → { get, set, open, destroy }",
+  "classes": [
+    "wb-value-editor",
+    "wb-value-inputs",
+    "wb-value-error"
+  ],
   "variantDimensions": [
     {
       "axis": "type",

@@ -1,0 +1,59 @@
+{
+  "slug": "shared-object",
+  "name": "多方共用的对象",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "examples/scene.mjs",
+  "sample": true,
+  "preview": "examples/scene.html",
+  "reference": "examples/scenes.html",
+  "intent": "客户方和我方共用、按阶段推进的对象，例如场景",
+  "specification": "rules/4-页面.md#415-多方共用的对象",
+  "classes": [
+    ".wb-problem",
+    ".wb-qa",
+    ".wb-qa-q",
+    ".wb-qa-a",
+    ".wb-qa-a.is-empty",
+    ".wb-qa-files",
+    ".wb-attach",
+    ".wb-scope"
+  ],
+  "markup": {
+    "problem": "<div class=\"wb-problem\"><section><h3>现在</h3><p>质量部每天手工汇总检验记录，约 40 分钟。</p></section><section><h3>希望</h3><p>每天 8:30 自动生成日报。</p></section></div>",
+    "qa": "<ol class=\"wb-qa\"><li><div class=\"wb-qa-q\">1. 数据从哪里来？</div><p class=\"wb-qa-a\">来料和成品检验记在 QMS 里。</p><div class=\"wb-qa-files\"><a class=\"wb-attach\" href=\"#\"><svg class=\"wb-cat-icon\" data-cat=\"3\" aria-hidden=\"true\"></svg><span>巡检记录表.jpg</span><span>1.2 MB</span></a></div></li><li><div class=\"wb-qa-q\">2. 有没有历史日报？</div><p class=\"wb-qa-a is-empty\">等王卓 · 远川回答</p></li></ol>",
+    "scope": "<span class=\"wb-scope\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-lock\"/></svg><span>仅我方</span></span>"
+  },
+  "visibility": {
+    "title": "both",
+    "meta": "both",
+    "next-step": "both",
+    "stages": "both",
+    "problem": "both",
+    "ai-judgement": "ours-until-confirmed",
+    "qa": "both",
+    "internal-note": "ours",
+    "comment": "both",
+    "properties": "both"
+  },
+  "rules": [
+    "人名后写组织简称：王卓 · 远川",
+    "可见范围两档：双方可见、仅我方，默认双方可见",
+    "仅我方的内容加 .wb-scope，双方可见的不加标记",
+    "客户方看不到的内容由服务端过滤，页面不渲染",
+    "评论框写明可见范围，可以切换",
+    "下一步提示条按看的人改写",
+    "AI 判断只有我方能确认，确认前客户方看不到",
+    "附件跟在所属的问题下面"
+  ],
+  "accessibility": [
+    ".wb-scope 的文字「仅我方」可被读屏读出，锁图标 aria-hidden",
+    "可见范围切换按钮用 aria-pressed"
+  ],
+  "doNotInvent": [
+    "给客户方显示「已隐藏」占位或模糊内容",
+    "双方可见的内容加标记",
+    "用颜色区分两方的评论",
+    "附件集中放在页面底部，和问题分开"
+  ]
+}

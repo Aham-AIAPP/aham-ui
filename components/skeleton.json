@@ -1,0 +1,28 @@
+{
+  "slug": "skeleton",
+  "name": "占位加载",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/controls.html",
+  "intent": "页面或区块首次加载、超过 1 秒时，在内容的位置显示同尺寸的灰块",
+  "specification": "rules/6-反馈.md#68-忙碌和占位加载",
+  "classes": [
+    "wb-skeleton"
+  ],
+  "markup": {
+    "row": "<span class=\"wb-skeleton\" style=\"width:40%\"></span>"
+  },
+  "rules": [
+    "一行文字一块，表格按行画",
+    "已有内容在刷新时保留旧内容，不换成灰块",
+    "只标正在加载的那部分，不用整页遮罩",
+    "减少动态效果时不动"
+  ],
+  "accessibility": [
+    "加载中的区块标 aria-busy=\"true\"，加载完成后去掉"
+  ],
+  "doNotInvent": [
+    "整页遮罩加转圈",
+    "彩色渐变的灰块"
+  ]
+}

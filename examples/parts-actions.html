@@ -5,20 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Aham UI · 部件：命令和快速操作</title>
   <link rel="stylesheet" href="../aham.css">
+  <link rel="stylesheet" href="_preview.css">
   <style>
-body { margin: 0; }
-/* Preview scaffold only; component styles come from aham.css. */
-.pv { max-width: 1040px; margin: 0 auto; padding: 32px 24px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
-.pv-row > * { min-width: 0; max-width: 100%; }
-.pv-frame > * { max-width: 100%; }
-.pv h1 { font-size: 20px; font-weight: 500; }
-.pv > p { color: var(--wb-muted); max-width: 72ch; line-height: 1.75; }
-.pv-story { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
-.pv-label { color: var(--wb-muted); font-size: 12px; font-weight: 500; letter-spacing: .5px; }
-.pv-row { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
-.pv-frame { border-radius: 8px; box-shadow: 0 0 0 1px var(--wb-line); overflow: hidden; background: var(--wb-bg); }
-.pv-cap { display: block; margin-top: 8px; color: var(--wb-muted); font-size: 12px; }
-.pv .pv-static { position: static; max-height: none; margin: 0; }
 .pv .wb-palette.pv-static { display: block; width: 560px; max-width: 100%; }
 .pv-toasts { display: grid; gap: 8px; width: 360px; max-width: 100%; }
 .pv-keys { width: 100%; }
@@ -102,7 +90,7 @@ const paletteGroups = () => [
     { id: 'owner', label: '分配给…', icon: 'user', keys: 'a', children: () => ['林悦', '周航', '许宁'].map(o => ({ id: o, label: o, icon: 'user', run: () => toast(`已分配给${o}`) })) },
     { id: 'copy', label: '复制编码', icon: 'copy', run: () => toast('已复制 CUS-2026-0033') },
   ] },
-  { heading: '操作', items: [{ id: 'create', label: '新建记录', icon: 'plus', keys: 'c', run: () => openCreate() }] },
+  { heading: '操作', items: [{ id: 'create', label: '新建客户', icon: 'plus', keys: 'c', run: () => openCreate() }] },
   { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?' }] },
 ];
 const flat = groups => groups.flatMap((g, gi) => g.items.map(it => ({ ...it, group: gi, heading: g.heading, arrow: Boolean(it.children) })));
@@ -142,7 +130,7 @@ paint();
 
 document.querySelector('#pv-toast').addEventListener('click', () => toast('已复制 CUS-2026-0033'));
 function openCreate() {
-  openCreateDialog({ root, title: '新建记录', scope: '客户', fields: [{ key: 'stage', label: '阶段', options: stages, value: '初次接触' }, { key: 'owner', label: '负责人', options: ['林悦', '周航', '许宁'], icon: 'user' }], onSubmit: v => { toast(`已创建「${v.title}」`); return true; } });
+  openCreateDialog({ root, title: '新建客户', scope: '客户', nameLabel: '客户全称', fields: [{ key: 'stage', label: '阶段', options: stages, value: '初次接触' }, { key: 'owner', label: '负责人', options: ['林悦', '周航', '许宁'], icon: 'user' }], onSubmit: v => { toast(`已创建「${v.title}」`); return true; } });
 }
 document.querySelector('#pv-create').addEventListener('click', openCreate);
 

@@ -10,6 +10,10 @@
   "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
   "api": "initComposer(form, { onSubmit(text) → boolean | Promise<boolean> })",
+  "classes": [
+    "wb-activity",
+    "wb-composer-hint"
+  ],
   "variantDimensions": [
     {
       "axis": "item",

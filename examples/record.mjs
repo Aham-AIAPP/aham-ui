@@ -1,7 +1,8 @@
 // Record detail sample: composes the Aham UI detail patterns with fictional demo data.
-import {initShell, initPropertyPickers, initComposer, initPalette, registerShortcut, listShortcuts, toast, icon, escapeHtml as esc, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
-import {makeCustomers, OWNERS, STAGES, INDUSTRIES, ME, money} from './list-model.mjs';
-import {simulateStream, summaryText, draftText, nextStepPlan, nextStage} from './ai-sample.mjs';
+import {initShell, stageIconHTML, initPropertyPickers, initComposer, initPalette, registerShortcut, toast, icon, escapeHtml as esc, personHTML, formatKeys, createAIOutput, showSuggestion, openAIConfirm, aiEnabled, avatarCat, initDropZone, fileCat, formatBytes} from '../aham.js';
+import {makeCustomers, OWNERS, STATUSES, INDUSTRIES, ME, money} from './list-model.mjs';
+import {simulateStream, summaryText, draftText, nextStepPlan, nextStatus} from './ai-sample.mjs';
+import {initAccount} from './account.mjs';
 
 const root = document.querySelector('.aham-workbench');
 const $ = s => root.querySelector(s);
@@ -18,24 +19,41 @@ const id = Number(new URLSearchParams(location.search).get('id'));
 const record = { ...(byId.get(id) ?? data[0]) };
 if (!nav.ids.includes(record.id)) nav.ids = [record.id, ...nav.ids];
 const pos = nav.ids.indexOf(record.id);
+const stageIcon = status => status === '已流失' ? stageIconHTML({ state: 'off', label: status }) : status === '已成交' ? stageIconHTML({ state: 'done', label: status })
+  : status === '潜在' ? stageIconHTML({ state: 'todo', label: status }) : stageIconHTML({ state: 'current', done: 1, total: 2, label: status });
+const metaHtml = () => `<span class="wb-status">${stageIcon(record.status)}<span>${esc(record.status)}</span></span><span>${esc(record.code)}</span><span>负责人 ${personHTML(record.owner)}</span>`;
+// A customer has a status; the sales stage lives on the opportunity (rules/4-页面.md 4.2). While the customer is open,
+// the next step names one thing for the owner, taken from the opportunity when there is one (rules/3-控件.md 3.13).
+const NEXT_ACTION = { 潜在: '约首次拜访', 跟进中: '推进商机 OPP-0187：提交方案初稿' };
+let remindedAt = '';
+function nextHtml() {
+  const action = NEXT_ACTION[record.status];
+  if (!action) return '';
+  const who = record.owner === ME ? '你' : record.owner;
+  const d = new Date(Date.now() + 3 * 864e5), due = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  // Waiting on a colleague: 提醒 once a day, then the time it was sent (rules/6-反馈.md 6.11).
+  const remind = record.owner === ME ? '' : remindedAt ? `<span class="wb-meta">已提醒 · ${remindedAt}</span>` : '<button type="button" class="wb-btn sm" data-action="remind">提醒</button>';
+  return `<div class="wb-next" role="status"><span class="wb-status" data-tone="wait"><b></b></span><span class="wb-grow"><strong>等${esc(who)}</strong>${action}</span><span class="wb-next-date">计划 ${due}</span>${remind}</div>`;
+}
 
 const activity = [
   { kind: 'event', icon: 'edit', who: ME, text: '创建了记录', when: record.created },
   { kind: 'comment', who: record.owner, text: '已约好下周二现场调研，先确认设备接口清单。', when: record.lastContact },
-  { kind: 'event', icon: 'refresh', who: record.owner, text: `把阶段改为「${record.stage}」`, when: record.lastContact },
+  { kind: 'event', icon: 'refresh', who: record.owner, text: `把客户状态改为「${record.status}」`, when: record.lastContact },
 ];
 
 function renderMain() {
   $('#record-main').innerHTML = `
     <h1 class="wb-detail-title">${esc(record.name)}</h1>
-    <div class="wb-detail-meta"><span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span></div>
+    <div class="wb-detail-meta">${metaHtml()}</div>
+    <div id="next-slot">${nextHtml()}</div>
     <div id="ai-slot"><button type="button" class="wb-btn sm ghost" data-action="ai-summary">${icon('ai')}<span>生成摘要</span></button></div>
-    <div class="wb-detail-body"><p>这是一段虚构的记录说明，用来演示详情页的正文区。正文放在居中的阅读宽度里，长段落按 1.75 行高排版。</p><p>属性放在右侧属性栏，正文只写需要阅读的内容：背景、范围、约定事项。</p></div>
+    <div class="wb-detail-body"><p>主营精密结构件和汽车零部件加工，两个厂区共 46 台数控设备。现有用友 U8 管财务和库存，车间报工还在用纸质派工单。</p><p>今年关注两件事：设备开动率看不清，客户审核要追溯到批次。双方约定先做一期生产执行，设备接口清单由客户设备科在调研前提供。</p></div>
     <section class="wb-detail-section" aria-labelledby="related-title">
       <div class="wb-section-heading"><h2 id="related-title">关联记录<span>2</span></h2></div>
       <ul class="wb-related">
-        <li><span class="wb-mono">OPP-0187</span><span class="wb-grow">MES 一期建设项目</span><span class="wb-status"><b></b>方案评估</span></li>
-        <li><span class="wb-mono">QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
+        <li><span>OPP-0187</span><span class="wb-grow">MES 一期建设项目</span><span class="wb-status"><b></b>方案评估</span></li>
+        <li><span>QT-0018</span><span class="wb-grow"><a href="document.html">销售报价单 V1.2</a></span><span class="wb-status"><b></b>草稿</span></li>
       </ul>
     </section>
     <section class="wb-detail-section" aria-labelledby="activity-title">
@@ -47,7 +65,7 @@ function renderMain() {
       <form class="wb-composer" id="composer" aria-label="写评论">
         <textarea rows="2" aria-label="评论内容" placeholder="写评论…" maxlength="2000"></textarea>
         <ul class="wb-composer-files" id="composer-files" hidden></ul>
-        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span>⌘ / Ctrl + Enter 发送 · 示例不保存</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
+        <div class="wb-composer-foot"><button type="button" class="wb-btn sm ghost" data-drop="file">文件</button><button type="button" class="wb-btn sm ghost" data-action="record-audio">录音</button><span class="wb-composer-hint">${formatKeys('mod+enter').join(' ')} 发送</span><button type="button" class="wb-btn sm ghost" data-action="ai-draft">${icon('ai')}<span>AI 起草</span></button><button type="submit" class="wb-btn sm primary">发送</button></div>
         <input type="file" multiple hidden>
       </form>
     </section>`;
@@ -61,20 +79,21 @@ function renderActivity() {
     : `<article class="wb-comment"><div class="wb-comment-head"><span class="wb-avatar-xs" data-cat="${avatarCat(a.who)}" aria-hidden="true">${esc([...a.who][0])}</span><strong>${esc(a.who)}</strong><span>${esc(a.when)}</span>${a.ai ? `<span class="wb-ai-mark">${icon('ai')}<span>${esc(a.ai)}</span></span>` : ''}</div>${a.text.split(/\n{2,}/).map(p => `<p>${esc(p)}</p>`).join('')}</article>`).join('');
 }
 function renderMeta() {
-  $('.wb-detail-meta').innerHTML = `<span class="wb-status"><b></b>${esc(record.stage)}</span><span class="wb-mono">${esc(record.code)}</span><span>负责人 ${esc(record.owner)}</span>`;
+  $('.wb-detail-meta').innerHTML = metaHtml();
+  $('#next-slot').innerHTML = nextHtml();
 }
 function renderProps() {
   $('#record-props').innerHTML = `
     <section class="wb-props-section" aria-labelledby="props-a"><h2 class="wb-props-title" id="props-a">属性</h2>
-      <div class="wb-prop"><span>阶段</span><button type="button" class="wb-prop-value" data-prop="stage"></button></div>
+      <div class="wb-prop"><span>客户状态</span><button type="button" class="wb-prop-value" data-prop="status"></button></div>
       <div class="wb-prop"><span>负责人</span><button type="button" class="wb-prop-value" data-prop="owner"></button></div>
       <div class="wb-prop"><span>行业</span><button type="button" class="wb-prop-value" data-prop="industry"></button></div>
     </section>
     <section class="wb-props-section" aria-labelledby="props-b"><h2 class="wb-props-title" id="props-b">信息</h2>
-      <div class="wb-prop"><span>编码</span><span class="wb-prop-value wb-mono">${esc(record.code)}</span></div>
-      <div class="wb-prop"><span>年度金额</span><span class="wb-prop-value wb-mono">${money(record.amountCents)}</span></div>
-      <div class="wb-prop"><span>最近跟进</span><span class="wb-prop-value wb-mono">${record.lastContact}</span></div>
-      <div class="wb-prop"><span>创建日期</span><span class="wb-prop-value wb-mono">${record.created}</span></div>
+      <div class="wb-prop"><span>编码</span><span class="wb-prop-value">${esc(record.code)}</span></div>
+      <div class="wb-prop"><span>年度金额</span><span class="wb-prop-value wb-tnum">${money(record.amountCents)}</span></div>
+      <div class="wb-prop"><span>最近跟进</span><span class="wb-prop-value">${record.lastContact}</span></div>
+      <div class="wb-prop"><span>创建日期</span><span class="wb-prop-value">${record.created}</span></div>
     </section>`;
 }
 
@@ -90,48 +109,53 @@ $('#record-prev').addEventListener('click', () => go(-1));
 $('#record-next').addEventListener('click', () => go(1));
 document.title = `${record.name} · Aham UI`;
 
-const labels = { stage: '阶段', owner: '负责人', industry: '行业' };
+const labels = { status: '客户状态', owner: '负责人', industry: '行业' };
 function applyChange(key, value, before, { undoable = true } = {}) {
   record[key] = value;
   activity.push({ kind: 'event', icon: key === 'owner' ? 'user' : 'refresh', who: ME, text: `把${labels[key]}从「${before}」改为「${value}」`, when: '刚刚' });
-  pickers.set({ stage: record.stage, owner: record.owner, industry: record.industry });
+  pickers.set({ status: record.status, owner: record.owner, industry: record.industry });
   renderMeta();
   renderActivity();
   if (undoable) toast(`已把${labels[key]}改为「${value}」`, { action: { label: '撤销', run: () => applyChange(key, before, value, { undoable: false }) } });
 }
 const pickers = initPropertyPickers({
   root, container: $('#record-props'),
-  fields: { stage: { label: '阶段', options: STAGES }, owner: { label: '负责人', options: OWNERS, icon: 'user', person: true }, industry: { label: '行业', options: INDUSTRIES } },
-  value: { stage: record.stage, owner: record.owner, industry: record.industry },
+  fields: { status: { label: '客户状态', options: STATUSES }, owner: { label: '负责人', options: OWNERS, icon: 'user', person: true }, industry: { label: '行业', options: INDUSTRIES } },
+  value: { status: record.status, owner: record.owner, industry: record.industry },
   onChange: (key, value, before) => applyChange(key, value, before),
 });
-const options = { stage: STAGES, owner: OWNERS, industry: INDUSTRIES };
-const shortcutItems = () => listShortcuts().map((k, i) => ({ id: `k${i}`, label: k.label, keys: k.keys, group: k.group, heading: k.group }));
+const options = { status: STATUSES, owner: OWNERS, industry: INDUSTRIES };
+const account = initAccount(root, { onShortcuts: () => palette.showShortcuts() });
 const palette = initPalette({
   root,
+  shell: true,
+  accountItems: () => account.commands(),
   context: () => ({ id: record.id, code: record.code, label: record.name }),
   groups: ctx => [
     ...(ctx ? [{ heading: '当前记录', items: [
-      ...['stage', 'owner', 'industry'].map(key => ({ id: key, label: key === 'owner' ? '分配给…' : `修改${labels[key]}…`, icon: key === 'owner' ? 'user' : 'success', keys: { stage: 's', owner: 'a' }[key], children: () => options[key].map(o => ({ id: o, label: o, current: o === record[key], run: () => { if (o !== record[key]) applyChange(key, o, record[key]); } })) })),
+      ...['status', 'owner', 'industry'].map(key => ({ id: key, label: key === 'owner' ? '分配给…' : `修改${labels[key]}…`, icon: key === 'owner' ? 'user' : 'success', keys: { status: 's', owner: 'a' }[key], children: () => options[key].map(o => ({ id: o, label: o, current: o === record[key], run: () => { if (o !== record[key]) applyChange(key, o, record[key]); } })) })),
       { id: 'comment', label: '写评论', icon: 'edit', run: () => $('#composer textarea').focus() },
     ] }, { heading: 'AI', items: [
       { id: 'ai-summary', label: '生成摘要', icon: 'ai', run: aiSummary },
       { id: 'ai-draft', label: '起草跟进记录', icon: 'ai', run: aiDraft },
       { id: 'ai-next', label: '建议下一步…', icon: 'ai', run: aiNextStep },
     ] }] : []),
+    { heading: '示例', items: [
+      { id: 'state-loading', label: '显示首次加载', icon: 'refresh', run: () => showState('loading') },
+      { id: 'state-error', label: '显示加载失败', icon: 'warning', run: () => showState('error') },
+      { id: 'state-denied', label: '显示无权限', icon: 'lock', run: () => showState('denied') },
+    ] },
     { heading: '跳转', items: [
       { id: 'prev', label: '上一条', icon: 'chevron-up', keys: 'k', run: () => go(-1) },
       { id: 'next', label: '下一条', icon: 'chevron-down', keys: 'j', run: () => go(1) },
       { id: 'back', label: '返回列表', icon: 'arrow-left', run: () => { location.href = $('#back-link').href; } },
     ] },
-    { heading: '帮助', items: [{ id: 'keys', label: '键盘快捷键…', icon: 'help', keys: '?', children: shortcutItems }] },
   ],
 });
-registerShortcut({ keys: 's', label: '修改阶段', group: '详情', run: () => $('[data-prop="stage"]').click() });
+registerShortcut({ keys: 's', label: '修改客户状态', group: '详情', run: () => $('[data-prop="status"]').click() });
 registerShortcut({ keys: 'a', label: '修改负责人', group: '详情', run: () => $('[data-prop="owner"]').click() });
 registerShortcut({ keys: 'k', label: '上一条', group: '详情', when: () => pos > 0, run: () => go(-1) });
 registerShortcut({ keys: 'j', label: '下一条', group: '详情', when: () => pos < nav.ids.length - 1, run: () => go(1) });
-registerShortcut({ keys: '?', label: '查看键盘快捷键', group: '通用', run: () => palette.openAt('键盘快捷键', shortcutItems()) });
 registerShortcut({ keys: 'mod+enter', label: '发送评论（在评论框内）', group: '详情', external: true });
 registerShortcut({ keys: 'escape', label: '关闭最上层的浮层', group: '通用', external: true });
 initComposer($('#composer'), {
@@ -200,7 +224,7 @@ function aiDraft() {
   });
 }
 function aiNextStep() {
-  const plan = nextStepPlan(record, STAGES);
+  const plan = nextStepPlan(record);
   aiBlock('ai-slot', {
     title: '建议下一步', sources: sources(), adoptLabel: '查看修改',
     generate: ({ signal }) => simulateStream(plan.text, { signal }),
@@ -208,21 +232,47 @@ function aiNextStep() {
   });
 }
 function applyPlan(plan) {
-  const before = record.stage, stage = plan.changes.find(c => c.key === 'stage'), task = plan.changes.find(c => c.key === 'task');
-  applyChange('stage', stage.to, before, { undoable: false });
+  const before = record.status, status = plan.changes.find(c => c.key === 'status'), task = plan.changes.find(c => c.key === 'task');
+  if (status) applyChange('status', status.to, before, { undoable: false });
   activity.push({ kind: 'event', icon: 'check', who: ME, text: `按 AI 建议新建任务「${task.to}」`, when: '刚刚' });
   renderActivity();
-  toast(`已按 AI 建议修改 ${plan.changes.length} 项`, { action: { label: '撤销', run: () => { activity.pop(); applyChange('stage', before, stage.to, { undoable: false }); } } });
+  toast(`已按 AI 建议修改 ${plan.changes.length} 项`, { action: { label: '撤销', run: () => { activity.pop(); if (status) applyChange('status', before, status.to, { undoable: false }); else renderActivity(); } } });
 }
-function suggestStage() {
-  const to = nextStage(STAGES, record.stage);
-  if (!aiEnabled() || to === record.stage) return;
-  showSuggestion($('[data-prop="stage"]').closest('.wb-prop'), { key: 'stage', label: '阶段', value: to, reason: '依据：最近一次跟进已约定现场调研', onAccept: v => applyChange('stage', v, record.stage) });
+function suggestStatus() {
+  const to = nextStatus(record.status);
+  if (!aiEnabled() || to === record.status) return;
+  showSuggestion($('[data-prop="status"]').closest('.wb-prop'), { key: 'status', label: '客户状态', value: to, reason: '依据：最近一次跟进已约定现场调研', onAccept: v => applyChange('status', v, record.status) });
 }
 root.addEventListener('click', e => {
   const action = e.target.closest('[data-action]')?.dataset.action;
-  if (action === 'ai-summary') aiSummary();
+  if (action === 'remind') {
+    remindedAt = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    activity.push({ kind: 'event', icon: 'bell', who: ME, text: `提醒${record.owner}${NEXT_ACTION[record.status]}`, when: '刚刚' });
+    renderMeta(); renderActivity();
+    toast(`已提醒${record.owner}，站内通知和企业微信各发一条`);
+  } else if (action === 'ai-summary') aiSummary();
   else if (action === 'ai-draft') aiDraft();
 });
-suggestStage();
+suggestStatus();
 initShell(root);
+
+// Page states for the samples (rules/6-反馈.md 6.8, 6.10): ?state=loading, error or denied. The real page is built
+// underneath and shown again after 重试 or when loading ends; 无权限 shows no name, no field and no properties panel.
+const STATES = {
+  loading: () => `<div class="wb-detail-main" aria-busy="true"><span class="wb-skeleton" style="width:40%;height:var(--wb-s5)"></span>${[90, 84, 60, 0, 70, 52].map(w => w ? `<span class="wb-skeleton" style="width:${w}%;margin-block-start:var(--wb-s3)"></span>` : '<span style="display:block;height:var(--wb-s5)"></span>').join('')}</div>`,
+  error: () => '<div class="wb-detail-main"><div class="wb-empty"><strong>客户没有加载出来</strong><p>网络连接中断（示例模拟）。侧栏和其他页面照常可用。</p><div><button type="button" class="wb-btn sm" data-state-action="retry">重试</button></div></div></div>',
+  denied: () => `<div class="wb-detail-main"><div class="wb-empty"><strong>没有权限查看这个客户</strong><p>只有华东销售组能看这个客户，找许宁开通。</p><div><a class="wb-btn sm" href="${esc($('#back-link').getAttribute('href'))}">返回列表</a></div></div></div>`,
+};
+function showState(name) {
+  $('#record-state')?.remove();
+  const main = $('#record-main'), props = $('#record-props'), crumb = $('#crumb-code');
+  main.hidden = Boolean(name);
+  props.hidden = name === 'error' || name === 'denied';
+  crumb.textContent = name === 'denied' ? '无权限' : record.code;
+  if (!name) return;
+  main.insertAdjacentHTML('beforebegin', `<div id="record-state">${STATES[name]()}</div>`);
+  if (name === 'loading') setTimeout(() => { if ($('#record-state [aria-busy]')) showState(null); }, 2000);
+}
+root.addEventListener('click', e => { if (e.target.closest('[data-state-action="retry"]')) showState('loading'); });
+const startState = new URLSearchParams(location.search).get('state');
+if (startState in STATES) showState(startState);

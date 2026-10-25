@@ -4,6 +4,104 @@
 
 ## [Unreleased]
 
+计划发布为 9.0.0。9.0 借鉴 Linear 的整体风格：界面退到业务对象后面，结构靠间距和对齐，信息密但不压人，颜色和图标克制。新增总体文档《设计理念》，每章写明落实哪几条原则。
+
+### 不兼容的改动
+- `.wb-mono` 改名为 `.wb-tnum`，用 Inter 的等宽数字（`font-variant-numeric: tabular-nums`）。JetBrains Mono（`--wb-mono`）只用于代码。
+- 删除 `--wb-detail-title`（24px）。详情页、单据页和设置页标题统一用 `--wb-title`（20px，字重 600）。
+- 删除 `--wb-rail-labeled` 和 `.aham-workbench.is-labeled`（72px 带名称导航栏），改用 220px 文字侧栏。
+- 外框默认展开侧栏。收起改用 `.aham-workbench.collapsed`（52px）；`.expanded` 只表示 1024px 及以下的浮层侧栏。`initShell()` 把选择记在本机，默认展开。
+- 侧栏结构改写：`.wb-rail-head`、`.wb-brand`、`.wb-brand-name`、`.wb-nav-group`、`.wb-nav-heading`、`.wb-nav-item`、`.wb-nav-count`、`.wb-nav-user`、`.wb-nav-foot`。8.x 的侧栏写法要按 examples/shell.html 改写。
+- 图标默认 14px（8.x 是 16px），页眉每条 44px（8.x 是 40px），侧栏导航项 28px（8.x 是 32px）。
+- 亮色中性灰去掉黄绿色偏，按 Claude 客户端侧栏重新取色：`--wb-canvas` 从 `#F9F9F7` 改为 `#EDECEB`，`--wb-nav-selected` `#DEDDDB`，`--wb-line` `#E5E5E4`，`--wb-line-strong` `#80807E`，`--wb-muted` `#666664`。8.x 的灰色在 LCH 里彩度 1.5–2.6、色相约 105°，9.0 的彩度在 1 以下。
+- `.wb-link` 改为正文色加 `--wb-line-strong` 下划线，不再用主色。
+- `.wb-tag` 改为描边胶囊：1px `--wb-line` 描边、6px 分类色圆点、`--wb-ink-2` 文字，不铺底色。
+- `--wb-label` 从 72px 改为 88px；`.wb-props` 宽度改用新变量 `--wb-panel-props`（288px）。
+- `--wb-detail-width`（720px）只给对外填报页。详情页正文和设置页内容改用新变量 `--wb-body-width`（640px）。
+- 列表页改用单行列表 `.wb-table.wb-list-rows`：数据行 44px（新变量 `--wb-list-row`），紧凑 36px；表头视觉隐藏，保留给读屏。8.0「电脑上不用 44px 行高」的规定只对数据表格保留。
+- 分区标题（单据分区、表格工具栏、设置分区、预览面板标题、空状态标题）从 14px 或 20px 改为 13px 字重 500。
+
+### 新增
+- 《设计理念》（设计理念.md）：读者和用法、总体标准、14 条原则（含义、原因、判据）、冲突时的次序、来源。README、AGENTS 和第 1 章链接到它。
+- 阶段图标 `.wb-stage-icon` 和 `stageIconHTML()`、`STAGE_STATE_WORDS`（3.15），五种状态：没开始、进行中、已完成、受阻、不进行。组件契约 stage-icon.json，共 45 份。
+- `personHTML(name, { compact: true })`：单行列表里只显示 20px 头像，带 `title` 和 `aria-label`。
+- 侧栏导航项写 `data-go` 时注册 G 加字母的跳转快捷键；收起时悬停显示名称和快捷键。
+- 颜色变量 `--wb-nav-selected`（亮色 `#E9E8E4`，暗色 `#232322`）。
+- 主题生成 scripts/theme.mjs（2.12）：由底色、主色和对比度三个值在 LCH 里生成中性色和主色。`--check` 检查默认主题和 3 个样例主题的对比度，CI 增加这一步。
+- 调研记录 research/Linear字体字号-调研.md：Linear 截图实测和 FDE 演示版对照。
+
+### 规则
+
+- 规则只写现行标准。原来夹在正文里的版本说明（8.x 的取值、9.0 删除的导航栏、8.0 的对比度等）只保留在本文件的对应版本下，测试会拦住再写进 rules/。
+- 第 1 章版本改为 9.0.0；1.2 改为原则和章节对照表；1.3 来源加 Linear，写明不借鉴的部分（品牌色、默认深色、渐变）；1.4 新增术语「阶段图标」「侧栏」，「导航栏」「菜单」统一改为「侧栏」。
+- 2.5 字号重写：工作台一屏只用 13px 和 12px 两档，20px 标题一页一次；字重 400 和 500，600 只给标题；Inter 光学尺寸自动。2.7 尺寸、2.9 图标重写。新增 2.12 主题生成。
+- 3.9 标签、3.11 头像、3.12 阶段条（2px 线，当前阶段用主色）更新；新增 3.15 阶段图标。
+- 4.1 外框、4.3 列表页、4.5 视图页签、4.8 记录详情页、4.9 设置页按 9.0 重写。
+- 第 7 章加 G 加字母跳转，⌘B 收起侧栏。
+- 第 9 章新增 9.7 风格判据 S1–S12 和截图比例校准；9.5 自查增加第 12 项。
+- lint 新增三类检查：主色用作文字颜色、svg 写死像素尺寸、侧栏的三组对比度。
+
+### 交互层
+- 内容区改为直角，铺到窗口边缘，和侧栏之间一条 1px `--wb-edge` 竖线；删去 `--wb-shell-radius`。侧栏去掉上内边距，第一行和页眉第一行对齐。明细表改为上下两条线，不画外框和圆角。依据是 Claude 客户端和 Linear 截图的量取：两者的区域都没有圆角。
+- 新增第 11 章《交互》：5 层表面、5 种状态、悬停的过渡、按频次定动效、减少动态效果、容器选用、验收。设计理念新增原则 12「每次操作都有回应，动效只说明来去」，原 12–14 顺延为 13–15。
+- 交互状态写在各组件自己的样式文件末尾：悬停移入立即、移出淡出；按下底色加深，独立按钮缩到 0.97；`aria-expanded="true"` 的触发按钮保持按下色；浮层、悬停提示、弹窗、预览面板、轻提示和保存栏用 `@starting-style` 出现。
+- `aham.js` 新增 `leave(el, done)`：给元素加 `data-leaving`，过渡结束再隐藏或移除。浮层、四种弹窗和轻提示改用它播放消失。浮层的变形原点在触发按钮一侧。悬停提示 300ms 内相邻元素不再延迟。
+- `scripts/build.mjs` 把单行 `:hover` 规则包进 `@media (hover: hover) and (pointer: fine)`，触屏上不留悬停色。
+- 新增颜色变量 `--wb-nav-hover`、`--wb-edge`、`--wb-line-soft`、`--wb-action-press`；`--wb-nav-selected` 亮色改为 `#D5D4D3`；`--wb-scrim` 亮色改为黑色 40%。分隔线分三档：外框交界、分栏、行间。
+- 时长变量改为 `--wb-instant` 100ms、`--wb-fast` 120ms、`--wb-pop` 150ms、`--wb-base` 200ms，删去 `--wb-slow`；新增 `--wb-ease-move`、`--wb-press-scale`、`--wb-tooltip-delay`。
+- 账户菜单和分栏弹窗：侧栏底部的账户按钮打开菜单，「偏好设置…」打开分栏弹窗，命令面板里也有同名命令，改了立即生效。组件契约新增 account-menu、preferences-dialog，共 47 份。
+- 设置页改为只放工作区设置，有修改时底部出现保存栏，⌘/Ctrl + S 保存。
+- 评论框改为白底、12px 圆角、1px `--wb-line-strong` 描边，不加阴影。文件上传进度条改用 `transform: scaleX()`。
+- 新增示例页 examples/interaction.html 和调研记录 research/交互层-调研.md。
+- lint 新增检查：不写 `transition: all`，不对宽高和位置做过渡，时长必须用变量。
+
+### 第三轮审计待定的 12 条（按推荐改）
+- 客户详情页的主区铺满工作面，和报价单一致，只有正文段落限宽 640px（4.8）。
+- 显示态字段标签统一为 12px 次要色，表单页标签保持 13px（U24，2.5）。
+- 客户的「阶段」改为「客户状态」：潜在、跟进中、已成交、已流失。销售阶段只在商机上（P26）。
+- 报价单状态加已发送、客户已接受、已转合同、已过期，每个状态写下一步和主按钮（P14，5.8）。审批人打开单据时显示「等你审批」，主按钮「通过」，退回要填原因（P11，5.9）。document-page.json 新增 `lifecycle` 状态清单（P21）。
+- 新增 4.14 权限、4.15 多方共用的对象、6.10 加载失败和无权限、6.11 通知和提醒、8.7 AI 判断（P17、P03、P16、P36、P19）。
+- 新增样板：home.html 我的工作台、scenes.html 场景列表、scene.html 场景详情、members.html 成员与角色（P22、P02）。侧栏加「首页」（G H）和「实施 / 场景」（G E）。list.html 和 record.html 用 `?state=` 演示加载、失败和无权限。
+- 新增类名 `.wb-problem`、`.wb-qa`、`.wb-qa-q`、`.wb-qa-a`、`.wb-qa-files`、`.wb-attach`、`.wb-scope`，契约 shared-object.json，共 50 份。契约结构新增 `lifecycle` 和 `visibility` 两个字段。
+- `.wb-row-link` 改为继承文字颜色、不加下划线，列表行名称不再显示成浏览器默认的蓝色链接。
+
+### 仓库结构
+- 样式源文件按组件族拆成 `src/NN-名称.css`（基础、外框、控件、表格、列表、单据、详情、浮层、设置、文件、流程、打印），编号决定合并顺序。屏幕尺寸、指针、对比度和动效的覆盖写在组件旁边，构建时按 `ENVIRONMENTS` 的顺序合并成每个条件一段；没登记的条件让构建失败。
+- 行为脚本拆成 `js/NN-名称.js`，构建合成一个 `aham.js`，导出名只增不减（共 69 个）。
+- 每个 `init*` 和 `create*` 返回 `destroy()`，由 `scope()` 统一移除监听、快捷键和元素，可以在 React 的 `useEffect` 里挂载和卸载，见 docs/react.md。测试检查每个导出函数都返回它。
+- 新增类型声明 aham.d.ts，测试检查它和导出一致；package.json 写明名称、版本、导出和类型，无依赖。
+- 示例页的侧栏只写一份（examples/_rail.html），构建写进各页。命令面板的界面、账户、跳转和帮助分组由 `initPalette({ shell: true })` 统一生成。
+- 组件契约有了 schema（components/schema.json）和检查脚本 scripts/contracts.mjs：类名要在 aham.css 里存在，API 要是 aham.js 的导出，规则锚点和样板文件要存在，aham.css 的每个类名都要有契约认领。
+- 规则里引用的颜色值和 2.3 对比度表由构建从 tokens.json 写入，`--check` 发现规则落后于取值时失败。对比度色对移到 scripts/lib/contrast.mjs。
+- lint 检查扩到 js/、examples/ 和 index.html，报告没用到的变量和 src/ 里用到的已废弃变量。
+- 调研和方案移到 docs/research 和 docs/decisions；删去 shots/。`npm run check` 跑构建检查、lint、契约、主题和测试五步，CI 相同。
+
+### 审计改动
+三位审阅者（界面、美学、产品）共提出 107 条，逐条处理结果见 docs/research/9.0-样板自查记录.md。主要改动：
+
+- 次要按钮改为无描边的底色按钮（新变量 `--wb-button`、`--wb-button-hover`、`--wb-button-press`），危险按钮按下用 `--wb-danger-press`。
+- 浮层、菜单、轻提示和弹窗的外缘改由阴影变量里的 1px `--wb-pop-edge` 线画出，不再另画边框。
+- 亮色主按钮底 `--wb-action` 改为和主色同值 `#336EE8`；`--wb-line-strong` 亮色 `#8C8B89`；暗色的线、次要文字和图标色重新取值。`--wb-hover` 改为 `--wb-fill` 的别名。
+- 行高改用像素：新变量 `--wb-leading`（20px）和 `--wb-leading-xs`（12px 文字用 16px）。分隔线固定 1px，不再在 2 倍屏上用 0.5px。
+- 勾选框、单选框和下拉框由 Aham 自己画；图标描边从 1.5 改为 1.75（24 网格）。
+- 等宽数字只用于金额、数量、单价和就地变化的计数，编号和日期不用。`.wb-value` 不再默认等宽。
+- 新增 `initObjectPage().check()`：提交时发现必填项未填，进入编辑态、标出全部问题、打开消息列表并聚焦第一个错误。
+- `openCreateDialog()` 新增 `nameLabel`、`inputs`、`description`、`check`：新建弹窗按对象命名首个字段并在创建前查重。
+- `initTheme()` 的按钮写成「切换到深色 / 浅色」，不再带 `aria-pressed`，并跟随别处设置的 `data-theme` 和系统主题。
+- 命令列表里带「…」的命令显示箭头，没有箭头的行留出同宽空位，键位列对齐。
+- 弹层表单改为标签列加 176px 控件列（新变量 `--wb-pop-control`）。新增 `--wb-related-code`、`--wb-setting-control`，`.wb-next-date.is-overdue`。
+- 对外填报页正文 14px；页头写发起方公司名，提交后显示编号和下一步提示条。
+- 样板：单据页和记录详情页加下一步提示条；单据的变更记录折叠在页尾；审批步骤写清等谁；空值按类型写；侧栏待办计数和工作清单同步；G 加字母改为英文首字母（合同 N）。
+
+### 升级步骤
+1. 全局替换 `wb-mono` 为 `wb-tnum`，`--wb-detail-title` 为 `--wb-title`。
+2. 删去 `is-labeled`；侧栏按 examples/shell.html 的结构改写，收起状态改用 `.collapsed`。
+3. 列表页的 `<table>` 加 `wb-list-rows`，单元格按 4.3 的顺序和类名改写（`wb-cell-meta`、`wb-cell-icon`、`wb-cell-name`、`wb-cell-end`）；人员单元格改用 `personHTML(name, { compact: true })`。
+4. 正文里用主色的链接改为 `.wb-link`。
+5. 跑 `node scripts/lint.mjs`，按提示改掉写死的图标像素和主色文字。
+6. 次要按钮去掉自己写的描边，改用 `--wb-button` 底色；列表和表单里的编号、日期去掉 `.wb-tnum`。
+7. `--wb-slow` 改为 `--wb-base`；侧栏底部的用户名改为账户按钮，按 examples/shell.html 改写；个人偏好从设置页移到 `initAccount()` 的分栏弹窗。
+
 ## [8.1.0] - 2026-10-23
 
 8.1 把 FDE 工作台界面设计中定下的通用规则写进规范：元素按用途取舍、人员头像、阶段条、下一步提示条、记录折叠、对外填报页，并把文字和控件描边的对比度提到 WCAG 2 AA。

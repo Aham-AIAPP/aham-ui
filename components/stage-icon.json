@@ -1,0 +1,51 @@
+{
+  "slug": "stage-icon",
+  "name": "阶段图标",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "behavior": "aham.js",
+  "preview": "examples/controls.html",
+  "reference": "examples/list.html",
+  "intent": "在单行列表和摘要行里用一个 14px 图标表示对象走到了哪一段",
+  "specification": "rules/3-控件.md#315-阶段图标",
+  "api": "stageIconHTML({ state: 'todo' | 'current' | 'done' | 'blocked' | 'off', done, total, label }) → HTML；STAGE_STATE_WORDS",
+  "classes": [
+    ".wb-stage-icon",
+    ".wb-stage-ring",
+    ".wb-stage-pie",
+    ".wb-cell-icon"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "data-state",
+      "values": [
+        "todo",
+        "current",
+        "done",
+        "blocked",
+        "off"
+      ]
+    }
+  ],
+  "markup": {
+    "current": "<span class=\"wb-stage-icon\" data-state=\"current\" role=\"img\" title=\"方案评估：进行中，第 3 段，共 4 段\" aria-label=\"方案评估：进行中，第 3 段，共 4 段\"><svg viewBox=\"0 0 14 14\" aria-hidden=\"true\">…</svg></span>",
+    "withText": "<span class=\"wb-status\">[stageIconHTML]<span>方案评估</span></span>"
+  },
+  "rules": [
+    "没开始：虚线空心圆，--wb-faint",
+    "进行中：实线圆，里面按 done / total 画扇形，主色",
+    "已完成：实心圆加对勾，成功色",
+    "受阻：实线圆加横线，警示色",
+    "不进行：实线圆加斜线，--wb-faint",
+    "按阶段分组时，分组行前放同样的图标；数据行里照常显示，作为改阶段的入口（快捷键 S）"
+  ],
+  "accessibility": [
+    "role=\"img\"，aria-label 和 title 写「阶段名：状态，第几段，共几段」",
+    "状态靠形状区分，不只靠颜色"
+  ],
+  "doNotInvent": [
+    "彩色状态胶囊代替图标",
+    "用分类色区分阶段",
+    "图标大于 14px"
+  ]
+}
