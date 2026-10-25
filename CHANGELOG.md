@@ -4,6 +4,48 @@
 
 ## [Unreleased]
 
+计划发布为 9.0.0。9.0 借鉴 Linear 的整体风格：界面退到业务对象后面，结构靠间距和对齐，信息密但不压人，颜色和图标克制。新增总体文档《设计理念》，每章写明落实哪几条原则。
+
+### 不兼容的改动
+- `.wb-mono` 改名为 `.wb-tnum`，用 Inter 的等宽数字（`font-variant-numeric: tabular-nums`）。JetBrains Mono（`--wb-mono`）只用于代码。
+- 删除 `--wb-detail-title`（24px）。详情页、单据页和设置页标题统一用 `--wb-title`（20px，字重 600）。
+- 删除 `--wb-rail-labeled` 和 `.aham-workbench.is-labeled`（72px 带名称导航栏），改用 220px 文字侧栏。
+- 外框默认展开侧栏。收起改用 `.aham-workbench.collapsed`（52px）；`.expanded` 只表示 1024px 及以下的浮层侧栏。`initShell()` 把选择记在本机，默认展开。
+- 侧栏结构改写：`.wb-rail-head`、`.wb-brand`、`.wb-brand-name`、`.wb-nav-group`、`.wb-nav-heading`、`.wb-nav-item`、`.wb-nav-count`、`.wb-nav-user`、`.wb-nav-foot`。8.x 的侧栏写法要按 examples/shell.html 改写。
+- 图标默认 14px（8.x 是 16px），页眉每条 44px（8.x 是 40px），侧栏导航项 28px（8.x 是 32px）。
+- `--wb-canvas` 从 `#F9F9F7` 加深到 `#F4F4F1`。
+- `.wb-link` 改为正文色加 `--wb-line-strong` 下划线，不再用主色。
+- `.wb-tag` 改为描边胶囊：1px `--wb-line` 描边、6px 分类色圆点、`--wb-ink-2` 文字，不铺底色。
+- `--wb-label` 从 72px 改为 88px；`.wb-props` 宽度改用新变量 `--wb-panel-props`（288px）。
+- `--wb-detail-width`（720px）只给对外填报页。详情页正文和设置页内容改用新变量 `--wb-body-width`（640px）。
+- 列表页改用单行列表 `.wb-table.wb-list-rows`：数据行 44px（新变量 `--wb-list-row`），紧凑 36px；表头视觉隐藏，保留给读屏。8.0「电脑上不用 44px 行高」的规定只对数据表格保留。
+- 分区标题（单据分区、表格工具栏、设置分区、预览面板标题、空状态标题）从 14px 或 20px 改为 13px 字重 500。
+
+### 新增
+- 《设计理念》（设计理念.md）：读者和用法、总体标准、14 条原则（含义、原因、判据）、冲突时的次序、来源。README、AGENTS 和第 1 章链接到它。
+- 阶段图标 `.wb-stage-icon` 和 `stageIconHTML()`、`STAGE_STATE_WORDS`（3.15），五种状态：没开始、进行中、已完成、受阻、不进行。组件契约 stage-icon.json，共 45 份。
+- `personHTML(name, { compact: true })`：单行列表里只显示 20px 头像，带 `title` 和 `aria-label`。
+- 侧栏导航项写 `data-go` 时注册 G 加字母的跳转快捷键；收起时悬停显示名称和快捷键。
+- 颜色变量 `--wb-nav-selected`（亮色 `#E9E8E4`，暗色 `#232322`）。
+- 主题生成 scripts/theme.mjs（2.12）：由底色、主色和对比度三个值在 LCH 里生成中性色和主色。`--check` 检查默认主题和 3 个样例主题的对比度，CI 增加这一步。
+- 调研记录 research/Linear字体字号-调研.md：Linear 截图实测和 FDE 演示版对照。
+
+### 规则
+- 第 1 章版本改为 9.0.0；1.2 改为原则和章节对照表；1.3 来源加 Linear，写明不借鉴的部分（品牌色、默认深色、渐变）；1.4 新增术语「阶段图标」「侧栏」，「导航栏」「菜单」统一改为「侧栏」。
+- 2.5 字号重写：工作台一屏只用 13px 和 12px 两档，20px 标题一页一次；字重 400 和 500，600 只给标题；Inter 光学尺寸自动。2.7 尺寸、2.9 图标重写。新增 2.12 主题生成。
+- 3.9 标签、3.11 头像、3.12 阶段条（2px 线，当前阶段用主色）更新；新增 3.15 阶段图标。
+- 4.1 外框、4.3 列表页、4.5 视图页签、4.8 记录详情页、4.9 设置页按 9.0 重写。
+- 第 7 章加 G 加字母跳转，⌘B 收起侧栏。
+- 第 9 章新增 9.7 风格判据 S1–S12 和截图比例校准；9.5 自查增加第 12 项。
+- lint 新增三类检查：主色用作文字颜色、svg 写死像素尺寸、侧栏的三组对比度。
+
+### 升级步骤
+1. 全局替换 `wb-mono` 为 `wb-tnum`，`--wb-detail-title` 为 `--wb-title`。
+2. 删去 `is-labeled`；侧栏按 examples/shell.html 的结构改写，收起状态改用 `.collapsed`。
+3. 列表页的 `<table>` 加 `wb-list-rows`，单元格按 4.3 的顺序和类名改写（`wb-cell-meta`、`wb-cell-icon`、`wb-cell-name`、`wb-cell-end`）；人员单元格改用 `personHTML(name, { compact: true })`。
+4. 正文里用主色的链接改为 `.wb-link`。
+5. 跑 `node scripts/lint.mjs`，按提示改掉写死的图标像素和主色文字。
+
 ## [8.1.0] - 2026-10-23
 
 8.1 把 FDE 工作台界面设计中定下的通用规则写进规范：元素按用途取舍、人员头像、阶段条、下一步提示条、记录折叠、对外填报页，并把文字和控件描边的对比度提到 WCAG 2 AA。
