@@ -13,7 +13,7 @@
 - 外框默认展开侧栏。收起改用 `.aham-workbench.collapsed`（52px）；`.expanded` 只表示 1024px 及以下的浮层侧栏。`initShell()` 把选择记在本机，默认展开。
 - 侧栏结构改写：`.wb-rail-head`、`.wb-brand`、`.wb-brand-name`、`.wb-nav-group`、`.wb-nav-heading`、`.wb-nav-item`、`.wb-nav-count`、`.wb-nav-user`、`.wb-nav-foot`。8.x 的侧栏写法要按 examples/shell.html 改写。
 - 图标默认 14px（8.x 是 16px），页眉每条 44px（8.x 是 40px），侧栏导航项 28px（8.x 是 32px）。
-- `--wb-canvas` 从 `#F9F9F7` 加深到 `#F4F4F1`。
+- 亮色中性灰去掉黄绿色偏，按 Claude 客户端侧栏重新取色：`--wb-canvas` 从 `#F9F9F7` 改为 `#EDECEB`，`--wb-nav-selected` `#DEDDDB`，`--wb-line` `#E5E5E4`，`--wb-line-strong` `#80807E`，`--wb-muted` `#666664`。8.x 的灰色在 LCH 里彩度 1.5–2.6、色相约 105°，9.0 的彩度在 1 以下。
 - `.wb-link` 改为正文色加 `--wb-line-strong` 下划线，不再用主色。
 - `.wb-tag` 改为描边胶囊：1px `--wb-line` 描边、6px 分类色圆点、`--wb-ink-2` 文字，不铺底色。
 - `--wb-label` 从 72px 改为 88px；`.wb-props` 宽度改用新变量 `--wb-panel-props`（288px）。
