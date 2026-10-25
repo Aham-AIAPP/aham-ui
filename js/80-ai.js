@@ -118,30 +118,16 @@ export function showSuggestion(anchor, { key, label, value, reason, onAccept, on
 
 // AI-proposed changes are written only after this confirmation (rules/8-AI协作.md 8.5). changes: [{ target, from?, to }].
 export function openAIConfirm({ root, title = '确认 AI 提出的修改', reason, changes, onConfirm, returnFocus }) {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-dialog wb-ai-confirm';
-  dialog.setAttribute('aria-labelledby', 'wb-ai-confirm-title');
-  dialog.innerHTML = `<form method="dialog">
+  const { dialog, close } = openDialog({ root, className: 'wb-dialog wb-ai-confirm', labelledBy: 'wb-ai-confirm-title', returnFocus, html: `<form method="dialog">
     <span class="wb-ai-mark">${icon('ai')}<span>AI 建议</span></span>
     <h2 id="wb-ai-confirm-title">${escapeHtml(title)}</h2>
     ${reason ? `<p>${escapeHtml(reason)}</p>` : ''}
     <ul class="wb-ai-changes">${changes.map(c => `<li><span>${escapeHtml(c.target)}</span><span>${c.from != null ? `${escapeHtml(c.from)} → ` : ''}<strong>${escapeHtml(c.to)}</strong></span></li>`).join('')}</ul>
     <p class="wb-ai-note">共 ${changes.length} 项。确认后才会写入，写入后可以撤销。</p>
-    <div class="wb-dialog-foot"><button class="wb-btn" value="cancel">取消</button><button class="wb-btn primary" value="confirm" autofocus>确认修改</button></div>
-  </form>`;
-  root.append(dialog);
-  const returnTo = document.activeElement;
-  let release = null;
-  dialog.addEventListener('close', () => {
-    release?.();
-    const ok = dialog.returnValue === 'confirm';
-    dialog.remove();
-    (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.();
-    if (ok) onConfirm?.(changes);
-  }, { once: true });
-  dialog.addEventListener('cancel', e => e.preventDefault());
-  dialog.returnValue = '';
-  dialog.showModal();
-  release = pushLayer(() => dialog.close('cancel'));
-  return { close: () => dialog.close('cancel') };
+    <div class="wb-dialog-foot"><button type="button" class="wb-btn" data-ai-confirm="cancel">取消</button><button type="submit" class="wb-btn primary">确认修改</button></div>
+  </form>` });
+  dialog.querySelector('[data-ai-confirm=cancel]').addEventListener('click', () => close());
+  dialog.querySelector('form').addEventListener('submit', e => { e.preventDefault(); close(() => onConfirm?.(changes)); });
+  dialog.querySelector('[type=submit]').focus();
+  return { close: () => close() };
 }

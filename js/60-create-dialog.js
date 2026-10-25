@@ -5,11 +5,11 @@
 // fields: [{ key, label, options, icon?, value? }]; onSubmit({ title, description, ...props }) → true when saved.
 // returnFocus: where focus goes on close when the element that opened the dialog was re-rendered meanwhile.
 export function openCreateDialog({ root, title: heading, scope, fields = [], onSubmit, returnFocus }) {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-create';
-  dialog.setAttribute('aria-labelledby', 'wb-create-title');
   const props = Object.fromEntries(fields.map(f => [f.key, f.value ?? '']));
-  dialog.innerHTML = `<form method="dialog" novalidate>
+  let confirm = null, foot = null, name = null;
+  const keep = () => { foot.hidden = false; confirm.hidden = true; name.focus(); };
+  const { dialog, close: finish } = openDialog({ root, className: 'wb-create', labelledBy: 'wb-create-title', returnFocus,
+    onEscape: () => (confirm.hidden ? askClose() : keep()), html: `<form method="dialog" novalidate>
     <div class="wb-create-head">${scope ? `<span class="wb-create-scope">${escapeHtml(scope)}</span>${icon('chevron-right')}` : ''}<span id="wb-create-title">${escapeHtml(heading)}</span></div>
     <input class="wb-create-name" name="title" aria-label="标题" placeholder="标题" maxlength="200" autocomplete="off" aria-describedby="wb-create-error">
     <p class="wb-value-error" id="wb-create-error" role="alert"></p>
@@ -20,11 +20,10 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
       <div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="cancel">取消</button><button type="submit" class="wb-btn sm primary">创建</button></div>
     </div>
     <div class="wb-create-foot wb-create-confirm" hidden><span>有未保存的内容。</span><div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="keep">继续编辑</button><button type="button" class="wb-btn sm ghost danger" data-create="discard">放弃</button><button type="button" class="wb-btn sm primary" data-create="save">创建</button></div></div>
-  </form>`;
-  root.append(dialog);
-  const form = dialog.querySelector('form'), name = form.title, desc = form.description, err = dialog.querySelector('#wb-create-error');
-  const [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
-  const returnTo = document.activeElement;
+  </form>` });
+  const form = dialog.querySelector('form'), desc = form.description, err = dialog.querySelector('#wb-create-error');
+  name = form.title;
+  [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
   const paintProps = () => dialog.querySelectorAll('[data-create-prop]').forEach(b => {
     const f = fields.find(x => x.key === b.dataset.createProp), v = props[f.key];
     b.innerHTML = `${f.icon ? icon(f.icon) : ''}<span>${escapeHtml(v || f.label)}</span>`;
@@ -32,8 +31,6 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     b.setAttribute('aria-label', `${f.label}：${v || '未设置'}`);
   });
   const dirty = () => Boolean(name.value.trim() || desc.value.trim());
-  let release = null;
-  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.(); }); }
   function askClose() {
     if (!dirty()) { finish(); return; }
     foot.hidden = true; confirm.hidden = false;
@@ -47,7 +44,6 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     if (form.more.checked) { name.value = ''; desc.value = ''; err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
     finish();
   }
-  dialog.addEventListener('cancel', e => e.preventDefault());
   form.addEventListener('submit', e => { e.preventDefault(); submit(); });
   form.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); } });
   name.addEventListener('input', () => { err.textContent = ''; name.removeAttribute('aria-invalid'); });
@@ -58,13 +54,11 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
       const f = fields.find(x => x.key === b.dataset.createProp);
       openPicker(b, { label: f.label, options: f.options, current: props[f.key], icon: f.icon, onSelect: v => { props[f.key] = v; paintProps(); } });
     } else if (b.dataset.create === 'cancel') askClose();
-    else if (b.dataset.create === 'keep') { foot.hidden = false; confirm.hidden = true; name.focus(); }
+    else if (b.dataset.create === 'keep') keep();
     else if (b.dataset.create === 'discard') finish();
     else if (b.dataset.create === 'save') submit();
   });
   paintProps();
-  dialog.showModal();
-  release = pushLayer(() => (confirm.hidden ? askClose() : (foot.hidden = false, confirm.hidden = true, name.focus())));
   name.focus();
   return { close: finish };
 }

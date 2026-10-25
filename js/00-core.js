@@ -34,3 +34,12 @@ if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
 
 const contextBreakpoint = root => matchMedia(`(max-width: ${getComputedStyle(root).getPropertyValue('--wb-bp-context').trim() || '64rem'})`);
 
+
+// The last kind of input: 'pointer' or 'key'. Focus moved by code shows a ring only after keyboard use (rules/11-交互.md 11.6),
+// because Safari draws :focus-visible on programmatic focus after a click.
+let inputKind = 'pointer';
+if (typeof document !== 'undefined') {
+  document.addEventListener('pointerdown', () => { inputKind = 'pointer'; }, true);
+  document.addEventListener('keydown', () => { inputKind = 'key'; }, true);
+}
+export const lastInput = () => inputKind;

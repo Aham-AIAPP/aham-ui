@@ -35,6 +35,15 @@ if (typeof document !== 'undefined') document.addEventListener('keydown', e => {
 
 const contextBreakpoint = root => matchMedia(`(max-width: ${getComputedStyle(root).getPropertyValue('--wb-bp-context').trim() || '64rem'})`);
 
+
+// The last kind of input: 'pointer' or 'key'. Focus moved by code shows a ring only after keyboard use (rules/11-交互.md 11.6),
+// because Safari draws :focus-visible on programmatic focus after a click.
+let inputKind = 'pointer';
+if (typeof document !== 'undefined') {
+  document.addEventListener('pointerdown', () => { inputKind = 'pointer'; }, true);
+  document.addEventListener('keydown', () => { inputKind = 'key'; }, true);
+}
+export const lastInput = () => inputKind;
 // ── Theme ────────────────────────────────────────────────────────────────────
 // ?theme=light|dark in the page URL sets the starting theme (the panorama page passes its own theme to embedded samples).
 // A [data-action="theme"] button inside root toggles light / dark and keeps its pressed state and icon in sync.
@@ -324,6 +333,40 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
   return api;
 }
 
+// ── Modal dialog (rules/6-反馈.md 6.3, rules/11-交互.md 11.4) ─────────────────────
+// The one way to open a modal. Every dialog in Aham (confirm, form, create, batch result, AI confirm, preferences) is
+// built on it, so all of them enter and leave the same way, join the Esc layer stack and give focus back.
+//   const { dialog, close } = openDialog({ root, className, labelledBy, html, returnFocus, onEscape, onBackdrop })
+// - html fills the <dialog>; the caller wires its own buttons and calls close(after) to finish.
+// - Esc runs onEscape when given (to ask in place first), otherwise close().
+// - onBackdrop: a click on the dimmed area outside the box. Leave it out for dialogs that hold unsaved input.
+// - Focus goes back to returnFocus, or to the element that had focus when the dialog opened, whichever is still in the page.
+export function openDialog({ root, className = 'wb-dialog', labelledBy, html, returnFocus, onEscape, onBackdrop }) {
+  const dialog = document.createElement('dialog');
+  dialog.className = className;
+  if (labelledBy) dialog.setAttribute('aria-labelledby', labelledBy);
+  dialog.innerHTML = html;
+  root.append(dialog);
+  const opener = document.activeElement;
+  let release = null, closed = false;
+  function close(after) {
+    if (closed) return;
+    closed = true;
+    release?.();
+    leave(dialog, () => {
+      dialog.close();
+      dialog.remove();
+      [returnFocus, opener].find(el => el?.isConnected)?.focus?.();
+      after?.();
+    });
+  }
+  const escape = () => (onEscape ? onEscape() : close());
+  dialog.addEventListener('cancel', e => { e.preventDefault(); escape(); });
+  if (onBackdrop) dialog.addEventListener('click', e => { if (e.target === dialog) onBackdrop(); });
+  dialog.showModal();
+  release = pushLayer(escape);
+  return { dialog, close, get closed() { return closed; } };
+}
 // ── Filter model (pure) ──────────────────────────────────────────────────────
 // Operators per field type. Option operators follow the number of values (是 ↔ 是其中之一) and keep their polarity.
 export const FILTER_OPERATORS = {
@@ -1046,6 +1089,60 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
   return { open };
 }
 
+// ── Account menu and split dialog (rules/11-交互.md 11.6) ───────────────────────────
+// The account button at the foot of the sidebar opens a menu: the signed-in account on the first line, then the
+// caller's items. A choice closes the menu at once (no exit motion) so the next layer can open in its place.
+//   initAccountMenu({ root, button, account: 'lin.yue@example.com', items: () => [{ id, label, icon, keys?, group }], onSelect })
+export function initAccountMenu({ root, button = root.querySelector('[data-action="account"]'), account = '', items, onSelect }) {
+  if (!button) return null;
+  const menu = document.createElement('div');
+  menu.className = 'wb-popover flush menu';
+  menu.setAttribute('role', 'dialog');
+  menu.setAttribute('aria-label', '账户');
+  menu.hidden = true;
+  menu.innerHTML = `${account ? `<div class="wb-account-head">${escapeHtml(account)}</div>` : ''}<div></div>`;
+  root.append(menu);
+  function open() {
+    createCommand(menu.lastElementChild, { role: 'menu', search: false, label: '账户', items: items(), onSelect: it => { closePopover('replace'); onSelect(it); } });
+    openPopover(button, menu);
+    menu.querySelector('[role=menu]').focus();
+  }
+  const toggle = () => (menu.hidden ? open() : closePopover());
+  button.addEventListener('click', toggle);
+  return { open, menu, destroy: () => { button.removeEventListener('click', toggle); menu.remove(); } };
+}
+
+// A modal with a section list on the left and the section's rows on the right: personal preferences. Changes apply at
+// once, so there is no save button; something that needs confirming asks in its own row, never in a second modal.
+//   openSplitDialog({ root, title, sections: [{ id, label, icon }], render: id => html, start, onShow(id, body), returnFocus })
+// Opened by pointer, focus goes to the content without a ring; opened from the keyboard, to the current section.
+export function openSplitDialog({ root, title, sections, render, start = sections[0].id, onShow, returnFocus }) {
+  const head = `wb-split-title-${++uid}`;
+  const modal = openDialog({ root, className: 'wb-dialog is-split', labelledBy: head, returnFocus, onBackdrop: () => modal.close(),
+    html: `<header class="wb-dialog-head"><h2 id="${head}">${escapeHtml(title)}</h2><button type="button" class="wb-icon-btn" data-split="close" aria-label="关闭">${icon('close')}</button></header>
+      <div class="wb-split"><nav class="wb-settings-nav" aria-label="${escapeHtml(title)}分类"><ul>${sections.map(s => `<li><a href="#" data-section="${escapeHtml(s.id)}">${s.icon ? icon(s.icon) : ''}<span>${escapeHtml(s.label)}</span></a></li>`).join('')}</ul></nav><div class="wb-split-body" tabindex="-1"></div></div>` });
+  const { dialog, close } = modal;
+  const body = dialog.querySelector('.wb-split-body');
+  let current = start;
+  function show(id) {
+    current = id;
+    body.innerHTML = render(id);
+    body.scrollTop = 0;
+    dialog.querySelectorAll('[data-section]').forEach(a => (a.dataset.section === id ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
+    onShow?.(id, body);
+  }
+  dialog.addEventListener('click', e => {
+    const t = e.target.closest('[data-section], [data-split="close"]');
+    if (!t) return;
+    e.preventDefault();
+    if (t.dataset.split === 'close') close();
+    else { show(t.dataset.section); t.focus(); }
+  });
+  show(start);
+  if (lastInput() === 'key') dialog.querySelector(`[data-section="${CSS.escape(start)}"]`).focus();
+  else body.focus({ focusVisible: false });
+  return { dialog, body, close, show, current: () => current, get closed() { return modal.closed; } };
+}
 // ── Create dialog ────────────────────────────────────────────────────────────
 // Quick create, as Circle's new-issue modal: borderless title, description, property chips that open pickers,
 // then 继续新建 and the primary button. ⌘/Ctrl+Enter creates. Closing with unsaved text asks in place
@@ -1053,11 +1150,11 @@ export function initContextMenu({ root, target, rowSelector = 'tbody tr[data-id]
 // fields: [{ key, label, options, icon?, value? }]; onSubmit({ title, description, ...props }) → true when saved.
 // returnFocus: where focus goes on close when the element that opened the dialog was re-rendered meanwhile.
 export function openCreateDialog({ root, title: heading, scope, fields = [], onSubmit, returnFocus }) {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-create';
-  dialog.setAttribute('aria-labelledby', 'wb-create-title');
   const props = Object.fromEntries(fields.map(f => [f.key, f.value ?? '']));
-  dialog.innerHTML = `<form method="dialog" novalidate>
+  let confirm = null, foot = null, name = null;
+  const keep = () => { foot.hidden = false; confirm.hidden = true; name.focus(); };
+  const { dialog, close: finish } = openDialog({ root, className: 'wb-create', labelledBy: 'wb-create-title', returnFocus,
+    onEscape: () => (confirm.hidden ? askClose() : keep()), html: `<form method="dialog" novalidate>
     <div class="wb-create-head">${scope ? `<span class="wb-create-scope">${escapeHtml(scope)}</span>${icon('chevron-right')}` : ''}<span id="wb-create-title">${escapeHtml(heading)}</span></div>
     <input class="wb-create-name" name="title" aria-label="标题" placeholder="标题" maxlength="200" autocomplete="off" aria-describedby="wb-create-error">
     <p class="wb-value-error" id="wb-create-error" role="alert"></p>
@@ -1068,11 +1165,10 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
       <div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="cancel">取消</button><button type="submit" class="wb-btn sm primary">创建</button></div>
     </div>
     <div class="wb-create-foot wb-create-confirm" hidden><span>有未保存的内容。</span><div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="keep">继续编辑</button><button type="button" class="wb-btn sm ghost danger" data-create="discard">放弃</button><button type="button" class="wb-btn sm primary" data-create="save">创建</button></div></div>
-  </form>`;
-  root.append(dialog);
-  const form = dialog.querySelector('form'), name = form.title, desc = form.description, err = dialog.querySelector('#wb-create-error');
-  const [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
-  const returnTo = document.activeElement;
+  </form>` });
+  const form = dialog.querySelector('form'), desc = form.description, err = dialog.querySelector('#wb-create-error');
+  name = form.title;
+  [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
   const paintProps = () => dialog.querySelectorAll('[data-create-prop]').forEach(b => {
     const f = fields.find(x => x.key === b.dataset.createProp), v = props[f.key];
     b.innerHTML = `${f.icon ? icon(f.icon) : ''}<span>${escapeHtml(v || f.label)}</span>`;
@@ -1080,8 +1176,6 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     b.setAttribute('aria-label', `${f.label}：${v || '未设置'}`);
   });
   const dirty = () => Boolean(name.value.trim() || desc.value.trim());
-  let release = null;
-  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.(); }); }
   function askClose() {
     if (!dirty()) { finish(); return; }
     foot.hidden = true; confirm.hidden = false;
@@ -1095,7 +1189,6 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     if (form.more.checked) { name.value = ''; desc.value = ''; err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
     finish();
   }
-  dialog.addEventListener('cancel', e => e.preventDefault());
   form.addEventListener('submit', e => { e.preventDefault(); submit(); });
   form.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); } });
   name.addEventListener('input', () => { err.textContent = ''; name.removeAttribute('aria-invalid'); });
@@ -1106,13 +1199,11 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
       const f = fields.find(x => x.key === b.dataset.createProp);
       openPicker(b, { label: f.label, options: f.options, current: props[f.key], icon: f.icon, onSelect: v => { props[f.key] = v; paintProps(); } });
     } else if (b.dataset.create === 'cancel') askClose();
-    else if (b.dataset.create === 'keep') { foot.hidden = false; confirm.hidden = true; name.focus(); }
+    else if (b.dataset.create === 'keep') keep();
     else if (b.dataset.create === 'discard') finish();
     else if (b.dataset.create === 'save') submit();
   });
   paintProps();
-  dialog.showModal();
-  release = pushLayer(() => (confirm.hidden ? askClose() : (foot.hidden = false, confirm.hidden = true, name.focus())));
   name.focus();
   return { close: finish };
 }
@@ -1126,17 +1217,9 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
 //   openConfirm({ title: '离开前保存报价单？', confirm: '保存', choices: [{ label: '放弃草稿', value: 'discard', danger: true },
 //     { label: '保留草稿', value: 'keep' }], onConfirm: save, onChoice: value => … })
 export function openConfirm({ root, title, text = '', confirm = '确认', danger = false, reason = null, choices = [], onConfirm, onChoice, returnFocus, cancel = '取消' }) {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-dialog';
-  dialog.setAttribute('aria-labelledby', 'wb-confirm-title');
-  dialog.innerHTML = `<form method="dialog" novalidate><h2 id="wb-confirm-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}${reason ? `<label class="wb-dialog-field"><span>${escapeHtml(reason.label)}<span class="wb-form-required" aria-hidden="true">*</span></span><textarea class="wb-field" name="reason" rows="3" maxlength="500" required aria-describedby="wb-confirm-error"></textarea><span class="wb-value-error" id="wb-confirm-error" role="alert"></span></label>` : ''}<div class="wb-dialog-foot"><button type="button" class="wb-btn" data-confirm="cancel">${escapeHtml(cancel)}</button>${choices.map((c, i) => `<button type="button" class="wb-btn${c.danger ? ' ghost danger' : ''}" data-choice="${i}">${escapeHtml(c.label)}</button>`).join('')}<button type="submit" class="wb-btn ${danger ? 'danger' : 'primary'}">${escapeHtml(confirm)}</button></div></form>`;
-  root.append(dialog);
-  const returnTo = returnFocus || document.activeElement;
+  const { dialog, close: finish } = openDialog({ root, labelledBy: 'wb-confirm-title', returnFocus, html: `<form method="dialog" novalidate><h2 id="wb-confirm-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}${reason ? `<label class="wb-dialog-field"><span>${escapeHtml(reason.label)}<span class="wb-form-required" aria-hidden="true">*</span></span><textarea class="wb-field" name="reason" rows="3" maxlength="500" required aria-describedby="wb-confirm-error"></textarea><span class="wb-value-error" id="wb-confirm-error" role="alert"></span></label>` : ''}<div class="wb-dialog-foot"><button type="button" class="wb-btn" data-confirm="cancel">${escapeHtml(cancel)}</button>${choices.map((c, i) => `<button type="button" class="wb-btn${c.danger ? ' ghost danger' : ''}" data-choice="${i}">${escapeHtml(c.label)}</button>`).join('')}<button type="submit" class="wb-btn ${danger ? 'danger' : 'primary'}">${escapeHtml(confirm)}</button></div></form>` });
   dialog.querySelectorAll('[data-choice]').forEach(b => b.addEventListener('click', () => { finish(); onChoice?.(choices[Number(b.dataset.choice)].value); }));
   const field = dialog.querySelector('textarea'), err = dialog.querySelector('.wb-value-error');
-  let release = null;
-  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }); }
-  dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
   dialog.querySelector('[data-confirm=cancel]').addEventListener('click', finish);
   field?.addEventListener('input', () => { err.textContent = ''; field.removeAttribute('aria-invalid'); });
   dialog.querySelector('form').addEventListener('submit', e => {
@@ -1146,8 +1229,6 @@ export function openConfirm({ root, title, text = '', confirm = '确认', danger
     finish();
     onConfirm?.(value);
   });
-  dialog.showModal();
-  release = pushLayer(finish);
   (field || dialog.querySelector('[data-confirm=cancel]')).focus();
   return { close: finish };
 }
@@ -1158,28 +1239,20 @@ export function openConfirm({ root, title, text = '', confirm = '确认', danger
 // onSubmit(values) → true closes the dialog; a string is shown as the error of the whole form; an object
 // { key: message } marks single fields. Esc and 取消 close without acting.
 export function openFormDialog({ root, title, text = '', fields = [], submit = '保存', onSubmit, returnFocus }) {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-dialog is-form';
-  dialog.setAttribute('aria-labelledby', 'wb-form-title');
   const control = f => {
     const id = `wb-form-${f.key}`, base = `class="wb-field${f.type === 'number' ? ' is-number' : ''}" id="${id}" name="${escapeHtml(f.key)}"${f.required ? ' required' : ''} aria-describedby="${id}-error"`;
     if (f.type === 'select') return `<select ${base}>${f.options.map(o => { const v = typeof o === 'object' ? o : { value: o, label: o }; return `<option value="${escapeHtml(v.value)}"${String(v.value) === String(f.value ?? '') ? ' selected' : ''}>${escapeHtml(v.label)}</option>`; }).join('')}</select>`;
     return `<input ${base} value="${escapeHtml(f.value ?? '')}"${f.inputmode ? ` inputmode="${f.inputmode}"` : ''} maxlength="200" autocomplete="off">`;
   };
-  dialog.innerHTML = `<form method="dialog" novalidate><h2 id="wb-form-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}<div class="wb-dialog-grid">${fields.map(f => `<div class="wb-form-row"><label class="wb-form-label" for="wb-form-${escapeHtml(f.key)}">${escapeHtml(f.label)}${f.required ? '<span class="wb-form-required" aria-hidden="true">*</span>' : ''}</label>${control(f)}${f.hint ? `<div class="wb-form-hint">${escapeHtml(f.hint)}</div>` : ''}<div class="wb-form-hint is-error" id="wb-form-${escapeHtml(f.key)}-error" role="alert"></div></div>`).join('')}</div><p class="wb-value-error" role="alert"></p><div class="wb-dialog-foot"><button type="button" class="wb-btn" data-form="cancel">取消</button><button type="submit" class="wb-btn primary">${escapeHtml(submit)}</button></div></form>`;
-  root.append(dialog);
+  const { dialog, close: finish } = openDialog({ root, className: 'wb-dialog is-form', labelledBy: 'wb-form-title', returnFocus, html: `<form method="dialog" novalidate><h2 id="wb-form-title">${escapeHtml(title)}</h2>${text ? `<p>${escapeHtml(text)}</p>` : ''}<div class="wb-dialog-grid">${fields.map(f => `<div class="wb-form-row"><label class="wb-form-label" for="wb-form-${escapeHtml(f.key)}">${escapeHtml(f.label)}${f.required ? '<span class="wb-form-required" aria-hidden="true">*</span>' : ''}</label>${control(f)}${f.hint ? `<div class="wb-form-hint">${escapeHtml(f.hint)}</div>` : ''}<div class="wb-form-hint is-error" id="wb-form-${escapeHtml(f.key)}-error" role="alert"></div></div>`).join('')}</div><p class="wb-value-error" role="alert"></p><div class="wb-dialog-foot"><button type="button" class="wb-btn" data-form="cancel">取消</button><button type="submit" class="wb-btn primary">${escapeHtml(submit)}</button></div></form>` });
   const form = dialog.querySelector('form'), formError = form.querySelector(':scope > .wb-value-error');
-  const returnTo = returnFocus || document.activeElement;
   const el = key => form.querySelector(`[name="${CSS.escape(key)}"]`);
-  let release = null;
-  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }); }
   function mark(key, message) {
     const c = el(key), box = dialog.querySelector(`#wb-form-${CSS.escape(key)}-error`);
     if (!c || !box) return;
     box.textContent = message || '';
     if (message) c.setAttribute('aria-invalid', 'true'); else c.removeAttribute('aria-invalid');
   }
-  dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
   dialog.querySelector('[data-form=cancel]').addEventListener('click', finish);
   form.addEventListener('input', e => { if (e.target.name) mark(e.target.name, ''); formError.textContent = ''; });
   form.addEventListener('submit', async e => {
@@ -1195,8 +1268,6 @@ export function openFormDialog({ root, title, text = '', fields = [], submit = '
     keys.forEach(k => mark(k, result[k]));
     el(keys[0])?.focus();
   });
-  dialog.showModal();
-  release = pushLayer(finish);
   (form.querySelector('input, select') || form.querySelector('[data-form=cancel]')).focus();
   return { close: finish, dialog };
 }
@@ -1207,18 +1278,8 @@ export function openFormDialog({ root, title, text = '', fields = [], submit = '
 export function showBatchResult({ root, action, noun, total, failed = [], returnFocus }) {
   const done = total - failed.length;
   if (!failed.length) { toast(`已${action} ${total} 个${noun}`); return null; }
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-dialog is-form';
-  dialog.setAttribute('aria-labelledby', 'wb-batch-title');
-  dialog.innerHTML = `<form method="dialog"><h2 id="wb-batch-title">${done ? `${escapeHtml(action)}了部分${escapeHtml(noun)}` : `没有${escapeHtml(noun)}被${escapeHtml(action)}`}</h2><p>${done} / ${total} 个已${escapeHtml(action)}。下面 ${failed.length} 个没有${escapeHtml(action)}，仍保持勾选，处理后可以再试一次。</p><ul class="wb-batch-list">${failed.map(f => `<li>${icon('error')}<span>${escapeHtml(f.name)}</span><small>${escapeHtml(f.reason)}</small></li>`).join('')}</ul><div class="wb-dialog-foot"><button type="submit" class="wb-btn primary">关闭</button></div></form>`;
-  root.append(dialog);
-  const returnTo = returnFocus || document.activeElement;
-  let release = null;
-  function finish() { release?.(); leave(dialog, () => { dialog.close(); dialog.remove(); if (returnTo?.isConnected) returnTo.focus(); }); }
-  dialog.addEventListener('cancel', e => { e.preventDefault(); finish(); });
+  const { dialog, close: finish } = openDialog({ root, className: 'wb-dialog is-form', labelledBy: 'wb-batch-title', returnFocus, html: `<form method="dialog"><h2 id="wb-batch-title">${done ? `${escapeHtml(action)}了部分${escapeHtml(noun)}` : `没有${escapeHtml(noun)}被${escapeHtml(action)}`}</h2><p>${done} / ${total} 个已${escapeHtml(action)}。下面 ${failed.length} 个没有${escapeHtml(action)}，仍保持勾选，处理后可以再试一次。</p><ul class="wb-batch-list">${failed.map(f => `<li>${icon('error')}<span>${escapeHtml(f.name)}</span><small>${escapeHtml(f.reason)}</small></li>`).join('')}</ul><div class="wb-dialog-foot"><button type="submit" class="wb-btn primary">关闭</button></div></form>` });
   dialog.querySelector('form').addEventListener('submit', e => { e.preventDefault(); finish(); });
-  dialog.showModal();
-  release = pushLayer(finish);
   dialog.querySelector('[type=submit]').focus();
   return { close: finish };
 }
@@ -1883,30 +1944,16 @@ export function showSuggestion(anchor, { key, label, value, reason, onAccept, on
 
 // AI-proposed changes are written only after this confirmation (rules/8-AI协作.md 8.5). changes: [{ target, from?, to }].
 export function openAIConfirm({ root, title = '确认 AI 提出的修改', reason, changes, onConfirm, returnFocus }) {
-  const dialog = document.createElement('dialog');
-  dialog.className = 'wb-dialog wb-ai-confirm';
-  dialog.setAttribute('aria-labelledby', 'wb-ai-confirm-title');
-  dialog.innerHTML = `<form method="dialog">
+  const { dialog, close } = openDialog({ root, className: 'wb-dialog wb-ai-confirm', labelledBy: 'wb-ai-confirm-title', returnFocus, html: `<form method="dialog">
     <span class="wb-ai-mark">${icon('ai')}<span>AI 建议</span></span>
     <h2 id="wb-ai-confirm-title">${escapeHtml(title)}</h2>
     ${reason ? `<p>${escapeHtml(reason)}</p>` : ''}
     <ul class="wb-ai-changes">${changes.map(c => `<li><span>${escapeHtml(c.target)}</span><span>${c.from != null ? `${escapeHtml(c.from)} → ` : ''}<strong>${escapeHtml(c.to)}</strong></span></li>`).join('')}</ul>
     <p class="wb-ai-note">共 ${changes.length} 项。确认后才会写入，写入后可以撤销。</p>
-    <div class="wb-dialog-foot"><button class="wb-btn" value="cancel">取消</button><button class="wb-btn primary" value="confirm" autofocus>确认修改</button></div>
-  </form>`;
-  root.append(dialog);
-  const returnTo = document.activeElement;
-  let release = null;
-  dialog.addEventListener('close', () => {
-    release?.();
-    const ok = dialog.returnValue === 'confirm';
-    dialog.remove();
-    (returnTo?.isConnected ? returnTo : returnFocus)?.focus?.();
-    if (ok) onConfirm?.(changes);
-  }, { once: true });
-  dialog.addEventListener('cancel', e => e.preventDefault());
-  dialog.returnValue = '';
-  dialog.showModal();
-  release = pushLayer(() => dialog.close('cancel'));
-  return { close: () => dialog.close('cancel') };
+    <div class="wb-dialog-foot"><button type="button" class="wb-btn" data-ai-confirm="cancel">取消</button><button type="submit" class="wb-btn primary">确认修改</button></div>
+  </form>` });
+  dialog.querySelector('[data-ai-confirm=cancel]').addEventListener('click', () => close());
+  dialog.querySelector('form').addEventListener('submit', e => { e.preventDefault(); close(() => onConfirm?.(changes)); });
+  dialog.querySelector('[type=submit]').focus();
+  return { close: () => close() };
 }

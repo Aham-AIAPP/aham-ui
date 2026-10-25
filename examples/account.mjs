@@ -1,7 +1,7 @@
 // Account menu and preferences dialog, shared by every sample with a sidebar (rules/11-交互.md 11.6).
 // The account button at the foot of the sidebar opens a menu; 偏好设置… opens a split dialog. Personal preferences
 // apply at once and confirm with a toast; workspace configuration stays on the settings page with a save button.
-import {openPopover, closePopover, createCommand, toast, pushLayer, leave, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled, icon} from '../aham.js';
+import {initAccountMenu, openSplitDialog, toast, setSingleKeyShortcuts, singleKeyShortcuts, setAIEnabled, aiEnabled} from '../aham.js';
 
 const KEY = 'aham-ui:settings-demo:v1';
 const DEFAULTS = { home: '客户列表', week: '星期一', singleKey: true, open: '进入详情页', theme: 'light', density: 'standard', ai: false, assign: true, digest: false };
@@ -36,10 +36,6 @@ const BODIES = {
   </div></section>`,
 };
 
-let lastInput = 'pointer';
-addEventListener('pointerdown', () => { lastInput = 'pointer'; }, true);
-addEventListener('keydown', () => { lastInput = 'key'; }, true);
-
 export function initAccount(root, { onShortcuts } = {}) {
   const button = root.querySelector('[data-action="account"]');
   let prefs = { ...DEFAULTS };
@@ -55,13 +51,6 @@ export function initAccount(root, { onShortcuts } = {}) {
   try { if (localStorage.getItem(KEY)) applyTheme(); } catch { /* storage blocked: keep the page theme */ }
 
   // ── Account menu ──
-  const menu = document.createElement('div');
-  menu.className = 'wb-popover flush menu';
-  menu.setAttribute('role', 'dialog');
-  menu.setAttribute('aria-label', '账户');
-  menu.hidden = true;
-  menu.innerHTML = '<div class="wb-account-head">lin.yue@example.com</div><div></div>';
-  root.append(menu);
   const items = () => [
     { id: 'prefs', label: '偏好设置…', icon: 'settings', group: 0 },
     ...(onShortcuts ? [{ id: 'keys', label: '键盘快捷键', icon: 'help', keys: '?', group: 0 }] : []),
@@ -74,22 +63,16 @@ export function initAccount(root, { onShortcuts } = {}) {
     else if (it.id === 'workspace') location.href = 'settings.html';
     else if (it.id === 'logout') toast('示例：不会退出登录');
   }
-  function openMenu() {
-    createCommand(menu.lastElementChild, { role: 'menu', search: false, label: '账户', items: items(), onSelect: it => { closePopover('replace'); run(it); } });
-    openPopover(button, menu);
-    menu.querySelector('[role=menu]').focus();
-  }
-  button?.addEventListener('click', () => (menu.hidden ? openMenu() : closePopover()));
+  const menu = initAccountMenu({ root, account: 'lin.yue@example.com', items, onSelect: run });
 
   // ── Preferences dialog ──
-  let dialog = null, release = null, returnTo = null, section = 'general';
+  let prefsDialog = null;
   function paint() {
-    if (!dialog) return;
-    const $$ = s => [...dialog.querySelectorAll(s)];
+    if (!prefsDialog) return;
+    const $$ = sel => [...prefsDialog.body.querySelectorAll(sel)];
     $$('[data-setting]').forEach(el => { if (el.type === 'checkbox') el.checked = Boolean(prefs[el.dataset.setting]); else el.value = prefs[el.dataset.setting]; });
     $$('[data-theme-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.themeChoice === themeChoice())));
     $$('[data-density-choice]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.densityChoice === prefs.density)));
-    $$('[data-section]').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   }
   function apply() { applyTheme(); setSingleKeyShortcuts(prefs.singleKey); setAIEnabled(prefs.ai); paint(); }
   // Apply, persist, confirm. If saving fails the previous value comes back and the toast says why (rules/4-页面.md 4.9).
@@ -99,61 +82,35 @@ export function initAccount(root, { onShortcuts } = {}) {
     try { localStorage.setItem(KEY, JSON.stringify(prefs)); apply(); toast(done); }
     catch { prefs = before; apply(); toast(`没有保存「${label}」：浏览器不允许写入本地存储`); }
   }
-  function show(id) {
-    section = id;
-    dialog.querySelector('.wb-split-body').innerHTML = BODIES[id];
-    dialog.querySelector('.wb-split-body').scrollTop = 0;
-    paint();
-  }
-  function close() {
-    if (!dialog) return;
-    const d = dialog;
-    dialog = null;
-    release?.();
-    leave(d, () => { d.close(); d.remove(); if (returnTo?.isConnected) returnTo.focus(); });
-  }
   function openPreferences(start = 'general') {
-    if (dialog) return;
-    returnTo = button?.isConnected && !document.activeElement?.closest('.wb-popover') ? document.activeElement : button;
-    dialog = document.createElement('dialog');
-    dialog.className = 'wb-dialog is-split';
-    dialog.setAttribute('aria-labelledby', 'wb-pref-title');
-    dialog.innerHTML = `<header class="wb-dialog-head"><h2 id="wb-pref-title">偏好设置</h2><button type="button" class="wb-icon-btn" data-pref="close" aria-label="关闭">${icon('close')}</button></header>
-      <div class="wb-split"><nav class="wb-settings-nav" aria-label="偏好分类"><ul>${SECTIONS.map(s => `<li><a href="#" data-section="${s.id}">${icon(s.icon)}<span>${s.label}</span></a></li>`).join('')}</ul></nav><div class="wb-split-body" tabindex="-1"></div></div>`;
-    root.append(dialog);
-    dialog.addEventListener('cancel', e => e.preventDefault());          // Esc goes through the layer stack
+    if (prefsDialog && !prefsDialog.closed) return;
+    const split = openSplitDialog({ root, title: '偏好设置', sections: SECTIONS, render: id => BODIES[id], start, onShow: paint,
+      returnFocus: document.activeElement?.closest('.wb-popover') ? button : undefined });
+    prefsDialog = split;
+    const { dialog } = split;
     dialog.addEventListener('click', e => {
-      if (e.target === dialog) { close(); return; }
-      const t = e.target.closest('a, button');
+      const t = e.target.closest('button');
       if (!t) return;
-      if (t.dataset.section) { e.preventDefault(); show(t.dataset.section); t.focus(); }
-      else if (t.dataset.pref === 'close') close();
-      else if (t.dataset.themeChoice) commit('外观', () => { prefs.theme = t.dataset.themeChoice; });
+      if (t.dataset.themeChoice) commit('外观', () => { prefs.theme = t.dataset.themeChoice; });
       else if (t.dataset.densityChoice) commit('列表行高', () => { prefs.density = t.dataset.densityChoice; });
       else if (t.dataset.pref === 'reset') askReset(t);
-      else if (t.dataset.pref === 'reset-cancel') show(section);
-      else if (t.dataset.pref === 'reset-confirm') { commit('全部偏好', () => { prefs = { ...DEFAULTS }; }, '全部偏好已恢复默认'); show(section); }
+      else if (t.dataset.pref === 'reset-cancel') split.show(split.current());
+      else if (t.dataset.pref === 'reset-confirm') { commit('全部偏好', () => { prefs = { ...DEFAULTS }; }, '全部偏好已恢复默认'); split.show(split.current()); }
     });
     dialog.addEventListener('change', e => {
       const el = e.target.closest('[data-setting]');
       if (!el) return;
       commit(el.closest('.wb-setting').querySelector('.wb-setting-title').textContent, () => { prefs[el.dataset.setting] = el.type === 'checkbox' ? el.checked : el.value; });
     });
-    dialog.showModal();
-    release = pushLayer(close);
-    show(start);
-    // Pointer opens put focus on the content without a ring (Safari shows one on programmatic focus); keyboard opens land on the current section.
-    if (lastInput === 'key') dialog.querySelector(`[data-section="${start}"]`).focus();
-    else dialog.querySelector('.wb-split-body').focus({ focusVisible: false });
   }
   // A second modal on top of this one is not allowed (rules/6-反馈.md 6.3): the reset row asks in place.
   function askReset(b) {
     b.closest('.wb-setting-control').innerHTML = '<span class="wb-setting-confirm">恢复全部默认值？<button type="button" class="wb-btn sm" data-pref="reset-cancel">取消</button><button type="button" class="wb-btn sm danger" data-pref="reset-confirm">重置</button></span>';
-    dialog.querySelector('[data-pref="reset-cancel"]').focus();
+    prefsDialog.body.querySelector('[data-pref="reset-cancel"]').focus();
   }
   const commands = () => [
     { id: 'prefs', label: '偏好设置…', icon: 'settings', run: () => openPreferences() },
     { id: 'theme-pref', label: '外观…', icon: 'moon', children: () => [['light', '浅色'], ['dark', '深色'], ['system', '跟随系统']].map(([v, l]) => ({ id: v, label: l, current: themeChoice() === v, run: () => commit('外观', () => { prefs.theme = v; }) })) },
   ];
-  return { openPreferences, openMenu, commands };
+  return { openPreferences, openMenu: () => menu?.open(), commands };
 }
