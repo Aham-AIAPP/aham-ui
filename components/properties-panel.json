@@ -9,7 +9,11 @@
   "intent": "记录属性栏：分组的「标签 + 值」行，可编辑值打开命令菜单",
   "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
-  "api": "initPropertyPickers({ root, container, fields: { key: { label, options, icon, person } }, value, onChange })；person: true 时值显示成头像加姓名",
+  "api": "initPropertyPickers({ container, fields: { key: { label, options, icon, person } }, value, onChange(key, value, before) }) → { get, set, destroy }。person: true 时值显示成头像加姓名",
+  "classes": [
+    "wb-props-section",
+    "wb-props-title"
+  ],
   "variantDimensions": [
     {
       "axis": "value",

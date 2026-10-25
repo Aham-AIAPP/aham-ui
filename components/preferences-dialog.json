@@ -2,12 +2,15 @@
   "slug": "preferences-dialog",
   "schemaVersion": 3,
   "implementation": "aham.css",
-  "behavior": "examples/account.mjs",
+  "behavior": "aham.js",
   "name": "分栏弹窗（偏好设置）",
   "intent": "只影响自己的偏好：左侧分类，右侧设置行，改了立即生效",
   "preview": "examples/interaction.html",
   "reference": "examples/account.mjs",
   "specification": "rules/11-交互.md#116-容器选用",
+  "api": {
+    "openSplitDialog": "openSplitDialog({ root, title, sections: [{ id, label, icon }], render: id => html, start, onShow(id, body), returnFocus }) → { dialog, body, show, current, close, closed }"
+  },
   "classes": [
     ".wb-dialog.is-split",
     ".wb-dialog-head",

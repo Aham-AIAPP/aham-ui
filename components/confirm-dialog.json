@@ -19,7 +19,9 @@
     ".wb-dialog-field",
     ".wb-dialog-foot",
     ".wb-dialog-grid",
-    ".wb-batch-list"
+    ".wb-batch-list",
+    "wb-confirm-text",
+    "wb-confirm-actions"
   ],
   "states": [
     "open",

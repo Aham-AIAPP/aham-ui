@@ -260,7 +260,7 @@
     },
     {
       "slug": "confirm-dialog",
-      "name": "确认弹窗",
+      "name": "确认弹窗和消息框",
       "group": "反馈",
       "specification": "rules/6-反馈.md#63-确认弹窗和消息框",
       "preview": "examples/document.html"
@@ -327,6 +327,20 @@
       "group": "组合",
       "specification": "rules/11-交互.md#116-容器选用",
       "preview": "examples/interaction.html"
+    },
+    {
+      "slug": "text",
+      "name": "次要文字和链接",
+      "group": "控件",
+      "specification": "rules/2-视觉.md#22-主色状态色和分类色",
+      "preview": "examples/controls.html"
+    },
+    {
+      "slug": "skeleton",
+      "name": "占位加载",
+      "group": "反馈",
+      "specification": "rules/6-反馈.md#68-忙碌和占位加载",
+      "preview": "examples/controls.html"
     }
   ]
 }

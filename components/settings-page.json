@@ -9,6 +9,11 @@
   "reference": "examples/settings.html",
   "specification": "rules/4-页面.md#49-设置页",
   "intent": "工作区设置页：左侧分组导航，右侧居中的分区与设置行；修改影响所有人，先改后保存",
+  "classes": [
+    "wb-settings-section",
+    "wb-save-bar",
+    "wb-settings-rows"
+  ],
   "variantDimensions": [
     {
       "axis": "control",

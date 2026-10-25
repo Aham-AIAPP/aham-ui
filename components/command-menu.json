@@ -9,7 +9,17 @@
   "specification": "rules/7-键盘与命令.md#73-选择菜单",
   "preview": "examples/parts-filter.html",
   "reference": "examples/list.html",
-  "api": "createCommand(host, { items, onSelect, onBack, placeholder, empty, search, label })",
+  "api": "createCommand(host, { items, onSelect, onBack, placeholder, empty, search, label, role }) → { render, input, focus, setItems, destroy }",
+  "classes": [
+    "wb-command",
+    "wb-command-input",
+    "wb-command-list",
+    "wb-command-gap",
+    "wb-command-sep",
+    "wb-command-empty",
+    "wb-command-head",
+    "wb-command-heading"
+  ],
   "variantDimensions": [
     {
       "axis": "selection",

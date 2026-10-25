@@ -7,7 +7,7 @@
   "intent": "查看、修改、提交、审批一张单据",
   "api": {
     "initObjectPage": "initObjectPage(root, { edit, footer, messages, validate, onSave, saved, canEdit, changed, draft: { interval, onDraft, onDiscard } }) → { enter, save, cancel, discard, saveDraft, values, isDirty, destroy }",
-    "initAnchorBar": "initAnchorBar(nav, { scroller }) → { refresh }"
+    "initAnchorBar": "initAnchorBar(nav, { scroller }) → { refresh, destroy }"
   },
   "preview": "examples/document.html",
   "specification": "rules/5-单据.md",
@@ -36,7 +36,23 @@
     ".wb-draft-state",
     ".wb-msg-btn",
     ".wb-messages",
-    ".wb-context"
+    ".wb-context",
+    "wb-section-head",
+    "wb-toolbar",
+    "wb-sep",
+    "wb-find",
+    "wb-total-label",
+    "wb-total",
+    "wb-summary-foot",
+    "wb-payment",
+    "wb-approval",
+    "wb-step-dot",
+    "wb-history",
+    "wb-feedback",
+    "wb-source",
+    "wb-edit-group",
+    "wb-value-state",
+    "wb-doc-group"
   ],
   "variantDimensions": [
     {

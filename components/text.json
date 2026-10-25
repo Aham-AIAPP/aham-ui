@@ -1,0 +1,32 @@
+{
+  "slug": "text",
+  "name": "次要文字和链接",
+  "schemaVersion": 3,
+  "implementation": "aham.css",
+  "preview": "examples/controls.html",
+  "intent": "元数据、补充说明、计数和正文链接的文字样式",
+  "specification": "rules/2-视觉.md#22-主色状态色和分类色",
+  "classes": [
+    "wb-meta",
+    "wb-note",
+    "wb-link"
+  ],
+  "markup": {
+    "meta": "<span class=\"wb-meta\">2026-10-25 更新</span>",
+    "note": "<p class=\"wb-note\">只显示最近 90 天的记录。</p>",
+    "link": "<button type=\"button\" class=\"wb-link\">查看全部</button>"
+  },
+  "rules": [
+    "元数据和说明用次要文字色 --wb-muted",
+    "正文链接用正文色加 1px 下划线，悬停时下划线变成正文色",
+    "链接不用主色",
+    "像链接的按钮用 button.wb-link，跳转用 a.wb-link"
+  ],
+  "accessibility": [
+    "次要文字对白底达到 4.5:1"
+  ],
+  "doNotInvent": [
+    "蓝色文字链接",
+    "用斜体表示说明"
+  ]
+}

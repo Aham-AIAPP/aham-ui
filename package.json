@@ -15,7 +15,7 @@
   "files": ["aham.css", "aham.js", "aham.d.ts", "tokens.json", "assets/", "components/", "rules/", "设计理念.md", "AGENTS.md"],
   "scripts": {
     "build": "node scripts/build.mjs",
-    "check": "node scripts/build.mjs --check && node scripts/lint.mjs && node scripts/theme.mjs --check && node --test"
+    "check": "node scripts/build.mjs --check && node scripts/lint.mjs && node scripts/contracts.mjs && node scripts/theme.mjs --check && node --test"
   },
   "engines": { "node": ">=20" }
 }

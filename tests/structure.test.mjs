@@ -242,3 +242,9 @@ test('the counts written in the docs match the repository', () => {
     assert.doesNotMatch(read(f), /\d+ 份契约/, `${f}: write no contract count; components/index.json lists them`);
   }
 });
+
+test('contracts match components/schema.json and claim every class (scripts/contracts.mjs)', async () => {
+  const { contracts } = await import('../scripts/contracts.mjs');
+  const { errors } = await contracts();
+  assert.deepEqual(errors, []);
+});

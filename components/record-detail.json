@@ -9,6 +9,15 @@
   "intent": "无明细表的记录详情页：页眉位置与上下条、居中正文、288px 属性栏",
   "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
+  "classes": [
+    "wb-detail-body",
+    "wb-related",
+    "wb-detail-title",
+    "wb-detail-meta",
+    "wb-detail-section",
+    "wb-section-heading",
+    "wb-divider"
+  ],
   "variantDimensions": [
     {
       "axis": "context",

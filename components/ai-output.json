@@ -9,7 +9,11 @@
   "reference": "examples/record.html",
   "intent": "AI 生成的摘要、草稿或建议说明：标记、逐段输出、依据、一个主操作；人决定是否采纳",
   "specification": "rules/8-AI协作.md#83-生成过程",
-  "api": "createAIOutput(host, { title, sources?, consent?, needsConsent?, generate({ signal }), adoptLabel?, onAdopt, onEdit?, onDiscard? }) → { run, stop, remove, text, element }；aiEnabled() / setAIEnabled(on)",
+  "api": "createAIOutput(host, { title, sources?, consent?, needsConsent?, generate({ signal }), adoptLabel?, onAdopt, onEdit?, onDiscard? }) → { run, stop, remove, text, element, destroy }；aiEnabled() / setAIEnabled(on)",
+  "classes": [
+    "wb-ai-stop",
+    "wb-ai-error"
+  ],
   "variantDimensions": [
     {
       "axis": "state",

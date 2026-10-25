@@ -9,7 +9,14 @@
   "specification": "rules/4-页面.md#46-显示选项",
   "preview": "examples/parts-filter.html",
   "reference": "examples/list.html",
-  "api": "initDisplay({ root, trigger, groups, sorts, columns, value, defaults, onChange })",
+  "api": "initDisplay({ root, trigger, groups, sorts, columns, value, defaults, onChange }) → { get, set, destroy }",
+  "classes": [
+    "wb-pop-title",
+    "wb-pop-section",
+    "wb-pop-field",
+    "wb-pop-row",
+    "wb-pop-foot"
+  ],
   "variantDimensions": [
     {
       "axis": "state",

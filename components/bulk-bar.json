@@ -8,6 +8,9 @@
   "implementation": "aham.css",
   "behavior": "aham.js",
   "intent": "勾选多行后替换页眉第 2 条，提供批量操作",
+  "classes": [
+    "wb-bulk-count"
+  ],
   "variantDimensions": [
     {
       "axis": "scope",

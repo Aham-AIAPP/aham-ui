@@ -9,7 +9,10 @@
   "reference": "examples/parts-files.html",
   "specification": "rules/5-单据.md#513-附件多层明细和版本对比",
   "intent": "树形明细表（BOM、总成装配）：层级缩进、展开折叠、按层汇总，行级键盘操作",
-  "api": "initTreeTable(table, { onToggle, onMove }) → { refresh, expandAll, collapseAll, current, focus }；treeTotals(rows, value) → Map",
+  "api": "initTreeTable(table, { onToggle, onMove }) → { refresh, expandAll, collapseAll, current, focus, destroy }；treeTotals(rows, value) → Map",
+  "classes": [
+    "wb-tree-table"
+  ],
   "variantDimensions": [
     {
       "axis": "depth",

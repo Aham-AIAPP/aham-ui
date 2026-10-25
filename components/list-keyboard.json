@@ -9,7 +9,7 @@
   "intent": "Linear 式列表键盘：当前行在 Tab 顺序里，方向键移动，空格预览，Enter 打开，x 勾选",
   "specification": "rules/4-页面.md#47-列表键盘和预览",
   "reference": "examples/list.html",
-  "api": "initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRange }) → { refresh, current, focus }",
+  "api": "initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRange }) → { refresh, current, focus, destroy }",
   "variantDimensions": [
     {
       "axis": "preview",

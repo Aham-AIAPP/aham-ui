@@ -6,9 +6,9 @@
   "name": "外框",
   "intent": "侧栏、页眉、内容区和侧面板",
   "api": {
-    "initShell": "initShell(root) → { set, isOpen, theme }",
-    "initPanels": "initPanels(root) → { show, hide }",
-    "initTheme": "initTheme(root)"
+    "initShell": "initShell(root) → { set, isOpen, theme, destroy }",
+    "initPanels": "initPanels(root) → { show(id, { focus, layer, returnTo }), current, destroy }",
+    "initTheme": "initTheme(root) → { set, get, fromUrl, destroy }"
   },
   "preview": "examples/shell.html",
   "specification": "rules/4-页面.md#41-外框",
@@ -30,7 +30,19 @@
     ".wb-header",
     ".wb-header-row",
     ".wb-layout",
-    ".wb-panel"
+    ".wb-panel",
+    "wb-crumbs",
+    "wb-crumbs-meta",
+    "wb-scrim",
+    "wb-header-lead",
+    "wb-header-trail",
+    "wb-count",
+    "wb-page-head",
+    "wb-page-head-lead",
+    "wb-page-head-trail",
+    "wb-tabs-bar",
+    "wb-tabs",
+    "wb-search"
   ],
   "keyboard": {
     "mod+b": "展开或收起侧栏",

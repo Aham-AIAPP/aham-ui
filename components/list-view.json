@@ -8,6 +8,22 @@
   "implementation": "aham.css",
   "behavior": "aham.js",
   "intent": "工作台列表页：单行列表、分组、翻页与空结果",
+  "classes": [
+    "wb-table-scroll",
+    "wb-cell-sub",
+    "wb-table-hint",
+    "wb-sort",
+    "wb-list",
+    "wb-list-scroll",
+    "wb-toggle-chips",
+    "wb-check-hit",
+    "wb-group-head",
+    "wb-group-toggle",
+    "wb-group-count",
+    "wb-empty",
+    "wb-pager",
+    "wb-peek"
+  ],
   "variantDimensions": [
     {
       "axis": "density",

@@ -9,7 +9,7 @@
   "intent": "行的右键菜单：分组动作，下级选项原地替换",
   "specification": "rules/7-键盘与命令.md#74-右键菜单",
   "reference": "examples/list.html",
-  "api": "initContextMenu({ root, target, rowSelector, items(row) }) → { open(row, point?) }",
+  "api": "initContextMenu({ root, target, rowSelector, items(row) }) → { open(row, point?), destroy }",
   "variantDimensions": [
     {
       "axis": "level",
