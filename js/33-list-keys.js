@@ -53,7 +53,8 @@ export function initListKeys({ table, onPreview, onOpen, onToggle, onMove, onRan
       }
       case 'Home': e.preventDefault(); focusRow(list[0]); break;
       case 'End': e.preventDefault(); focusRow(list[list.length - 1]); break;
-      case ' ': e.preventDefault(); onPreview?.(idOf(tr)); break;
+      // Preview is optional (rules/4-页面.md 4.7): without onPreview the space bar keeps scrolling the page.
+      case ' ': if (onPreview) { e.preventDefault(); onPreview(idOf(tr)); } break;
       case 'Enter': e.preventDefault(); onOpen?.(idOf(tr)); break;
       case 'x': case 'X': e.preventDefault(); anchor = idOf(tr); onToggle?.(idOf(tr)); break;
     }

@@ -11,6 +11,7 @@
   "classes": [
     "wb-table-scroll",
     "wb-cell-sub",
+    "wb-cell-wait",
     "wb-table-hint",
     "wb-sort",
     "wb-list",

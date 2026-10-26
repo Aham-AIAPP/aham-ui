@@ -33,11 +33,11 @@ function render() {
     const open = !shut.has(stage);
     return `<tbody><tr class="wb-group-head"><th colspan="6" scope="rowgroup"><button type="button" class="wb-group-toggle" data-group="${stage}" aria-expanded="${open}">${icon('chevron-down')}${stageIconHTML({ ...stageState(stage), label: stage })}${stage}<span class="wb-group-count">${list.length}</span></button></th></tr>`
       + (open ? list.map(r => `<tr><td class="wb-cell-meta">${r.code}</td><td class="wb-cell-name"><a class="wb-row-link" href="scene.html">${esc(r.name)}</a></td><td><span class="wb-tag">${esc(r.customer)}</span></td>`
-        + `<td>${r.ai === 'pending' ? `<span class="wb-ai-mark">${icon('ai')}<span>AI 待确认</span></span>` : esc(waitText(r.wait))}</td>`
+        + `<td class="wb-cell-wait">${r.ai === 'pending' ? `<span class="wb-ai-mark">${icon('ai')}<span>AI 待确认</span></span>` : esc(waitText(r.wait))}</td>`
         + `<td class="number"><span class="wb-next-date${r.overdue ? ' is-overdue' : ''}">${r.overdue ? `逾期 ${r.overdue} 天` : r.due ? `计划 ${r.due}` : r.updated}</span></td><td class="wb-cell-end">${personHTML(r.owner, { compact: true })}</td></tr>`).join('') : '')
       + '</tbody>';
   }).join('');
-  table.style.minWidth = `${88 + 240 + 112 + 260 + 96 + 44}px`;
+  table.style.setProperty('--wb-table-min', `${88 + 240 + 112 + 260 + 96 + 44}px`);
   table.innerHTML = '<colgroup><col style="width:88px"><col><col style="width:112px"><col style="width:260px"><col style="width:96px"><col style="width:44px"></colgroup>'
     + '<thead class="wb-sr-only"><tr><th scope="col">编号</th><th scope="col">场景</th><th scope="col">客户</th><th scope="col">下一步</th><th scope="col">日期</th><th scope="col">负责人</th></tr></thead>' + body;
 }

@@ -9,6 +9,12 @@ export function navCommands(root) {
   return [...root.querySelectorAll('.wb-rail [data-go]')].filter(a => a.getAttribute('aria-current') !== 'page')
     .map(a => ({ id: `go-${a.dataset.go}`, label: [...a.children].find(c => c.tagName === 'SPAN' && !c.classList.contains('wb-nav-count'))?.textContent.trim() ?? a.textContent.trim(), keys: `g ${a.dataset.go}`, run: () => a.click() }));
 }
+// Page actions for the palette, read from the text buttons in the header trail (rules/7-键盘与命令.md 7.2).
+// The header and the palette then share one definition: label from the button text, keys from data-keys.
+export function pageCommands(root) {
+  return [...root.querySelectorAll('.wb-header-trail button.wb-btn')].filter(b => !b.disabled && !b.hidden && b.textContent.trim())
+    .map((b, i) => ({ id: b.id ? `page-${b.id}` : `page-${i}`, label: b.dataset.tooltip || b.textContent.trim(), ...(b.dataset.keys ? { keys: b.dataset.keys } : {}), run: () => b.click() }));
+}
 // shell: true adds the commands every workbench page has after the page's own groups: 界面 (sidebar, panels, theme),
 // 账户 (accountItems), 跳转 (sidebar items, G + letter) and 帮助 (keyboard shortcuts, also on ?).
 export function initPalette({ root, groups, context, shell = false, accountItems }) {
