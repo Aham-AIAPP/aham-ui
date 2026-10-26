@@ -92,6 +92,16 @@
  .aham-workbench .wb-check-hit {min-height:calc(var(--wb-touch) - 1px)}
  .aham-workbench .wb-list-rows,.aham-workbench .wb-list[data-list-density] .wb-list-rows {--wb-list-row:var(--wb-touch);--wb-check-col:var(--wb-touch)}
  .aham-workbench .wb-list-rows td button {min-height:calc(var(--wb-touch) - 1px)}
+ /* data-mobile=stack (rules/4-页面.md 4.3): each row becomes two lines, name then 在等谁, avatar on the right; other cells hide. */
+ .aham-workbench .wb-list-rows[data-mobile=stack],.aham-workbench .wb-list-rows[data-mobile=stack] tbody {display:block;width:100%;min-width:0}
+ .aham-workbench .wb-list-rows[data-mobile=stack] colgroup {display:none}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tbody tr:not(.wb-group-head) {display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:var(--wb-s3);padding:var(--wb-s2) var(--wb-s4);border-bottom:var(--wb-hairline) solid var(--wb-line-soft)}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tbody tr:not(.wb-group-head) td {display:none;height:auto;padding:0;border:0}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tbody tr:not(.wb-group-head) td.wb-cell-name {display:block;grid-column:1;white-space:normal}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tbody tr:not(.wb-group-head) td.wb-cell-wait {display:block;grid-column:1;grid-row:2;color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:normal}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tbody tr:not(.wb-group-head) td.wb-cell-end {display:block;grid-column:2;grid-row:1 / span 2}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tr.wb-group-head {display:block}
+ .aham-workbench .wb-list-rows[data-mobile=stack] tr.wb-group-head th {display:flex;align-items:center}
 }
 @media (pointer:coarse) {
  .aham-workbench .wb-list,.aham-workbench .wb-list[data-list-density] {--wb-row:var(--wb-touch)}

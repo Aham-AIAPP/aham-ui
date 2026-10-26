@@ -49,6 +49,7 @@ export interface PaletteContext { id: unknown; code?: string; label: string }
 export interface PaletteHandle extends Handle { open(start?: { label: string; items: PaletteItem[] }): void; close(): void; openAt(label: string, items: PaletteItem[]): void; showShortcuts(): void }
 export function initPalette(options: { root: Root; groups(context: PaletteContext | null): PaletteGroup[]; context?(): PaletteContext | null; shell?: boolean; accountItems?(): PaletteItem[] }): PaletteHandle;
 export function navCommands(root: Root): PaletteItem[];
+export function pageCommands(root: Root): PaletteItem[];
 export function shortcutItems(): PaletteItem[];
 export function shellGroups(root: Root, options?: { accountItems?(): PaletteItem[]; showShortcuts?(): void }): PaletteGroup[];
 
