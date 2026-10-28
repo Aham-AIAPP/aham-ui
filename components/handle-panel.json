@@ -1,0 +1,53 @@
+{
+  "slug": "handle-panel",
+  "name": "处理面板",
+  "schemaVersion": 3,
+  "confidence": "high",
+  "implementation": "aham.css",
+  "preview": "examples/parts-record.html",
+  "intent": "先选怎么处理一件待办，再只填这种方式要的内容，底部写明提交后会发生什么",
+  "specification": "rules/3-控件.md#320-处理面板",
+  "classes": [
+    ".wb-handle",
+    ".wb-handle-body",
+    ".wb-handle-chip",
+    ".wb-handle-chip-btn",
+    ".wb-handle-chips",
+    ".wb-handle-due",
+    ".wb-handle-empty",
+    ".wb-handle-fields",
+    ".wb-handle-foot",
+    ".wb-handle-head",
+    ".wb-handle-inline",
+    ".wb-handle-label",
+    ".wb-handle-mode",
+    ".wb-handle-mode-cancel",
+    ".wb-handle-mode-complete",
+    ".wb-handle-modes",
+    ".wb-handle-more",
+    ".wb-handle-note",
+    ".wb-handle-row",
+    ".wb-handle-sum",
+    ".wb-handle-task"
+  ],
+  "markup": {
+    "panel": "<form class=\"wb-handle\"><div class=\"wb-handle-head\"><div><h2>处理任务</h2><p>远川精密 · <span class=\"wb-handle-due\">已逾期 2 天</span></p></div></div><div class=\"wb-handle-body\"><p class=\"wb-handle-task\"><span>任务内容</span>约王卓评审方案初稿</p><fieldset class=\"wb-handle-modes\"><legend>选择处理方式</legend><label class=\"wb-handle-mode wb-handle-mode-complete\"><input type=\"radio\" name=\"mode\" checked><b>完成任务</b><span>记一条跟进</span></label><label class=\"wb-handle-mode wb-handle-mode-cancel\"><input type=\"radio\" name=\"mode\"><b>取消任务</b><span>写明原因</span></label></fieldset><fieldset class=\"wb-handle-fields\"><div class=\"wb-handle-row\"><label class=\"wb-handle-label\">办理结果 <em>*</em></label><textarea></textarea></div><div class=\"wb-handle-row\"><div class=\"wb-handle-inline\"><div class=\"wb-handle-chips\"><label class=\"wb-handle-chip\"><input type=\"radio\"><span>电话</span></label><button class=\"wb-handle-chip-btn\" type=\"button\">明天</button></div><span class=\"wb-handle-note\">执行人：本人</span></div></div><details class=\"wb-handle-more\"><summary>补充</summary></details><p class=\"wb-handle-sum\">提交后：……</p><p class=\"wb-handle-empty\">没有可用的处理方式</p></fieldset></div><div class=\"wb-handle-foot\"><button class=\"wb-btn primary\" type=\"submit\">完成任务</button></div></form>"
+  },
+  "rules": [
+    "方式是卡片：名称加一句说明；没有权限的方式不出现",
+    "只显示选中方式的字段，其他方式的字段隐藏并停用",
+    "必填只留一项，其余带默认值；常用日期给快捷按钮",
+    "不常填的补充收进 .wb-handle-more",
+    "字段下写「提交后：……」.wb-handle-sum；提交按钮文字跟着方式变，取消用危险色",
+    "全站一个面板：弹窗里用 .wb-handle，详情页里加 .is-inline"
+  ],
+  "accessibility": [
+    "方式用 radio 组，fieldset 带 legend",
+    "弹窗里第一行写任务名和到期情况，关闭按钮有 aria-label"
+  ],
+  "doNotInvent": [
+    "每种方式各开一个弹窗",
+    "提交后再跳一个确认页才写入轻操作",
+    "按钮只写「提交」"
+  ]
+}

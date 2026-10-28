@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aham UI · 部件：记录详情的首屏</title>
+  <link rel="stylesheet" href="../aham.css">
+  <link rel="stylesheet" href="_preview.css">
+  <style>
+.pv-record { max-width: 960px; }
+  </style>
+</head>
+<body>
+<div class="aham-workbench wb-bare" data-theme="light">
+<main class="pv">
+  <header><h1>记录详情的首屏 · 关键信息、带事件的阶段条、工作记录、还缺什么、处理面板</h1></header>
+  <p>9.2 收录，来自一个 CRM 的商机、客户、线索等八类详情页。顺序：标题 → 要点 → 关键信息（最后一格是下一步）→ 阶段条 → 工作记录。规则见 rules/3-控件.md 3.16–3.20、rules/4-页面.md 4.8。示例数据全部虚构。</p>
+
+  <section class="pv-story pv-record">
+    <div class="pv-label">要点 · 还缺什么</div>
+    <div class="wb-gaps" role="note"><span class="wb-gaps-title">还缺</span><ul><li title="谁最后拍板？预算归哪个部门？">决策人</li><li title="客户为什么现在要做，不做会怎样？">为什么现在做</li><li>竞争情况</li></ul></div>
+    <section class="wb-record-summary" aria-label="需求概要">
+      <div class="wb-record-summary-head"><h2>需求概要</h2><span class="chip">4 项</span><span class="wb-grow"></span><a class="wb-link" href="#">看完整需求描述</a><button type="button" class="wb-btn ghost sm">编辑</button></div>
+      <p class="is-lead">远川精密三个车间的生产数据打通，年底前上线一期</p>
+      <ol><li>报工数据当天回写 ERP</li><li>设备停机自动报警</li><li>质检记录可追溯到批次</li><li>车间看板按班组显示</li></ol>
+    </section>
+  </section>
+
+  <section class="pv-story pv-record">
+    <div class="pv-label">关键信息 · 金额一格放大，下一步一格带「处理」</div>
+    <section class="wb-key-facts" aria-label="关键数字">
+      <div class="wb-key-fact is-primary"><span class="wb-key-fact-k">预计签约额</span><span class="wb-key-fact-v">86.0 万</span><span class="wb-key-fact-s">加权 34.4 万 · 赢率 40%</span></div>
+      <div class="wb-key-fact"><span class="wb-key-fact-k">预计签约日</span><span class="wb-key-fact-v">12-20</span><span class="wb-key-fact-s">2026 年 · 还有 53 天</span></div>
+      <div class="wb-key-fact is-risk"><span class="wb-key-fact-k">当前阶段</span><span class="wb-key-fact-v">方案论证</span><span class="wb-key-fact-s">已停留 19 天（建议 14 天）</span></div>
+      <div class="wb-key-fact is-next tone-risk"><span class="wb-key-fact-k">下一步 · 已逾期 2 天</span><span class="wb-key-fact-text">约王卓评审方案初稿</span><span class="wb-key-fact-actions"><span class="wb-key-fact-s">执行人 林悦</span><button type="button" class="wb-btn sm">处理</button></span></div>
+    </section>
+  </section>
+
+  <section class="pv-story pv-record">
+    <div class="pv-label">带事件的阶段条 · 线上的点是每条记录，当前阶段那段按停留时间拉长</div>
+    <section class="wb-stage-track" aria-label="推进阶段">
+      <div class="wb-stage-track-head"><h2>推进阶段</h2><span class="wb-stage-track-note">线上的点是每次跟进</span><span class="wb-grow"></span><span class="chip">6 次跟进 · 最近 10-26</span></div>
+      <div class="wb-stage-track-scroll"><div class="wb-stage-track-rail" role="img" aria-label="推进阶段：当前在方案论证，共 6 次跟进">
+        <div class="wb-stage-track-line"><div class="wb-stage-track-done wb-fill-62"></div></div>
+        <a class="wb-stage-event wb-at-9 t1" href="#" title="09-02 · 电话"><b>09-02</b><i></i></a>
+        <a class="wb-stage-event wb-at-20 is-strong t1" href="#" title="09-15 · 上门拜访"><b>09-15 拜访</b><i></i></a>
+        <a class="wb-stage-event wb-at-31 t1" href="#" title="09-29 · 微信"><b>09-29</b><i></i></a>
+        <a class="wb-stage-event wb-at-42 is-strong t1" href="#" title="10-09 · 上门拜访"><b>10-09 拜访</b><i></i></a>
+        <a class="wb-stage-event wb-at-48 t2" href="#" title="10-14 · 电话"><b>10-14</b><i></i></a>
+        <a class="wb-stage-event wb-at-55 t1" href="#" title="10-26 · 电话"><b>10-26</b><i></i></a>
+        <div class="wb-stage-today wb-at-62"><span>今天</span></div>
+        <div class="wb-stage-stop wb-at-4 is-first" data-state="past"><i></i><b>初步接触</b><small>08-28</small></div>
+        <div class="wb-stage-stop wb-at-17" data-state="past"><i></i><b>需求调研</b><small>09-10</small></div>
+        <div class="wb-stage-stop wb-at-30" data-state="now"><i></i><b>方案论证</b><small>10-09 起 · 19 天</small></div>
+        <div class="wb-stage-stop wb-at-70" data-state="future"><i></i><b>报价</b><small>建议 7 天</small></div>
+        <div class="wb-stage-stop wb-at-83" data-state="future"><i></i><b>商务谈判</b><small>建议 14 天</small></div>
+        <div class="wb-stage-stop wb-at-96 is-last" data-state="end"><i></i><b>签约</b><small>预计 12-20</small></div>
+      </div></div>
+      <div class="wb-stage-track-foot"><span class="wb-stage-track-legend"><i class="is-strong"></i>上门拜访<i></i>电话 / 微信<em></em>今天</span><span class="wb-stage-track-gap">10-09 到 10-26，17 天没有跟进</span></div>
+    </section>
+  </section>
+
+  <section class="pv-story pv-record">
+    <div class="pv-label">工作记录 · 开放任务在最上面，最新的记录在上</div>
+    <div class="wb-worklog-open" aria-label="待处理任务">
+      <div class="wb-worklog-task is-overdue"><span class="wb-worklog-due">10-26 · 已逾期</span><span class="wb-worklog-goal"><b>约王卓评审方案初稿</b><small>林悦 · TASK-0187</small></span><span class="wb-worklog-actions"><button type="button" class="wb-btn sm">处理</button></span></div>
+      <div class="wb-worklog-task"><span class="wb-worklog-due">11-03</span><span class="wb-worklog-goal"><b>发报价单</b><small>林悦 · TASK-0191</small></span><span class="wb-worklog-actions"><button type="button" class="wb-btn sm">处理</button></span></div>
+    </div>
+    <ol class="wb-worklog">
+      <li class="wb-worklog-item"><div class="wb-worklog-meta"><b>电话</b><span class="wb-worklog-tag">方案沟通</span><span>2026-10-26 15:20</span><span>林悦</span><a class="wb-worklog-code" href="#">OPFU-0412</a></div>
+        <div class="wb-worklog-body">王卓确认先做一车间试点，方案里补设备清单。</div>
+        <div class="wb-worklog-note"><span>当前问题</span>预算要等集团批复</div>
+        <div class="wb-worklog-note is-next"><span>下一步 · 10-30</span>约王卓评审方案初稿</div></li>
+      <li class="wb-worklog-item is-task"><div class="wb-worklog-meta"><b>任务已完成</b><span>2026-10-14 10:02</span><span>林悦</span><a class="wb-worklog-code" href="#">TASK-0170</a></div>
+        <div class="wb-worklog-body">把调研纪要发给客户确认</div></li>
+      <li class="wb-worklog-item is-strong"><div class="wb-worklog-meta"><b>上门拜访</b><span>2026-10-09 14:00</span><span>林悦</span><a class="wb-worklog-code" href="#">OPFU-0388</a></div>
+        <div class="wb-worklog-body">参观三个车间，记下 12 台设备的接口情况。</div>
+        <div class="wb-worklog-closed">同时完成任务 <a href="#">TASK-0168</a>：约车间主任现场调研</div></li>
+    </ol>
+    <details class="wb-worklog-more"><summary>查看更早记录 · 3 条</summary><ol class="wb-worklog"><li class="wb-worklog-item"><div class="wb-worklog-meta"><b>电话</b><span>2026-09-02 09:30</span><span>林悦</span></div><div class="wb-worklog-body">第一次联系，客户在找 MES 供应商。</div></li></ol></details>
+  </section>
+
+  <section class="pv-story pv-record">
+    <div class="pv-label">处理面板 · 先选怎么处理，只出这种方式要填的内容，底部写明提交后会发生什么</div>
+    <div class="pv-frame"><form class="wb-handle is-inline" action="#">
+      <div class="wb-handle-body">
+        <fieldset class="wb-handle-modes"><legend>选择处理方式</legend>
+          <label class="wb-handle-mode wb-handle-mode-complete"><input type="radio" name="mode" checked><b>完成任务</b><span>记一条跟进，任务随之完成</span></label>
+          <label class="wb-handle-mode"><input type="radio" name="mode"><b>调整日期</b><span>改计划完成日期，写明原因</span></label>
+          <label class="wb-handle-mode"><input type="radio" name="mode"><b>转派他人</b><span>换一位执行人</span></label>
+          <label class="wb-handle-mode wb-handle-mode-cancel"><input type="radio" name="mode"><b>取消任务</b><span>不再做，写明原因</span></label>
+        </fieldset>
+        <fieldset class="wb-handle-fields">
+          <div class="wb-handle-row"><label class="wb-handle-label" for="pv-h-r">办理结果 <em>*</em></label><textarea class="wb-field" id="pv-h-r" rows="3" placeholder="这次推动了什么、客户确认了什么"></textarea></div>
+          <div class="wb-handle-row"><span class="wb-handle-label">沟通方式</span><div class="wb-handle-chips"><label class="wb-handle-chip"><input type="radio" name="ch" checked><span>电话</span></label><label class="wb-handle-chip"><input type="radio" name="ch"><span>微信</span></label><label class="wb-handle-chip"><input type="radio" name="ch"><span>上门拜访</span></label></div></div>
+          <div class="wb-handle-row"><label class="wb-handle-label" for="pv-h-n">后续安排（选填）</label><div class="wb-handle-inline"><input class="wb-field" id="pv-h-n" type="date"><div class="wb-handle-chips"><button class="wb-handle-chip-btn" type="button">明天</button><button class="wb-handle-chip-btn on" type="button">下周一</button></div><span class="wb-handle-note">执行人：本人</span></div></div>
+          <details class="wb-handle-more"><summary>补充当前问题、需要的支持</summary><div class="wb-handle-row"><label class="wb-handle-label" for="pv-h-p">当前问题</label><input class="wb-field" id="pv-h-p"></div></details>
+          <p class="wb-handle-sum">提交后：记一条电话跟进，任务 TASK-0187 完成，下周一新建一条跟进任务。</p>
+        </fieldset>
+      </div>
+      <div class="wb-handle-foot"><button class="wb-btn primary" type="button">完成任务</button></div>
+    </form></div>
+  </section>
+</main>
+</div>
+</body>
+</html>

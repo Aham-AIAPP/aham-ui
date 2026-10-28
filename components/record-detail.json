@@ -16,7 +16,10 @@
     "wb-detail-meta",
     "wb-detail-section",
     "wb-section-heading",
-    "wb-divider"
+    "wb-divider",
+    "wb-record-summary",
+    "wb-record-summary-head",
+    "wb-record-summary-tags"
   ],
   "variantDimensions": [
     {
@@ -63,7 +66,8 @@
     "主内容铺满，边距同单据页（--wb-page-gutter），正文段落限宽 640px（--wb-body-width）；属性栏 288px（--wb-panel-props）单独滚动；1024px 及以下属性栏移到正文后方",
     "标题 20px 字重 600；摘要行放阶段图标加文字、编号、负责人",
     "有明细表和金额的单据用单据页（rules/5-单据.md），不用本页型",
-    "动态、修改记录和版本记录默认折叠在页尾一行"
+    "动态、修改记录和版本记录默认折叠在页尾一行",
+    "要点 .wb-record-summary 写这个对象自己的事（需求概要、主营业务、活动目标），放在关键信息上面，底色 --wb-fill"
   ],
   "states": [
     "default",

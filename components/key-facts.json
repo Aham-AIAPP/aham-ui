@@ -1,0 +1,51 @@
+{
+  "slug": "key-facts",
+  "name": "关键信息",
+  "schemaVersion": 3,
+  "confidence": "high",
+  "implementation": "aham.css",
+  "preview": "examples/parts-record.html",
+  "intent": "记录详情页标题下 3–4 个判断推进要用的数，最后一格是下一步",
+  "specification": "rules/3-控件.md#316-关键信息记录详情页",
+  "classes": [
+    ".wb-key-fact",
+    ".wb-key-fact-actions",
+    ".wb-key-fact-k",
+    ".wb-key-fact-s",
+    ".wb-key-fact-text",
+    ".wb-key-fact-v",
+    ".wb-key-facts"
+  ],
+  "variantDimensions": [
+    {
+      "axis": "cell",
+      "values": [
+        "default",
+        "is-primary",
+        "is-risk",
+        "is-warn",
+        "is-muted",
+        "is-next"
+      ]
+    }
+  ],
+  "markup": {
+    "facts": "<section class=\"wb-key-facts\" aria-label=\"关键数字\"><div class=\"wb-key-fact is-primary\"><span class=\"wb-key-fact-k\">预计签约额</span><span class=\"wb-key-fact-v\">86.0 万</span><span class=\"wb-key-fact-s\">加权 34.4 万</span></div><div class=\"wb-key-fact is-next tone-risk\"><span class=\"wb-key-fact-k\">下一步 · 已逾期 2 天</span><span class=\"wb-key-fact-text\">约王卓评审方案初稿</span><span class=\"wb-key-fact-actions\"><span class=\"wb-key-fact-s\">执行人 林悦</span><button type=\"button\" class=\"wb-btn sm\">处理</button></span></div></section>"
+  },
+  "rules": [
+    "3–4 格；一页只放大一格（.is-primary，通常是金额）",
+    "每格写标签、数、一句说明；值是一句话时用 .wb-key-fact-text",
+    "超期、停滞加 .is-risk，快到期 .is-warn，没有数据 .is-muted",
+    "最后一格是下一步 .is-next：标签写到期情况，值写要做的事，下面写执行人和「处理」；逾期加 .tone-risk，今天到期加 .tone-warn",
+    "不放输入框",
+    "1024px 及以下每行三格、下一步独占一行；640px 及以下每行两格"
+  ],
+  "accessibility": [
+    "外框写 aria-label，例如「关键数字」"
+  ],
+  "doNotInvent": [
+    "把属性栏的全部字段搬进关键信息",
+    "两格以上同时放大",
+    "在关键信息里直接改值"
+  ]
+}
