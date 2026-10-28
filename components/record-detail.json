@@ -10,6 +10,7 @@
   "specification": "rules/4-页面.md#48-记录详情页",
   "reference": "examples/record.html",
   "classes": [
+    "wb-detail-head",
     "wb-detail-body",
     "wb-related",
     "wb-detail-title",
@@ -67,7 +68,8 @@
     "标题 20px 字重 600；摘要行放阶段图标加文字、编号、负责人",
     "有明细表和金额的单据用单据页（rules/5-单据.md），不用本页型",
     "动态、修改记录和版本记录默认折叠在页尾一行",
-    "要点 .wb-record-summary 写这个对象自己的事（需求概要、主营业务、活动目标），放在关键信息上面，底色 --wb-fill"
+    "要点 .wb-record-summary 写这个对象自己的事（需求概要、主营业务、活动目标），放在关键信息上面，底色 --wb-fill",
+    "标题和摘要行包在 .wb-detail-head 里，滚动时停在页面上方；滚过 24px 加 .is-stuck，标题收成一行，摘要行一行省略，640px 及以下只留标题；外层已有吸顶页眉时用 --wb-detail-head-top 写页眉高度"
   ],
   "states": [
     "default",

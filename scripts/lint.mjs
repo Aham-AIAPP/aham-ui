@@ -19,8 +19,9 @@ const root = new URL('../', import.meta.url);
 const read = f => readFileSync(new URL(f, root), 'utf8');
 const list = (dir, ext) => readdirSync(new URL(dir, root)).filter(f => ext.some(e => f.endsWith(e))).map(f => `${dir}${f}`);
 
-// Variables set at run time rather than by tokens: --wb-level by the tree table, --wb-cat by [data-cat], --wb-expand-cols by the page.
-export const RUNTIME_VARS = ['level', 'cat', 'expand-cols'];
+// Variables set at run time rather than by tokens: --wb-level by the tree table, --wb-cat by [data-cat], --wb-expand-cols by the page,
+// --wb-detail-head-top by a product whose page scroller already has a stuck header above the record title.
+export const RUNTIME_VARS = ['level', 'cat', 'expand-cols', 'detail-head-top'];
 
 export {PAIRS, contrast} from './lib/contrast.mjs';
 import {PAIRS, contrast, contrastTable} from './lib/contrast.mjs';

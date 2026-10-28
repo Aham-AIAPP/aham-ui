@@ -44,8 +44,8 @@ const activity = [
 
 function renderMain() {
   $('#record-main').innerHTML = `
-    <h1 class="wb-detail-title">${esc(record.name)}</h1>
-    <div class="wb-detail-meta">${metaHtml()}</div>
+    <header class="wb-detail-head"><h1 class="wb-detail-title">${esc(record.name)}</h1>
+    <div class="wb-detail-meta">${metaHtml()}</div></header>
     <div id="next-slot">${nextHtml()}</div>
     <div id="ai-slot"><button type="button" class="wb-btn sm ghost" data-action="ai-summary">${icon('ai')}<span>生成摘要</span></button></div>
     <div class="wb-detail-body"><p>主营精密结构件和汽车零部件加工，两个厂区共 46 台数控设备。现有用友 U8 管财务和库存，车间报工还在用纸质派工单。</p><p>今年关注两件事：设备开动率看不清，客户审核要追溯到批次。双方约定先做一期生产执行，设备接口清单由客户设备科在调研前提供。</p></div>
@@ -276,3 +276,7 @@ function showState(name) {
 root.addEventListener('click', e => { if (e.target.closest('[data-state-action="retry"]')) showState('loading'); });
 const startState = new URLSearchParams(location.search).get('state');
 if (startState in STATES) showState(startState);
+
+// 标题和摘要行停在页面上方（rules/4-页面.md 4.8）：内容滚过 24px 后收成一行。
+const detailScroll = document.querySelector('.wb-detail-scroll');
+detailScroll?.addEventListener('scroll', () => document.querySelector('.wb-detail-head')?.classList.toggle('is-stuck', detailScroll.scrollTop > 24), { passive: true });
