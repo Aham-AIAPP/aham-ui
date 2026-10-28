@@ -4,7 +4,7 @@
     "license": "ISC",
     "version": "lucide-static 1.24.0；ai / stop 两件取自 lucide-react 1.16.0（同为 ISC）",
     "grid": 24,
-    "strokeWidth": 1.5,
+    "strokeWidth": 1.75,
     "style": "outline / round cap+join",
     "color": "currentColor(继承 ink token)",
     "usage": "<svg class=\"icon\"><use href=\"icons/aham-icons.svg#i-search\"/></svg>",
