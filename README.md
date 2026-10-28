@@ -72,7 +72,7 @@ Aham UI 是一套给电脑浏览器里的业务管理系统用的界面规范，
 
 **交给 AI**：把仓库地址 `https://github.com/Aham-AIAPP/aham-ui` 发给 AI，要求按 [AGENTS.md](AGENTS.md) 生成界面。
 
-**在页面里引用**：复制 `aham.css`、`aham.js`、`aham.d.ts` 和 `assets/` 目录；用 npm 的项目可以按标签安装：`npm install github:Aham-AIAPP/aham-ui#v9.2.0`，再 `import 'aham-ui/aham.css'`。React 的接法见 [docs/react.md](docs/react.md)。
+**在页面里引用**：复制 `aham.css`、`aham.js`、`aham.d.ts` 和 `assets/` 目录；用 npm 的项目可以按标签安装：`npm install github:Aham-AIAPP/aham-ui#v9.2.1`，再 `import 'aham-ui/aham.css'`。React 的接法见 [docs/react.md](docs/react.md)。
 
 ```html
 <link rel="stylesheet" href="aham.css">
@@ -94,7 +94,7 @@ npm run check                                   # 生成检查、lint、契约�
 
 ## 版本
 
-当前版本 9.2.0。9.2 新增记录详情页首屏的五个组件：关键信息、带事件的阶段条、工作记录、还缺什么、处理面板。9.0 新增《设计理念》，整体风格借鉴 Linear：220px 文字侧栏、无表头的分组单行列表、铺满的主区加属性栏、两档字号、14px 图标、描边标签、阶段图标、三值生成主题。类名和变量有改动，升级说明见 [CHANGELOG.md](CHANGELOG.md)。
+当前版本 9.2.1。9.2 新增记录详情页首屏的五个组件：关键信息、带事件的阶段条、工作记录、还缺什么、处理面板。9.0 新增《设计理念》，整体风格借鉴 Linear：220px 文字侧栏、无表头的分组单行列表、铺满的主区加属性栏、两档字号、14px 图标、描边标签、阶段图标、三值生成主题。类名和变量有改动，升级说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md) · [CONTRIBUTING](CONTRIBUTING.md) · [ORIGIN](ORIGIN.md) · [MIT](LICENSE)
 

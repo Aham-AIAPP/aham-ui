@@ -7,6 +7,13 @@
 /* The main column fills the work surface with the same edges as a document page; only running text keeps a 640px measure. */
 :where(.aham-workbench) .wb-detail-main{padding:var(--wb-s5) var(--wb-page-gutter) var(--wb-s8)}
 :where(.aham-workbench) .wb-detail-title{font-size:var(--wb-title);font-weight:600;line-height:1.3}
+/* Title and summary line stay under the header while the record scrolls (9.2.1). The page script adds .is-stuck once
+   the content has scrolled 24px: the title shrinks to one line and the summary line keeps one line; on phones only the
+   title stays. --wb-detail-head-top is the height of anything already stuck above it (0 inside .wb-detail-scroll). */
+:where(.aham-workbench) .wb-detail-head{position:sticky;top:var(--wb-detail-head-top, 0px);z-index:var(--wb-z-pop);margin-block-end:var(--wb-s4);padding-block:var(--wb-s2);background:var(--wb-bg);border-bottom:var(--wb-hairline) solid transparent}
+:where(.aham-workbench) .wb-detail-head.is-stuck{border-bottom-color:var(--wb-line)}
+:where(.aham-workbench) .wb-detail-head.is-stuck .wb-detail-title{font-size:calc(var(--wb-title) * .8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(.aham-workbench) .wb-detail-head.is-stuck .wb-detail-meta{flex-wrap:nowrap;margin-block-start:2px;overflow:hidden;white-space:nowrap}
 :where(.aham-workbench) .wb-detail-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3);margin-block-start:var(--wb-s2);color:var(--wb-muted)}
 /* The next-step line sits one step below the meta line; a text button that opens a line in the reading column
    moves left by its own padding so its text lines up with the title. */
@@ -85,6 +92,7 @@
  .aham-workbench .wb-detail>.wb-panel {border-top:var(--wb-hairline) solid var(--wb-line)}
 }
 @media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-detail-head.is-stuck .wb-detail-meta {display:none}
  .aham-workbench .wb-detail {overflow:visible}
  .aham-workbench .wb-detail-main {padding:var(--wb-s4)}
  .aham-workbench .wb-problem {grid-template-columns:minmax(0,1fr);gap:var(--wb-s4)}
