@@ -105,7 +105,7 @@ const BANNED = ['承接', '赋能', '沉淀', '落地', '抓手', '闭环', '粒
 test('every rule chapter names the design principles it carries out', () => {
   for (const f of RULES) assert.ok(/本章落实设计理念的原则 \d/.test(read(f).split('\n').slice(0, 4).join('\n')), f);
   const philosophy = read('设计理念.md');
-  for (let n = 1; n <= 15; n++) assert.ok(philosophy.includes(`**原则 ${n}　`), `设计理念.md 原则 ${n}`);
+  for (let n = 1; n <= 16; n++) assert.ok(philosophy.includes(`**原则 ${n}　`), `设计理念.md 原则 ${n}`);
   for (const f of ['README.md', 'AGENTS.md']) assert.ok(read(f).includes('设计理念.md'), `${f} links the philosophy`);
 });
 
