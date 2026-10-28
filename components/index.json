@@ -348,6 +348,41 @@
       "group": "反馈",
       "specification": "rules/6-反馈.md#68-忙碌和占位加载",
       "preview": "examples/controls.html"
+    },
+    {
+      "slug": "key-facts",
+      "name": "关键信息",
+      "group": "组合",
+      "specification": "rules/3-控件.md#316-关键信息记录详情页",
+      "preview": "examples/parts-record.html"
+    },
+    {
+      "slug": "stage-track",
+      "name": "带事件的阶段条",
+      "group": "组合",
+      "specification": "rules/3-控件.md#317-带事件的阶段条",
+      "preview": "examples/parts-record.html"
+    },
+    {
+      "slug": "worklog",
+      "name": "工作记录",
+      "group": "组合",
+      "specification": "rules/3-控件.md#318-工作记录",
+      "preview": "examples/parts-record.html"
+    },
+    {
+      "slug": "gaps",
+      "name": "还缺什么",
+      "group": "组合",
+      "specification": "rules/3-控件.md#319-还缺什么",
+      "preview": "examples/parts-record.html"
+    },
+    {
+      "slug": "handle-panel",
+      "name": "处理面板",
+      "group": "组合",
+      "specification": "rules/3-控件.md#320-处理面板",
+      "preview": "examples/parts-record.html"
     }
   ]
 }

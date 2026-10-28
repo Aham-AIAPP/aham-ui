@@ -1,0 +1,29 @@
+{
+  "slug": "gaps",
+  "name": "还缺什么",
+  "schemaVersion": 3,
+  "confidence": "high",
+  "implementation": "aham.css",
+  "preview": "examples/parts-record.html",
+  "intent": "一条提示，列出这条记录还缺的信息，悬停看该问的问题",
+  "specification": "rules/3-控件.md#319-还缺什么",
+  "classes": [
+    ".wb-gaps",
+    ".wb-gaps-title"
+  ],
+  "markup": {
+    "gaps": "<div class=\"wb-gaps\" role=\"note\"><span class=\"wb-gaps-title\">还缺</span><ul><li title=\"谁最后拍板？\">决策人</li></ul></div>"
+  },
+  "rules": [
+    "放在标题下、关键信息上面；没有缺的就不显示",
+    "每项一个圆角标签，title 写该问对方的问题",
+    "缺的是信息；要某个人去做的事写成下一步"
+  ],
+  "accessibility": [
+    "外框 role=\"note\""
+  ],
+  "doNotInvent": [
+    "写成「请补充」这类泛泛的话",
+    "把任务列进还缺什么"
+  ]
+}

@@ -1,0 +1,182 @@
+/* Record page parts (9.2, rules/3-控件.md 3.16–3.20 and rules/4-页面.md 4.8). Proven in a CRM: key facts under the
+   title, a stage track that marks every record on the line, a work log with open tasks on top, a "still missing"
+   strip, and a handle panel that asks how to close a task before showing its fields. Positions on the stage track
+   are classes (wb-at and wb-fill plus 0–100), so pages never write inline styles. */
+:where(.aham-workbench) .wb-record-summary{margin:0 0 16px;padding:12px 14px;border-radius:var(--wb-radius-lg);background:var(--wb-fill);min-width:0;}
+:where(.aham-workbench) .wb-record-summary-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px;}
+:where(.aham-workbench) .wb-record-summary-head h2{margin:0;font-size:var(--wb-body);font-weight:600;}
+:where(.aham-workbench) .wb-record-summary > p{margin:0 0 6px;overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-record-summary > p:last-child{margin-bottom:0;}
+:where(.aham-workbench) .wb-record-summary .is-lead{color:var(--wb-ink);font-weight:500;}
+:where(.aham-workbench) .wb-record-summary .is-empty{color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-record-summary ol{margin:0;padding-inline-start:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 28px;}
+:where(.aham-workbench) .wb-record-summary ol li{overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-record-summary ol li::marker{color:var(--wb-muted);}
+:where(.aham-workbench) .wb-record-summary .longtext{font-size:var(--wb-body);line-height:1.75;border:0;padding:0;}
+:where(.aham-workbench) .wb-record-summary-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+:where(.aham-workbench) .wb-record-summary dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 28px;margin:0;}
+:where(.aham-workbench) .wb-record-summary dl > div{min-width:0;}
+:where(.aham-workbench) .wb-record-summary dt{color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-record-summary dd{margin:2px 0 0;overflow-wrap:anywhere;white-space:pre-line;line-height:1.7;}
+:where(.aham-workbench) .wb-key-facts{display:flex;margin:0 0 18px;border:1px solid var(--wb-line);border-radius:var(--wb-radius-lg);overflow:hidden;min-width:0;}
+:where(.aham-workbench) .wb-key-fact{flex:1 1 0;display:grid;align-content:start;gap:2px;min-width:0;padding:12px 16px;border-inline-end:1px solid var(--wb-line);}
+:where(.aham-workbench) .wb-key-fact:last-child{border-inline-end:0;}
+:where(.aham-workbench) .wb-key-fact-k{color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-key-fact-v{font-size:var(--wb-total);line-height:32px;font-weight:650;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;color:var(--wb-ink);text-decoration:none;}
+:where(.aham-workbench) a.wb-key-fact-v:hover{text-decoration:underline;text-underline-offset:4px;}
+:where(.aham-workbench) .wb-key-fact-v small{font-size:var(--wb-body);font-weight:500;color:var(--wb-muted);}
+:where(.aham-workbench) .wb-key-fact-s{color:var(--wb-ink-2);font-size:var(--wb-text-xs);overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-key-fact.is-primary{flex-grow:1.2;background:linear-gradient(180deg,var(--wb-blue-bg),var(--wb-bg));}
+:where(.aham-workbench) .wb-key-fact.is-primary .wb-key-fact-v{font-size:calc(var(--wb-total) * 1.25);line-height:38px;color:var(--wb-blue);}
+:where(.aham-workbench) .wb-key-fact.is-risk .wb-key-fact-v{color:var(--wb-danger);}
+:where(.aham-workbench) .wb-key-fact.is-warn .wb-key-fact-v{color:var(--wb-warning);}
+:where(.aham-workbench) .wb-key-fact.is-muted .wb-key-fact-v{color:var(--wb-muted);font-size:var(--wb-title);font-weight:500;}
+:where(.aham-workbench) .wb-key-fact.is-next{flex-grow:1.45;background:var(--wb-fill);}
+:where(.aham-workbench) .wb-key-fact.is-next.tone-warn{background:var(--wb-warning-bg);} .wb-key-fact.is-next.tone-warn .wb-key-fact-k {color:var(--wb-warning);font-weight:600;}
+:where(.aham-workbench) .wb-key-fact.is-next.tone-risk{background:var(--wb-danger-bg);} .wb-key-fact.is-next.tone-risk .wb-key-fact-k {color:var(--wb-danger);font-weight:600;}
+:where(.aham-workbench) .wb-key-fact-text{font-weight:600;line-height:20px;margin:2px 0 4px;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;}
+:where(.aham-workbench) .wb-key-fact-text.is-empty{color:var(--wb-muted);font-weight:400;}
+:where(.aham-workbench) .wb-key-fact-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;}
+:where(.aham-workbench) .wb-stage-track{margin:0 0 20px;min-width:0;}
+:where(.aham-workbench) .wb-stage-track-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px;}
+:where(.aham-workbench) .wb-stage-track-head h2{margin:0;font-size:var(--wb-body);font-weight:600;}
+:where(.aham-workbench) .wb-stage-track-note{color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-stage-track-scroll{overflow-x:auto;}
+:where(.aham-workbench) .wb-stage-track-rail{position:relative;min-width:var(--wb-table-min);height:136px;}
+:where(.aham-workbench) .wb-stage-track-line{position:absolute;top:62px;left:4%;right:4%;height:6px;border-radius:var(--wb-radius-pill);background:var(--wb-line);}
+:where(.aham-workbench) .wb-stage-track-done{height:100%;border-radius:var(--wb-radius-pill);background:linear-gradient(90deg,var(--wb-blue),color-mix(in srgb,var(--wb-blue) 55%,var(--wb-bg)));}
+:where(.aham-workbench) .wb-stage-stop{position:absolute;top:52px;transform:translateX(-50%);display:grid;justify-items:center;width:140px;text-align:center;}
+:where(.aham-workbench) .wb-stage-stop i{width:26px;height:26px;border-radius:50%;background:var(--wb-bg);border:3px solid var(--wb-edge);position:relative;box-sizing:border-box;}
+:where(.aham-workbench) .wb-stage-stop[data-state=past] i{background:var(--wb-blue);border-color:var(--wb-blue);}
+:where(.aham-workbench) .wb-stage-stop[data-state=now] i{border-color:var(--wb-blue);box-shadow:0 0 0 5px color-mix(in srgb,var(--wb-blue) 16%,transparent);}
+:where(.aham-workbench) .wb-stage-stop[data-state=now] i::after{content:'';position:absolute;inset:5px;border-radius:50%;background:var(--wb-blue);}
+:where(.aham-workbench) .wb-stage-stop[data-state=end] i{border-color:var(--wb-success);border-style:dashed;}
+:where(.aham-workbench) .wb-stage-stop[data-state=won] i{background:var(--wb-success);border-color:var(--wb-success);}
+:where(.aham-workbench) .wb-stage-stop[data-state=lost] i{background:var(--wb-danger);border-color:var(--wb-danger);}
+:where(.aham-workbench) .wb-stage-stop b{margin-top:6px;font-weight:500;}
+:where(.aham-workbench) .wb-stage-stop[data-state=now] b{color:var(--wb-blue);}
+:where(.aham-workbench) .wb-stage-stop.is-first{transform:translateX(-13px);justify-items:start;text-align:left;width:180px;}
+:where(.aham-workbench) .wb-stage-stop.is-last{transform:translateX(calc(-100% + 13px));justify-items:end;text-align:right;}
+:where(.aham-workbench) .wb-stage-stop small{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:16px;}
+:where(.aham-workbench) .wb-stage-event{position:absolute;top:59px;transform:translateX(-50%);z-index:2;color:inherit;text-decoration:none;}
+:where(.aham-workbench) .wb-stage-event i{display:block;width:12px;height:12px;border-radius:50%;background:var(--wb-bg);border:3px solid var(--wb-blue);box-sizing:border-box;}
+:where(.aham-workbench) .wb-stage-event.is-strong i{background:var(--wb-blue);}
+:where(.aham-workbench) .wb-stage-event:hover i,:where(.aham-workbench) .wb-stage-event:focus-visible i{transform:scale(1.35);}
+:where(.aham-workbench) .wb-stage-event b{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);white-space:nowrap;font-size:var(--wb-text-xs);line-height:14px;font-weight:500;color:var(--wb-ink-2);}
+:where(.aham-workbench) .wb-stage-event.t2 b{bottom:34px;}
+:where(.aham-workbench) .wb-stage-today{position:absolute;top:22px;height:52px;border-inline-start:2px dashed var(--wb-warning);z-index:1;}
+:where(.aham-workbench) .wb-stage-today span{position:absolute;left:5px;top:-2px;white-space:nowrap;font-size:var(--wb-text-xs);font-weight:600;color:var(--wb-warning);}
+:where(.aham-workbench) .wb-stage-track-foot{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-stage-track-legend{display:inline-flex;align-items:center;gap:6px;}
+:where(.aham-workbench) .wb-stage-track-legend i{width:10px;height:10px;border-radius:50%;border:2px solid var(--wb-blue);background:var(--wb-bg);margin-inline-start:6px;box-sizing:border-box;}
+:where(.aham-workbench) .wb-stage-track-legend i.is-strong{background:var(--wb-blue);margin-inline-start:0;}
+:where(.aham-workbench) .wb-stage-track-legend em{width:0;height:12px;border-inline-start:2px dashed var(--wb-warning);margin-inline-start:8px;}
+:where(.aham-workbench) .wb-stage-track-gap{color:var(--wb-warning);}
+:where(.aham-workbench) .wb-gaps{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 16px;padding:10px 14px;border-radius:var(--wb-radius-lg);background:var(--wb-warning-bg);}
+:where(.aham-workbench) .wb-gaps-title{color:var(--wb-warning);font-weight:600;}
+:where(.aham-workbench) .wb-gaps ul{display:contents;margin:0;padding:0;list-style:none;}
+:where(.aham-workbench) .wb-gaps li{display:inline-flex;align-items:center;min-height:24px;padding:0 10px;border-radius:var(--wb-radius-pill);background:var(--wb-bg);border:1px solid color-mix(in srgb,var(--wb-warning) 35%,var(--wb-bg));font-size:var(--wb-text-xs);overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-gaps li[title]{cursor:help;}
+:where(.aham-workbench) .wb-worklog-open{display:grid;margin:4px 0 14px;border:1px solid var(--wb-line);border-radius:var(--wb-radius);overflow:hidden;}
+:where(.aham-workbench) .wb-worklog-task{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:var(--wb-s3);align-items:center;padding:10px 12px;background:var(--wb-fill);}
+:where(.aham-workbench) .wb-worklog-task + .wb-worklog-task{border-top:1px solid var(--wb-line);}
+:where(.aham-workbench) .wb-worklog-task.is-overdue{background:var(--wb-warning-bg);}
+:where(.aham-workbench) .wb-worklog-due{color:var(--wb-warning);font-size:var(--wb-text-xs);font-weight:600;font-variant-numeric:tabular-nums;}
+:where(.aham-workbench) .wb-worklog-task.is-overdue .wb-worklog-due{color:var(--wb-danger);}
+:where(.aham-workbench) .wb-worklog-goal{min-width:0;overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-worklog-goal small{display:block;color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-worklog-actions{display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:4px;}
+:where(.aham-workbench) .wb-worklog{position:relative;margin:0;padding:0 0 0 24px;list-style:none;}
+:where(.aham-workbench) .wb-worklog::before{content:"";position:absolute;inset-inline-start:6px;inset-block:8px;width:1px;background:var(--wb-line);}
+:where(.aham-workbench) .wb-worklog-item{position:relative;padding:0 0 22px;min-width:0;}
+:where(.aham-workbench) .wb-worklog-item::before{content:"";position:absolute;inset-inline-start:-24px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--wb-muted);outline:4px solid var(--wb-bg);}
+:where(.aham-workbench) .wb-worklog-item.is-strong::before{background:var(--wb-blue);}
+:where(.aham-workbench) .wb-worklog-item.is-task::before{background:var(--wb-success);}
+:where(.aham-workbench) .wb-worklog-item.is-cancelled::before{background:var(--wb-line-strong);}
+:where(.aham-workbench) .wb-worklog-meta{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;color:var(--wb-ink-2);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-worklog-meta b{color:var(--wb-ink);font-weight:500;}
+:where(.aham-workbench) .wb-worklog-item.is-task .wb-worklog-meta b{color:var(--wb-success);}
+:where(.aham-workbench) .wb-worklog-item.is-cancelled .wb-worklog-meta b{color:var(--wb-muted);}
+:where(.aham-workbench) .wb-worklog-meta a{color:var(--wb-ink-2);}
+:where(.aham-workbench) .wb-worklog-tag{padding:1px 8px;border-radius:var(--wb-radius-pill);background:var(--wb-fill);color:var(--wb-ink-2)}
+:where(.aham-workbench) .wb-worklog-code{color:var(--wb-muted);font-family:var(--wb-mono);}
+:where(.aham-workbench) .wb-worklog-body{margin-top:4px;font-size:var(--wb-body);line-height:1.75;white-space:pre-line;overflow-wrap:anywhere;max-width:var(--wb-body-width);}
+:where(.aham-workbench) .wb-worklog-note{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;margin-top:6px;font-size:var(--wb-body);line-height:1.7;white-space:pre-line;overflow-wrap:anywhere;max-width:var(--wb-body-width);color:var(--wb-ink-2);}
+:where(.aham-workbench) .wb-worklog-note > span{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:22px;white-space:nowrap;}
+:where(.aham-workbench) .wb-worklog-note.is-next > span{color:var(--wb-ink-2);font-weight:500}
+:where(.aham-workbench) .wb-worklog-closed{margin-top:6px;color:var(--wb-success);font-size:var(--wb-text-xs);overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-worklog-detail{margin-top:6px;}
+:where(.aham-workbench) .wb-worklog-detail > summary{cursor:pointer;color:var(--wb-ink-2);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-worklog-detail dl{margin:8px 0 0;}
+:where(.aham-workbench) .wb-worklog-detail dt{color:var(--wb-muted);font-size:var(--wb-text-xs);margin-top:8px;}
+:where(.aham-workbench) .wb-worklog-detail dd{margin:2px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-worklog-more{margin-top:4px;border-top:1px solid var(--wb-line);}
+:where(.aham-workbench) .wb-worklog-more > summary{padding:14px 0;cursor:pointer;font-size:var(--wb-text-xs);color:var(--wb-ink-2);}
+:where(.aham-workbench) .wb-worklog-more > .wb-worklog{margin-top:8px;}
+:where(.aham-workbench) .wb-worklog-extra{display:grid;gap:4px;margin-top:8px;padding:8px 12px;border-radius:var(--wb-radius);background:var(--wb-fill);font-size:var(--wb-body);}
+:where(.aham-workbench) .wb-worklog-extra > b{font-weight:500;font-size:var(--wb-text-xs);color:var(--wb-ink-2);}
+/* Handle panel: pick how to close the task, see only that way's fields, read what happens on submit. */
+:where(.aham-workbench) .wb-handle{display:grid;gap:0;min-width:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-head{display:flex;align-items:flex-start;gap:var(--wb-s3);padding:var(--wb-s4) var(--wb-s4) var(--wb-s3);border-bottom:1px solid var(--wb-line);}
+:where(.aham-workbench) .wb-handle .wb-handle-head > div{flex:1;min-width:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-head h2{margin:0;font-size:var(--wb-body);font-weight:600;}
+:where(.aham-workbench) .wb-handle .wb-handle-head p{margin:2px 0 0;color:var(--wb-muted);font-size:var(--wb-text-xs);overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-handle .wb-handle-due.warn{color:var(--wb-warning);font-weight:500;} .wb-handle .wb-handle-due.risk {color:var(--wb-danger);font-weight:500;}
+:where(.aham-workbench) .wb-handle .wb-handle-body{display:grid;gap:var(--wb-s4);padding:var(--wb-s4);}
+:where(.aham-workbench) .wb-handle.is-inline .wb-handle-body{padding:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-task{margin:0;color:var(--wb-ink-2);overflow-wrap:anywhere;}
+:where(.aham-workbench) .wb-handle .wb-handle-task span{margin-inline-end:var(--wb-s2);color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-handle fieldset{margin:0;padding:0;border:0;min-width:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--wb-s2);}
+:where(.aham-workbench) .wb-handle .wb-handle-modes legend{margin-bottom:var(--wb-s2);font-weight:600;}
+:where(.aham-workbench) .wb-handle .wb-handle-mode{position:relative;display:grid;gap:2px;padding:10px 12px;border:1px solid var(--wb-line);border-radius:var(--wb-radius);cursor:pointer;background:var(--wb-bg);}
+:where(.aham-workbench) .wb-handle .wb-handle-mode input{position:absolute;opacity:0;pointer-events:none;}
+:where(.aham-workbench) .wb-handle .wb-handle-mode b{font-weight:600;}
+:where(.aham-workbench) .wb-handle .wb-handle-mode span{color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:17px;}
+:where(.aham-workbench) .wb-handle .wb-handle-mode:hover{border-color:var(--wb-line-strong);}
+:where(.aham-workbench) .wb-handle .wb-handle-mode:has(input:checked){border-color:var(--wb-blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--wb-blue) 14%,transparent);}
+:where(.aham-workbench) .wb-handle .wb-handle-mode:has(input:focus-visible){outline:2px solid var(--wb-blue);outline-offset:2px;}
+:where(.aham-workbench) .wb-handle .wb-handle-mode-complete b{color:var(--wb-success);} .wb-handle .wb-handle-mode-cancel b {color:var(--wb-danger);}
+:where(.aham-workbench) .wb-handle .wb-handle-fields{display:grid;gap:var(--wb-s3);padding:var(--wb-s4);border-radius:var(--wb-radius);background:var(--wb-fill);}
+:where(.aham-workbench) .wb-handle .wb-handle-fields[hidden]{display:none;}
+:where(.aham-workbench) .wb-handle .wb-handle-row{display:grid;gap:6px;min-width:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-label{font-size:var(--wb-text-xs);color:var(--wb-ink-2);}
+:where(.aham-workbench) .wb-handle .wb-handle-label em{color:var(--wb-danger);font-style:normal;}
+:where(.aham-workbench) .wb-handle :is(textarea,:where(.aham-workbench) input:not([type=radio]):not([type=checkbox]),:where(.aham-workbench) select){width:100%;min-width:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-inline{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s2);}
+:where(.aham-workbench) .wb-handle .wb-handle-inline > input{flex:0 1 220px;}
+:where(.aham-workbench) .wb-handle .wb-handle-chips{display:flex;flex-wrap:wrap;gap:6px;}
+:where(.aham-workbench) .wb-handle .wb-handle-chip{position:relative;display:inline-flex;}
+:where(.aham-workbench) .wb-handle .wb-handle-chip input{position:absolute;opacity:0;pointer-events:none;}
+:where(.aham-workbench) .wb-handle .wb-handle-chip span,:where(.aham-workbench) .wb-handle .wb-handle-chip-btn{display:inline-flex;align-items:center;min-height:28px;padding:2px 10px;border:1px solid var(--wb-line);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink);font:inherit;font-size:var(--wb-text-xs);cursor:pointer;white-space:nowrap;}
+:where(.aham-workbench) .wb-handle .wb-handle-chip:has(input:checked) span,:where(.aham-workbench) .wb-handle .wb-handle-chip-btn.on{border-color:var(--wb-blue);background:var(--wb-blue-bg);color:var(--wb-ink);font-weight:500;}
+:where(.aham-workbench) .wb-handle .wb-handle-chip:has(input:focus-visible) span{outline:2px solid var(--wb-blue);outline-offset:1px;}
+:where(.aham-workbench) .wb-handle .wb-handle-note{color:var(--wb-muted);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-handle .wb-handle-more > summary{cursor:pointer;color:var(--wb-ink-2);text-decoration:underline;text-underline-offset:3px;font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-handle .wb-handle-more[open]{display:grid;gap:var(--wb-s3);}
+:where(.aham-workbench) .wb-handle .wb-handle-sum{margin:0;padding:8px 10px;border-radius:var(--wb-radius-sm);background:var(--wb-bg);color:var(--wb-ink-2);font-size:var(--wb-text-xs);}
+:where(.aham-workbench) .wb-handle .wb-handle-empty{margin:0;color:var(--wb-muted);}
+:where(.aham-workbench) .wb-handle .wb-handle-foot{display:flex;justify-content:flex-end;gap:var(--wb-s2);padding:var(--wb-s3) var(--wb-s4);border-top:1px solid var(--wb-line);}
+:where(.aham-workbench) .wb-handle.is-inline .wb-handle-foot{padding:var(--wb-s3) 0 0;border-top:0;}
+:where(.aham-workbench) .wb-handle .wb-handle-foot .wb-btn.danger,:where(.aham-workbench) .wb-handle [data-th-submit].is-danger{background:var(--wb-danger);border-color:var(--wb-danger);color:var(--wb-on);}
+:where(.aham-workbench) .wb-stage-track-rail .wb-at-0{left:0%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-1{left:1%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-2{left:2%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-3{left:3%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-4{left:4%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-5{left:5%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-6{left:6%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-7{left:7%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-8{left:8%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-9{left:9%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-10{left:10%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-11{left:11%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-12{left:12%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-13{left:13%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-14{left:14%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-15{left:15%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-16{left:16%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-17{left:17%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-18{left:18%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-19{left:19%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-20{left:20%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-21{left:21%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-22{left:22%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-23{left:23%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-24{left:24%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-25{left:25%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-26{left:26%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-27{left:27%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-28{left:28%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-29{left:29%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-30{left:30%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-31{left:31%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-32{left:32%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-33{left:33%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-34{left:34%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-35{left:35%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-36{left:36%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-37{left:37%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-38{left:38%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-39{left:39%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-40{left:40%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-41{left:41%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-42{left:42%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-43{left:43%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-44{left:44%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-45{left:45%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-46{left:46%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-47{left:47%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-48{left:48%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-49{left:49%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-50{left:50%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-51{left:51%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-52{left:52%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-53{left:53%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-54{left:54%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-55{left:55%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-56{left:56%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-57{left:57%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-58{left:58%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-59{left:59%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-60{left:60%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-61{left:61%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-62{left:62%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-63{left:63%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-64{left:64%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-65{left:65%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-66{left:66%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-67{left:67%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-68{left:68%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-69{left:69%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-70{left:70%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-71{left:71%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-72{left:72%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-73{left:73%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-74{left:74%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-75{left:75%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-76{left:76%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-77{left:77%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-78{left:78%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-79{left:79%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-80{left:80%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-81{left:81%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-82{left:82%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-83{left:83%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-84{left:84%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-85{left:85%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-86{left:86%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-87{left:87%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-88{left:88%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-89{left:89%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-90{left:90%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-91{left:91%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-92{left:92%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-93{left:93%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-94{left:94%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-95{left:95%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-96{left:96%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-97{left:97%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-98{left:98%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-99{left:99%} :where(.aham-workbench) .wb-stage-track-rail .wb-at-100{left:100%}
+:where(.aham-workbench) .wb-stage-track-done.wb-fill-0{width:0%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-1{width:1%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-2{width:2%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-3{width:3%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-4{width:4%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-5{width:5%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-6{width:6%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-7{width:7%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-8{width:8%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-9{width:9%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-10{width:10%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-11{width:11%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-12{width:12%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-13{width:13%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-14{width:14%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-15{width:15%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-16{width:16%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-17{width:17%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-18{width:18%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-19{width:19%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-20{width:20%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-21{width:21%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-22{width:22%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-23{width:23%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-24{width:24%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-25{width:25%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-26{width:26%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-27{width:27%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-28{width:28%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-29{width:29%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-30{width:30%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-31{width:31%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-32{width:32%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-33{width:33%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-34{width:34%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-35{width:35%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-36{width:36%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-37{width:37%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-38{width:38%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-39{width:39%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-40{width:40%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-41{width:41%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-42{width:42%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-43{width:43%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-44{width:44%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-45{width:45%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-46{width:46%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-47{width:47%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-48{width:48%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-49{width:49%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-50{width:50%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-51{width:51%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-52{width:52%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-53{width:53%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-54{width:54%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-55{width:55%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-56{width:56%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-57{width:57%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-58{width:58%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-59{width:59%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-60{width:60%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-61{width:61%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-62{width:62%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-63{width:63%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-64{width:64%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-65{width:65%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-66{width:66%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-67{width:67%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-68{width:68%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-69{width:69%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-70{width:70%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-71{width:71%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-72{width:72%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-73{width:73%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-74{width:74%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-75{width:75%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-76{width:76%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-77{width:77%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-78{width:78%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-79{width:79%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-80{width:80%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-81{width:81%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-82{width:82%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-83{width:83%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-84{width:84%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-85{width:85%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-86{width:86%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-87{width:87%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-88{width:88%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-89{width:89%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-90{width:90%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-91{width:91%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-92{width:92%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-93{width:93%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-94{width:94%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-95{width:95%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-96{width:96%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-97{width:97%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-98{width:98%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-99{width:99%} :where(.aham-workbench) .wb-stage-track-done.wb-fill-100{width:100%}
+@media (max-width: {{breakpoint.bp-context}}) {
+  :where(.aham-workbench) .wb-key-facts{flex-wrap:wrap}
+  /* Wrapped cells draw their right and bottom lines and pull in by 1px; the frame clips the outer ones. */
+  :where(.aham-workbench) .wb-key-fact{flex:1 1 30%;border-bottom:1px solid var(--wb-line);margin:0 -1px -1px 0}
+  :where(.aham-workbench) .wb-key-facts:not(:has(.is-next)) .wb-key-fact{flex-basis:40%}
+  :where(.aham-workbench) .wb-key-fact.is-next{flex-basis:100%}
+  :where(.aham-workbench) .wb-record-summary :is(ol,dl){grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width: {{breakpoint.bp-mobile}}) {
+  :where(.aham-workbench) .wb-key-fact{flex-basis:40%;padding:10px 12px}
+  :where(.aham-workbench) .wb-key-fact-v{font-size:var(--wb-title);line-height:26px}
+  :where(.aham-workbench) .wb-key-fact.is-primary .wb-key-fact-v{font-size:calc(var(--wb-title) * 1.1);line-height:28px}
+  :where(.aham-workbench) .wb-worklog-task{grid-template-columns:minmax(0,1fr) auto}
+  :where(.aham-workbench) .wb-worklog-due{grid-column:1 / -1}
+  :where(.aham-workbench) .wb-worklog-note{grid-template-columns:minmax(0,1fr);gap:0}
+  :where(.aham-workbench) .wb-handle .wb-handle-modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  :where(.aham-workbench) .wb-handle .wb-handle-foot .wb-btn{min-height:var(--wb-touch);flex:1;justify-content:center}
+  :where(.aham-workbench) .wb-handle .wb-handle-mode span{display:none}
+}
