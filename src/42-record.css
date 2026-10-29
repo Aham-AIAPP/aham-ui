@@ -9,7 +9,8 @@
 :where(.aham-workbench) .wb-record-summary > p:last-child{margin-bottom:0;}
 :where(.aham-workbench) .wb-record-summary .is-lead{color:var(--wb-ink);font-weight:500;}
 :where(.aham-workbench) .wb-record-summary .is-empty{color:var(--wb-muted);}
-:where(.aham-workbench) .wb-record-summary ol{margin:0;padding-inline-start:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--wb-s1) var(--wb-s6);max-width:var(--wb-body-width);}
+/* Points fill the column: as many 320px-or-wider columns as fit, so a line never passes 48 characters and wide screens leave no blank. */
+:where(.aham-workbench) .wb-record-summary ol{margin:0;padding-inline-start:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:var(--wb-s1) var(--wb-s7);}
 :where(.aham-workbench) .wb-record-summary ol li{overflow-wrap:anywhere;}
 :where(.aham-workbench) .wb-record-summary ol li::marker{color:var(--wb-muted);}
 :where(.aham-workbench) .wb-record-summary .longtext{max-width:var(--wb-body-width);font-size:var(--wb-body);line-height:1.75;border:0;padding:0;}
@@ -90,10 +91,12 @@
 :where(.aham-workbench) .wb-worklog-goal{min-width:0;overflow-wrap:anywhere;}
 :where(.aham-workbench) .wb-worklog-goal small{display:block;color:var(--wb-muted);font-size:var(--wb-text-xs);}
 :where(.aham-workbench) .wb-worklog-actions{display:inline-flex;flex-wrap:wrap;justify-content:flex-end;gap:var(--wb-s1);}
-/* Work log: one column at the reading measure. Each record has a 24px disc for its kind (follow-up blue, face to face
-   solid blue, task grey); a hairline joins the discs. Records written before the disc existed keep an 8px dot. */
-:where(.aham-workbench) .wb-worklog{margin:0;padding:0;list-style:none;max-width:calc(var(--wb-body-width) + 36px);}
-:where(.aham-workbench) .wb-worklog-item{position:relative;padding:0 0 20px 36px;min-width:0;}
+/* Work log. Each record has a 24px disc for its kind (follow-up blue, face to face solid blue, task grey); a hairline
+   joins the discs. Records written before the disc existed keep an 8px dot. Narrow: one column at the reading measure.
+   From 960px of log width: the text stays at the measure on the left and .wb-worklog-side (next step, tasks closed by
+   this record) takes the rest on the right, so wide screens carry no blank beside the log. */
+:where(.aham-workbench) .wb-worklog{margin:0;padding:0;list-style:none;container-type:inline-size;}
+:where(.aham-workbench) .wb-worklog-item{position:relative;padding:0 0 20px 36px;min-width:0;max-width:calc(var(--wb-body-width) + 36px);}
 :where(.aham-workbench) .wb-worklog-item:last-child{padding-bottom:0;}
 :where(.aham-workbench) .wb-worklog-item:not(:last-child)::after{content:"";position:absolute;inset-inline-start:11px;top:28px;bottom:4px;border-inline-start:var(--wb-hairline) solid var(--wb-line);}
 :where(.aham-workbench) .wb-worklog-icon{position:absolute;inset-inline-start:0;top:0;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--wb-blue-bg);color:var(--wb-blue);}
@@ -118,6 +121,14 @@
 :where(.aham-workbench) .wb-worklog-closed > svg{margin-top:3px;color:var(--wb-success);}
 :where(.aham-workbench) .wb-worklog-closed a{color:var(--wb-ink);}
 :where(.aham-workbench) .wb-worklog-detail{margin-top:var(--wb-s1);}
+@container (min-width: {{breakpoint.bp-log-split}}) {
+  :where(.aham-workbench) .wb-worklog-item{display:grid;grid-template-columns:minmax(0,var(--wb-body-width)) minmax(0,1fr);column-gap:var(--wb-s7);align-content:start;max-width:none}
+  :where(.aham-workbench) .wb-worklog-item > *{grid-column:1}
+  :where(.aham-workbench) .wb-worklog-item > .wb-worklog-meta{grid-column:1 / -1}
+  :where(.aham-workbench) .wb-worklog-item > .wb-worklog-side{grid-column:2;grid-row:2 / span 20;align-self:start;padding-inline-start:var(--wb-s4);border-inline-start:var(--wb-hairline) solid var(--wb-line-soft)}
+  :where(.aham-workbench) .wb-worklog-side > :first-child{margin-top:2px}
+  :where(.aham-workbench) .wb-worklog-side .wb-worklog-note{grid-template-columns:minmax(0,1fr);gap:0}
+}
 :where(.aham-workbench) .wb-worklog-detail > summary{cursor:pointer;color:var(--wb-muted);}
 :where(.aham-workbench) .wb-worklog-detail dl{margin:var(--wb-s2) 0 0;}
 :where(.aham-workbench) .wb-worklog-detail dt{color:var(--wb-muted);margin-top:var(--wb-s2);}

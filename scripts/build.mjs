@@ -18,6 +18,7 @@ export const SOURCES = readdirSync(new URL('src/', root)).filter(f => /^\d\d-[\w
 // build, so a new breakpoint is a decision, not an accident.
 export const ENVIRONMENTS = [
   '@container (max-width: {{breakpoint.bp-form}})',
+  '@container (min-width: {{breakpoint.bp-log-split}})',
   '@media (min-resolution: 2dppx)',
   '@media (min-width: {{breakpoint.bp-wide}})',
   '@media (max-width: {{breakpoint.bp-context}})',
