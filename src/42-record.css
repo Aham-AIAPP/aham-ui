@@ -94,7 +94,9 @@
 /* Work log. Each record has a 24px disc for its kind (follow-up blue, face to face solid blue, task grey); a hairline
    joins the discs. Records written before the disc existed keep an 8px dot. Narrow: one column at the reading measure.
    From 960px of log width: the text stays at the measure on the left and .wb-worklog-side (next step, tasks closed by
-   this record) takes the rest on the right, so wide screens carry no blank beside the log. */
+   this record) takes the rest on the right, so wide screens carry no blank beside the log. The disc stays out of the
+   split: an absolutely positioned grid child that names a grid-column is placed against that column, not the item's
+   padding box, so `> *{grid-column:1}` alone moved the disc 36px right onto the record kind. */
 :where(.aham-workbench) .wb-worklog{margin:0;padding:0;list-style:none;container-type:inline-size;}
 :where(.aham-workbench) .wb-worklog-item{position:relative;padding:0 0 20px 36px;min-width:0;max-width:calc(var(--wb-body-width) + 36px);}
 :where(.aham-workbench) .wb-worklog-item:last-child{padding-bottom:0;}
@@ -124,6 +126,7 @@
 @container (min-width: {{breakpoint.bp-log-split}}) {
   :where(.aham-workbench) .wb-worklog-item{display:grid;grid-template-columns:minmax(0,var(--wb-body-width)) minmax(0,1fr);column-gap:var(--wb-s7);align-content:start;max-width:none}
   :where(.aham-workbench) .wb-worklog-item > *{grid-column:1}
+  :where(.aham-workbench) .wb-worklog-item > .wb-worklog-icon{grid-column:auto}
   :where(.aham-workbench) .wb-worklog-item > .wb-worklog-meta{grid-column:1 / -1}
   :where(.aham-workbench) .wb-worklog-item > .wb-worklog-side{grid-column:2;grid-row:2 / span 20;align-self:start;padding-inline-start:var(--wb-s4);border-inline-start:var(--wb-hairline) solid var(--wb-line-soft)}
   :where(.aham-workbench) .wb-worklog-side > :first-child{margin-top:2px}
