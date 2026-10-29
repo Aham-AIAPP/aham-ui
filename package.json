@@ -1,6 +1,6 @@
 {
   "name": "aham-ui",
-  "version": "10.0.1",
+  "version": "10.0.2",
   "description": "Aham UI：B 端工作台设计系统。tokens、样式、行为脚本和规则，没有第三方依赖。",
   "license": "MIT",
   "type": "module",

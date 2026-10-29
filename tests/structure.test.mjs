@@ -226,6 +226,18 @@ test('every init* and create* handle has destroy (docs/react.md)', () => {
   assert.deepEqual(missing, []);
 });
 
+test('work log: the kind disc stays on the connecting line when the log splits into two columns (rules/3-控件.md 3.18)', () => {
+  // An absolutely positioned grid child that names a grid-column is placed against that column, not the padding box:
+  // 10.0.1 gave the disc grid-column:1 with every other child and it sat 36px to the right, over the record kind.
+  const split = read('aham.css').match(/@container \(min-width: 960px\)\{([^@]*)\}/);
+  assert.ok(split, 'the work log splits at 960px of log width');
+  const rules = split[1];
+  const all = rules.indexOf('.wb-worklog-item > *{grid-column:1}');
+  const disc = rules.indexOf('.wb-worklog-item > .wb-worklog-icon{grid-column:auto}');
+  assert.ok(all >= 0 && disc > all, 'the disc opts out of the columns after the catch-all');
+  assert.ok(/\.wb-worklog-icon\{position:absolute;inset-inline-start:0;top:0;/.test(read('aham.css')));
+});
+
 test('one version everywhere: package.json, tokens.json, rules/1 and README', () => {
   const v = JSON.parse(read('package.json')).version;
   assert.equal(tokens.$meta.version, v);
