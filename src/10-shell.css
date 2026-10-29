@@ -7,9 +7,8 @@
 :where(.aham-workbench) .wb-brand-name{min-width:0;font-weight:500;color:var(--wb-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 :where(.aham-workbench) .wb-nav-group{display:grid;gap:2px}
 :where(.aham-workbench) .wb-nav-heading{display:block;padding:0 var(--wb-s2) var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-:where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink-2);text-align:start}
+:where(.aham-workbench) .wb-nav-item{display:flex;align-items:center;gap:var(--wb-s2);width:100%;height:var(--wb-nav-item);padding:0 var(--wb-s2);border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-ink);text-align:start}
 :where(.aham-workbench) a.wb-nav-item{text-decoration:none}
-:where(.aham-workbench) .wb-nav-item svg{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-nav-item:hover{background:var(--wb-nav-hover)}
 :where(.aham-workbench) .wb-nav-item[aria-current=page]{background:var(--wb-nav-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-nav-item[aria-current=page] svg{color:var(--wb-ink)}
