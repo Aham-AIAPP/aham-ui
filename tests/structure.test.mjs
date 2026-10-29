@@ -31,7 +31,7 @@ test('density: 44px single-line list rows, 36px table rows, 32px compact, 44px f
   assert.equal(v('row-compact'), '32px');
   assert.equal(v('control'), '32px');
   assert.equal(v('touch'), '44px');
-  assert.equal(v('icon'), '14px');
+  assert.equal(v('icon'), '16px');
   assert.equal(tokens.layout.nav.$value, '220px');
   const css = read('aham.css');
   assert.ok(/@media \(pointer:coarse\)[\s\S]*--wb-row:var\(--wb-touch\)/.test(css), 'touch rows switch to 44px');
@@ -39,8 +39,10 @@ test('density: 44px single-line list rows, 36px table rows, 32px compact, 44px f
 
 test('type scale: two sizes on workbench pages, 12px the smallest (rules/2-视觉.md 2.5)', () => {
   const px = k => parseInt(resolve(`text.${k}`), 10);
-  assert.equal(px('body'), 13);
+  assert.equal(px('body'), 14);
+  assert.equal(px('leading'), 22);
   assert.equal(px('text-xs'), 12);
+  assert.equal(parseInt(tokens.layout['body-width'].$value, 10) / px('body'), 48, 'a line of running text holds 48 characters at most');
   assert.equal(px('title'), 20);
   assert.ok(!('detail-title' in tokens.text), 'detail-title was removed in 9.0');
   assert.ok(Object.keys(tokens.text).filter(k => !k.startsWith('$')).every(k => px(k) >= 12));

@@ -10,6 +10,7 @@
   "classes": [
     ".wb-key-fact",
     ".wb-key-fact-actions",
+    ".wb-key-fact-bar",
     ".wb-key-fact-k",
     ".wb-key-fact-s",
     ".wb-key-fact-text",
@@ -21,7 +22,6 @@
       "axis": "cell",
       "values": [
         "default",
-        "is-primary",
         "is-risk",
         "is-warn",
         "is-muted",
@@ -30,13 +30,15 @@
     }
   ],
   "markup": {
-    "facts": "<section class=\"wb-key-facts\" aria-label=\"关键数字\"><div class=\"wb-key-fact is-primary\"><span class=\"wb-key-fact-k\">预计签约额</span><span class=\"wb-key-fact-v\">86.0 万</span><span class=\"wb-key-fact-s\">加权 34.4 万</span></div><div class=\"wb-key-fact is-next tone-risk\"><span class=\"wb-key-fact-k\">下一步 · 已逾期 2 天</span><span class=\"wb-key-fact-text\">约王卓评审方案初稿</span><span class=\"wb-key-fact-actions\"><span class=\"wb-key-fact-s\">执行人 林悦</span><button type=\"button\" class=\"wb-btn sm\">处理</button></span></div></section>"
+    "facts": "<section class=\"wb-key-facts\" aria-label=\"关键数字\"><div class=\"wb-key-fact\"><span class=\"wb-key-fact-k\">预计签约额</span><span class=\"wb-key-fact-v\">86.0 万</span><span class=\"wb-key-fact-s\">加权 34.4 万</span></div><div class=\"wb-key-fact is-risk\"><span class=\"wb-key-fact-k\">当前阶段</span><span class=\"wb-key-fact-v\">方案论证</span><span class=\"wb-key-fact-bar\"><i><b class=\"wb-fill-100\"></b></i>停留 19 / 建议 14 天</span></div><div class=\"wb-key-fact is-next tone-risk\"><span class=\"wb-key-fact-k\">下一步 · 已逾期 2 天</span><span class=\"wb-key-fact-text\">约王卓评审方案初稿</span><span class=\"wb-key-fact-actions\"><span class=\"wb-key-fact-s\">执行人 林悦</span><button type=\"button\" class=\"wb-btn sm\">处理</button></span></div></section>"
   },
   "rules": [
-    "3–4 格；一页只放大一格（.is-primary，通常是金额）",
-    "每格写标签、数、一句说明；值是一句话时用 .wb-key-fact-text",
-    "超期、停滞加 .is-risk，快到期 .is-warn，没有数据 .is-muted",
-    "最后一格是下一步 .is-next：标签写到期情况，值写要做的事，下面写执行人和「处理」；逾期加 .tone-risk，今天到期加 .tone-warn",
+    "3–4 格，等宽；数统一 24px（--wb-total）、字重 600，不单独放大某一格",
+    "每格写标签（12px）、数、一句说明（12px）；值是一句话时用 .wb-key-fact-text",
+    "超期、停滞加 .is-risk；缺了要补的值（未填、未安排）加 .is-warn，说明行放补填的链接；没有数据也不用补的加 .is-muted",
+    "停留天数配 .wb-key-fact-bar：<i><b class=\"wb-fill-N\"></b></i> 后面写「停留 N / 建议 M 天」，N 是停留天数占建议天数的百分比，超过 100 按 100 画，格子加 .is-risk",
+    "最后一格是下一步 .is-next：标签写到期情况，值写要做的事，下面写执行人和「处理」；逾期加 .tone-risk，今天到期加 .tone-warn，这两种铺警示底色；没有下一步时值写「未安排」并加 .is-warn，下面放新建入口",
+    "外框 --wb-line，格子之间 --wb-line-soft 竖线，其他格子不铺底色",
     "不放输入框",
     "1024px 及以下每行三格、下一步独占一行；640px 及以下每行两格"
   ],
@@ -45,7 +47,7 @@
   ],
   "doNotInvent": [
     "把属性栏的全部字段搬进关键信息",
-    "两格以上同时放大",
+    "放大某一格的字号或给某一格加渐变底色",
     "在关键信息里直接改值"
   ]
 }

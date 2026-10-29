@@ -27,19 +27,29 @@
   </section>
 
   <section class="pv-story pv-record">
-    <div class="pv-label">关键信息 · 金额一格放大，下一步一格带「处理」</div>
+    <div class="pv-label">关键信息 · 四格等宽，停留天数配进度，逾期的下一步铺警示底色</div>
     <section class="wb-key-facts" aria-label="关键数字">
-      <div class="wb-key-fact is-primary"><span class="wb-key-fact-k">预计签约额</span><span class="wb-key-fact-v">86.0 万</span><span class="wb-key-fact-s">加权 34.4 万 · 赢率 40%</span></div>
+      <div class="wb-key-fact"><span class="wb-key-fact-k">预计签约额</span><span class="wb-key-fact-v">86.0 万</span><span class="wb-key-fact-s">加权 34.4 万 · 赢率 40%</span></div>
       <div class="wb-key-fact"><span class="wb-key-fact-k">预计签约日</span><span class="wb-key-fact-v">12-20</span><span class="wb-key-fact-s">2026 年 · 还有 53 天</span></div>
-      <div class="wb-key-fact is-risk"><span class="wb-key-fact-k">当前阶段</span><span class="wb-key-fact-v">方案论证</span><span class="wb-key-fact-s">已停留 19 天（建议 14 天）</span></div>
+      <div class="wb-key-fact is-risk"><span class="wb-key-fact-k">当前阶段</span><span class="wb-key-fact-v">方案论证</span><span class="wb-key-fact-bar"><i><b class="wb-fill-100"></b></i>停留 19 / 建议 14 天</span></div>
       <div class="wb-key-fact is-next tone-risk"><span class="wb-key-fact-k">下一步 · 已逾期 2 天</span><span class="wb-key-fact-text">约王卓评审方案初稿</span><span class="wb-key-fact-actions"><span class="wb-key-fact-s">执行人 林悦</span><button type="button" class="wb-btn sm">处理</button></span></div>
     </section>
   </section>
 
   <section class="pv-story pv-record">
-    <div class="pv-label">带事件的阶段条 · 线上的点是每条记录，当前阶段那段按停留时间拉长</div>
+    <div class="pv-label">关键信息 · 缺了要补的值用琥珀色，说明行直接给补填入口</div>
+    <section class="wb-key-facts" aria-label="关键数字">
+      <div class="wb-key-fact is-warn"><span class="wb-key-fact-k">预计签约额</span><span class="wb-key-fact-v">未填</span><span class="wb-key-fact-s"><a href="#">填写金额</a></span></div>
+      <div class="wb-key-fact"><span class="wb-key-fact-k">预计签约日</span><span class="wb-key-fact-v">12-21</span><span class="wb-key-fact-s">2026 年 · 还有 53 天</span></div>
+      <div class="wb-key-fact"><span class="wb-key-fact-k">当前阶段</span><span class="wb-key-fact-v">初步接触</span><span class="wb-key-fact-bar"><i><b class="wb-fill-7"></b></i>停留 1 / 建议 14 天</span></div>
+      <div class="wb-key-fact is-next is-warn"><span class="wb-key-fact-k">下一步</span><span class="wb-key-fact-v">未安排</span><span class="wb-key-fact-s"><a href="#">新建任务</a></span></div>
+    </section>
+  </section>
+
+  <section class="pv-story pv-record">
+    <div class="pv-label">带事件的阶段条 · 线上的点是每条记录，当前阶段那段按停留时间拉长，说明收进「?」</div>
     <section class="wb-stage-track" aria-label="推进阶段">
-      <div class="wb-stage-track-head"><h2>推进阶段</h2><span class="wb-stage-track-note">线上的点是每次跟进</span><span class="wb-grow"></span><span class="chip">6 次跟进 · 最近 10-26</span></div>
+      <div class="wb-stage-track-head"><h2>推进阶段</h2><span class="wb-stage-track-note">6 次跟进 · 最近 10-26</span><span class="wb-grow"></span><button type="button" class="wb-icon-btn" aria-label="阶段条说明" data-tooltip="线上的点是每次跟进：实心是上门拜访，空心是电话和微信；虚线是今天"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-help"></use></svg></button></div>
       <div class="wb-stage-track-scroll"><div class="wb-stage-track-rail" role="img" aria-label="推进阶段：当前在方案论证，共 6 次跟进">
         <div class="wb-stage-track-line"><div class="wb-stage-track-done wb-fill-62"></div></div>
         <a class="wb-stage-event wb-at-9 t1" href="#" title="09-02 · 电话"><b>09-02</b><i></i></a>
@@ -56,7 +66,7 @@
         <div class="wb-stage-stop wb-at-83" data-state="future"><i></i><b>商务谈判</b><small>建议 14 天</small></div>
         <div class="wb-stage-stop wb-at-96 is-last" data-state="end"><i></i><b>签约</b><small>预计 12-20</small></div>
       </div></div>
-      <div class="wb-stage-track-foot"><span class="wb-stage-track-legend"><i class="is-strong"></i>上门拜访<i></i>电话 / 微信<em></em>今天</span><span class="wb-stage-track-gap">10-09 到 10-26，17 天没有跟进</span></div>
+      <div class="wb-stage-track-foot"><span class="wb-stage-track-gap">10-09 到 10-26，17 天没有跟进</span></div>
     </section>
   </section>
 
@@ -67,17 +77,20 @@
       <div class="wb-worklog-task"><span class="wb-worklog-due">11-03</span><span class="wb-worklog-goal"><b>发报价单</b><small>林悦 · TASK-0191</small></span><span class="wb-worklog-actions"><button type="button" class="wb-btn sm">处理</button></span></div>
     </div>
     <ol class="wb-worklog">
-      <li class="wb-worklog-item"><div class="wb-worklog-meta"><b>电话</b><span class="wb-worklog-tag">方案沟通</span><span>2026-10-26 15:20</span><span>林悦</span><a class="wb-worklog-code" href="#">OPFU-0412</a></div>
+      <li class="wb-worklog-item"><span class="wb-worklog-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-phone"></use></svg></span><div class="wb-worklog-meta"><b>电话</b><span class="wb-worklog-tag">方案沟通</span><span>林悦</span><span class="wb-worklog-time">2026-10-26 15:20</span><a class="wb-worklog-code" href="#">OPFU-0412</a></div>
         <div class="wb-worklog-body">王卓确认先做一车间试点，方案里补设备清单。</div>
         <div class="wb-worklog-note"><span>当前问题</span>预算要等集团批复</div>
         <div class="wb-worklog-note is-next"><span>下一步 · 10-30</span>约王卓评审方案初稿</div></li>
-      <li class="wb-worklog-item is-task"><div class="wb-worklog-meta"><b>任务已完成</b><span>2026-10-14 10:02</span><span>林悦</span><a class="wb-worklog-code" href="#">TASK-0170</a></div>
+      <li class="wb-worklog-item is-task"><span class="wb-worklog-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-task"></use></svg></span><div class="wb-worklog-meta"><b>任务已完成</b><span>林悦</span><span class="wb-worklog-time">2026-10-14 10:02</span><a class="wb-worklog-code" href="#">TASK-0170</a></div>
         <div class="wb-worklog-body">把调研纪要发给客户确认</div></li>
-      <li class="wb-worklog-item is-strong"><div class="wb-worklog-meta"><b>上门拜访</b><span>2026-10-09 14:00</span><span>林悦</span><a class="wb-worklog-code" href="#">OPFU-0388</a></div>
+      <li class="wb-worklog-item is-task is-cancelled"><span class="wb-worklog-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-task"></use></svg></span><div class="wb-worklog-meta"><b>任务已取消</b><span>林悦</span><span class="wb-worklog-time">2026-10-12 09:00</span><a class="wb-worklog-code" href="#">TASK-0169</a></div>
+        <div class="wb-worklog-body">约设备科长看样机</div>
+        <div class="wb-worklog-note"><span>取消原因</span>设备科长出差，改到下周</div></li>
+      <li class="wb-worklog-item is-strong"><span class="wb-worklog-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-users"></use></svg></span><div class="wb-worklog-meta"><b>上门拜访</b><span>林悦</span><span class="wb-worklog-time">2026-10-09 14:00</span><a class="wb-worklog-code" href="#">OPFU-0388</a></div>
         <div class="wb-worklog-body">参观三个车间，记下 12 台设备的接口情况。</div>
-        <div class="wb-worklog-closed">同时完成任务 <a href="#">TASK-0168</a>：约车间主任现场调研</div></li>
+        <div class="wb-worklog-closed"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-success"></use></svg><span>同时完成任务 <a href="#" title="TASK-0168">约车间主任现场调研</a></span></div></li>
     </ol>
-    <details class="wb-worklog-more"><summary>查看更早记录 · 3 条</summary><ol class="wb-worklog"><li class="wb-worklog-item"><div class="wb-worklog-meta"><b>电话</b><span>2026-09-02 09:30</span><span>林悦</span></div><div class="wb-worklog-body">第一次联系，客户在找 MES 供应商。</div></li></ol></details>
+    <details class="wb-worklog-more"><summary>查看更早记录 · 3 条</summary><ol class="wb-worklog"><li class="wb-worklog-item"><span class="wb-worklog-icon"><svg aria-hidden="true"><use href="../assets/icons/aham-icons.svg#i-phone"></use></svg></span><div class="wb-worklog-meta"><b>电话</b><span>林悦</span><span class="wb-worklog-time">2026-09-02 09:30</span></div><div class="wb-worklog-body">第一次联系，客户在找 MES 供应商。</div></li></ol></details>
   </section>
 
   <section class="pv-story pv-record">

@@ -2,6 +2,10 @@
 :where(.aham-workbench) .wb-record-nav{display:flex;align-items:center;gap:var(--wb-s1);color:var(--wb-muted);font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-record-nav>span{margin-inline-end:var(--wb-s1)}
 :where(.aham-workbench) .wb-detail{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto}
+/* Wide screens (rules/4-页面.md 4.8): the main column and the properties panel stay two columns. Together they widen by
+   1px for every 4px of window, up to 1840px (--wb-record-width), then centre; the header row keeps the same edges. */
+:where(.aham-workbench) .wb-detail{width:100%;max-width:var(--wb-record-width);margin-inline:auto}
+:where(.aham-workbench) .wb-main:has(>.wb-detail)>.wb-header .wb-header-row{padding-inline:max(var(--wb-s4),calc((100% - var(--wb-record-width)) / 2 + var(--wb-s4)))}
 :where(.aham-workbench) .wb-detail-scroll{min-height:0;overflow-y:auto}
 /* Centred on whole pixels, so text and lines never sit on a half pixel. */
 /* The main column fills the work surface with the same edges as a document page; only running text keeps a 640px measure. */
@@ -57,7 +61,7 @@
 :where(.aham-workbench) .wb-props-section{display:grid;gap:var(--wb-s1)}
 :where(.aham-workbench) .wb-props-title{margin-block-end:var(--wb-s1);color:var(--wb-muted);font-size:var(--wb-text-xs);font-weight:500}
 :where(.aham-workbench) .wb-prop{display:grid;grid-template-columns:var(--wb-label) minmax(0,1fr);align-items:center;gap:var(--wb-s2);min-height:var(--wb-control)}
-:where(.aham-workbench) .wb-prop>span:first-child{color:var(--wb-muted);font-size:var(--wb-text-xs);white-space:nowrap}
+:where(.aham-workbench) .wb-prop>span:first-child{color:var(--wb-muted);white-space:nowrap}
 :where(.aham-workbench) .wb-prop-value{display:flex;align-items:center;gap:var(--wb-s1);min-width:0;min-height:var(--wb-header-control);padding:0 var(--wb-s1);margin-inline-start:calc(-1 * var(--wb-s1));border:0;border-radius:var(--wb-radius);background:transparent;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 :where(.aham-workbench) button.wb-prop-value:hover{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-prop-value.is-empty{color:var(--wb-muted)}

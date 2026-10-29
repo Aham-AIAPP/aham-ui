@@ -6,7 +6,7 @@
 //   5. Colour pairs used for text, icons and controls reach their contrast minimum in both themes (PAIRS).
 //   6. src/ never colours text with the primary blue: links use the body colour (rules/2-视觉.md 2.2, 9.0). The stage
 //      icon, the current stop of a stage track and the one key number of a record page are current-item marks.
-//   7. src/ sets no icon size in px: icons take --wb-icon (14px) or a spacing token (rules/2-视觉.md 2.9).
+//   7. src/ sets no icon size in px: icons take --wb-icon (16px) or a spacing token (rules/2-视觉.md 2.9).
 //   8. src/ transitions name their properties, never move layout (width, height, position, margin), and take token durations.
 //   9. Every variable tokens.json defines is used somewhere: src/, js/, examples/, index.html or another variable.
 //      A token marked $deprecated is kept for products that still use it, and src/ may not use it.
@@ -42,7 +42,7 @@ export function lint() {
       if (/\b(rgba?|hsla?)\(/.test(line)) errors.push(`${at}: 写死了颜色，改用 tokens.json 的颜色变量`);
       if (/font(-size)?:[^;}]*\b\d+(\.\d+)?px/.test(line)) errors.push(`${at}: 字号写死成 px，改用 --wb-text-* 变量`);
       for (const r of line.matchAll(/border-radius:([^;}]+)/g)) if (/\b([3-9]|\d{2,})px/.test(r[1])) errors.push(`${at}: 圆角写死成 px，改用 --wb-radius-* 变量`);
-      if (/[{;]color:var\(--wb-blue\)/.test(line) && !/\.wb-stage-icon|\.wb-stage-stop\[data-state=now\]|\.wb-key-fact\.is-primary/.test(line)) errors.push(`${at}: 文字用了主色。正文链接用正文色加下划线，主色只给主按钮、焦点和当前项标记`);
+      if (/[{;]color:var\(--wb-blue\)/.test(line) && !/\.wb-stage-icon|\.wb-stage-stop\[data-state=now\]|\.wb-worklog-icon/.test(line)) errors.push(`${at}: 文字用了主色。正文链接用正文色加下划线，主色只给主按钮、焦点和当前项标记`);
       if (/svg[^{]*\{[^}]*\b(width|height):\d+px/.test(line)) errors.push(`${at}: 图标尺寸写死成 px，改用 --wb-icon 或间距变量`);
       // Motion (rules/11-交互.md 11.4): name the animated properties, move with transform and opacity only, time with tokens.
       for (const m of line.matchAll(/transition(?:-property)?:([^;}]+)/g)) {
