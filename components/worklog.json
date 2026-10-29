@@ -23,12 +23,13 @@
     ".wb-worklog-more",
     ".wb-worklog-note",
     ".wb-worklog-open",
+    ".wb-worklog-side",
     ".wb-worklog-tag",
     ".wb-worklog-task",
     ".wb-worklog-time"
   ],
   "markup": {
-    "worklog": "<div class=\"wb-worklog-open\" aria-label=\"待处理任务\"><div class=\"wb-worklog-task is-overdue\"><span class=\"wb-worklog-due\">10-26 · 已逾期</span><span class=\"wb-worklog-goal\"><b>约王卓评审方案初稿</b><small>林悦 · TASK-0187</small></span><span class=\"wb-worklog-actions\"><button type=\"button\" class=\"wb-btn sm\">处理</button></span></div></div><ol class=\"wb-worklog\"><li class=\"wb-worklog-item is-strong\"><span class=\"wb-worklog-icon\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-users\"></use></svg></span><div class=\"wb-worklog-meta\"><b>上门拜访</b><span class=\"wb-worklog-tag\">方案沟通</span><span>林悦</span><span class=\"wb-worklog-time\">10-09 14:00</span><a class=\"wb-worklog-code\" href=\"#\">OPFU-0388</a></div><div class=\"wb-worklog-body\">参观三个车间。</div><div class=\"wb-worklog-note is-next\"><span>下一步 · 10-30</span>约王卓评审方案初稿</div><div class=\"wb-worklog-closed\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-success\"></use></svg><span>同时完成任务 <a href=\"#\" title=\"TASK-0168\">约车间主任现场调研</a></span></div><details class=\"wb-worklog-detail\"><summary>完整内容</summary></details><div class=\"wb-worklog-extra\"><b>推荐企业</b></div></li></ol><details class=\"wb-worklog-more\"><summary>查看更早记录 · 3 条</summary></details>"
+    "worklog": "<div class=\"wb-worklog-open\" aria-label=\"待处理任务\"><div class=\"wb-worklog-task is-overdue\"><span class=\"wb-worklog-due\">10-26 · 已逾期</span><span class=\"wb-worklog-goal\"><b>约王卓评审方案初稿</b><small>林悦 · TASK-0187</small></span><span class=\"wb-worklog-actions\"><button type=\"button\" class=\"wb-btn sm\">处理</button></span></div></div><ol class=\"wb-worklog\"><li class=\"wb-worklog-item is-strong\"><span class=\"wb-worklog-icon\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-users\"></use></svg></span><div class=\"wb-worklog-meta\"><b>上门拜访</b><span class=\"wb-worklog-tag\">方案沟通</span><span>林悦</span><span class=\"wb-worklog-time\">10-09 14:00</span><a class=\"wb-worklog-code\" href=\"#\">OPFU-0388</a></div><div class=\"wb-worklog-body\">参观三个车间。</div><div class=\"wb-worklog-side\"><div class=\"wb-worklog-note is-next\"><span>下一步 · 10-30</span>约王卓评审方案初稿</div><div class=\"wb-worklog-closed\"><svg aria-hidden=\"true\"><use href=\"assets/icons/aham-icons.svg#i-success\"></use></svg><span>同时完成任务 <a href=\"#\" title=\"TASK-0168\">约车间主任现场调研</a></span></div></div><details class=\"wb-worklog-detail\"><summary>完整内容</summary></details><div class=\"wb-worklog-extra\"><b>推荐企业</b></div></li></ol><details class=\"wb-worklog-more\"><summary>查看更早记录 · 3 条</summary></details>"
   },
   "rules": [
     "开放任务列在最上面 .wb-worklog-open，一行一条，带「处理」；逾期加 .is-overdue",
@@ -38,7 +39,8 @@
     "面对面的记录加 .is-strong",
     "最近 8 条直接显示，更早的收进 .wb-worklog-more",
     "和页尾折叠的动态分开",
-    "一栏排，整条最宽 --wb-body-width 加 36px：左边 24px 的类型圆标 .wb-worklog-icon（跟进是浅蓝底蓝图标，面对面是实心蓝，任务是灰底），圆标之间一条细线连起来；补充内容排在正文下面"
+    "记录区窄于 960px 时一栏排，整条最宽 --wb-body-width 加 36px；补充内容排在正文下面。960px 以上分两栏：左边正文和补充，最宽 --wb-body-width；右边 .wb-worklog-side 放下一步和同时完成的任务，宽屏多出的宽度由它占，旁边不留空白。左边 24px 的类型圆标 .wb-worklog-icon（跟进是浅蓝底蓝图标，面对面是实心蓝，任务是灰底），圆标之间一条细线连起来",
+    "下一步（.wb-worklog-note.is-next）和同时完成的任务（.wb-worklog-closed）放进 .wb-worklog-side；没有这两样的记录不写 .wb-worklog-side"
   ],
   "accessibility": [
     "开放任务区写 aria-label「待处理任务」"
