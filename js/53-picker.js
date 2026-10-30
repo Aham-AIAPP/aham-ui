@@ -25,6 +25,7 @@ export function openPicker(anchor, { label, options, current, icon: optionIcon, 
       pending = true; error.textContent = ''; panel.setAttribute('aria-busy', 'true');
       try {
         if (await onSelect(it.id, current) === false) throw new Error('保存失败，原值未改变，可以重试。');
+        anchor.disabled = disabled;
         if (alive) api.close('done');
       } catch (err) { if (alive) error.textContent = actionError(err); }
       finally { anchor.disabled = disabled; if (alive) panel.removeAttribute('aria-busy'); pending = false; }

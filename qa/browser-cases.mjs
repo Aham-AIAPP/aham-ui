@@ -136,6 +136,9 @@ test('短文案：等待中宽度保持稳定且可访问名称说明进度', as
 test('Toast: repeated identical notifications share one live message', () => {
   const a=ui.toast('Repeated',{duration:0}),b=ui.toast('Repeated',{duration:0});cleanups.push(a,b);equal(root.querySelectorAll('.wb-toast').length,1,'deduplicated');
 });
+test('Picker: successful async save returns focus to its enabled trigger', async () => {
+  const b=button();ui.openPicker(b,{label:'Stage',options:['A','B'],current:'A',onSelect:()=>Promise.resolve(true)});q('[data-index="1"]').click();await wait(200);equal(document.activeElement,b,'focus returns after unlocking');
+});
 // Equal-specificity pseudo-state replicas test the complete style matrix. CI additionally uses real pointer input.
 const sheet = document.createElement('style');
 async function stateStyles(){

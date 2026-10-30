@@ -918,7 +918,7 @@ export function initComposer(form, { onSubmit }) {
       if (!await onSubmit(text)) throw new Error('发送失败，内容已保留，可以重试。');
       if (life.active && revision === submitted) area.value = '';
     } catch (err) { if (life.active) error.textContent = actionError(err); }
-    finally { restore(); pending = false; form.removeAttribute('aria-busy'); if (life.active) sync(); }
+    finally { restore(); pending = false; form.removeAttribute('aria-busy'); if (life.active) { sync(); if (document.activeElement === document.body || document.activeElement === send) area.focus(); } }
   }
   life.on(area, 'compositionstart', () => { composing = true; });
   life.on(area, 'compositionend', () => { composing = false; });
@@ -1123,6 +1123,7 @@ export function openPicker(anchor, { label, options, current, icon: optionIcon, 
       pending = true; error.textContent = ''; panel.setAttribute('aria-busy', 'true');
       try {
         if (await onSelect(it.id, current) === false) throw new Error('保存失败，原值未改变，可以重试。');
+        anchor.disabled = disabled;
         if (alive) api.close('done');
       } catch (err) { if (alive) error.textContent = actionError(err); }
       finally { anchor.disabled = disabled; if (alive) panel.removeAttribute('aria-busy'); pending = false; }

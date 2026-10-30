@@ -16,7 +16,7 @@ export function initComposer(form, { onSubmit }) {
       if (!await onSubmit(text)) throw new Error('发送失败，内容已保留，可以重试。');
       if (life.active && revision === submitted) area.value = '';
     } catch (err) { if (life.active) error.textContent = actionError(err); }
-    finally { restore(); pending = false; form.removeAttribute('aria-busy'); if (life.active) sync(); }
+    finally { restore(); pending = false; form.removeAttribute('aria-busy'); if (life.active) { sync(); if (document.activeElement === document.body || document.activeElement === send) area.focus(); } }
   }
   life.on(area, 'compositionstart', () => { composing = true; });
   life.on(area, 'compositionend', () => { composing = false; });
