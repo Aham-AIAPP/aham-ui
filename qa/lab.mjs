@@ -18,9 +18,17 @@ q('#confirm').onclick=()=>{let count=0;ui.openConfirm({root,title:'归档测试�
 let stage='待调研';q('#picker').onclick=()=>{let count=0;ui.openPicker(q('#picker'),{label:'阶段',current:stage,options:['待调研','访谈中','待核对','已确认','已归档'],onSelect:async v=>{await delay();if(++count===1)return false;stage=v;q('#picker').textContent=`阶段：${v}`;}});};
 let ai;q('#ai').onclick=()=>{ai?.destroy();let count=0;ai=ui.createAIOutput(q('#ai-host'),{title:'访谈摘要',sources:[{label:'虚构访谈记录'}],needsConsent:()=>false,generate:async function*(){for(const s of ['采购与仓储的当前流程已梳理。','\n\n三个待核对事项仍需补充证据。']){await delay();yield s;}},onAdopt:async()=>{await delay();return ++count>1;}});};
 q('#undo').onclick=()=>{let count=0;ui.toast('测试阶段已更新',{action:{label:'撤销',run:async()=>{await delay();return ++count>1;}}});};
-const index=await(await fetch('../components/index.json')).json();
-const entries=Array.isArray(index)?index:(index.components||index.items||[]);
-const contracts=await Promise.all(entries.map(async entry=>{const path=typeof entry==='string'?entry:(entry.path||entry.contract||`${entry.slug}.json`);return await(await fetch(path.startsWith('components/')?`../${path}`:`../components/${path}`)).json();}));
-q('#contract-count').textContent=`${contracts.length} 项 · 结构、状态、键盘与无障碍`;
+let contracts=[];
 function render(){const term=q('#search').value.trim().toLowerCase();q('#contracts').innerHTML=contracts.filter(c=>JSON.stringify(c).toLowerCase().includes(term)).map(c=>`<article><a class="wb-link" href="../${ui.escapeHtml(c.preview||c.reference)}">${ui.escapeHtml(c.name)}</a><p>${ui.escapeHtml(c.intent)}</p><small>${ui.escapeHtml((c.states||[]).join(' · '))}</small></article>`).join('');}
-q('#search').oninput=render;render();
+async function read(url){const response=await fetch(url);if(!response.ok)throw new Error(`HTTP ${response.status}`);return response.json();}
+async function loadCatalog(){
+ q('#catalog-retry').hidden=true;q('#contract-count').textContent='正在加载组件契约…';
+ try{
+  const index=await read('../components/index.json'),entries=index.components;
+  const loaded=[];
+  // Bound requests so a local static server or slow connection is not overwhelmed.
+  for(let i=0;i<entries.length;i+=4)loaded.push(...await Promise.all(entries.slice(i,i+4).map(entry=>read(`../components/${entry.slug}.json`))));
+  contracts=loaded;q('#contract-count').textContent=`${contracts.length} 项 · 结构、状态、键盘与无障碍`;render();
+ }catch{q('#contract-count').textContent='组件目录暂未加载，可重试。';q('#catalog-retry').hidden=false;}
+}
+q('#search').oninput=render;q('#catalog-retry').onclick=loadCatalog;loadCatalog();

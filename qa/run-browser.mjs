@@ -23,6 +23,9 @@ try{
    assert.deepEqual(errors,[],'runtime errors');
    // Actual pointer/focus pseudo-classes, beyond the equal-specificity matrix in the browser harness.
    await page.goto(`${base}/qa/lab.html`);
+   await page.locator('#contracts article').last().waitFor();
+   assert.equal(await page.locator('#contracts article').count(),55,'all component contracts load');
+   assert.deepEqual(errors,[],'lab runtime errors');
    for(const theme of ['light','dark']){
     await page.locator('.aham-workbench').evaluate((el,t)=>el.dataset.theme=t,theme);
     const b=page.locator('#save'),rect=await b.boundingBox();
