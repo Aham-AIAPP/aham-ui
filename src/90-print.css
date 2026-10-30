@@ -41,3 +41,9 @@
   .aham-workbench .wb-sheet-scroll{overflow:visible}
   .aham-workbench .wb-sheet{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}
 }
+
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-print-bar {display:grid;grid-template-columns:auto minmax(0,1fr) auto;height:auto;min-height:var(--wb-header-row);gap:var(--wb-s2);padding-block:var(--wb-s2)}
+ .aham-workbench .wb-print-bar>.wb-spacer {display:none}
+ .aham-workbench .wb-print-note {grid-column:1 / -1;grid-row:2;font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs)}
+}

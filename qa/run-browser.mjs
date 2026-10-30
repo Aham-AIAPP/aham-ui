@@ -48,6 +48,10 @@ try{
    for(const width of [390,1024,1280,1440,1920])for(const theme of ['light','dark'])for(const name of cases){
     await page.setViewportSize({width,height:1000});await page.goto(`${base}/examples/${name}.html`);
     await page.locator('.aham-workbench').evaluate((el,t)=>el.dataset.theme=t,theme);await page.evaluate(()=>document.fonts.ready);
+    if(name==='print'){
+      const contained=await page.locator('.wb-print-bar').evaluate(bar=>{const b=bar.getBoundingClientRect();return [...bar.children].filter(el=>getComputedStyle(el).display!=='none').every(el=>{const r=el.getBoundingClientRect();return r.top>=b.top-1&&r.bottom<=b.bottom+1&&r.right<=b.right+1;});});
+      assert(contained,`${engine} print toolbar contains its text at ${width}`);
+    }
     layoutChecks++;
     const overflow=await page.evaluate(()=>({actual:document.documentElement.scrollWidth,viewport:innerWidth}));
     if(overflow.actual>overflow.viewport+1){

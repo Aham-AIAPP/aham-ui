@@ -1891,6 +1891,9 @@
 .aham-workbench .wb-expand-body{padding-inline-start:var(--wb-s5)}
 .aham-workbench .wb-stages{grid-auto-columns:minmax(var(--wb-s7),1fr);overflow-x:auto}
 .aham-workbench .wb-next{flex-wrap:wrap}
+.aham-workbench .wb-print-bar{display:grid;grid-template-columns:auto minmax(0,1fr) auto;height:auto;min-height:var(--wb-header-row);gap:var(--wb-s2);padding-block:var(--wb-s2)}
+.aham-workbench .wb-print-bar>.wb-spacer{display:none}
+.aham-workbench .wb-print-note{grid-column:1 / -1;grid-row:2;font-size:var(--wb-text-xs);line-height:var(--wb-leading-xs)}
 }
 @media (pointer:coarse){
 .aham-workbench :is(button,.wb-btn),.aham-workbench :is(input:not([type=checkbox],[type=radio]),select){min-height:var(--wb-touch);min-width:var(--wb-touch)}
