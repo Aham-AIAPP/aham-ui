@@ -8,7 +8,7 @@ export function initPropertyPickers({ container, fields, value, onChange }) {
   function paint() {
     container.querySelectorAll('[data-prop]').forEach(b => {
       const key = b.dataset.prop, f = fields[key], v = values[key];
-      if (!f) return;
+      if (!f || pending.has(key)) return;
       b.classList.toggle('is-empty', !v);
       // person: true shows people as an avatar plus the name (rules/3-控件.md 3.11).
       const lead = f.person && v ? `<span class="wb-avatar-xs" data-cat="${avatarCat(v)}" aria-hidden="true">${escapeHtml([...v][0])}</span>` : f.icon ? icon(f.icon) : '';

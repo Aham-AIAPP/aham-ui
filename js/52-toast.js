@@ -8,7 +8,10 @@ export function toast(message, { action, duration = 4000 } = {}) {
     host = document.createElement('section'); host.className = 'wb-toasts';
     host.setAttribute('aria-label', '通知'); root.append(host); toastHosts.set(root, host);
   }
+  const duplicate = [...host.children].find(el => el._toastMessage === message && el._toastAction === action?.run && !el.hasAttribute('data-leaving'));
+  if (duplicate) return duplicate._dismissToast;
   const el = document.createElement('div');
+  el._toastMessage = message; el._toastAction = action?.run;
   el.className = 'wb-toast'; el.setAttribute('role', 'status');
   el.innerHTML = `<span>${escapeHtml(message)}</span>${action ? `<button type="button" class="wb-btn sm ghost">${escapeHtml(action.label)}</button>` : ''}`;
   host.append(el);
@@ -39,4 +42,16 @@ export function toast(message, { action, duration = 4000 } = {}) {
     } finally { restore(); pending = false; resume(); }
   });
   resume(); return dismiss;
+}
+
+// Completion notifications emitted by a callback must survive closing that callback's modal.
+function moveDialogToasts(dialog) {
+  const source = toastHosts.get(dialog);
+  if (!source) return;
+  const root = dialog.parentElement?.closest('dialog[open]') || dialog.closest('.aham-workbench');
+  if (!root) return;
+  const target = toastHosts.get(root);
+  if (target?.isConnected) { target.append(...source.children); source.remove(); }
+  else { root.append(source); toastHosts.set(root, source); }
+  toastHosts.delete(dialog);
 }

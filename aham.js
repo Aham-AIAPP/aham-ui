@@ -66,14 +66,22 @@ function pendingUI(container, button, label = '保存中…') {
   if (container.matches('button')) controls.unshift(container);
   const states = controls.map(el => [el, el.disabled]);
   const busy = container.getAttribute('aria-busy');
-  const html = button?.innerHTML, width = button?.style.minWidth;
-  if (button) { button.style.minWidth = `${button.getBoundingClientRect().width}px`; button.textContent = label; }
+  const html = button?.innerHTML, width = button?.style.minWidth, accessible = button?.getAttribute('aria-label');
+  if (button) {
+    const style = getComputedStyle(button), measure = document.createElement('canvas').getContext('2d');
+    measure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const available = button.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const short = [label, '稍候', '…'].find(text => measure.measureText(text).width <= available) || '…';
+    button.style.minWidth = `${button.getBoundingClientRect().width}px`;
+    button.setAttribute('aria-label', `${accessible || button.textContent.trim()}，${label}`);
+    button.textContent = short;
+  }
   container.setAttribute('aria-busy', 'true');
   states.forEach(([el]) => { el.disabled = true; });
   return () => {
     states.forEach(([el, disabled]) => { el.disabled = disabled; });
     if (busy === null) container.removeAttribute('aria-busy'); else container.setAttribute('aria-busy', busy);
-    if (button) { button.innerHTML = html; button.style.minWidth = width; }
+    if (button) { button.innerHTML = html; button.style.minWidth = width; if (accessible === null) button.removeAttribute('aria-label'); else button.setAttribute('aria-label', accessible); }
   };
 }
 function actionError(error, fallback = '保存失败，内容已保留，可以重试。') {
@@ -427,6 +435,7 @@ export function openDialog({ root, className = 'wb-dialog', labelledBy, html, re
     closed = true;
     release?.();
     leave(dialog, () => {
+      moveDialogToasts(dialog);
       dialog.close();
       dialog.remove();
       [returnFocus, opener].find(el => el?.isConnected)?.focus?.();
@@ -859,7 +868,7 @@ export function initPropertyPickers({ container, fields, value, onChange }) {
   function paint() {
     container.querySelectorAll('[data-prop]').forEach(b => {
       const key = b.dataset.prop, f = fields[key], v = values[key];
-      if (!f) return;
+      if (!f || pending.has(key)) return;
       b.classList.toggle('is-empty', !v);
       // person: true shows people as an avatar plus the name (rules/3-控件.md 3.11).
       const lead = f.person && v ? `<span class="wb-avatar-xs" data-cat="${avatarCat(v)}" aria-hidden="true">${escapeHtml([...v][0])}</span>` : f.icon ? icon(f.icon) : '';
@@ -1038,7 +1047,10 @@ export function toast(message, { action, duration = 4000 } = {}) {
     host = document.createElement('section'); host.className = 'wb-toasts';
     host.setAttribute('aria-label', '通知'); root.append(host); toastHosts.set(root, host);
   }
+  const duplicate = [...host.children].find(el => el._toastMessage === message && el._toastAction === action?.run && !el.hasAttribute('data-leaving'));
+  if (duplicate) return duplicate._dismissToast;
   const el = document.createElement('div');
+  el._toastMessage = message; el._toastAction = action?.run;
   el.className = 'wb-toast'; el.setAttribute('role', 'status');
   el.innerHTML = `<span>${escapeHtml(message)}</span>${action ? `<button type="button" class="wb-btn sm ghost">${escapeHtml(action.label)}</button>` : ''}`;
   host.append(el);
@@ -1069,6 +1081,18 @@ export function toast(message, { action, duration = 4000 } = {}) {
     } finally { restore(); pending = false; resume(); }
   });
   resume(); return dismiss;
+}
+
+// Completion notifications emitted by a callback must survive closing that callback's modal.
+function moveDialogToasts(dialog) {
+  const source = toastHosts.get(dialog);
+  if (!source) return;
+  const root = dialog.parentElement?.closest('dialog[open]') || dialog.closest('.aham-workbench');
+  if (!root) return;
+  const target = toastHosts.get(root);
+  if (target?.isConnected) { target.append(...source.children); source.remove(); }
+  else { root.append(source); toastHosts.set(root, source); }
+  toastHosts.delete(dialog);
 }
 // One property picker. A save settles before closing; failed selections remain retryable.
 let pickerPop = null, pickerCommand = null;

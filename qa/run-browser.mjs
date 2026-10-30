@@ -47,9 +47,10 @@ try{
     await page.locator('.aham-workbench').evaluate((el,t)=>el.dataset.theme=t,theme);await page.evaluate(()=>document.fonts.ready);
     const overflow=await page.evaluate(()=>({actual:document.documentElement.scrollWidth,viewport:innerWidth}));
     if(overflow.actual>overflow.viewport+1){
-      const offenders=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(el=>{const r=el.getBoundingClientRect();return r.width&&r.right>innerWidth+1&&!el.closest('[hidden], .wb-table-wrap');}).slice(0,12).map(el=>({tag:el.tagName,cls:el.className,right:el.getBoundingClientRect().right})));
+      const offenders=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(el=>{const r=el.getBoundingClientRect();return r.width&&r.right>innerWidth+1&&!el.closest('[hidden], .wb-table-scroll, .wb-sheet-scroll');}).slice(0,12).map(el=>({tag:el.tagName,cls:el.className,right:el.getBoundingClientRect().right})));
       report.push({failure:`${engine} ${name} ${theme} ${width}: page overflow`,overflow,offenders});
     }
+    await page.waitForTimeout(220);
     if(engine==='chromium')await page.screenshot({path:`${out}/${name}-${theme}-${width}.png`,fullPage:true});
    }
    if(engine==='chromium'){await page.goto(`${base}/examples/print.html`);await page.pdf({path:`${out}/print-A4.pdf`,format:'A4',printBackground:true});}

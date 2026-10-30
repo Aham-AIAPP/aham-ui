@@ -78,3 +78,8 @@
 @media (pointer:coarse) {
  .aham-workbench .wb-seg.sm {height:auto}
 }
+
+/* Full-width mobile panels fade without sliding past the viewport edge. */
+@media (max-width: {{breakpoint.bp-mobile}}) {
+ .aham-workbench .wb-panel {transform:none;transition-property:opacity}
+}

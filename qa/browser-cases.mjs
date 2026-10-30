@@ -124,6 +124,18 @@ test('Toast：hover 与 focus 独立暂停', async () => {
   const el=q('.wb-toast');el.dispatchEvent(new Event('mouseenter'));el.querySelector('button').focus();el.dispatchEvent(new Event('mouseleave'));await wait(140);assert(el.isConnected,'仍聚焦时不能恢复计时');
   q('#theme').focus();await wait(300);assert(!el.isConnected,'离焦后恢复');
 });
+test('完成通知：弹窗关闭后仍可看到并使用撤销', async () => {
+  own(ui.openConfirm({root,title:'完成测试',onConfirm:()=>{const dismiss=ui.toast('已完成',{duration:0,action:{label:'撤销',run:()=>true}});cleanups.push(dismiss);}}));
+  submit(q('dialog form'));await wait(250);assert(!q('dialog'),'弹窗已关闭');assert(q('.wb-toast'),'完成通知仍存在');
+  q('.wb-toast button').click();await wait(250);assert(!q('.wb-toast'),'关闭后撤销仍可用');
+});
+test('短文案：等待中宽度保持稳定且可访问名称说明进度', async () => {
+  const d=deferred();own(ui.openCreateDialog({root,title:'新建',onSubmit:()=>d.promise}));const f=q('.wb-create form'),b=f.querySelector('[type=submit]');input(f.elements.title,'甲');
+  const width=b.getBoundingClientRect().width;submit(f);await wait();equal(b.getBoundingClientRect().width,width,'创建按钮不变宽');assert(b.getAttribute('aria-label').includes('创建中'),'读屏进度明确');d.resolve(false);await wait();equal(b.textContent,'创建','恢复文案');
+});
+test('Toast: repeated identical notifications share one live message', () => {
+  const a=ui.toast('Repeated',{duration:0}),b=ui.toast('Repeated',{duration:0});cleanups.push(a,b);equal(root.querySelectorAll('.wb-toast').length,1,'deduplicated');
+});
 // Equal-specificity pseudo-state replicas test the complete style matrix. CI additionally uses real pointer input.
 const sheet = document.createElement('style');
 async function stateStyles(){

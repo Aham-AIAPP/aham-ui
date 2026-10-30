@@ -20,6 +20,7 @@ export function openDialog({ root, className = 'wb-dialog', labelledBy, html, re
     closed = true;
     release?.();
     leave(dialog, () => {
+      moveDialogToasts(dialog);
       dialog.close();
       dialog.remove();
       [returnFocus, opener].find(el => el?.isConnected)?.focus?.();

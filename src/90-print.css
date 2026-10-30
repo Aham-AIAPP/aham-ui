@@ -15,6 +15,7 @@
 }
 /* Print preview: a toolbar above an A4 sheet at real size. The sheet is the printed output; nothing on it is interactive. */
 :where(.aham-workbench.wb-print-preview){display:block;height:auto;min-height:100vh;overflow:visible;background:var(--wb-canvas)}
+:where(.aham-workbench) .wb-sheet-scroll{max-width:100%;overflow:auto}
 :where(.aham-workbench) .wb-print-bar{position:sticky;top:0;z-index:var(--wb-z-pop);display:flex;align-items:center;gap:var(--wb-s3);height:var(--wb-header-row);padding:0 var(--wb-s4);background:var(--wb-bg);border-bottom:var(--wb-hairline) solid var(--wb-line)}
 :where(.aham-workbench) .wb-print-bar>.wb-spacer{flex:1}
 :where(.aham-workbench) .wb-sheet{box-sizing:border-box;width:210mm;min-height:297mm;margin:var(--wb-s6) auto;padding:15mm;background:var(--wb-bg);color:var(--wb-ink);box-shadow:0 0 0 1px var(--wb-line);font-size:var(--wb-body);line-height:var(--wb-leading)}
@@ -37,5 +38,6 @@
 @page{size:A4;margin:15mm}
 @media print {
   .aham-workbench.wb-print-preview{background:var(--wb-bg)}
+  .aham-workbench .wb-sheet-scroll{overflow:visible}
   .aham-workbench .wb-sheet{width:auto;min-height:0;margin:0;padding:0;box-shadow:none}
 }
