@@ -9,7 +9,7 @@
 :where(.aham-workbench) .wb-command-input{display:flex;align-items:center;gap:var(--wb-s2);height:var(--wb-command-input);padding:0 var(--wb-s3);border-bottom:var(--wb-hairline) solid var(--wb-line);color:var(--wb-muted)}
 :where(.aham-workbench) .wb-command-input input{flex:1;min-width:0;height:100%;padding:0;border:0;background:transparent;color:var(--wb-ink);outline:0}
 :where(.aham-workbench) .wb-command-list{max-height:300px;overflow-y:auto;margin:0;padding:var(--wb-s1);list-style:none;outline:0}
-:where(.aham-workbench) .wb-command-list [data-index]{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-nav-item);padding:0 var(--wb-s2);border-radius:var(--wb-radius-sm);cursor:default;user-select:none;white-space:nowrap}
+:where(.aham-workbench) .wb-command-list [data-index]{display:flex;align-items:center;gap:var(--wb-s2);min-height:var(--wb-menu-row);padding:0 var(--wb-s2);border-radius:var(--wb-radius-sm);cursor:default;user-select:none;white-space:nowrap}
 :where(.aham-workbench) .wb-command-list [data-index][data-active]{background:var(--wb-hover)}
 :where(.aham-workbench) .wb-command-list [data-index]>svg{color:var(--wb-muted)}
 :where(.aham-workbench) .wb-command-list [data-index]>svg:last-child:not(:first-child){margin-inline-start:auto;visibility:hidden}
@@ -171,4 +171,22 @@
 @media (prefers-reduced-motion: reduce) {
  .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar),.aham-workbench :is(.wb-popover,.wb-dialog,.wb-create)[data-leaving] {transform:none}
  .aham-workbench .wb-skeleton {animation:none}
+}
+
+/* Separate keyboard activation from pointer motion; leaving layers are inert in JS. */
+:where(.aham-workbench) :is(.wb-popover,.wb-dialog,.wb-create)[data-input=key]{transition:none;transform:none}
+:where(.aham-workbench) :is(.wb-dialog,.wb-create)[data-input=key]::backdrop{transition:none}
+:where(.aham-workbench) .wb-create{overflow-y:auto}
+:where(.aham-workbench) .wb-dialog{max-height:calc(100dvh - var(--wb-s6));overflow-y:auto}
+:where(.aham-workbench) .wb-value-error{overflow-wrap:anywhere}
+:where(.aham-workbench) .wb-value-error:empty{display:none}
+:where(.aham-workbench) .wb-popover>.wb-value-error{padding:var(--wb-s2);margin:0}
+:where(.aham-workbench) [aria-busy=true] .wb-command-list{cursor:progress}
+@media (pointer:coarse){
+ .aham-workbench .wb-command-list [data-index]{min-height:var(--wb-touch)}
+}
+@media (prefers-reduced-motion: reduce){
+ .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar){transition-property:opacity;transition-duration:var(--wb-instant);transform:none}
+ .aham-workbench :is(.wb-dialog,.wb-create)::backdrop{transition-duration:var(--wb-instant)}
+ .aham-workbench :is(.wb-btn,.wb-icon-btn,.wb-seg button,.wb-chip>button){transition:none}
 }

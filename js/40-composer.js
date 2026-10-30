@@ -1,27 +1,31 @@
-// ── Composer ─────────────────────────────────────────────────────────────────
-// Comment box: ⌘/Ctrl+Enter or the send button submits; Enter alone adds a line; nothing is sent while an IME is
-// composing or the text is blank. onSubmit(text) returns true (or a promise of true) when the comment was saved.
+// Comment submit keeps failed drafts and never clears text typed during a request.
 export function initComposer(form, { onSubmit }) {
   const life = scope();
   const area = form.querySelector('textarea'), send = form.querySelector('[type=submit]');
-  const sync = () => { send.disabled = !area.value.trim(); };
+  const error = document.createElement('p');
+  error.className = 'wb-value-error'; error.setAttribute('role', 'alert'); form.append(error);
+  let pending = false, revision = 0, composing = false;
+  const sync = () => { send.disabled = pending || !area.value.trim(); };
   async function submit() {
-    const text = area.value.trim();
-    if (!text) return;
-    send.disabled = true;
+    const text = area.value.trim(), submitted = revision;
+    if (!life.active || pending || composing || !text) return;
+    pending = true; error.textContent = '';
     form.setAttribute('aria-busy', 'true');
-    let ok = false;
-    try { ok = await onSubmit(text); } finally { form.removeAttribute('aria-busy'); }
-    if (ok) area.value = '';
-    sync();
-    area.focus();
+    const restore = pendingUI(send, send, '发送中…');
+    try {
+      if (!await onSubmit(text)) throw new Error('发送失败，内容已保留，可以重试。');
+      if (life.active && revision === submitted) area.value = '';
+    } catch (err) { if (life.active) error.textContent = actionError(err); }
+    finally { restore(); pending = false; form.removeAttribute('aria-busy'); if (life.active) sync(); }
   }
-  life.on(area, 'input', sync);
+  life.on(area, 'compositionstart', () => { composing = true; });
+  life.on(area, 'compositionend', () => { composing = false; });
+  life.on(area, 'input', () => { revision++; error.textContent = ''; sync(); });
   life.on(area, 'keydown', e => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); }
   });
   life.on(form, 'submit', e => { e.preventDefault(); submit(); });
+  life.keep(() => { error.remove(); });
   sync();
   return { submit, destroy: life.end };
 }
-

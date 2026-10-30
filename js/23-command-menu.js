@@ -5,7 +5,10 @@
 // `checked` makes it a multi-select row; `heading` titles a group (palette); `keys` shows shortcut hints.
 // role: 'listbox' (pickers, filters) or 'menu' (context menu actions).
 // `items` may be a function of the query, which is how quick-search results are added under the field list.
+const commandHosts = new WeakMap();
 export function createCommand(host, { items, onSelect, onBack, placeholder = '搜索…', empty = '没有匹配项', search = true, label = '', role = 'listbox' }) {
+  commandHosts.get(host)?.destroy();
+  if (search && role === 'menu') role = 'listbox';
   const life = scope();
   const id = `wb-cmd-${++uid}`;
   host.classList.add('wb-command');
@@ -49,7 +52,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
     keyTarget.setAttribute('aria-activedescendant', el ? el.id : '');
     if (scroll) el?.scrollIntoView({ block: 'nearest' });
   }
-  function choose(i) { const it = shown[i]; if (it) onSelect?.(it, api); }
+  function choose(i) { if (host.closest('[aria-busy=true], [inert]')) return; const it = shown[i]; if (it) onSelect?.(it, api); }
   life.on(keyTarget, 'keydown', e => {
     if (e.isComposing) return;
     const n = shown.length;
@@ -65,6 +68,8 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = '�
   life.on(list, 'mousedown', e => e.preventDefault());       // keep focus in the input
   life.on(list, 'click', e => { const li = e.target.closest('[data-index]'); if (li) choose(Number(li.dataset.index)); });
   const api = { render, input, focus: () => keyTarget.focus(), setItems(next) { items = next; render(); }, destroy: life.end };
+  commandHosts.set(host, api);
+  life.keep(() => { if (commandHosts.get(host) === api) commandHosts.delete(host); });
   render();
   const start = shown.findIndex(it => it.current);                 // pickers open with the current value highlighted
   if (start > 0) highlight(start);

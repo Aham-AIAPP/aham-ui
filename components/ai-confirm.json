@@ -9,7 +9,7 @@
   "reference": "examples/record.html",
   "intent": "AI 提出要改数据时的确认弹窗：改什么、从什么改为什么、共几项",
   "specification": "rules/8-AI协作.md#85-改数据之前",
-  "api": "openAIConfirm({ root, title?, reason?, changes: [{ target, from?, to }], onConfirm, returnFocus? }) → { close }",
+  "api": "openAIConfirm({ root, title?, reason?, changes: [{ target, from?, to }], onConfirm, returnFocus?, canUndo? }) → { close }",
   "variantDimensions": [
     {
       "axis": "count",
@@ -39,19 +39,23 @@
     ]
   },
   "markup": {
-    "dialog": "<dialog class=\"wb-dialog wb-ai-confirm\" aria-labelledby=\"t\"><form method=\"dialog\"><span class=\"wb-ai-mark\">…AI 建议</span><h2 id=\"t\">确认 AI 提出的修改</h2><ul class=\"wb-ai-changes\"><li><span>阶段</span><span>方案评估 → <strong>商务谈判</strong></span></li></ul><p class=\"wb-ai-note\">共 1 项。确认后才会写入，写入后可以撤销。</p><div class=\"wb-dialog-foot\"><button class=\"wb-btn\" value=\"cancel\">取消</button><button class=\"wb-btn primary\" value=\"confirm\">确认修改</button></div></form></dialog>"
+    "dialog": "<dialog class=\"wb-dialog wb-ai-confirm\" aria-labelledby=\"t\"><form method=\"dialog\"><span class=\"wb-ai-mark\">…AI 建议</span><h2 id=\"t\">确认 AI 提出的修改</h2><ul class=\"wb-ai-changes\"><li><span>阶段</span><span>方案评估 → <strong>商务谈判</strong></span></li></ul><p class=\"wb-ai-note\">共 1 项。确认后才会写入。</p><div class=\"wb-dialog-foot\"><button class=\"wb-btn\" value=\"cancel\">取消</button><button class=\"wb-btn primary\" value=\"confirm\">确认修改</button></div></form></dialog>"
   },
   "rules": [
     "AI 改任何记录前都先打开确认弹窗",
     "逐项列出：对象或字段、原值 → 新值；新建类只写新值",
     "取消在左、确认在右，确认是主按钮",
-    "写入后用轻提示确认并提供撤销",
-    "AI 不能直接删除记录"
+    "只有产品提供真实撤销能力时传 canUndo: true 并显示撤销说明",
+    "AI 不能直接删除记录",
+    "异步操作完成后才关闭或清空；等待期间防重复提交，失败保留内容并提供重试"
   ],
   "states": [
     "open",
     "confirmed",
-    "cancelled"
+    "cancelled",
+    "saving",
+    "error",
+    "retry"
   ],
   "keyboard": [
     "Esc 取消",

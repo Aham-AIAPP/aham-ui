@@ -94,7 +94,7 @@ npm run check                                   # 生成检查、lint、契约�
 
 ## 版本
 
-当前版本 10.0.2。10.0 正文改为 14px、图标 16px，记录详情页的关键信息、阶段条、工作记录按管理系统重新打磨，并新增宽屏规则，正文字号变了，升级前先看 CHANGELOG。9.2 新增记录详情页首屏的五个组件：关键信息、带事件的阶段条、工作记录、还缺什么、处理面板。9.0 新增《设计理念》，整体风格借鉴 Linear：220px 文字侧栏、无表头的分组单行列表、铺满的主区加属性栏、两档字号、14px 图标、描边标签、阶段图标、三值生成主题。类名和变量有改动，升级说明见 [CHANGELOG.md](CHANGELOG.md)。
+当前版本 10.1.0。10.0 正文改为 14px、图标 16px，记录详情页的关键信息、阶段条、工作记录按管理系统重新打磨，并新增宽屏规则，正文字号变了，升级前先看 CHANGELOG。9.2 新增记录详情页首屏的五个组件：关键信息、带事件的阶段条、工作记录、还缺什么、处理面板。9.0 新增《设计理念》，整体风格借鉴 Linear：220px 文字侧栏、无表头的分组单行列表、铺满的主区加属性栏、两档字号、14px 图标、描边标签、阶段图标、三值生成主题。类名和变量有改动，升级说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 [Releases](https://github.com/Aham-AIAPP/aham-ui/releases) · [CHANGELOG](CHANGELOG.md) · [CONTRIBUTING](CONTRIBUTING.md) · [ORIGIN](ORIGIN.md) · [MIT](LICENSE)
 
@@ -114,3 +114,11 @@ Aham 这个名字来自 *aha moment*，每个工具处理一类任务。
 公众号发布 AI 工具的实践记录和更新，扫码可以加作者微信交流。
 
 <p><img src="assets/wechat-qr.png" width="640" alt="Aham 公众号和作者微信二维码"></p>
+
+## 组件与交互回归
+
+运行 `npm run lab` 后打开 `/qa/lab.html`，体验深浅色按钮、首次失败与重试、菜单、弹窗和 AI 采纳。`/qa/browser.html` 可在浏览器里运行可控延迟和错误注入回归。
+
+完整检查：`npm ci`、`npm run check`、`npx playwright install --with-deps chromium webkit`、`npm run test:browser`。浏览器检查结果放在 `qa-results/`，CI 作为 14 天有效的构件保存。运行时没有新增依赖。
+
+异步回调中，确认、选择、属性保存、AI 采纳和撤销以 `void` / `true` 表示成功，`false` / reject 表示失败；新建和评论沿用必须返回 `true` 的约定。数据提交应在回调成功前完成。组件只能保护界面，服务端写入仍由产品实现幂等与事务。AI 确认的 `canUndo` 默认 `false`，只有实现了真实撤销流程时才设为 `true`。

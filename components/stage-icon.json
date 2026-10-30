@@ -6,7 +6,7 @@
   "behavior": "aham.js",
   "preview": "examples/controls.html",
   "reference": "examples/list.html",
-  "intent": "在单行列表和摘要行里用一个 14px 图标表示对象走到了哪一段",
+  "intent": "在单行列表和摘要行里用一个 16px 图标表示对象走到了哪一段",
   "specification": "rules/3-控件.md#315-阶段图标",
   "api": "stageIconHTML({ state: 'todo' | 'current' | 'done' | 'blocked' | 'off', done, total, label }) → HTML；STAGE_STATE_WORDS",
   "classes": [
@@ -46,6 +46,6 @@
   "doNotInvent": [
     "彩色状态胶囊代替图标",
     "用分类色区分阶段",
-    "图标大于 14px"
+    "图标大于 16px"
   ]
 }

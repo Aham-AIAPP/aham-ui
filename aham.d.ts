@@ -1,3 +1,5 @@
+// Async actions: void/true means success; false or rejection preserves the UI for retry.
+type ActionResult = void | boolean | Promise<void | boolean>;
 // Type declarations for aham.js. Hand-written; tests/structure.test.mjs checks that the names match the exports.
 // Every init* / create* handle has destroy(): it removes the listeners, shortcuts and elements the call added
 // (docs/react.md shows mounting in useEffect and destroying in its clean-up).
@@ -39,7 +41,7 @@ export function createCommand(host: HTMLElement, options: {
   items: CommandItem[] | ((query: string) => CommandItem[]); onSelect(item: CommandItem): void; onBack?(): void;
   placeholder?: string; empty?: string; search?: boolean; label?: string; role?: 'listbox' | 'menu';
 }): CommandHandle;
-export function openPicker(anchor: HTMLElement, options: { label: string; options: string[]; current?: string; icon?: string; onSelect(value: string): void; returnFocus?: HTMLElement }): PopoverHandle;
+export function openPicker(anchor: HTMLElement, options: { label: string; options: string[]; current?: string; icon?: string; onSelect(value: string, before?: string): ActionResult; search?: boolean; returnFocus?: HTMLElement }): PopoverHandle;
 export function initContextMenu(options: { root: Root; target: HTMLElement; rowSelector?: string; items(row: HTMLElement): CommandItem[] }): Handle & { open(row: HTMLElement, point?: { x: number; y: number }): void };
 
 // ── Command palette ──
@@ -67,17 +69,17 @@ export interface DialogHandle { dialog: HTMLDialogElement; close(after?: () => v
 export function openDialog(options: { root: Root; className?: string; labelledBy?: string; html: string; returnFocus?: HTMLElement; onEscape?(): void; onBackdrop?(): void }): DialogHandle;
 export function openConfirm(options: {
   root: Root; title: string; text?: string; confirm?: string; danger?: boolean; reason?: { label: string } | null;
-  choices?: { label: string; value: string; danger?: boolean }[]; onConfirm?(reason?: string): void; onChoice?(value: string): void;
+  choices?: { label: string; value: string; danger?: boolean }[]; onConfirm?(reason?: string): ActionResult; onChoice?(value: string): ActionResult;
   returnFocus?: HTMLElement; cancel?: string;
 }): { close(): void };
 export interface FormField { key: string; label: string; type?: 'text' | 'number' | 'select'; options?: string[]; value?: string; required?: boolean; hint?: string; inputmode?: string }
 export function openFormDialog(options: { root: Root; title: string; text?: string; fields?: FormField[]; submit?: string; onSubmit(values: Record<string, string>): boolean | string | Record<string, string> | Promise<boolean | string | Record<string, string>>; returnFocus?: HTMLElement }): { close(): void; dialog: HTMLDialogElement };
 export function openCreateDialog(options: { root: Root; title: string; scope?: string; fields?: { key: string; label: string; options: string[]; icon?: string; value?: string }[]; onSubmit(values: Record<string, string>): boolean | Promise<boolean>; returnFocus?: HTMLElement;
-  nameLabel?: string; inputs?: { key: string; label: string; placeholder?: string; maxlength?: number }[]; description?: string | false; check?(values: Record<string, string>): string | null | undefined }): { close(): void };
+  nameLabel?: string; inputs?: { key: string; label: string; placeholder?: string; maxlength?: number }[]; description?: string | false; check?(values: Record<string, string>): string | null | undefined | Promise<string | null | undefined> }): { close(): void };
 export function showBatchResult(options: { root: Root; action: string; noun: string; total: number; failed?: { name: string; reason: string }[]; returnFocus?: HTMLElement }): { close(): void } | null;
 export function openSplitDialog(options: { root: Root; title: string; sections: { id: string; label: string; icon?: string }[]; render(id: string): string; start?: string; onShow?(id: string, body: HTMLElement): void; returnFocus?: HTMLElement }): DialogHandle & { body: HTMLElement; show(id: string): void; current(): string };
 export function initAccountMenu(options: { root: Root; button?: HTMLElement; account?: string; items(): CommandItem[]; onSelect(item: CommandItem): void }): (Handle & { open(): void; menu: HTMLElement }) | null;
-export function toast(message: string, options?: { action?: { label: string; run(): void }; duration?: number }): () => void;
+export function toast(message: string, options?: { action?: { label: string; run(): ActionResult }; duration?: number }): () => void;
 
 // ── Lists ──
 export interface Filter { field: string; op: string; values: unknown[] }
@@ -93,7 +95,7 @@ export function initFilter(options: { root: Root; trigger: HTMLElement; bar: HTM
 export interface DisplayState { group: string | null; sort: { field: string; dir: 'asc' | 'desc' }; density: 'standard' | 'compact'; columns: [string, boolean][] }
 export function initDisplay(options: { root: Root; trigger: HTMLElement; groups: [string, string][]; sorts: [string, string][]; columns: [string, string][]; value: DisplayState; defaults: DisplayState; onChange(state: DisplayState): void }): Handle & { get(): DisplayState; set(state: DisplayState): void };
 export function initListKeys(options: { table: HTMLTableElement; onPreview?(id: string): void; onOpen?(id: string): void; onToggle?(id: string): void; onMove?(row: HTMLTableRowElement): void; onRange?(ids: string[], checked: boolean): void }): Handle & { refresh(): void; current(): HTMLTableRowElement | null; focus(id: unknown): void };
-export function initPropertyPickers(options: { container: HTMLElement; fields: Record<string, { label: string; options: string[]; icon?: string }>; value: Record<string, string>; onChange(key: string, value: string, old: string): void }): Handle & { set(value: Record<string, string>): void; get(): Record<string, string> };
+export function initPropertyPickers(options: { container: HTMLElement; fields: Record<string, { label: string; options: string[]; icon?: string; person?: boolean }>; value: Record<string, string>; onChange(key: string, value: string, old: string): ActionResult }): Handle & { set(value: Record<string, string>): void; get(): Record<string, string> };
 export function initSingleExpand(list: HTMLElement): Handle & { open(index: number): void };
 export function initTreeTable(table: HTMLTableElement, options?: { onToggle?(id: string, open: boolean): void; onMove?(row: HTMLTableRowElement): void }): Handle & { refresh(): void; expandAll(): void; collapseAll(): void; current(): HTMLTableRowElement | null; focus(id: unknown): void };
 export function toCSV(rows: Record<string, unknown>[], columns: { key: string; label: string; value?(row: Record<string, unknown>): unknown }[]): string;
@@ -102,7 +104,7 @@ export function treeTotals<T extends { id: unknown; parent?: unknown }>(rows: T[
 export function diffRecords<T extends Record<string, unknown>>(before: T[], after: T[], options?: { key?: string; fields?: (string | { key: string })[] }): { added: T[]; removed: T[]; changed: { id: string; before: T; after: T; fields: { field: string; from: unknown; to: unknown }[] }[]; unchanged: number };
 
 // ── Records and documents ──
-export function initComposer(form: HTMLFormElement, options: { onSubmit(text: string): boolean | Promise<boolean> }): Handle & { submit(): void };
+export function initComposer(form: HTMLFormElement, options: { onSubmit(text: string): boolean | Promise<boolean> }): Handle & { submit(): Promise<void> };
 export function initAnchorBar(nav: HTMLElement, options: { scroller: HTMLElement }): Handle & { refresh(): void };
 export interface ObjectProblem { control: HTMLElement; message: string; severity: 'error' | 'warning' }
 export function initObjectPage(root: Root, options?: {
@@ -133,7 +135,7 @@ export function setAIEnabled(on: boolean): void;
 export function createAIOutput(host: HTMLElement, options: {
   title: string; sources?: { label: string; href?: string }[]; consent?: string; needsConsent?(): boolean;
   generate(options: { signal: AbortSignal }): AsyncIterable<string>; adoptLabel?: string;
-  onAdopt?(text: string): void; onEdit?(text: string): void; onDiscard?(): void;
+  onAdopt?(text: string): ActionResult; onEdit?(text: string): ActionResult; onDiscard?(): ActionResult;
 }): Handle & { run(): Promise<void>; stop(): void; remove(): void; text(): string; element: HTMLElement };
-export function showSuggestion(anchor: HTMLElement, options: { key: string; label: string; value: string; reason: string; onAccept(): void; onDismiss?(): void }): { remove(): void } | null;
-export function openAIConfirm(options: { root: Root; title?: string; reason?: string; changes: { target: string; from?: string; to: string }[]; onConfirm?(changes: { target: string; from?: string; to: string }[]): void; returnFocus?: HTMLElement }): { close(): void };
+export function showSuggestion(anchor: HTMLElement, options: { key: string; label: string; value: string; reason: string; onAccept(value: string): ActionResult; onDismiss?(): ActionResult }): { remove(): void } | null;
+export function openAIConfirm(options: { root: Root; title?: string; reason?: string; changes: { target: string; from?: string; to: string }[]; onConfirm?(changes: { target: string; from?: string; to: string }[]): ActionResult; canUndo?: boolean; returnFocus?: HTMLElement }): { close(): void };
