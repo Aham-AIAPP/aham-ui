@@ -19,7 +19,7 @@ export function initPanels(root = document.querySelector('.aham-workbench')) {
       const on = t.dataset.panelToggle === id;
       t.setAttribute('aria-pressed', String(on));
       const p = panelOf(t.dataset.panelToggle);
-      if (p) p.hidden = !on;
+      if (p) { p.dataset.input = lastInput(); p.hidden = !on; }
     }
     const p = panelOf(id);
     if (p && (floating(p) || layer)) {

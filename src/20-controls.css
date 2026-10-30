@@ -127,9 +127,12 @@
  .aham-workbench .wb-crumbs-meta {display:none}
  .aham-workbench .wb-tabs {gap:var(--wb-s3)}
  .aham-workbench .wb-chip {flex:none;height:var(--wb-touch)}
+ .aham-workbench .wb-icon-btn {min-width:var(--wb-touch)}
+ .aham-workbench :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button)::after {inset:0}
 }
 @media (pointer:coarse) {
  .aham-workbench .wb-chip {height:var(--wb-touch)}
+ .aham-workbench :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button)::after {inset:0}
 }
 @media (prefers-reduced-motion: reduce) {
  .aham-workbench :is(.wb-btn,.wb-icon-btn):active {transform:none}

@@ -46,7 +46,10 @@ try{
     await page.setViewportSize({width,height:1000});await page.goto(`${base}/examples/${name}.html`);
     await page.locator('.aham-workbench').evaluate((el,t)=>el.dataset.theme=t,theme);await page.evaluate(()=>document.fonts.ready);
     const overflow=await page.evaluate(()=>({actual:document.documentElement.scrollWidth,viewport:innerWidth}));
-    assert(overflow.actual<=overflow.viewport+1,`${engine} ${name} ${theme} ${width}: page overflow ${JSON.stringify(overflow)}`);
+    if(overflow.actual>overflow.viewport+1){
+      const offenders=await page.evaluate(()=>[...document.querySelectorAll('body *')].filter(el=>{const r=el.getBoundingClientRect();return r.width&&r.right>innerWidth+1&&!el.closest('[hidden], .wb-table-wrap');}).slice(0,12).map(el=>({tag:el.tagName,cls:el.className,right:el.getBoundingClientRect().right})));
+      report.push({failure:`${engine} ${name} ${theme} ${width}: page overflow`,overflow,offenders});
+    }
     if(engine==='chromium')await page.screenshot({path:`${out}/${name}-${theme}-${width}.png`,fullPage:true});
    }
    if(engine==='chromium'){await page.goto(`${base}/examples/print.html`);await page.pdf({path:`${out}/print-A4.pdf`,format:'A4',printBackground:true});}
@@ -54,4 +57,4 @@ try{
   }finally{await browser.close();}
  }
 }catch(error){report.push({failure:error.stack});process.exitCode=1;console.error(error);}
-finally{await writeFile(`${out}/report.json`,JSON.stringify(report,null,2));server.kill();}
+finally{if(report.some(r=>r.failure))process.exitCode=1;await writeFile(`${out}/report.json`,JSON.stringify(report,null,2));server.kill();}
