@@ -8,6 +8,7 @@ export const PAIRS = [
   ['faint', 'bg', 3, '图标、禁用文字'], ['faint', 'fill', 3, '小元素底色上的图标'],
   ['line-strong', 'bg', 3, '输入框的描边'], ['line-strong', 'pop-bg', 3, '弹层里的输入框描边'],
   ['on', 'action', 4.5, '主按钮文字'], ['on', 'action-hover', 4.5, '主按钮悬停时的文字'], ['on', 'action-press', 4.5, '主按钮按下时的文字'],
+  ['ink', 'button', 4.5, '次要按钮文字'], ['ink', 'button-hover', 4.5, '次要按钮悬停文字'], ['ink', 'button-press', 4.5, '次要按钮按下文字'], ['danger', 'danger-press', 4.5, '危险按钮按下文字'],
   ['blue', 'bg', 3, '焦点框、链接图标'],
   ['success', 'bg', 4.5, '成功文字'], ['warning', 'bg', 4.5, '警示文字'], ['danger', 'bg', 4.5, '错误文字'], ['info', 'bg', 4.5, '信息文字'],
   ['danger', 'danger-bg', 4.5, '错误提示框里的文字'], ['ink', 'warning-bg', 4.5, '警示提示框里的文字'], ['ink', 'warning-mark', 4.5, '待核对的值'],

@@ -9,6 +9,7 @@
 export function openDialog({ root, className = 'wb-dialog', labelledBy, html, returnFocus, onEscape, onBackdrop }) {
   const dialog = document.createElement('dialog');
   dialog.className = className;
+  dialog.dataset.input = lastInput();
   if (labelledBy) dialog.setAttribute('aria-labelledby', labelledBy);
   dialog.innerHTML = html;
   root.append(dialog);
@@ -17,8 +18,10 @@ export function openDialog({ root, className = 'wb-dialog', labelledBy, html, re
   function close(after) {
     if (closed) return;
     closed = true;
+    dialog.dataset.input = lastInput();
     release?.();
     leave(dialog, () => {
+      moveDialogToasts(dialog);
       dialog.close();
       dialog.remove();
       [returnFocus, opener].find(el => el?.isConnected)?.focus?.();

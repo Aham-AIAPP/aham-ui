@@ -28,7 +28,10 @@
     "reason-empty-error",
     "form-field-error",
     "batch-partial",
-    "batch-all-failed"
+    "batch-all-failed",
+    "saving",
+    "error",
+    "retry"
   ],
   "keyboard": {
     "Esc": "关闭，不执行",
@@ -39,7 +42,8 @@
     "按钮写动作本身，危险操作红字，最多两个；离开草稿弹窗例外，用 choices",
     "需要原因时原因必填",
     "批量处理全部成功用轻提示，有失败时弹窗列出失败项和原因",
-    "一次只开一个模态弹窗"
+    "一次只开一个模态弹窗",
+    "等待异步回调成功后才关闭、清空或提交新值；失败保留原内容，错误就地显示，允许重试"
   ],
   "accessibility": [
     "原生 dialog 加 showModal",

@@ -1,5 +1,5 @@
 // ── Popover ──────────────────────────────────────────────────────────────────
-// Same contract as components/popover.json: non-modal, one at a time (no cascading), light dismiss.
+// Same contract as components/command-menu.json: non-modal, one at a time (no cascading), light dismiss.
 // Esc or finishing returns focus to the trigger. Arrow-key movement inside lists belongs to createCommand.
 // api.trigger may be reassigned when a re-render replaces the trigger element; call api.place() afterwards.
 let openPop = null;
@@ -8,23 +8,29 @@ let openPop = null;
 export function openPopover(trigger, panel, { align = 'auto', onClose, point = null, returnFocus = null } = {}) {
   closePopover('replace');
   panel._stopLeave?.();
+  panel.inert = false;
+  panel.dataset.input = lastInput();
   panel.hidden = false;
   // The trigger keeps its pressed look while the popover is open (rules/11-交互.md 11.2).
   const expands = el => el.hasAttribute?.('aria-haspopup') || el.matches?.('button, [role=button], summary');
   if (expands(trigger)) trigger.setAttribute('aria-expanded', 'true');
   const place = () => placePopover(api.trigger, panel, align, point);
+  const focusOutside = e => { if (!panel.contains(e.target) && !api.trigger.contains(e.target)) api.close('tab'); };
   const outside = e => { if (!panel.contains(e.target) && !api.trigger.contains(e.target)) api.close('outside'); };
   const release = pushLayer(reason => api.close(reason));
   document.addEventListener('pointerdown', outside, true);
+  document.addEventListener('focusin', focusOutside);
   addEventListener('resize', place);
   document.addEventListener('scroll', place, true);
   const api = {
     panel, trigger, place,
     close(reason = 'done') {
       if (openPop !== api) return;
+      panel.dataset.input = lastInput();
       openPop = null;
       release();
       document.removeEventListener('pointerdown', outside, true);
+      document.removeEventListener('focusin', focusOutside);
       removeEventListener('resize', place);
       document.removeEventListener('scroll', place, true);
       if (reason === 'replace') panel.hidden = true;
@@ -37,7 +43,7 @@ export function openPopover(trigger, panel, { align = 'auto', onClose, point = n
   };
   openPop = api;
   place();
-  (panel.querySelector('[autofocus]') || panel.querySelector('input:not([type=checkbox]), select, textarea') || panel.querySelector('[role=listbox][tabindex="0"], button'))?.focus({ preventScroll: true });
+  (panel.querySelector('[autofocus]') || panel.querySelector('input:not([type=checkbox]), select, textarea') || panel.querySelector('[role=listbox][tabindex="0"], [role=menu][tabindex="0"], button'))?.focus({ preventScroll: true });
   return api;
 }
 export const closePopover = (reason = 'done') => openPop?.close(reason);
@@ -55,6 +61,7 @@ function placePopover(trigger, panel, align, point) {
   let top = r.bottom + gap;
   if (top + h > innerHeight - edge && r.top - gap - h > edge) top = r.top - gap - h;
   panel.style.left = `${Math.round(left)}px`;
+  top = Math.max(edge, Math.min(top, innerHeight - h - edge));
   panel.style.top = `${Math.round(top)}px`;
   // Grow out of the trigger's side (rules/11-交互.md 11.4).
   panel.style.transformOrigin = `${end ? 'right' : 'left'} ${top < r.top ? 'bottom' : 'top'}`;

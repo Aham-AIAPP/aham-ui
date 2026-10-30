@@ -1,5 +1,5 @@
-:where(.aham-workbench) .wb-icon-btn{display:inline-grid;place-items:center;flex:none;width:var(--wb-header-control);height:var(--wb-header-control);padding:0;border:0;border-radius:var(--wb-radius);background:transparent;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-icon-btn:hover{background:var(--wb-hover);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-icon-btn{display:inline-grid;place-items:center;flex:none;width:var(--wb-header-control);height:var(--wb-header-control);padding:0;border:0;border-radius:var(--wb-control-radius);background:transparent;color:var(--wb-muted)}
+:where(.aham-workbench) .wb-icon-btn:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-hover);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-icon-btn[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-status{display:inline-flex;align-items:center;gap:var(--wb-dot);color:var(--wb-ink);white-space:nowrap}
 :where(.aham-workbench) .wb-status b{width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-muted)}
@@ -12,37 +12,37 @@
 /* Tabular figures for amounts and quantities only: in codes and dates they widen the hyphen (rules/2-视觉.md 2.4). */
 :where(.aham-workbench) .wb-tnum{font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
-/* Buttons: secondary ones are a filled surface with no outline (Claude client); the primary carries the one blue. */
-:where(.aham-workbench) .wb-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-s2);border:0;border-radius:var(--wb-radius);background:var(--wb-button);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
+/* Buttons: secondary ones are a filled surface with no outline (Claude client); the primary uses a paired neutral foreground and background. */
+:where(.aham-workbench) .wb-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-icon-gap);border:0;border-radius:var(--wb-control-radius);background:var(--wb-button);color:var(--wb-ink);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) a.wb-btn{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
-:where(.aham-workbench) .wb-btn:hover{background:var(--wb-button-hover)}
+:where(.aham-workbench) .wb-btn:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-button-hover)}
 :where(.aham-workbench) .wb-btn.ghost{background:transparent;color:var(--wb-muted)}
-:where(.aham-workbench) .wb-btn.ghost:hover{background:var(--wb-hover);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-btn.ghost:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-hover);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.ghost[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.primary{background:var(--wb-action);color:var(--wb-on);font-weight:500}
-:where(.aham-workbench) .wb-btn.primary:hover{background:var(--wb-action-hover)}
+:where(.aham-workbench) .wb-btn.primary:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-action-hover)}
 :where(.aham-workbench) button:disabled{opacity:.4;cursor:not-allowed}
 :where(.aham-workbench) .wb-btn.primary:disabled{opacity:1;background:var(--wb-button);color:var(--wb-faint)}
 :where(.aham-workbench) .wb-tabs-bar{display:flex;justify-content:space-between;align-items:center;border-bottom:var(--wb-hairline) solid var(--wb-line);gap:var(--wb-s2)}
 :where(.aham-workbench) .wb-tabs{display:flex;gap:var(--wb-s5)}
 :where(.aham-workbench) .wb-tabs button{border:0;border-bottom:2px solid transparent;background:transparent;padding:var(--wb-s2) 0;color:var(--wb-muted);white-space:nowrap}
 :where(.aham-workbench) .wb-tabs button.active{color:var(--wb-ink);border-bottom-color:var(--wb-blue)}
-:where(.aham-workbench) .wb-seg{display:inline-flex;width:fit-content;gap:var(--wb-s1);background:var(--wb-fill);padding:var(--wb-s1);border-radius:var(--wb-radius)}
+:where(.aham-workbench) .wb-seg{display:inline-flex;width:fit-content;gap:var(--wb-s1);background:var(--wb-fill);padding:var(--wb-s1);border-radius:var(--wb-control-radius)}
 :where(.aham-workbench) .wb-seg button{background:transparent;border:0;border-radius:var(--wb-radius-sm);padding:var(--wb-s1) var(--wb-s2);color:var(--wb-muted);white-space:nowrap}
-:where(.aham-workbench) .wb-seg button:hover{color:var(--wb-ink)}
+:where(.aham-workbench) .wb-seg button:hover:not(:disabled,[aria-disabled=true]){color:var(--wb-ink)}
 :where(.aham-workbench) .wb-seg button[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-seg.sm{height:var(--wb-header-control);padding:0;gap:var(--wb-s1);background:transparent}
-:where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s3);border-radius:var(--wb-radius);color:var(--wb-ink-2)}
-:where(.aham-workbench) .wb-seg.sm button:hover{background:var(--wb-hover);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-seg.sm button{height:100%;padding:0 var(--wb-s3);border-radius:var(--wb-control-radius);color:var(--wb-ink-2)}
+:where(.aham-workbench) .wb-seg.sm button:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-hover);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-seg.sm button[aria-pressed=true]{background:var(--wb-selected);color:var(--wb-ink);font-weight:500}
 :where(.aham-workbench) .wb-btn.icon-only{padding:0;width:var(--wb-control)}
 :where(.aham-workbench) .wb-btn.sm.icon-only{width:var(--wb-header-control)}
 :where(.aham-workbench) .wb-dot{position:absolute;top:var(--wb-s1);right:var(--wb-s1);width:var(--wb-dot);height:var(--wb-dot);border-radius:50%;background:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn.danger{background:var(--wb-button);color:var(--wb-danger)}
-:where(.aham-workbench) .wb-btn.danger:hover{background:var(--wb-danger-bg)}
+:where(.aham-workbench) .wb-btn.danger:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-danger-bg)}
 :where(.aham-workbench) .wb-btn.ghost.danger{background:transparent;color:var(--wb-danger)}
-:where(.aham-workbench) .wb-btn.ghost.danger:hover{background:var(--wb-hover)}
+:where(.aham-workbench) .wb-btn.ghost.danger:hover:not(:disabled,[aria-disabled=true]){background:var(--wb-hover)}
 :where(.aham-workbench) .wb-switch{display:inline-flex;align-items:center;gap:var(--wb-s2);cursor:pointer;color:var(--wb-ink)}
 :where(.aham-workbench) .wb-switch input{position:absolute;opacity:0;width:1px;height:1px}
 :where(.aham-workbench) .wb-switch span{position:relative;width:28px;height:16px;border-radius:var(--wb-radius-pill);background:var(--wb-line-strong);transition:background var(--wb-fast) var(--wb-ease)}
@@ -90,13 +90,13 @@
 :where(.aham-workbench) .wb-stage-icon[data-state=blocked]{color:var(--wb-warning)}
 /* Links in running text (9.0, rules/2-视觉.md 2.2): body colour with a quiet underline; blue is kept for focus and the primary button. */
 :where(.aham-workbench) .wb-link,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a{padding:0;border:0;background:transparent;color:var(--wb-ink);text-decoration:underline;text-decoration-color:var(--wb-line-strong);text-decoration-thickness:1px;text-underline-offset:3px;cursor:pointer}
-:where(.aham-workbench) .wb-link:hover,:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a:hover{text-decoration-color:currentColor}
+:where(.aham-workbench) .wb-link:hover:not(:disabled,[aria-disabled=true]),:where(.aham-workbench) :is(.wb-detail-body,.wb-comment) a:hover:not(:disabled,[aria-disabled=true]){text-decoration-color:currentColor}
 /* Field: text box, select and textarea share one look, 32px with a 1px line; .sm is 28px for toolbars and popovers. */
-:where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:var(--wb-leading);height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line-strong);border-radius:var(--wb-radius);background:var(--wb-bg);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-field{display:inline-block;vertical-align:middle;box-sizing:border-box;margin:0;font:inherit;line-height:var(--wb-leading);height:var(--wb-control);min-width:0;padding:0 var(--wb-s2);border:1px solid var(--wb-line-strong);border-radius:var(--wb-control-radius);background:var(--wb-bg);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-field.sm{height:var(--wb-header-control)}
 :where(.aham-workbench) select.wb-field{appearance:none;padding-inline-end:calc(var(--wb-s5) + var(--wb-s1));background-image:linear-gradient(45deg,transparent calc(50% - 0.75px),var(--wb-muted) calc(50% - 0.75px),var(--wb-muted) calc(50% + 0.75px),transparent calc(50% + 0.75px)),linear-gradient(-45deg,transparent calc(50% - 0.75px),var(--wb-muted) calc(50% - 0.75px),var(--wb-muted) calc(50% + 0.75px),transparent calc(50% + 0.75px));background-size:5px 5px;background-repeat:no-repeat;background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%}
 :where(.aham-workbench) textarea.wb-field{height:auto;min-height:calc(var(--wb-control) * 2);padding-block:5px;line-height:var(--wb-leading);resize:vertical}
-:where(.aham-workbench) .wb-field:hover{border-color:var(--wb-muted)}
+:where(.aham-workbench) .wb-field:hover:not(:disabled,[aria-disabled=true]){border-color:var(--wb-muted)}
 :where(.aham-workbench) .wb-field:focus{outline:0;border-color:var(--wb-blue);box-shadow:0 0 0 3px var(--wb-blue-bg)}
 :where(.aham-workbench) .wb-field[aria-invalid=true]{outline:0;border-color:var(--wb-danger)}
 :where(.aham-workbench) .wb-field:disabled{background:var(--wb-fill);color:var(--wb-faint);cursor:not-allowed}
@@ -114,24 +114,32 @@
 :where(.aham-workbench) .wb-choices.is-column{flex-direction:column}
 /* States (rules/11-交互.md 11.2–11.4): hover comes in at once and fades out; press and open keep two shades deeper. */
 :where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-seg button,.wb-chip>button){transition:var(--wb-state-out)}
-:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-seg button,.wb-chip>button):hover{transition:var(--wb-state-in)}
-:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn):not(:disabled,[aria-disabled=true]):active{transform:scale(var(--wb-press-scale))}
-:where(.aham-workbench) :is(.wb-icon-btn,.wb-seg button,.wb-chip>button,.wb-btn.ghost):not(:disabled):active{background:var(--wb-selected)}
-:where(.aham-workbench) .wb-btn:not(.primary,.danger,.ghost):not(:disabled):active{background:var(--wb-button-press)}
-:where(.aham-workbench) .wb-btn.primary:not(:disabled):active{background:var(--wb-action-press)}
-:where(.aham-workbench) .wb-btn.danger:not(:disabled):active{background:var(--wb-danger-press)}
-:where(.aham-workbench) :is(.wb-btn.ghost,.wb-icon-btn,.wb-chip>button)[aria-expanded=true]{background:var(--wb-selected);color:var(--wb-ink)}
-:where(.aham-workbench) .wb-btn:not(.primary,.ghost)[aria-expanded=true]{background:var(--wb-button-press)}
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn,.wb-seg button,.wb-chip>button):hover:not(:disabled,[aria-disabled=true]){transition:var(--wb-state-in)}
+:where(.aham-workbench) :is(.wb-icon-btn,.wb-seg button,.wb-chip>button,.wb-btn.ghost):not(:disabled,[aria-disabled=true]):active{background:var(--wb-selected)}
+:where(.aham-workbench) .wb-btn:not(.primary,.danger,.ghost):not(:disabled,[aria-disabled=true]):active{background:var(--wb-button-press)}
+:where(.aham-workbench) .wb-btn.primary:not(:disabled,[aria-disabled=true]):active{background:var(--wb-action-press)}
+:where(.aham-workbench) .wb-btn.danger:not(:disabled,[aria-disabled=true]):active{background:var(--wb-danger-press)}
+:where(.aham-workbench) :is(.wb-btn.ghost,.wb-icon-btn,.wb-chip>button)[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-selected);color:var(--wb-ink)}
+:where(.aham-workbench) .wb-btn:not(.primary,.ghost)[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-button-press)}
 
 /* Environment overrides: screen size, pointer, contrast and motion preferences. */
 @media (max-width: {{breakpoint.bp-mobile}}) {
  .aham-workbench .wb-crumbs-meta {display:none}
  .aham-workbench .wb-tabs {gap:var(--wb-s3)}
  .aham-workbench .wb-chip {flex:none;height:var(--wb-touch)}
+ .aham-workbench .wb-icon-btn {min-width:var(--wb-touch)}
+ .aham-workbench :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button)::after {inset:0}
 }
 @media (pointer:coarse) {
  .aham-workbench .wb-chip {height:var(--wb-touch)}
+ .aham-workbench :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button)::after {inset:0}
 }
 @media (prefers-reduced-motion: reduce) {
  .aham-workbench :is(.wb-btn,.wb-icon-btn):active {transform:none}
 }
+
+/* Disabled has no hover/press geometry. Busy keeps the variant pair so its progress text stays readable. */
+:where(.aham-workbench) :is(.wb-btn,.wb-icon-btn)[aria-disabled=true]{opacity:.4;cursor:not-allowed}
+:where(.aham-workbench) .wb-btn.primary[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-action-press);color:var(--wb-on)}
+:where(.aham-workbench) [aria-busy=true] .wb-btn:disabled,:where(.aham-workbench) .wb-btn[aria-busy=true]{opacity:1}
+:where(.aham-workbench) [aria-busy=true] .wb-btn.primary:disabled,:where(.aham-workbench) .wb-btn.primary[aria-busy=true]{background:var(--wb-action);color:var(--wb-on)}

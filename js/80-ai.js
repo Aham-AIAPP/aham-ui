@@ -26,7 +26,8 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
     <p class="wb-sr-only" role="status"></p>`;
   host.append(box);
   const q = s => box.querySelector(s), body = q('.wb-ai-body'), actions = q('.wb-ai-actions'), status = q('[role=status]');
-  let controller = null, release = null, text = '', consented = false;
+  let controller = null, release = null, text = '', consented = false, pending = false, removed = false;
+  const error = document.createElement('p'); error.className = 'wb-value-error'; error.setAttribute('role', 'alert'); box.append(error);
   const button = (id, label, kind = 'ghost') => `<button type="button" class="wb-btn sm ${kind}" data-ai="${id}">${escapeHtml(label)}</button>`;
   function show() { body.innerHTML = text.split(/\n{2,}/).filter(Boolean).map(p => `<p>${escapeHtml(p)}</p>`).join(''); }
   function paint(state, message = '') {
@@ -55,6 +56,8 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
     status.textContent = `已停止：${title}`;
   }
   async function run() {
+    if (!life.active || pending || removed) return;
+    error.textContent = '';
     if (!consented && needsConsent()) { paint('consent'); return; }
     controller?.abort();
     controller = new AbortController();
@@ -77,17 +80,25 @@ export function createAIOutput(host, { title, sources = [], consent = '会把当
       paint('failed', err?.message);
     }
   }
-  function remove() { if (box.dataset.state === 'generating') controller.abort(); unlayer(); box.remove(); }
-  life.on(box, 'click', e => {
+  function remove() { removed = true; controller?.abort(); unlayer(); box.remove(); }
+  life.keep(remove);
+  life.on(box, 'click', async e => {
     const b = e.target.closest('[data-ai]');
-    if (!b) return;
+    if (!b || pending || removed) return;
     const act = b.dataset.ai;
     if (act === 'stop') stop();
     else if (act === 'allow') { consented = true; setAIEnabled(true); run(); }
     else if (act === 'retry') run();
-    else if (act === 'adopt') { onAdopt?.(text); remove(); }
-    else if (act === 'edit') { onEdit?.(text); remove(); }
-    else if (act === 'discard') { onDiscard?.(); remove(); }
+    else if (['adopt', 'edit', 'discard'].includes(act)) {
+      pending = true; error.textContent = '';
+      const restore = pendingUI(box, b, '处理中…');
+      try {
+        const result = await (act === 'adopt' ? onAdopt?.(text) : act === 'edit' ? onEdit?.(text) : onDiscard?.());
+        if (result === false) throw new Error('操作失败，AI 内容已保留，可以重试。');
+        if (life.active) remove();
+      } catch (err) { if (life.active && !removed) error.textContent = actionError(err); }
+      finally { restore(); pending = false; }
+    }
   });
   run();
   return { run, stop, remove, text: () => text, element: box, destroy: life.end };
@@ -99,36 +110,58 @@ const dismissedSuggestions = new Set();
 export function showSuggestion(anchor, { key, label, value, reason, onAccept, onDismiss }) {
   const id = `${key}:${value}`;
   if (dismissedSuggestions.has(id)) return null;
-  (anchor.closest('.aham-workbench') ?? document).querySelectorAll('.wb-ai-suggest').forEach(el => el.remove());
+  const page = anchor.closest('.aham-workbench') ?? document;
+  if (page.querySelector('.wb-ai-suggest[aria-busy=true]')) return null;
+  page.querySelectorAll('.wb-ai-suggest').forEach(el => el.remove());
   const el = document.createElement('div');
   el.className = 'wb-ai-suggest';
   el.setAttribute('role', 'note');
   el.setAttribute('aria-label', `AI 建议把${label}改为${value}`);
   el.innerHTML = `${icon('ai')}<span>建议：<strong>${escapeHtml(value)}</strong></span>${reason ? `<span class="wb-ai-reason">${escapeHtml(reason)}</span>` : ''}<span class="wb-ai-suggest-actions"><button type="button" class="wb-btn sm ghost" data-ai="accept">采纳</button><button type="button" class="wb-btn sm ghost" data-ai="dismiss">忽略</button></span>`;
   anchor.after(el);
-  el.addEventListener('click', e => {
+  let pending = false;
+  const error = document.createElement('span'); error.className = 'wb-value-error'; error.setAttribute('role', 'alert'); el.append(error);
+  el.addEventListener('click', async e => {
     const b = e.target.closest('[data-ai]');
-    if (!b) return;
-    el.remove();
-    if (b.dataset.ai === 'accept') onAccept?.(value);
-    else { dismissedSuggestions.add(id); onDismiss?.(); }
-    (anchor.querySelector('button') ?? anchor).focus?.();
+    if (!b || pending) return;
+    pending = true; error.textContent = '';
+    const restore = pendingUI(el, b, '处理中…');
+    try {
+      if (await (b.dataset.ai === 'accept' ? onAccept?.(value) : onDismiss?.()) === false) throw new Error('操作失败，可以重试。');
+      if (!el.isConnected) return;
+      el.remove();
+      if (b.dataset.ai === 'dismiss') dismissedSuggestions.add(id);
+      (anchor.querySelector('button') ?? anchor).focus?.();
+    } catch (err) { if (el.isConnected) error.textContent = actionError(err); }
+    finally { restore(); pending = false; }
   });
   return { remove: () => el.remove() };
 }
 
 // AI-proposed changes are written only after this confirmation (rules/8-AI协作.md 8.5). changes: [{ target, from?, to }].
-export function openAIConfirm({ root, title = '确认 AI 提出的修改', reason, changes, onConfirm, returnFocus }) {
-  const { dialog, close } = openDialog({ root, className: 'wb-dialog wb-ai-confirm', labelledBy: 'wb-ai-confirm-title', returnFocus, html: `<form method="dialog">
+export function openAIConfirm({ root, title = '确认 AI 提出的修改', reason, changes, onConfirm, returnFocus, canUndo = false }) {
+  let pending = false;
+  const modal = openDialog({ root, onEscape: () => { if (!pending) modal.close(); }, className: 'wb-dialog wb-ai-confirm', labelledBy: 'wb-ai-confirm-title', returnFocus, html: `<form method="dialog">
     <span class="wb-ai-mark">${icon('ai')}<span>AI 建议</span></span>
     <h2 id="wb-ai-confirm-title">${escapeHtml(title)}</h2>
     ${reason ? `<p>${escapeHtml(reason)}</p>` : ''}
     <ul class="wb-ai-changes">${changes.map(c => `<li><span>${escapeHtml(c.target)}</span><span>${c.from != null ? `${escapeHtml(c.from)} → ` : ''}<strong>${escapeHtml(c.to)}</strong></span></li>`).join('')}</ul>
-    <p class="wb-ai-note">共 ${changes.length} 项。确认后才会写入，写入后可以撤销。</p>
-    <div class="wb-dialog-foot"><button type="button" class="wb-btn" data-ai-confirm="cancel">取消</button><button type="submit" class="wb-btn primary">确认修改</button></div>
+    <p class="wb-ai-note">共 ${changes.length} 项。确认后才会写入。${canUndo ? '写入后可以撤销。' : ''}</p>
+    <p class="wb-value-error" role="alert"></p><div class="wb-dialog-foot"><button type="button" class="wb-btn" data-ai-confirm="cancel">取消</button><button type="submit" class="wb-btn primary">确认修改</button></div>
   </form>` });
-  dialog.querySelector('[data-ai-confirm=cancel]').addEventListener('click', () => close());
-  dialog.querySelector('form').addEventListener('submit', e => { e.preventDefault(); close(() => onConfirm?.(changes)); });
+  const { dialog, close } = modal;
+  dialog.querySelector('[data-ai-confirm=cancel]').addEventListener('click', () => { if (!pending) close(); });
+  dialog.querySelector('form').addEventListener('submit', async e => {
+    e.preventDefault(); if (pending || modal.closed) return;
+    pending = true;
+    const error = dialog.querySelector('[role=alert]'); error.textContent = '';
+    const restore = pendingUI(dialog, dialog.querySelector('[type=submit]'), '写入中…');
+    try {
+      if (await onConfirm?.(changes) === false) throw new Error('写入失败，可以重试。');
+      if (!modal.closed) close();
+    } catch (err) { if (!modal.closed) error.textContent = actionError(err); }
+    finally { restore(); pending = false; }
+  });
   dialog.querySelector('[type=submit]').focus();
   return { close: () => close() };
 }

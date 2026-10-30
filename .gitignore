@@ -17,3 +17,7 @@ Icon?
 
 # local tooling
 .claude/
+
+node_modules/
+qa-results/
+work/

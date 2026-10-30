@@ -9,10 +9,10 @@
     <a class="wb-btn sm ghost" href="document.html">返回单据</a>
     <span class="wb-meta">打印预览 · A4 纵向</span>
     <span class="wb-spacer"></span>
-    <span class="wb-meta" id="print-note"></span>
+    <span class="wb-meta wb-print-note" id="print-note"></span>
     <button type="button" class="wb-btn sm primary" id="print-go" data-tooltip="打印" data-keys="mod+p">打印</button>
   </div>
-  <main class="wb-sheet" id="sheet" aria-label="打印内容"></main>
+  <div class="wb-sheet-scroll" role="region" aria-label="A4 打印内容，可横向滚动" tabindex="0"><main class="wb-sheet" id="sheet" aria-label="打印内容"></main></div>
 </div>
 <script type="module" src="./print.mjs"></script>
 </body>

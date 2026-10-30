@@ -13,14 +13,18 @@
     ".wb-sheet-head",
     ".wb-sheet-mark",
     ".wb-sheet-total",
-    ".wb-sheet-sign"
+    ".wb-sheet-sign",
+    ".wb-sheet-scroll",
+    ".wb-print-note"
   ],
   "rules": [
     "A4 纵向，边距 15mm",
     "未生效的单据印「草稿 · 未生效」这类标记",
     "金额写大写（chineseAmount）",
     "表头每页重复，一行不拆到两页",
-    "打印一律用亮色"
+    "打印一律用亮色",
+    "窄屏预览在可键盘访问的 wb-sheet-scroll 容器内横向滚动，页面和工具栏不溢出；打印时解除滚动",
+    "窄屏工具栏把状态说明放在第二行，文字不超出工具栏边界"
   ],
   "accessibility": [
     "预览纸上的内容不可交互"

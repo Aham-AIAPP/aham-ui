@@ -9,10 +9,11 @@
 // returnFocus: where focus goes on close when the element that opened the dialog was re-rendered meanwhile.
 export function openCreateDialog({ root, title: heading, scope, fields = [], onSubmit, returnFocus, nameLabel = '标题', inputs = [], description = '补充说明…', check }) {
   const props = Object.fromEntries(fields.map(f => [f.key, f.value ?? '']));
-  let confirm = null, foot = null, name = null;
+  let confirm = null, foot = null, name = null, pending = false;
+  let initialProps = JSON.stringify(props);
   const keep = () => { foot.hidden = false; confirm.hidden = true; name.focus(); };
-  const { dialog, close: finish } = openDialog({ root, className: 'wb-create', labelledBy: 'wb-create-title', returnFocus,
-    onEscape: () => (confirm.hidden ? askClose() : keep()), html: `<form method="dialog" novalidate>
+  const modal = openDialog({ root, className: 'wb-create', labelledBy: 'wb-create-title', returnFocus,
+    onEscape: () => { if (!pending) confirm.hidden ? askClose() : keep(); }, html: `<form method="dialog" novalidate>
     <div class="wb-create-head">${scope ? `<span class="wb-create-scope">${escapeHtml(scope)}</span>${icon('chevron-right')}` : ''}<span id="wb-create-title">${escapeHtml(heading)}</span></div>
     <input class="wb-create-name" name="title" aria-label="${escapeHtml(nameLabel)}" placeholder="${escapeHtml(nameLabel)}" maxlength="200" autocomplete="off" aria-describedby="wb-create-error">
     <p class="wb-value-error" id="wb-create-error" role="alert"></p>
@@ -25,6 +26,7 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     </div>
     <div class="wb-create-foot wb-create-confirm" hidden><span>有未保存的内容。</span><div class="wb-create-actions"><button type="button" class="wb-btn sm" data-create="keep">继续编辑</button><button type="button" class="wb-btn sm ghost danger" data-create="discard">放弃</button><button type="button" class="wb-btn sm primary" data-create="save">创建</button></div></div>
   </form>` });
+  const { dialog, close: finish } = modal;
   const form = dialog.querySelector('form'), desc = form.elements.description || { value: '' }, err = dialog.querySelector('#wb-create-error');
   name = form.elements.title;
   [foot, confirm] = dialog.querySelectorAll('.wb-create-foot');
@@ -34,30 +36,40 @@ export function openCreateDialog({ root, title: heading, scope, fields = [], onS
     b.classList.toggle('is-empty', !v);
     b.setAttribute('aria-label', `${f.label}：${v || '未设置'}`);
   });
-  const dirty = () => Boolean(name.value.trim() || desc.value.trim() || inputs.some(f => form.elements[f.key].value.trim()));
+  const dirty = () => Boolean(name.value.trim() || desc.value.trim() || inputs.some(f => form.elements[f.key].value.trim()) || JSON.stringify(props) !== initialProps);
   function askClose() {
+    if (pending) return;
     if (!dirty()) { finish(); return; }
     foot.hidden = true; confirm.hidden = false;
     confirm.querySelector('[data-create="keep"]').focus();
   }
   async function submit() {
+    if (pending || modal.closed) return;
     const t = name.value.trim();
     const fail = text => { err.textContent = text; name.setAttribute('aria-invalid', 'true'); name.focus(); foot.hidden = false; confirm.hidden = true; };
     if (!t) { fail(`${nameLabel}未填写`); return; }
     const values = { title: t, description: desc.value.trim(), ...Object.fromEntries(inputs.map(f => [f.key, form.elements[f.key].value.trim()])), ...props };
-    const problem = check?.(values);
-    if (problem) { fail(problem); return; }
-    const ok = await onSubmit(values);
-    if (!ok) return;
-    if (form.more.checked) { name.value = ''; desc.value = ''; inputs.forEach(f => { form.elements[f.key].value = ''; }); err.textContent = ''; name.removeAttribute('aria-invalid'); name.focus(); return; }
-    finish();
+    pending = true; err.textContent = '';
+    const restore = pendingUI(form, form.querySelector(confirm.hidden ? '[type=submit]' : '[data-create=save]'), '创建中…');
+    try {
+      const problem = await check?.(values);
+      if (modal.closed) return;
+      if (problem) { fail(problem); return; }
+      if (!await onSubmit(values)) throw new Error('创建失败，内容已保留，可以重试。');
+      if (modal.closed) return;
+      if (form.elements.more.checked) {
+        name.value = ''; desc.value = ''; inputs.forEach(f => { form.elements[f.key].value = ''; });
+        initialProps = JSON.stringify(props); name.removeAttribute('aria-invalid'); keep();
+      } else finish();
+    } catch (error) { if (!modal.closed) err.textContent = actionError(error); }
+    finally { restore(); pending = false; if (!modal.closed) name.focus(); }
   }
   form.addEventListener('submit', e => { e.preventDefault(); submit(); });
   form.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey) && !e.isComposing) { e.preventDefault(); submit(); } });
   name.addEventListener('input', () => { err.textContent = ''; name.removeAttribute('aria-invalid'); });
   dialog.addEventListener('click', e => {
     const b = e.target.closest('button');
-    if (!b) return;
+    if (!b || pending || modal.closed) return;
     if (b.dataset.createProp) {
       const f = fields.find(x => x.key === b.dataset.createProp);
       openPicker(b, { label: f.label, options: f.options, current: props[f.key], icon: f.icon, onSelect: v => { props[f.key] = v; paintProps(); } });

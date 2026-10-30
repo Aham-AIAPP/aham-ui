@@ -17,10 +17,12 @@ export function pushLayer(close) {
 // Plays an element's exit transition ([data-leaving] in each component style, rules/11-交互.md 11.4), then runs done.
 // With reduced motion, or without a transition, done runs at once. Returns a function that cancels the exit.
 export function leave(el, done) {
+  const wasInert = el.inert;
+  el.inert = true;
   el.dataset.leaving = '';
   const ms = Math.max(0, ...getComputedStyle(el).transitionDuration.split(',').map(v => parseFloat(v) * (v.trim().endsWith('ms') ? 1 : 1000) || 0));
   let timer = 0;
-  const stop = () => { clearTimeout(timer); delete el.dataset.leaving; };
+  const stop = () => { clearTimeout(timer); delete el.dataset.leaving; el.inert = wasInert; };
   if (!ms) { stop(); done(); return () => {}; }
   timer = setTimeout(() => { stop(); done(); }, ms);
   return stop;
@@ -30,6 +32,7 @@ export function leave(el, done) {
 function scope() {
   const ac = new AbortController(), undo = [];
   return {
+    get active() { return !ac.signal.aborted; },
     on(target, type, fn, options) {
       target?.addEventListener(type, fn, { ...(typeof options === 'boolean' ? { capture: options } : options), signal: ac.signal });
     },
@@ -55,3 +58,31 @@ if (typeof document !== 'undefined') {
   document.addEventListener('keydown', () => { inputKind = 'key'; }, true);
 }
 export const lastInput = () => inputKind;
+
+// Lock one transaction, preserve control states and label width, then restore them exactly.
+function pendingUI(container, button, label = '保存中…') {
+  const controls = [...container.querySelectorAll('button, input, select, textarea')];
+  if (container.matches('button')) controls.unshift(container);
+  const states = controls.map(el => [el, el.disabled]);
+  const busy = container.getAttribute('aria-busy');
+  const html = button?.innerHTML, width = button?.style.minWidth, accessible = button?.getAttribute('aria-label');
+  if (button) {
+    const style = getComputedStyle(button), measure = document.createElement('canvas').getContext('2d');
+    measure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    const available = button.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    const short = [label, '稍候', '…'].find(text => measure.measureText(text).width <= available) || '…';
+    button.style.minWidth = `${button.getBoundingClientRect().width}px`;
+    button.setAttribute('aria-label', `${accessible || button.textContent.trim()}，${label}`);
+    button.textContent = short;
+  }
+  container.setAttribute('aria-busy', 'true');
+  states.forEach(([el]) => { el.disabled = true; });
+  return () => {
+    states.forEach(([el, disabled]) => { el.disabled = disabled; });
+    if (busy === null) container.removeAttribute('aria-busy'); else container.setAttribute('aria-busy', busy);
+    if (button) { button.innerHTML = html; button.style.minWidth = width; if (accessible === null) button.removeAttribute('aria-label'); else button.setAttribute('aria-label', accessible); }
+  };
+}
+function actionError(error, fallback = '保存失败，内容已保留，可以重试。') {
+  return error instanceof Error && error.message ? error.message : fallback;
+}
