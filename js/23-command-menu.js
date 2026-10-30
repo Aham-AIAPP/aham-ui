@@ -39,7 +39,7 @@ export function createCommand(host, { items, onSelect, onBack, placeholder = 'Êê
       const prefix = it.prefix ? `<span class="wb-command-prefix">${escapeHtml(it.prefix)}</span>${icon('chevron-right')}` : '';
       const count = it.count === undefined ? '' : `<sup class="wb-command-count">${it.count > 99 ? '99+' : it.count}</sup>`;
       const keys = it.keys ? `<span class="wb-kbd-group" aria-hidden="true">${formatKeys(it.keys).map(k => `<kbd class="wb-kbd">${escapeHtml(k)}</kbd>`).join('')}</span>` : '';
-      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${arrowed(it) ? icon('arrow-right') : slot}</li>`;
+      html += `<li role="${itemRole}" id="${id}-${i}" data-index="${i}"${role === 'listbox' ? ` aria-selected="${it.checked ?? Boolean(it.current)}"` : ''}${it.checked === undefined || role === 'menu' ? '' : ` aria-checked="${it.checked}"`}${it.current ? ' aria-current="true"' : ''}${it.danger ? ' class="is-danger"' : ''}${it.keys ? ` aria-keyshortcuts="${escapeHtml(ariaKeys(it.keys))}"` : ''}>${check}${it.icon ? icon(it.icon) : gap}<span class="wb-command-label">${prefix}<span>${escapeHtml(it.label)}</span>${count}</span>${keys}${arrowed(it) ? icon('arrow-right') : slot}</li>`;
     });
     list.innerHTML = html;
     emptyEl.hidden = shown.length > 0;

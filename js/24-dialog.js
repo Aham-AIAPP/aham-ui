@@ -18,6 +18,7 @@ export function openDialog({ root, className = 'wb-dialog', labelledBy, html, re
   function close(after) {
     if (closed) return;
     closed = true;
+    dialog.dataset.input = lastInput();
     release?.();
     leave(dialog, () => {
       moveDialogToasts(dialog);

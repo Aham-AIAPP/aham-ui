@@ -26,6 +26,7 @@ export function openPopover(trigger, panel, { align = 'auto', onClose, point = n
     panel, trigger, place,
     close(reason = 'done') {
       if (openPop !== api) return;
+      panel.dataset.input = lastInput();
       openPop = null;
       release();
       document.removeEventListener('pointerdown', outside, true);

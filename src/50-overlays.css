@@ -174,8 +174,8 @@
 }
 
 /* Separate keyboard activation from pointer motion; leaving layers are inert in JS. */
-:where(.aham-workbench) :is(.wb-popover,.wb-dialog,.wb-create,.wb-panel)[data-input=key]{transition:none;transform:none}
-:where(.aham-workbench) :is(.wb-dialog,.wb-create)[data-input=key]::backdrop{transition:none}
+.aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-panel)[data-input=key]{transition:none;transform:none}
+.aham-workbench :is(.wb-dialog,.wb-create)[data-input=key]::backdrop{transition:none}
 :where(.aham-workbench) .wb-create{overflow-y:auto}
 :where(.aham-workbench) .wb-dialog{max-height:calc(100dvh - var(--wb-s6));overflow-y:auto}
 :where(.aham-workbench) .wb-value-error{overflow-wrap:anywhere}
