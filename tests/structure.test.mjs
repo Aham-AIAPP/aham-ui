@@ -148,10 +148,13 @@ test('buttons with icons remain named (rules/3-控件.md 3.2)', () => {
   }
 });
 
-test('navigation names are nonempty (rules/4-页面.md 4.1)', () => {
+test('navigation names are nonempty and at most 6 characters (rules/4-页面.md 4.1)', () => {
+  // A Han character counts 1; Latin letters and digits count half.
+  const width = text => [...text].reduce((n, ch) => n + (/[\u0000-\u00ff]/.test(ch) ? 0.5 : 1), 0);
   for (const page of samples()) {
     for (const [, name] of read(page).matchAll(/class="wb-nav-item"[^>]*>[\s\S]*?<span>([^<]+)<\/span>/g)) {
       assert.ok(name.trim().length > 0, `${page}: ${name}`);
+      assert.ok(width(name.trim()) <= 6, `${page}: ${name}`);
     }
   }
 });

@@ -8,6 +8,7 @@
 - 主按钮改回 10.0 的主色蓝：`--wb-action` #336EE8，悬停 `--wb-action-hover` #2A62D6，按下 `--wb-action-press` #2357C4，文字 `--wb-on` 白色，亮色和暗色同值。悬停和按下逐档加深，和 11.2 一致；10.1.0 的中性主按钮悬停变浅、按下变深，方向和 11.2 相反。`scripts/theme.mjs` 把这三个变量放回主色组，四个变量的说明分别写明用途。
 - 规则、契约、示例页和说明文字统一到 10.1 的新写法：每个当前任务层只有一个主按钮；按钮可以图标加文字；按下尺寸不变；大区块默认不铺灰。涉及 rules/1、2、3、9、11，AGENTS.md、README.md、设计理念.md、components/shell.json、index.html、examples/controls.html 和 examples/interaction.html。
 - rules/1 1.4 新增「任务层」的定义：页面、打开的模态弹窗、单据的显示态和编辑态各算一层。阶段图标的尺寸改为 16px，和 tokens.json 一致。
+- 导航名称最多 6 个字（rules/4 4.1），汉字算 1 个字，英文字母和数字两个算 1 个字；设计理念原则 13 和 shell 契约同步，结构测试新增字数检查。
 - rules/2 2.1 写出允许铺 `--wb-fill` 淡底的 8 个多行区块和允许铺状态底色的 2 个区块；新增区块要先加进这份清单。
 - rules/11 原有两节都编为 11.7，改为 11.7「异步操作和状态的先后」和 11.8「验收」。11.7 改用 1.4 词表用语，补写回调在弹窗关闭前执行。9 份组件契约里重复的异步规则改为引用 11.7。
 
@@ -19,7 +20,7 @@
 ### 维护
 - js/40-composer.js、js/52-toast.js、js/53-picker.js 恢复分节标题和行为说明，补写异步提交、失败重试和弹窗内轻提示的行为。
 - qa/browser.html、qa/lab.html、qa/lab.css 按行展开；qa 页面去掉写死的版本号「10.1」，browser.html 的间距和字号改用变量。
-- README 的「组件与交互回归」移到「使用方法」之后。测试名「navigation names are meaningful and nonempty」改为「nonempty」，和实际检查一致。
+- README 的「组件与交互回归」移到「使用方法」之后。测试「navigation names are meaningful and nonempty」改为检查非空和最多 6 个字。
 - CHANGELOG 10.1.0 补「升级须知」，删去「修复」下多出的空行，「Toast」改为「轻提示」。
 
 ## [10.1.0] - 2026-10-30
