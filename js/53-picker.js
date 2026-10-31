@@ -1,4 +1,8 @@
-// One property picker. A save settles before closing; failed selections remain retryable.
+// ── Picker ───────────────────────────────────────────────────────────────────
+// Single-value property picker used by table cells, the properties panel and shortcuts: a command menu anchored to
+// the element being edited, opening on the current value, with search from 5 options. onSelect(value, current) may
+// return a promise: the picker stays open until it settles; on false or a throw it stays open, shows the error and
+// the original value is kept so the user can pick again.
 let pickerPop = null, pickerCommand = null;
 export function openPicker(anchor, { label, options, current, icon: optionIcon, onSelect, returnFocus, search = options.length >= 5 }) {
   closePopover('replace');

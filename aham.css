@@ -126,9 +126,9 @@
   --wb-faint: #888886;
   --wb-blue: #336EE8;
   --wb-blue-bg: #EDF1FA;
-  --wb-action: #252524;
-  --wb-action-hover: #383836;
-  --wb-action-press: #151515;
+  --wb-action: #336EE8;
+  --wb-action-hover: #2A62D6;
+  --wb-action-press: #2357C4;
   --wb-on: #FFFFFF;
   --wb-success: #1F7A4D;
   --wb-success-bg: #EAF4EE;
@@ -172,10 +172,10 @@
   --wb-faint: #7B7B79;
   --wb-blue: #6C97F0;
   --wb-blue-bg: #1F2A40;
-  --wb-action: #E3E2E0;
-  --wb-action-hover: #F5F5F3;
-  --wb-action-press: #CECDCA;
-  --wb-on: #151515;
+  --wb-action: #336EE8;
+  --wb-action-hover: #2A62D6;
+  --wb-action-press: #2357C4;
+  --wb-on: #FFFFFF;
   --wb-success: #6DBE8F;
   --wb-success-bg: #1C2A22;
   --wb-warning: #E0A84A;
@@ -219,10 +219,10 @@
   --wb-faint: #7B7B79;
   --wb-blue: #6C97F0;
   --wb-blue-bg: #1F2A40;
-  --wb-action: #E3E2E0;
-  --wb-action-hover: #F5F5F3;
-  --wb-action-press: #CECDCA;
-  --wb-on: #151515;
+  --wb-action: #336EE8;
+  --wb-action-hover: #2A62D6;
+  --wb-action-press: #2357C4;
+  --wb-on: #FFFFFF;
   --wb-success: #6DBE8F;
   --wb-success-bg: #1C2A22;
   --wb-warning: #E0A84A;
@@ -267,9 +267,9 @@
   --wb-faint: #888886;
   --wb-blue: #336EE8;
   --wb-blue-bg: #EDF1FA;
-  --wb-action: #252524;
-  --wb-action-hover: #383836;
-  --wb-action-press: #151515;
+  --wb-action: #336EE8;
+  --wb-action-hover: #2A62D6;
+  --wb-action-press: #2357C4;
   --wb-on: #FFFFFF;
   --wb-success: #1F7A4D;
   --wb-success-bg: #EAF4EE;
@@ -400,7 +400,7 @@
 /* Tabular figures for amounts and quantities only: in codes and dates they widen the hyphen (rules/2-视觉.md 2.4). */
 :where(.aham-workbench) .wb-tnum{font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
-/* Buttons: secondary ones are a filled surface with no outline (Claude client); the primary uses a paired neutral foreground and background. */
+/* Buttons: secondary ones are a filled surface with no outline (Claude client); the primary carries the one blue. */
 :where(.aham-workbench) .wb-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-icon-gap);border:0;border-radius:var(--wb-control-radius);background:var(--wb-button);color:var(--wb-ink);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) a.wb-btn{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
@@ -530,11 +530,11 @@
 :where(.aham-workbench) :is(.wb-btn.ghost,.wb-icon-btn,.wb-chip>button)[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-selected);color:var(--wb-ink)}
 :where(.aham-workbench) .wb-btn:not(.primary,.ghost)[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-button-press)}
 /* Environment overrides: screen size, pointer, contrast and motion preferences. */
-/* Disabled has no hover/press geometry. Busy keeps the variant pair so its progress text stays readable. */
+/* Disabled has no hover/press geometry. Only the button that waits (aria-busy on the button itself) keeps its colours so its progress text stays readable; other disabled buttons in a busy form stay dimmed. */
 :where(.aham-workbench) :is(.wb-btn,.wb-icon-btn)[aria-disabled=true]{opacity:.4;cursor:not-allowed}
 :where(.aham-workbench) .wb-btn.primary[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-action-press);color:var(--wb-on)}
-:where(.aham-workbench) [aria-busy=true] .wb-btn:disabled,:where(.aham-workbench) .wb-btn[aria-busy=true]{opacity:1}
-:where(.aham-workbench) [aria-busy=true] .wb-btn.primary:disabled,:where(.aham-workbench) .wb-btn.primary[aria-busy=true]{background:var(--wb-action);color:var(--wb-on)}
+:where(.aham-workbench) .wb-btn[aria-busy=true]{opacity:1}
+:where(.aham-workbench) .wb-btn.primary[aria-busy=true]{background:var(--wb-action);color:var(--wb-on)}
 /* ---- src/30-table.css ---- */
 /* position:relative keeps visually hidden text inside table cells within the scroll area. */
 :where(.aham-workbench) .wb-table-scroll{position:relative;overflow-x:auto;max-width:100%}
@@ -1919,7 +1919,6 @@
 .aham-workbench:not([data-theme="light"]){--wb-line:#7A766F;--wb-line-strong:#7A766F;--wb-muted:#A6A6A3;--wb-faint:#A6A6A3}
 }
 @media (prefers-reduced-motion: reduce){
-.aham-workbench :is(.wb-btn,.wb-icon-btn):active{transform:none}
 .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar),.aham-workbench :is(.wb-popover,.wb-dialog,.wb-create)[data-leaving]{transform:none}
 .aham-workbench .wb-skeleton{animation:none}
 .aham-workbench :is(.wb-popover,.wb-dialog,.wb-create,.wb-toast,.wb-panel,.wb-save-bar){transition-property:opacity;transition-duration:var(--wb-instant);transform:none}

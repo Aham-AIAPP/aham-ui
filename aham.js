@@ -66,7 +66,7 @@ function pendingUI(container, button, label = '保存中…') {
   if (container.matches('button')) controls.unshift(container);
   const states = controls.map(el => [el, el.disabled]);
   const busy = container.getAttribute('aria-busy');
-  const html = button?.innerHTML, width = button?.style.minWidth, accessible = button?.getAttribute('aria-label');
+  const html = button?.innerHTML, width = button?.style.minWidth, accessible = button?.getAttribute('aria-label'), buttonBusy = button?.getAttribute('aria-busy');
   if (button) {
     const style = getComputedStyle(button), measure = document.createElement('canvas').getContext('2d');
     measure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
@@ -75,13 +75,18 @@ function pendingUI(container, button, label = '保存中…') {
     button.style.minWidth = `${button.getBoundingClientRect().width}px`;
     button.setAttribute('aria-label', `${accessible || button.textContent.trim()}，${label}`);
     button.textContent = short;
+    button.setAttribute('aria-busy', 'true');
   }
   container.setAttribute('aria-busy', 'true');
   states.forEach(([el]) => { el.disabled = true; });
   return () => {
     states.forEach(([el, disabled]) => { el.disabled = disabled; });
     if (busy === null) container.removeAttribute('aria-busy'); else container.setAttribute('aria-busy', busy);
-    if (button) { button.innerHTML = html; button.style.minWidth = width; if (accessible === null) button.removeAttribute('aria-label'); else button.setAttribute('aria-label', accessible); }
+    if (button) {
+      button.innerHTML = html; button.style.minWidth = width;
+      if (accessible === null) button.removeAttribute('aria-label'); else button.setAttribute('aria-label', accessible);
+      if (button !== container) { if (buttonBusy == null) button.removeAttribute('aria-busy'); else button.setAttribute('aria-busy', buttonBusy); }
+    }
   };
 }
 function actionError(error, fallback = '保存失败，内容已保留，可以重试。') {
@@ -900,7 +905,11 @@ export function initPropertyPickers({ container, fields, value, onChange }) {
   return { set(next) { revision++; values = { ...next }; paint(); }, get: () => ({ ...values }), destroy: life.end };
 }
 
-// Comment submit keeps failed drafts and never clears text typed during a request.
+// ── Composer ─────────────────────────────────────────────────────────────────
+// Comment box: ⌘/Ctrl+Enter or the send button submits; Enter alone adds a line; nothing is sent while an IME is
+// composing or the text is blank. onSubmit(text) returns true (or a promise of true) when the comment was saved.
+// While it waits the send button shows 发送中… and a second submit is ignored. On false or a throw the draft stays,
+// the error shows under the box and the user can retry; text typed during the request is never cleared.
 export function initComposer(form, { onSubmit }) {
   const life = scope();
   const area = form.querySelector('textarea'), send = form.querySelector('[type=submit]');
@@ -1039,7 +1048,13 @@ export function initTooltips(root = document.querySelector('.aham-workbench')) {
   return handle;
 }
 
-// Notifications pause independently for hover/focus. Async undo settles before dismissal.
+// ── Toast ────────────────────────────────────────────────────────────────────
+// Transient confirmation after an action, bottom-right (bottom on phones). At most 3 stay; each leaves after 4s,
+// paused while hovered or focused. A repeat of a visible toast (same text and action) is not added again.
+// Inside an open modal dialog the toast is placed in that dialog, because everything outside it is inert.
+// An optional action (e.g. 撤销) may return a promise: the toast waits for it and then dismisses; on false or a
+// throw it stays, shows the error and keeps the action for a retry. Errors that need a fix belong next to the
+// field or in an inline notice, not in a toast.
 const toastHosts = new WeakMap();
 export function toast(message, { action, duration = 4000 } = {}) {
   const root = document.querySelector('.aham-workbench dialog[open]') || document.querySelector('.aham-workbench');
@@ -1096,7 +1111,11 @@ function moveDialogToasts(dialog) {
   else { root.append(source); toastHosts.set(root, source); }
   toastHosts.delete(dialog);
 }
-// One property picker. A save settles before closing; failed selections remain retryable.
+// ── Picker ───────────────────────────────────────────────────────────────────
+// Single-value property picker used by table cells, the properties panel and shortcuts: a command menu anchored to
+// the element being edited, opening on the current value, with search from 5 options. onSelect(value, current) may
+// return a promise: the picker stays open until it settles; on false or a throw it stays open, shows the error and
+// the original value is kept so the user can pick again.
 let pickerPop = null, pickerCommand = null;
 export function openPicker(anchor, { label, options, current, icon: optionIcon, onSelect, returnFocus, search = options.length >= 5 }) {
   closePopover('replace');

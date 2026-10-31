@@ -228,7 +228,7 @@ function aiNextStep() {
   aiBlock('ai-slot', {
     title: '建议下一步', sources: sources(), adoptLabel: '查看修改',
     generate: ({ signal }) => simulateStream(plan.text, { signal }),
-    onAdopt: () => openAIConfirm({ root, reason: plan.reason, changes: plan.changes, returnFocus: $('[data-action="ai-summary"]'), onConfirm: () => applyPlan(plan) }),
+    onAdopt: () => openAIConfirm({ root, reason: plan.reason, changes: plan.changes, returnFocus: $('[data-action="ai-summary"]'), canUndo: true, onConfirm: () => applyPlan(plan) }),
   });
 }
 function applyPlan(plan) {

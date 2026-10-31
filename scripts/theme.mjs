@@ -37,8 +37,8 @@ const lab = ([L, C, H]) => [L, C * Math.cos(H * Math.PI / 180), C * Math.sin(H *
 export const deltaE = (x, y) => Math.hypot(...lab(hexToLch(x)).map((v, i) => v - lab(hexToLch(y))[i]));   // CIE76
 
 // ── Generator ────────────────────────────────────────────────────────────────
-export const NEUTRALS = ['bg', 'canvas', 'fill', 'hover', 'selected', 'nav-hover', 'nav-selected', 'line', 'line-soft', 'edge', 'line-strong', 'pop-bg', 'pop-edge', 'button', 'button-hover', 'button-press', 'ink', 'ink-2', 'muted', 'faint', 'action', 'action-hover', 'action-press', 'on'];
-export const ACCENTS = ['blue', 'blue-bg'];
+export const NEUTRALS = ['bg', 'canvas', 'fill', 'hover', 'selected', 'nav-hover', 'nav-selected', 'line', 'line-soft', 'edge', 'line-strong', 'pop-bg', 'pop-edge', 'button', 'button-hover', 'button-press', 'ink', 'ink-2', 'muted', 'faint'];
+export const ACCENTS = ['blue', 'blue-bg', 'action', 'action-hover', 'action-press'];
 const SCALED = new Set(['line', 'line-soft', 'edge', 'line-strong', 'ink', 'ink-2', 'muted', 'faint']);   // text and lines follow the contrast input
 export const DEFAULTS = { light: { base: '#EDECEB', accent: '#336EE8', contrast: 60 }, dark: { base: '#0B0B0B', accent: '#336EE8', contrast: 60 } };
 const hand = mode => Object.fromEntries(leaves(`color.${mode}`).map(([n, p]) => [n, resolve(p)]));
