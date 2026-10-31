@@ -65,7 +65,7 @@ function pendingUI(container, button, label = '保存中…') {
   if (container.matches('button')) controls.unshift(container);
   const states = controls.map(el => [el, el.disabled]);
   const busy = container.getAttribute('aria-busy');
-  const html = button?.innerHTML, width = button?.style.minWidth, accessible = button?.getAttribute('aria-label');
+  const html = button?.innerHTML, width = button?.style.minWidth, accessible = button?.getAttribute('aria-label'), buttonBusy = button?.getAttribute('aria-busy');
   if (button) {
     const style = getComputedStyle(button), measure = document.createElement('canvas').getContext('2d');
     measure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
@@ -74,13 +74,18 @@ function pendingUI(container, button, label = '保存中…') {
     button.style.minWidth = `${button.getBoundingClientRect().width}px`;
     button.setAttribute('aria-label', `${accessible || button.textContent.trim()}，${label}`);
     button.textContent = short;
+    button.setAttribute('aria-busy', 'true');
   }
   container.setAttribute('aria-busy', 'true');
   states.forEach(([el]) => { el.disabled = true; });
   return () => {
     states.forEach(([el, disabled]) => { el.disabled = disabled; });
     if (busy === null) container.removeAttribute('aria-busy'); else container.setAttribute('aria-busy', busy);
-    if (button) { button.innerHTML = html; button.style.minWidth = width; if (accessible === null) button.removeAttribute('aria-label'); else button.setAttribute('aria-label', accessible); }
+    if (button) {
+      button.innerHTML = html; button.style.minWidth = width;
+      if (accessible === null) button.removeAttribute('aria-label'); else button.setAttribute('aria-label', accessible);
+      if (button !== container) { if (buttonBusy == null) button.removeAttribute('aria-busy'); else button.setAttribute('aria-busy', buttonBusy); }
+    }
   };
 }
 function actionError(error, fallback = '保存失败，内容已保留，可以重试。') {

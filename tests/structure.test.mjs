@@ -148,7 +148,7 @@ test('buttons with icons remain named (rules/3-控件.md 3.2)', () => {
   }
 });
 
-test('navigation names are meaningful and nonempty (rules/4-页面.md 4.1)', () => {
+test('navigation names are nonempty (rules/4-页面.md 4.1)', () => {
   for (const page of samples()) {
     for (const [, name] of read(page).matchAll(/class="wb-nav-item"[^>]*>[\s\S]*?<span>([^<]+)<\/span>/g)) {
       assert.ok(name.trim().length > 0, `${page}: ${name}`);

@@ -1,1 +1,34 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aham UI · 交互回归</title><link rel="stylesheet" href="../aham.css"><style>body{margin:0}.qa{padding:24px;min-height:100vh}.qa h1{font-size:20px}.qa pre{white-space:pre-wrap;overflow-wrap:anywhere}.qa section{margin-block:24px}.qa #fixture{min-height:100px}.qa .row{display:flex;flex-wrap:wrap;gap:12px}.qa [data-result=fail]{color:var(--wb-danger)}</style><div class="aham-workbench wb-bare qa" data-theme="light"><h1>交互回归 · 10.1</h1><p>真实组件、可控延迟、首次失败与再次成功。全部为本页虚构数据。</p><div class="row"><button class="wb-btn primary" id="run">运行回归测试</button><button class="wb-btn" id="theme">切换深浅色</button><a class="wb-btn" href="lab.html">组件与动效实验室</a></div><p id="summary" role="status">尚未运行</p><section id="fixture"></section><ol id="results"></ol><details><summary>结构化结果</summary><pre id="json"></pre></details></div><script type="module" src="browser-cases.mjs"></script></html>
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aham UI · 交互回归</title>
+<link rel="stylesheet" href="../aham.css">
+<style>
+  body { margin: 0 }
+  .qa { padding: var(--wb-s5); min-height: 100vh }
+  .qa h1 { font-size: var(--wb-title) }
+  .qa pre { white-space: pre-wrap; overflow-wrap: anywhere }
+  .qa section { margin-block: var(--wb-s5) }
+  .qa #fixture { min-height: 100px }
+  .qa .row { display: flex; flex-wrap: wrap; gap: var(--wb-s3) }
+  .qa [data-result=fail] { color: var(--wb-danger) }
+</style>
+<div class="aham-workbench wb-bare qa" data-theme="light">
+  <h1>交互回归</h1>
+  <p>真实组件、可控延迟、首次失败与再次成功。全部为本页虚构数据。</p>
+  <div class="row">
+    <button class="wb-btn primary" id="run">运行回归测试</button>
+    <button class="wb-btn" id="theme">切换深浅色</button>
+    <a class="wb-btn" href="lab.html">组件与动效实验室</a>
+  </div>
+  <p id="summary" role="status">尚未运行</p>
+  <section id="fixture"></section>
+  <ol id="results"></ol>
+  <details>
+    <summary>结构化结果</summary>
+    <pre id="json"></pre>
+  </details>
+</div>
+<script type="module" src="browser-cases.mjs"></script>
+</html>

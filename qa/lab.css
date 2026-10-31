@@ -1,1 +1,31 @@
-body{margin:0}.lab{min-height:100vh;padding:var(--wb-s6);background:var(--wb-bg);color:var(--wb-ink)}.lab header{display:flex;justify-content:space-between;align-items:center;gap:var(--wb-s5);padding-block-end:var(--wb-s6);border-bottom:1px solid var(--wb-line)}.lab .eyebrow{font-size:var(--wb-text-xs);color:var(--wb-muted);letter-spacing:.08em}.lab h1{font-size:var(--wb-title);font-weight:600;margin:var(--wb-s2) 0}.lab p.wb-value-error{color:var(--wb-danger)}.lab p{color:var(--wb-muted);margin:var(--wb-s2) 0}.lab section{padding-block:var(--wb-s6);border-bottom:1px solid var(--wb-line)}.lab h2{font-size:var(--wb-body);font-weight:600;margin:0}.lab .section-title{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--wb-s4);margin-bottom:var(--wb-s5)}.lab .section-title>span{font-size:var(--wb-text-xs);color:var(--wb-muted)}.lab .actions{display:flex;flex-wrap:wrap;align-items:center;gap:var(--wb-s3)}.lab .button-matrix{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--wb-s5)}.lab .button-matrix>div{display:flex;flex-direction:column;align-items:flex-start;gap:var(--wb-s3)}.lab .demo{max-width:var(--wb-body-width)}.lab .demo textarea{display:block;width:100%;margin:var(--wb-s2) 0 var(--wb-s4)}.lab #save-state{color:var(--wb-muted);font-size:var(--wb-text-xs)}.lab .contracts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--wb-s5);margin-top:var(--wb-s5)}.lab .contracts article{padding-bottom:var(--wb-s3);border-bottom:1px solid var(--wb-line-soft)}.lab .contracts a{font-weight:500}.lab .contracts p{font-size:var(--wb-text-xs)}.lab .contracts small{color:var(--wb-muted);overflow-wrap:anywhere}.lab footer{padding-block:var(--wb-s5);font-size:var(--wb-text-xs);color:var(--wb-muted)}.lab #ai-host{margin-top:var(--wb-s4);max-width:var(--wb-body-width)}.lab #search{margin-left:var(--wb-s3)}@media(max-width:700px){.lab{padding:var(--wb-s4)}.lab header{align-items:flex-start;flex-direction:column}.lab .button-matrix{grid-template-columns:repeat(2,minmax(0,1fr))}.lab .contracts{grid-template-columns:1fr}}
+body { margin: 0 }
+.lab { min-height: 100vh; padding: var(--wb-s6); background: var(--wb-bg); color: var(--wb-ink) }
+.lab header { display: flex; justify-content: space-between; align-items: center; gap: var(--wb-s5); padding-block-end: var(--wb-s6); border-bottom: 1px solid var(--wb-line) }
+.lab .eyebrow { font-size: var(--wb-text-xs); color: var(--wb-muted); letter-spacing: .08em }
+.lab h1 { font-size: var(--wb-title); font-weight: 600; margin: var(--wb-s2) 0 }
+.lab p.wb-value-error { color: var(--wb-danger) }
+.lab p { color: var(--wb-muted); margin: var(--wb-s2) 0 }
+.lab section { padding-block: var(--wb-s6); border-bottom: 1px solid var(--wb-line) }
+.lab h2 { font-size: var(--wb-body); font-weight: 600; margin: 0 }
+.lab .section-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: var(--wb-s4); margin-bottom: var(--wb-s5) }
+.lab .section-title>span { font-size: var(--wb-text-xs); color: var(--wb-muted) }
+.lab .actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--wb-s3) }
+.lab .button-matrix { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: var(--wb-s5) }
+.lab .button-matrix>div { display: flex; flex-direction: column; align-items: flex-start; gap: var(--wb-s3) }
+.lab .demo { max-width: var(--wb-body-width) }
+.lab .demo textarea { display: block; width: 100%; margin: var(--wb-s2) 0 var(--wb-s4) }
+.lab #save-state { color: var(--wb-muted); font-size: var(--wb-text-xs) }
+.lab .contracts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: var(--wb-s5); margin-top: var(--wb-s5) }
+.lab .contracts article { padding-bottom: var(--wb-s3); border-bottom: 1px solid var(--wb-line-soft) }
+.lab .contracts a { font-weight: 500 }
+.lab .contracts p { font-size: var(--wb-text-xs) }
+.lab .contracts small { color: var(--wb-muted); overflow-wrap: anywhere }
+.lab footer { padding-block: var(--wb-s5); font-size: var(--wb-text-xs); color: var(--wb-muted) }
+.lab #ai-host { margin-top: var(--wb-s4); max-width: var(--wb-body-width) }
+.lab #search { margin-left: var(--wb-s3) }
+@media (max-width:700px) {
+  .lab { padding: var(--wb-s4) }
+  .lab header { align-items: flex-start; flex-direction: column }
+  .lab .button-matrix { grid-template-columns: repeat(2,minmax(0,1fr)) }
+  .lab .contracts { grid-template-columns: 1fr }
+}

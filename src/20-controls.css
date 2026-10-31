@@ -12,7 +12,7 @@
 /* Tabular figures for amounts and quantities only: in codes and dates they widen the hyphen (rules/2-视觉.md 2.4). */
 :where(.aham-workbench) .wb-tnum{font-variant-numeric:tabular-nums}
 :where(.aham-workbench) .wb-note{display:block;color:var(--wb-muted);margin-block-start:var(--wb-s5)}
-/* Buttons: secondary ones are a filled surface with no outline (Claude client); the primary uses a paired neutral foreground and background. */
+/* Buttons: secondary ones are a filled surface with no outline (Claude client); the primary carries the one blue. */
 :where(.aham-workbench) .wb-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--wb-icon-gap);border:0;border-radius:var(--wb-control-radius);background:var(--wb-button);color:var(--wb-ink);height:var(--wb-control);padding:0 var(--wb-s3);white-space:nowrap}
 :where(.aham-workbench) a.wb-btn{color:var(--wb-ink);text-decoration:none}
 :where(.aham-workbench) .wb-btn.sm{height:var(--wb-header-control);padding:0 var(--wb-s2)}
@@ -134,12 +134,9 @@
  .aham-workbench .wb-chip {height:var(--wb-touch)}
  .aham-workbench :is(.wb-icon-btn,.wb-btn.sm,.wb-chip>button)::after {inset:0}
 }
-@media (prefers-reduced-motion: reduce) {
- .aham-workbench :is(.wb-btn,.wb-icon-btn):active {transform:none}
-}
 
-/* Disabled has no hover/press geometry. Busy keeps the variant pair so its progress text stays readable. */
+/* Disabled has no hover/press geometry. Only the button that waits (aria-busy on the button itself) keeps its colours so its progress text stays readable; other disabled buttons in a busy form stay dimmed. */
 :where(.aham-workbench) :is(.wb-btn,.wb-icon-btn)[aria-disabled=true]{opacity:.4;cursor:not-allowed}
 :where(.aham-workbench) .wb-btn.primary[aria-expanded=true]:not(:disabled,[aria-disabled=true]){background:var(--wb-action-press);color:var(--wb-on)}
-:where(.aham-workbench) [aria-busy=true] .wb-btn:disabled,:where(.aham-workbench) .wb-btn[aria-busy=true]{opacity:1}
-:where(.aham-workbench) [aria-busy=true] .wb-btn.primary:disabled,:where(.aham-workbench) .wb-btn.primary[aria-busy=true]{background:var(--wb-action);color:var(--wb-on)}
+:where(.aham-workbench) .wb-btn[aria-busy=true]{opacity:1}
+:where(.aham-workbench) .wb-btn.primary[aria-busy=true]{background:var(--wb-action);color:var(--wb-on)}

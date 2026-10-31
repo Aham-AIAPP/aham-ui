@@ -1,4 +1,10 @@
-// Notifications pause independently for hover/focus. Async undo settles before dismissal.
+// ── Toast ────────────────────────────────────────────────────────────────────
+// Transient confirmation after an action, bottom-right (bottom on phones). At most 3 stay; each leaves after 4s,
+// paused while hovered or focused. A repeat of a visible toast (same text and action) is not added again.
+// Inside an open modal dialog the toast is placed in that dialog, because everything outside it is inert.
+// An optional action (e.g. 撤销) may return a promise: the toast waits for it and then dismisses; on false or a
+// throw it stays, shows the error and keeps the action for a retry. Errors that need a fix belong next to the
+// field or in an inline notice, not in a toast.
 const toastHosts = new WeakMap();
 export function toast(message, { action, duration = 4000 } = {}) {
   const root = document.querySelector('.aham-workbench dialog[open]') || document.querySelector('.aham-workbench');

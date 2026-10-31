@@ -85,7 +85,7 @@ showSuggestion($('#pv-stage-row'), { key: 'stage', label: '阶段', value: '商�
 
 const changes = [{ target: '阶段', from: '方案评估', to: '商务谈判' }, { target: '新建任务', to: '发送设备接口清单模板 · 截止 2026-10-06' }];
 $('#pv-confirm-static').innerHTML = `<span class="wb-ai-mark">${icon('ai')}<span>AI 建议</span></span><h2 style="margin:8px 0 0;font-size:var(--wb-text-base)">确认 AI 提出的修改</h2><p style="margin:8px 0 0;color:var(--wb-muted)">最近一次跟进已约定现场调研。</p><ul class="wb-ai-changes">${changes.map(c => `<li><span>${escapeHtml(c.target)}</span><span>${c.from ? `${escapeHtml(c.from)} → ` : ''}<strong>${escapeHtml(c.to)}</strong></span></li>`).join('')}</ul><p style="margin:0 0 16px;color:var(--wb-muted)">共 2 项。确认后才会写入，写入后可以撤销。</p><div class="wb-dialog-foot"><button type="button" class="wb-btn">取消</button><button type="button" class="wb-btn primary">确认修改</button></div>`;
-$('#pv-confirm-open').addEventListener('click', e => openAIConfirm({ root, reason: '最近一次跟进已约定现场调研。', changes, returnFocus: e.currentTarget, onConfirm: () => toast('已按 AI 建议修改 2 项', { action: { label: '撤销', run: () => {} } }) }));
+$('#pv-confirm-open').addEventListener('click', e => openAIConfirm({ root, reason: '最近一次跟进已约定现场调研。', changes, returnFocus: e.currentTarget, onConfirm: () => toast('已按 AI 建议修改 2 项（示例不保存）') }));
 
 let live = null;
 $('#pv-live-start').addEventListener('click', () => {

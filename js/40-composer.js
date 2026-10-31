@@ -1,4 +1,8 @@
-// Comment submit keeps failed drafts and never clears text typed during a request.
+// ── Composer ─────────────────────────────────────────────────────────────────
+// Comment box: ⌘/Ctrl+Enter or the send button submits; Enter alone adds a line; nothing is sent while an IME is
+// composing or the text is blank. onSubmit(text) returns true (or a promise of true) when the comment was saved.
+// While it waits the send button shows 发送中… and a second submit is ignored. On false or a throw the draft stays,
+// the error shows under the box and the user can retry; text typed during the request is never cleared.
 export function initComposer(form, { onSubmit }) {
   const life = scope();
   const area = form.querySelector('textarea'), send = form.querySelector('[type=submit]');
